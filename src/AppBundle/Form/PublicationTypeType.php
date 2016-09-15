@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AuthorType extends AbstractType
+class PublicationTypeType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,16 +15,8 @@ class AuthorType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
-        $builder->add('fullName');  // string     
-        $builder->add('sortableName');  // string     
-        $builder->add('birthDate');  // date     
-        $builder->add('deathDate');  // date     
-        $builder->add('notes');  // text     
-        $builder->add('birthPlace');     
-        $builder->add('deathPlace');     
-        $builder->add('status');     
-        $builder->add('residences');     
-        $builder->add('publications');         
+        $builder->add('label');  // string     
+        $builder->add('description');  // text         
     }
     
     /**
@@ -33,7 +25,7 @@ class AuthorType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Author'
+            'data_class' => 'AppBundle\Entity\PublicationType'
         ));
     }
 }

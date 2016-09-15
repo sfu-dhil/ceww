@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Repository\AuthorRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Author
  *
  * @ORM\Table(name="author")
- * @ORM\Entity(repositoryClass="AuthorRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Author extends AbstractEntity{
@@ -71,8 +70,16 @@ class Author extends AbstractEntity{
      */
     private $residences;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="Publication", inversedBy="authors")
+     * @ORM\JoinTable(name="author_publication")
+     * @var Collection|Publication[]
+     */
+    private $publications;
+    
     public function __construct() {
         $this->residences = new ArrayCollection();
+        $this->publications = new ArrayCollection();
     }
     
     public function __toString() {
@@ -314,5 +321,39 @@ class Author extends AbstractEntity{
     public function getResidences()
     {
         return $this->residences;
+    }
+
+    /**
+     * Add publication
+     *
+     * @param \AppBundle\Entity\Publication $publication
+     *
+     * @return Author
+     */
+    public function addPublication(\AppBundle\Entity\Publication $publication)
+    {
+        $this->publications[] = $publication;
+
+        return $this;
+    }
+
+    /**
+     * Remove publication
+     *
+     * @param \AppBundle\Entity\Publication $publication
+     */
+    public function removePublication(\AppBundle\Entity\Publication $publication)
+    {
+        $this->publications->removeElement($publication);
+    }
+
+    /**
+     * Get publications
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPublications()
+    {
+        return $this->publications;
     }
 }
