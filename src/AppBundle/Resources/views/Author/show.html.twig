@@ -38,6 +38,10 @@
                 <td>{% if author.deathDate %}{{ author.deathDate|date('Y-m-d') }}{% endif %}</td>
             </tr>
             <tr>
+                <th>Notes</th>
+            <td>{{ author.notes }}</td>
+            </tr>
+            <tr>
                 <th>Created</th>
                 <td>{% if author.created %}{{ author.created|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>

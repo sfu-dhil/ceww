@@ -2,13 +2,16 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Repository\AuthorRepository;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Author
  *
  * @ORM\Table(name="author")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")
+ * @ORM\Entity(repositoryClass="AuthorRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Author extends AbstractEntity{
@@ -38,33 +41,43 @@ class Author extends AbstractEntity{
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsBorn")
      * @ORM\JoinColumn(name="birthplace_id", referencedColumnName="id", nullable=true)
-     * @var type 
+     * @var Place 
      */
     private $birthPlace;
     
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsDied")
      * @ORM\JoinColumn(name="deathplace_id", referencedColumnName="id", nullable=true)
-     * @var type 
+     * @var Place
      */
     private $deathPlace;
     
     /**
      * @ORM\ManyToOne(targetEntity="Status", inversedBy="publishedAuthors")
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=false)
-     * @var type 
+     * @var Status 
      */
     private $status;
     
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
     private $notes;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
+     * @ORM\JoinTable(name="author_residence")
+     * @var Collection|Place[]
+     */
+    private $residences;
+    
     public function __construct() {
+        $this->residences = new ArrayCollection();
     }
     
     public function __toString() {
         return $this->fullName;
     }
-
 
     /**
      * Set fullName
@@ -130,7 +143,7 @@ class Author extends AbstractEntity{
     /**
      * Set birthDate
      *
-     * @param \DateTime $birthDate
+     * @param DateTime$birthDate
      *
      * @return Author
      */
@@ -144,8 +157,7 @@ class Author extends AbstractEntity{
     /**
      * Get birthDate
      *
-     * @return \DateTime
-     */
+     * @return DateTime     */
     public function getBirthDate()
     {
         return $this->birthDate;
@@ -154,7 +166,7 @@ class Author extends AbstractEntity{
     /**
      * Set deathDate
      *
-     * @param \DateTime $deathDate
+     * @param DateTime$deathDate
      *
      * @return Author
      */
@@ -168,8 +180,7 @@ class Author extends AbstractEntity{
     /**
      * Get deathDate
      *
-     * @return \DateTime
-     */
+     * @return DateTime     */
     public function getDeathDate()
     {
         return $this->deathDate;
@@ -245,5 +256,63 @@ class Author extends AbstractEntity{
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set notes
+     *
+     * @param string $notes
+     *
+     * @return Author
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Get notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Add residence
+     *
+     * @param \AppBundle\Entity\Place $residence
+     *
+     * @return Author
+     */
+    public function addResidence(\AppBundle\Entity\Place $residence)
+    {
+        $this->residences[] = $residence;
+
+        return $this;
+    }
+
+    /**
+     * Remove residence
+     *
+     * @param \AppBundle\Entity\Place $residence
+     */
+    public function removeResidence(\AppBundle\Entity\Place $residence)
+    {
+        $this->residences->removeElement($residence);
+    }
+
+    /**
+     * Get residences
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getResidences()
+    {
+        return $this->residences;
     }
 }

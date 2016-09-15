@@ -24,6 +24,7 @@
                 <th>Sortablename</th>
                 <th>Birthdate</th>
                 <th>Deathdate</th>
+                <th>Notes</th>
                 <th>Created</th>
                 <th>Updated</th>            </tr>
         </thead>
@@ -38,6 +39,7 @@
                 <td>{{ author.sortableName }}</td>
                 <td>{% if author.birthDate %}{{ author.birthDate|date('Y-m-d') }}{% endif %}</td>
                 <td>{% if author.deathDate %}{{ author.deathDate|date('Y-m-d') }}{% endif %}</td>
+                <td>{{ author.notes }}</td>
                 <td>{% if author.created %}{{ author.created|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if author.updated %}{{ author.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>

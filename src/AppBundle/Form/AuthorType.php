@@ -19,9 +19,11 @@ class AuthorType extends AbstractType
         $builder->add('sortableName');  // string     
         $builder->add('birthDate');  // date     
         $builder->add('deathDate');  // date     
+        $builder->add('notes');  // text     
         $builder->add('birthPlace');     
         $builder->add('deathPlace');     
-        $builder->add('status');         
+        $builder->add('status');     
+        $builder->add('residences');         
     }
     
     /**

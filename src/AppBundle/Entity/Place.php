@@ -65,11 +65,19 @@ class Place extends AbstractEntity
      */
     private $authorsDied;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="Author", mappedBy="residences")
+     * @ORM\JoinTable(name="author_residence")
+     * @var Collection|Author[]
+     */
+    private $residents;
+
     public function __construct() {
         $this->alternateNames = new ArrayCollection();
         $this->adminNames = new ArrayCollection();
         $this->authorsBorn = new ArrayCollection();
         $this->authorsDied = new ArrayCollection();
+        $this->residents = new ArrayCollection();
     }
     
     public function __toString() {
@@ -310,5 +318,39 @@ class Place extends AbstractEntity
     public function getAuthorsDied()
     {
         return $this->authorsDied;
+    }
+
+    /**
+     * Add resident
+     *
+     * @param \AppBundle\Entity\Author $resident
+     *
+     * @return Place
+     */
+    public function addResident(\AppBundle\Entity\Author $resident)
+    {
+        $this->residents[] = $resident;
+
+        return $this;
+    }
+
+    /**
+     * Remove resident
+     *
+     * @param \AppBundle\Entity\Author $resident
+     */
+    public function removeResident(\AppBundle\Entity\Author $resident)
+    {
+        $this->residents->removeElement($resident);
+    }
+
+    /**
+     * Get residents
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getResidents()
+    {
+        return $this->residents;
     }
 }

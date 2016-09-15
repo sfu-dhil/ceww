@@ -21,7 +21,8 @@ class PlaceType extends AbstractType
         $builder->add('adminNames');  // array     
         $builder->add('latitude');  // decimal     
         $builder->add('longitude');  // decimal     
-        $builder->add('description');  // text         
+        $builder->add('description');  // text     
+        $builder->add('residents');         
     }
     
     /**
