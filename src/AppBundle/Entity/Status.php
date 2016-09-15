@@ -24,6 +24,12 @@ class Status extends AbstractEntity {
      */
     private $description;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Author", mappedBy="status")
+     * @var Collection|Author[]
+     */
+    private $publishedAuthors;
+    
     public function __toString() {
         return $this->label;
     }
@@ -76,4 +82,45 @@ class Status extends AbstractEntity {
         return $this->description;
     }
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->publishedAuthors = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add publishedAuthor
+     *
+     * @param \AppBundle\Entity\Author $publishedAuthor
+     *
+     * @return Status
+     */
+    public function addPublishedAuthor(\AppBundle\Entity\Author $publishedAuthor)
+    {
+        $this->publishedAuthors[] = $publishedAuthor;
+
+        return $this;
+    }
+
+    /**
+     * Remove publishedAuthor
+     *
+     * @param \AppBundle\Entity\Author $publishedAuthor
+     */
+    public function removePublishedAuthor(\AppBundle\Entity\Author $publishedAuthor)
+    {
+        $this->publishedAuthors->removeElement($publishedAuthor);
+    }
+
+    /**
+     * Get publishedAuthors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPublishedAuthors()
+    {
+        return $this->publishedAuthors;
+    }
 }

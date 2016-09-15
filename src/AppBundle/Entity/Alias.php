@@ -14,15 +14,15 @@ class Alias extends AbstractEntity
 {
 
     /**
+     * @ORM\Column(type="string", length=120, nullable=false)
+     */
+    private $name;
+
+    /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     private $maiden;
     
-    /**
-     * @ORM\Column(type="string", length=24, nullable=false)
-     */
-    private $name;
-
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -34,31 +34,6 @@ class Alias extends AbstractEntity
     
     public function __toString() {
         return $this->name;
-    }
-
-
-    /**
-     * Set maiden
-     *
-     * @param boolean $maiden
-     *
-     * @return Alias
-     */
-    public function setMaiden($maiden)
-    {
-        $this->maiden = $maiden;
-
-        return $this;
-    }
-
-    /**
-     * Get maiden
-     *
-     * @return boolean
-     */
-    public function getMaiden()
-    {
-        return $this->maiden;
     }
 
     /**
@@ -83,6 +58,30 @@ class Alias extends AbstractEntity
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set maiden
+     *
+     * @param boolean $maiden
+     *
+     * @return Alias
+     */
+    public function setMaiden($maiden)
+    {
+        $this->maiden = $maiden;
+
+        return $this;
+    }
+
+    /**
+     * Get maiden
+     *
+     * @return boolean
+     */
+    public function getMaiden()
+    {
+        return $this->maiden;
     }
 
     /**

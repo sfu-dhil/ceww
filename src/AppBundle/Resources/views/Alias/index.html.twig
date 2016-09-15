@@ -20,8 +20,8 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
             <tr>
-                <th>Maiden</th>
                 <th>Name</th>
+                <th>Maiden</th>
                 <th>Description</th>
                 <th>Created</th>
                 <th>Updated</th>            </tr>
@@ -31,10 +31,10 @@
             <tr>
                 <td>
                     <a href="{{ path('admin_alias_show', { 'id': alias.id }) }}">
-                        {{ alias.maiden }}
+                        {{ alias.name }}
                     </a>
                 </td>
-                <td>{{ alias.name }}</td>
+                <td>{% if alias.maiden %}Yes{% else %}No{% endif %}</td>
                 <td>{{ alias.description }}</td>
                 <td>{% if alias.created %}{{ alias.created|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if alias.updated %}{{ alias.updated|date('Y-m-d H:i:s') }}{% endif %}</td>

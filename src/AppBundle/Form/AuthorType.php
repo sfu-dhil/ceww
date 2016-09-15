@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AliasType extends AbstractType
+class AuthorType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,9 +15,13 @@ class AliasType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
-        $builder->add('name');  // string     
-        $builder->add('maiden');  // boolean     
-        $builder->add('description');  // text         
+        $builder->add('fullName');  // string     
+        $builder->add('sortableName');  // string     
+        $builder->add('birthDate');  // date     
+        $builder->add('deathDate');  // date     
+        $builder->add('birthPlace');     
+        $builder->add('deathPlace');     
+        $builder->add('status');         
     }
     
     /**
@@ -26,7 +30,7 @@ class AliasType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Alias'
+            'data_class' => 'AppBundle\Entity\Author'
         ));
     }
 }
