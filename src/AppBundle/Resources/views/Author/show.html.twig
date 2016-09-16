@@ -97,6 +97,10 @@
                 <th>Updated</th>
                 <td>{% if author.updated %}{{ author.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
+			<tr>
+				<th>Status</th>
+				<td>{{ author.status }}</td>
+			</tr>
         </tbody>
     </table>
 
