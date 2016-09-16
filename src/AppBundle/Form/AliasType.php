@@ -17,7 +17,8 @@ class AliasType extends AbstractType
     {    
         $builder->add('name');  // string     
         $builder->add('maiden');  // boolean     
-        $builder->add('description');  // text         
+        $builder->add('description');  // text     
+        $builder->add('authors');         
     }
     
     /**

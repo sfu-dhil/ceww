@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Publication extends AbstractEntity {
     
     /**
-     * @ORM\Column(type="string", length=120, nullable=false)
+     * @ORM\Column(type="string", length=250, nullable=false)
      */
     private $title;
     
@@ -124,11 +126,11 @@ class Publication extends AbstractEntity {
     /**
      * Set publicationType
      *
-     * @param \AppBundle\Entity\PublicationType $publicationType
+     * @param PublicationType $publicationType
      *
      * @return Publication
      */
-    public function setPublicationType(\AppBundle\Entity\PublicationType $publicationType = null)
+    public function setPublicationType(PublicationType $publicationType = null)
     {
         $this->publicationType = $publicationType;
 
@@ -138,7 +140,7 @@ class Publication extends AbstractEntity {
     /**
      * Get publicationType
      *
-     * @return \AppBundle\Entity\PublicationType
+     * @return PublicationType
      */
     public function getPublicationType()
     {
@@ -148,11 +150,11 @@ class Publication extends AbstractEntity {
     /**
      * Add author
      *
-     * @param \AppBundle\Entity\Author $author
+     * @param Author $author
      *
      * @return Publication
      */
-    public function addAuthor(\AppBundle\Entity\Author $author)
+    public function addAuthor(Author $author)
     {
         $this->authors[] = $author;
 
@@ -162,9 +164,9 @@ class Publication extends AbstractEntity {
     /**
      * Remove author
      *
-     * @param \AppBundle\Entity\Author $author
+     * @param Author $author
      */
-    public function removeAuthor(\AppBundle\Entity\Author $author)
+    public function removeAuthor(Author $author)
     {
         $this->authors->removeElement($author);
     }
@@ -172,7 +174,7 @@ class Publication extends AbstractEntity {
     /**
      * Get authors
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getAuthors()
     {

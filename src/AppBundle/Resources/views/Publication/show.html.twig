@@ -4,6 +4,22 @@
     <h1>Publication</h1>
  {% endblock %} 
 
+{% macro pubList(title, list) %}
+	{% if list|length %}
+		<h2>{{ title }}</h2>
+		<ul>
+			{% for p in list %}
+				<li>
+					<a href='{{ path('admin_author_show', {'id': p.id }) }}'>
+						{{ p }}
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endmacro %}
+{% import _self as self %}
+ 
 {% block body %}
 
     <div class="btn-toolbar">
@@ -44,4 +60,6 @@
         </tbody>
     </table>
 
+    {{ self.pubList('Authors', publication.authors) }}				
+				
 {% endblock %}

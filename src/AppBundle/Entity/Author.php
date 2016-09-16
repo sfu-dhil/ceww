@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,14 +27,14 @@ class Author extends AbstractEntity{
     private $sortableName;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
-     * @var DateTime
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
      */
     private $birthDate;
     
     /**
-     * @ORM\Column(type="date", nullable=true)
-     * @var DateTime
+     * @ORM\Column(type="integer", nullable=true)
+     * @var int
      */
     private $deathDate;
     
@@ -64,6 +65,13 @@ class Author extends AbstractEntity{
     private $notes;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Alias", inversedBy="authors")
+     * @ORM\JoinTable(name="author_alias");
+     * @var Collection|Alias[]
+     */
+    private $aliases;
+    
+    /**
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
      * @ORM\JoinTable(name="author_residence")
      * @var Collection|Place[]
@@ -78,6 +86,7 @@ class Author extends AbstractEntity{
     private $publications;
     
     public function __construct() {
+        $this->aliases = new ArrayCollection();
         $this->residences = new ArrayCollection();
         $this->publications = new ArrayCollection();
     }
@@ -148,59 +157,13 @@ class Author extends AbstractEntity{
     }
     
     /**
-     * Set birthDate
-     *
-     * @param DateTime$birthDate
-     *
-     * @return Author
-     */
-    public function setBirthDate($birthDate)
-    {
-        $this->birthDate = $birthDate;
-
-        return $this;
-    }
-
-    /**
-     * Get birthDate
-     *
-     * @return DateTime     */
-    public function getBirthDate()
-    {
-        return $this->birthDate;
-    }
-
-    /**
-     * Set deathDate
-     *
-     * @param DateTime$deathDate
-     *
-     * @return Author
-     */
-    public function setDeathDate($deathDate)
-    {
-        $this->deathDate = $deathDate;
-
-        return $this;
-    }
-
-    /**
-     * Get deathDate
-     *
-     * @return DateTime     */
-    public function getDeathDate()
-    {
-        return $this->deathDate;
-    }
-
-    /**
      * Set birthPlace
      *
-     * @param \AppBundle\Entity\Place $birthPlace
+     * @param Place $birthPlace
      *
      * @return Author
      */
-    public function setBirthPlace(\AppBundle\Entity\Place $birthPlace = null)
+    public function setBirthPlace(Place $birthPlace = null)
     {
         $this->birthPlace = $birthPlace;
 
@@ -210,7 +173,7 @@ class Author extends AbstractEntity{
     /**
      * Get birthPlace
      *
-     * @return \AppBundle\Entity\Place
+     * @return Place
      */
     public function getBirthPlace()
     {
@@ -220,11 +183,11 @@ class Author extends AbstractEntity{
     /**
      * Set deathPlace
      *
-     * @param \AppBundle\Entity\Place $deathPlace
+     * @param Place $deathPlace
      *
      * @return Author
      */
-    public function setDeathPlace(\AppBundle\Entity\Place $deathPlace = null)
+    public function setDeathPlace(Place $deathPlace = null)
     {
         $this->deathPlace = $deathPlace;
 
@@ -234,7 +197,7 @@ class Author extends AbstractEntity{
     /**
      * Get deathPlace
      *
-     * @return \AppBundle\Entity\Place
+     * @return Place
      */
     public function getDeathPlace()
     {
@@ -244,11 +207,11 @@ class Author extends AbstractEntity{
     /**
      * Set status
      *
-     * @param \AppBundle\Entity\Status $status
+     * @param Status $status
      *
      * @return Author
      */
-    public function setStatus(\AppBundle\Entity\Status $status)
+    public function setStatus(Status $status)
     {
         $this->status = $status;
 
@@ -258,7 +221,7 @@ class Author extends AbstractEntity{
     /**
      * Get status
      *
-     * @return \AppBundle\Entity\Status
+     * @return Status
      */
     public function getStatus()
     {
@@ -292,13 +255,15 @@ class Author extends AbstractEntity{
     /**
      * Add residence
      *
-     * @param \AppBundle\Entity\Place $residence
+     * @param Place $residence
      *
      * @return Author
      */
-    public function addResidence(\AppBundle\Entity\Place $residence)
+    public function addResidence(Place $residence)
     {
-        $this->residences[] = $residence;
+        if(! $this->residences->contains($residence)) {
+            $this->residences[] = $residence;        
+        }
 
         return $this;
     }
@@ -306,9 +271,9 @@ class Author extends AbstractEntity{
     /**
      * Remove residence
      *
-     * @param \AppBundle\Entity\Place $residence
+     * @param Place $residence
      */
-    public function removeResidence(\AppBundle\Entity\Place $residence)
+    public function removeResidence(Place $residence)
     {
         $this->residences->removeElement($residence);
     }
@@ -316,7 +281,7 @@ class Author extends AbstractEntity{
     /**
      * Get residences
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getResidences()
     {
@@ -326,13 +291,15 @@ class Author extends AbstractEntity{
     /**
      * Add publication
      *
-     * @param \AppBundle\Entity\Publication $publication
+     * @param Publication $publication
      *
      * @return Author
      */
-    public function addPublication(\AppBundle\Entity\Publication $publication)
+    public function addPublication(Publication $publication)
     {
-        $this->publications[] = $publication;
+        if(! $this->publications->contains($publication)) {
+            $this->publications[] = $publication;
+        }
 
         return $this;
     }
@@ -340,9 +307,9 @@ class Author extends AbstractEntity{
     /**
      * Remove publication
      *
-     * @param \AppBundle\Entity\Publication $publication
+     * @param Publication $publication
      */
-    public function removePublication(\AppBundle\Entity\Publication $publication)
+    public function removePublication(Publication $publication)
     {
         $this->publications->removeElement($publication);
     }
@@ -350,10 +317,97 @@ class Author extends AbstractEntity{
     /**
      * Get publications
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getPublications()
+    public function getPublications($filter=null)
     {
-        return $this->publications;
+        if($filter===null) {
+            return $this->publications;
+        }
+        return $this->publications->filter(function(Publication $p) use($filter) {
+            return $p->getPublicationType()->getLabel() === $filter;
+        });
+    }
+
+    /**
+     * Add alias
+     *
+     * @param Alias $alias
+     *
+     * @return Author
+     */
+    public function addAlias(Alias $alias)
+    {
+        $this->aliases[] = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Remove alias
+     *
+     * @param Alias $alias
+     */
+    public function removeAlias(Alias $alias)
+    {
+        $this->aliases->removeElement($alias);
+    }
+
+    /**
+     * Get aliases
+     *
+     * @return Collection
+     */
+    public function getAliases()
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * Set birthDate
+     *
+     * @param integer $birthDate
+     *
+     * @return Author
+     */
+    public function setBirthDate($birthDate)
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * Get birthDate
+     *
+     * @return integer
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
+
+    /**
+     * Set deathDate
+     *
+     * @param integer $deathDate
+     *
+     * @return Author
+     */
+    public function setDeathDate($deathDate)
+    {
+        $this->deathDate = $deathDate;
+
+        return $this;
+    }
+
+    /**
+     * Get deathDate
+     *
+     * @return integer
+     */
+    public function getDeathDate()
+    {
+        return $this->deathDate;
     }
 }

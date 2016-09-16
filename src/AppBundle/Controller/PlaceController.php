@@ -27,7 +27,7 @@ class PlaceController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $dql = 'SELECT e FROM AppBundle:Place e ORDER BY e.id';
+        $dql = 'SELECT e FROM AppBundle:Place e ORDER BY e.name';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $places = $paginator->paginate($query, $request->query->getint('page', 1), 25);

@@ -28,7 +28,7 @@ class Place extends AbstractEntity
     private $alternateNames;
     
     /**
-     * @ORM\Column(type="string", length=250, nullable=false)
+     * @ORM\Column(type="string", length=250, nullable=true)
      */
     private $countryName;
     
@@ -73,8 +73,8 @@ class Place extends AbstractEntity
     private $residents;
 
     public function __construct() {
-        $this->alternateNames = new ArrayCollection();
-        $this->adminNames = new ArrayCollection();
+        $this->alternateNames = array();
+        $this->adminNames = array();
         $this->authorsBorn = new ArrayCollection();
         $this->authorsDied = new ArrayCollection();
         $this->residents = new ArrayCollection();

@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,8 +30,15 @@ class Alias extends AbstractEntity
      */
     private $description;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Author", mappedBy="aliases")
+     * @var Collection|Author[]
+     */
+    private $authors;
+
     public function __construct() {
         $this->maiden = false;
+        $this->authors = new ArrayCollection();
     }
     
     public function __toString() {
@@ -106,5 +115,39 @@ class Alias extends AbstractEntity
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Add author
+     *
+     * @param Author $author
+     *
+     * @return Alias
+     */
+    public function addAuthor(Author $author)
+    {
+        $this->authors[] = $author;
+
+        return $this;
+    }
+
+    /**
+     * Remove author
+     *
+     * @param Author $author
+     */
+    public function removeAuthor(Author $author)
+    {
+        $this->authors->removeElement($author);
+    }
+
+    /**
+     * Get authors
+     *
+     * @return Collection
+     */
+    public function getAuthors()
+    {
+        return $this->authors;
     }
 }

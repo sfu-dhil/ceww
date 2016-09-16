@@ -19,7 +19,7 @@ class PublicationType extends AbstractEntity
     private $label;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     
