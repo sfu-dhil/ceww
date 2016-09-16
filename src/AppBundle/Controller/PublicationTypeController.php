@@ -23,6 +23,7 @@ class PublicationTypeController extends Controller
      * @Route("/", name="admin_publication_type_index")
      * @Method("GET")
      * @Template()
+	 * @param Request $request
      */
     public function indexAction(Request $request)
     {
@@ -36,6 +37,44 @@ class PublicationTypeController extends Controller
             'publicationTypes' => $publicationTypes,
         );
     }
+    /**
+     * Search for PublicationType entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:PublicationType repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated search.html.twig
+	 * template.
+	 * 
+     //    public function searchQuery($q) {
+     //        $qb = $this->createQueryBuilder('e');
+     //        $qb->where("e.fieldName like '%$q%'");
+     //        return $qb->getQuery();
+     //    }
+	 *
+     *
+     * @Route("/search", name="admin_publication_type_search")
+     * @Method("GET")
+     * @Template()
+	 * @param Request $request
+     */
+    public function searchAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:PublicationType');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->searchQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$publicationTypes = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+		} else {
+			$publicationTypes = array();
+		}
+
+        return array(
+            'publicationTypes' => $publicationTypes,
+			'q' => $q,
+        );
+    }
 
     /**
      * Creates a new PublicationType entity.
@@ -43,6 +82,7 @@ class PublicationTypeController extends Controller
      * @Route("/new", name="admin_publication_type_new")
      * @Method({"GET", "POST"})
      * @Template()
+	 * @param Request $request
      */
     public function newAction(Request $request)
     {
@@ -71,6 +111,7 @@ class PublicationTypeController extends Controller
      * @Route("/{id}", name="admin_publication_type_show")
      * @Method("GET")
      * @Template()
+	 * @param PublicationType $publicationType
      */
     public function showAction(PublicationType $publicationType)
     {
@@ -86,6 +127,8 @@ class PublicationTypeController extends Controller
      * @Route("/{id}/edit", name="admin_publication_type_edit")
      * @Method({"GET", "POST"})
      * @Template()
+	 * @param Request $request
+	 * @param PublicationType $publicationType
      */
     public function editAction(Request $request, PublicationType $publicationType)
     {
@@ -111,6 +154,8 @@ class PublicationTypeController extends Controller
      *
      * @Route("/{id}/delete", name="admin_publication_type_delete")
      * @Method("GET")
+	 * @param Request $request
+	 * @param PublicationType $publicationType
      */
     public function deleteAction(Request $request, PublicationType $publicationType)
     {

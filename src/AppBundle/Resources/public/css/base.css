@@ -37,6 +37,10 @@ a[href ^= 'https://']::after {
     -moz-osx-font-smoothing: grayscale;        
 }
 
+div.tab-content {
+	min-height: 200px;
+}
+
 ul.columnated {
 	list-style: none;	
 }

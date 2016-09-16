@@ -23,11 +23,12 @@ class AuthorController extends Controller
      * @Route("/", name="admin_author_index")
      * @Method("GET")
      * @Template()
+	 * @param Request $request
      */
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $dql = 'SELECT e FROM AppBundle:Author e ORDER BY e.fullName';
+        $dql = 'SELECT e FROM AppBundle:Author e ORDER BY e.sortableName';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $authors = $paginator->paginate($query, $request->query->getint('page', 1), 25);
@@ -36,29 +37,42 @@ class AuthorController extends Controller
             'authors' => $authors,
         );
     }
-    
     /**
      * Search for Author entities.
-     * 
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Author repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated search.html.twig
+	 * template.
+	 * 
+     //    public function searchQuery($q) {
+     //        $qb = $this->createQueryBuilder('e');
+     //        $qb->where("e.fieldName like '%$q%'");
+     //        return $qb->getQuery();
+     //    }
+	 *
+     *
      * @Route("/search", name="admin_author_search")
      * @Method("GET")
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Author');        
-        $q = $request->query->get('q');
-        if($q) {
-            $query = $repo->searchQuery($q);       
-            $paginator = $this->get('knp_paginator');
-            $authors = $paginator->paginate($query, $request->query->getint('page', 1), 25);
-        } else {
-            $authors = array();
-        }
+		$repo = $em->getRepository('AppBundle:Author');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->searchQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$authors = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+		} else {
+			$authors = array();
+		}
+
         return array(
             'authors' => $authors,
-            'q' => $q,
+			'q' => $q,
         );
     }
 
@@ -68,6 +82,7 @@ class AuthorController extends Controller
      * @Route("/new", name="admin_author_new")
      * @Method({"GET", "POST"})
      * @Template()
+	 * @param Request $request
      */
     public function newAction(Request $request)
     {
@@ -96,6 +111,7 @@ class AuthorController extends Controller
      * @Route("/{id}", name="admin_author_show")
      * @Method("GET")
      * @Template()
+	 * @param Author $author
      */
     public function showAction(Author $author)
     {
@@ -111,6 +127,8 @@ class AuthorController extends Controller
      * @Route("/{id}/edit", name="admin_author_edit")
      * @Method({"GET", "POST"})
      * @Template()
+	 * @param Request $request
+	 * @param Author $author
      */
     public function editAction(Request $request, Author $author)
     {
@@ -136,6 +154,8 @@ class AuthorController extends Controller
      *
      * @Route("/{id}/delete", name="admin_author_delete")
      * @Method("GET")
+	 * @param Request $request
+	 * @param Author $author
      */
     public function deleteAction(Request $request, Author $author)
     {

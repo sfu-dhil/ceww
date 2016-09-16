@@ -14,6 +14,9 @@
             <a href="{{ path('admin_alias_new') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span> New
             </a>
+            <a href="{{ path('admin_alias_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
         </div>
     </div>
         
@@ -22,9 +25,8 @@
             <tr>
                 <th>Name</th>
                 <th>Maiden</th>
-                <th>Description</th>
-                <th>Created</th>
-                <th>Updated</th>            </tr>
+				<th>Authors</th>
+			</tr>
         </thead>
         <tbody>
         {% for alias in aliases %}
@@ -35,9 +37,7 @@
                     </a>
                 </td>
                 <td>{% if alias.maiden %}Yes{% else %}No{% endif %}</td>
-                <td>{{ alias.description }}</td>
-                <td>{% if alias.created %}{{ alias.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if alias.updated %}{{ alias.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+				<td>{{ alias.authors|length }}</td>
             </tr>
         {% endfor %}
         </tbody>
