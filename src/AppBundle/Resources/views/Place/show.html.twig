@@ -4,6 +4,22 @@
     <h1>Place</h1>
 {% endblock %} 
 
+{% macro pubList(title, list, pathname) %}
+	{% if list|length %}
+		<h2>{{ title }}</h2>
+		<ul class='columnated'>
+			{% for p in list %}
+				<li>
+					<a href='{{ path(pathname, {'id': p.id }) }}'>
+						{{ p }}
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endmacro %}
+{% import _self as self %}
+
 {% block body %}
 
     <div class="btn-toolbar">
@@ -72,4 +88,28 @@
         </tbody>
     </table>
 
+<div>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#born" aria-controls="home" role="tab" data-toggle="tab">Born</a></li>
+    <li role="presentation"><a href="#died" aria-controls="profile" role="tab" data-toggle="tab">Died</a></li>
+    <li role="presentation"><a href="#resident" aria-controls="messages" role="tab" data-toggle="tab">Resident</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+	  <div role="tabpanel" class="tab-pane active" id="born">
+		  {{ self.pubList('Authors Born', place.authorsBorn, 'admin_author_show') }}
+	  </div>
+	  <div role="tabpanel" class="tab-pane" id="died">
+		  {{ self.pubList('Authors Died', place.authorsDied, 'admin_author_show') }}
+	  </div>
+	  <div role="tabpanel" class="tab-pane" id="resident">
+		  {{ self.pubList('Authors Resident', place.residents, 'admin_author_show') }}
+	  </div>
+  </div>
+
+</div>				
+				
 {% endblock %}

@@ -7,7 +7,7 @@
 {% macro pubList(title, list, pathname) %}
 	{% if list|length %}
 		<h2>{{ title }}</h2>
-		<ul>
+		<ul class='columnated'>
 			{% for p in list %}
 				<li>
 					<a href='{{ path(pathname, {'id': p.id }) }}'>
@@ -100,10 +100,27 @@
 		</tbody>
 	</table>
 
-	
-	{{ self.pubList('Residences', author.residences, 'admin_place_show') }}
-	{{ self.pubList('Publications', author.getPublications('Book'), 'admin_publication_show') }}
-	{{ self.pubList('Anthologies', author.getPublications('Anthology'), 'admin_publication_show') }}
-	{{ self.pubList('Periodicals', author.getPublications('Periodical'), 'admin_publication_show') }}
-	
+	<ul class="nav nav-tabs" role="tablist">
+		<li role="presentation" class="active"><a href="#residences" aria-controls="residences" role="tab" data-toggle="tab">Residences</a></li>
+		<li role="presentation"><a href="#books" aria-controls="books" role="tab" data-toggle="tab">Books</a></li>
+		<li role="presentation"><a href="#anthologies" aria-controls="anthologies" role="tab" data-toggle="tab">Anthologies</a></li>
+		<li role="presentation"><a href="#periodicals" aria-controls="periodicals" role="tab" data-toggle="tab">Periodicals</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="residences">
+			{{ self.pubList('Residences', author.residences, 'admin_place_show') }}
+		</div>
+		<div role="tabpanel" class="tab-pane" id="books">
+			{{ self.pubList('Publications', author.getPublications('Book'), 'admin_publication_show') }}
+		</div>
+		<div role="tabpanel" class="tab-pane" id="anthologies">
+			{{ self.pubList('Anthologies', author.getPublications('Anthology'), 'admin_publication_show') }}
+		</div>
+		<div role="tabpanel" class="tab-pane" id="periodicals">
+			{{ self.pubList('Periodicals', author.getPublications('Periodical'), 'admin_publication_show') }}
+		</div>
+	</div>
+
+
 {% endblock %}

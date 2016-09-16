@@ -4,13 +4,13 @@
     <h1>Alias</h1>
  {% endblock %} 
 
- {% macro pubList(title, list) %}
+{% macro pubList(title, list, pathname) %}
 	{% if list|length %}
 		<h2>{{ title }}</h2>
-		<ul>
+		<ul class='columnated'>
 			{% for p in list %}
 				<li>
-					<a href='{{ path('admin_author_show', {'id': p.id }) }}'>
+					<a href='{{ path(pathname, {'id': p.id }) }}'>
 						{{ p }}
 					</a>
 				</li>
@@ -60,6 +60,6 @@
         </tbody>
     </table>
 
-	{{ self.pubList('Authors', alias.authors) }}
+	{{ self.pubList('Authors', alias.authors, 'admin_author_show') }}
 				
 {% endblock %}

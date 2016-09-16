@@ -36,6 +36,31 @@ class AuthorController extends Controller
             'authors' => $authors,
         );
     }
+    
+    /**
+     * Search for Author entities.
+     * 
+     * @Route("/search", name="admin_author_search")
+     * @Method("GET")
+     * @Template()
+     * @param Request $request
+     */
+    public function searchAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Author');        
+        $q = $request->query->get('q');
+        if($q) {
+            $query = $repo->searchQuery($q);       
+            $paginator = $this->get('knp_paginator');
+            $authors = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $authors = array();
+        }
+        return array(
+            'authors' => $authors,
+            'q' => $q,
+        );
+    }
 
     /**
      * Creates a new Author entity.

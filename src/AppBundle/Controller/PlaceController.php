@@ -79,7 +79,7 @@ class PlaceController extends Controller
             'place' => $place,
         );
     }
-
+    
     /**
      * Displays a form to edit an existing Place entity.
      *
