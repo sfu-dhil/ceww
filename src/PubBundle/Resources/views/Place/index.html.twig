@@ -11,10 +11,7 @@
 
         <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
-            <a href="{{ path('admin_place_new') }}" class="btn btn-default">
-                <span class="glyphicon glyphicon-plus"></span> New
-            </a>
-            <a href="{{ path('admin_place_search') }}" class="btn btn-default">
+            <a href="{{ path('place_search') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Search
             </a>
         </div>
@@ -33,7 +30,7 @@
         {% for place in places %}
             <tr>
                 <td>
-                    <a href="{{ path('admin_place_show', { 'id': place.id }) }}">
+                    <a href="{{ path('place_show', { 'id': place.id }) }}">
                         {{ place.name }}
                     </a>
                 </td>
