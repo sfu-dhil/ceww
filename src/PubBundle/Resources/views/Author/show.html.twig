@@ -79,10 +79,6 @@
 					{% endif %}
 				</td>
 			</tr>
-			<tr>
-                <th>Notes</th>
-				<td>{{ author.notes|nl2br }}</td>
-            </tr>
             <tr>
                 <th>Created</th>
                 <td>{% if author.created %}{{ author.created|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -91,10 +87,6 @@
                 <th>Updated</th>
                 <td>{% if author.updated %}{{ author.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
-			<tr>
-				<th>Status</th>
-				<td>{{ author.status }}</td>
-			</tr>
         </tbody>
     </table>
 
