@@ -19,7 +19,7 @@ class PublicationController extends Controller
     /**
      * Lists all Publication entities.
      *
-     * @Route("/", name="admin_publication_index")
+     * @Route("/", name="publication_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -51,7 +51,7 @@ class PublicationController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="admin_publication_search")
+     * @Route("/search", name="publication_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -78,7 +78,7 @@ class PublicationController extends Controller
     /**
      * Finds and displays a Publication entity.
      *
-     * @Route("/{id}", name="admin_publication_show")
+     * @Route("/{id}", name="publication_show")
      * @Method("GET")
      * @Template()
 	 * @param Publication $publication

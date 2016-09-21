@@ -19,7 +19,7 @@ class PlaceController extends Controller
     /**
      * Lists all Place entities.
      *
-     * @Route("/", name="admin_place_index")
+     * @Route("/", name="place_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -51,7 +51,7 @@ class PlaceController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="admin_place_search")
+     * @Route("/search", name="place_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -78,7 +78,7 @@ class PlaceController extends Controller
     /**
      * Finds and displays a Place entity.
      *
-     * @Route("/{id}", name="admin_place_show")
+     * @Route("/{id}", name="place_show")
      * @Method("GET")
      * @Template()
 	 * @param Place $place

@@ -39,6 +39,22 @@
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="{{ path('homepage') }}">Home</a></li>
 
+						<li>
+							<a href="{{ path('author_index') }}">
+								Authors
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('admin_publication_index') }}">
+								Publications
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('place_index') }}">
+								Places
+							</a>
+						</li>
+						
 						{% if app.user is not null and is_granted('ROLE_ADMIN') %}
 
 							<li>

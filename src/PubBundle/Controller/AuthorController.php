@@ -19,7 +19,7 @@ class AuthorController extends Controller
     /**
      * Lists all Author entities.
      *
-     * @Route("/", name="admin_author_index")
+     * @Route("/", name="author_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -51,7 +51,7 @@ class AuthorController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="admin_author_search")
+     * @Route("/search", name="author_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -78,7 +78,7 @@ class AuthorController extends Controller
     /**
      * Finds and displays a Author entity.
      *
-     * @Route("/{id}", name="admin_author_show")
+     * @Route("/{id}", name="author_show")
      * @Method("GET")
      * @Template()
 	 * @param Author $author

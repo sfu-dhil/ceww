@@ -19,7 +19,7 @@ class AliasController extends Controller
     /**
      * Lists all Alias entities.
      *
-     * @Route("/", name="admin_alias_index")
+     * @Route("/", name="alias_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -51,7 +51,7 @@ class AliasController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="admin_alias_search")
+     * @Route("/search", name="alias_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -78,7 +78,7 @@ class AliasController extends Controller
     /**
      * Finds and displays a Alias entity.
      *
-     * @Route("/{id}", name="admin_alias_show")
+     * @Route("/{id}", name="alias_show")
      * @Method("GET")
      * @Template()
 	 * @param Alias $alias
