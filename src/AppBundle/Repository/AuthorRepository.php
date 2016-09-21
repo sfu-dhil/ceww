@@ -22,7 +22,9 @@ class AuthorRepository extends EntityRepository
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('a');
         $qb->where("a.fullName like '%$q%'");
-        return $qb->getQuery();
+        $qb->addOrderBy('a.sortableName');
+        $query = $qb->getQuery();
+        return $query;
     }
     
 }

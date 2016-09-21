@@ -37,6 +37,27 @@ a[href ^= 'https://']::after {
     -moz-osx-font-smoothing: grayscale;        
 }
 
+span.twitter-typeahead {
+	display: block;
+	width: 100%;
+}
+
+div.tt-cursor, div.tt-selectable:hover {
+	background-color: lightblue !important;	
+}
+
+div.tt-selectable {
+	padding: 5px;	
+	border: 1px solid lightgrey;
+}
+
+div.tt-menu {
+	background-color: #fff;
+	border-collapse: collapse;
+	border: 1px solid lightgrey;
+	padding: 5px;	
+}
+
 div.tab-content {
 	min-height: 200px;
 }

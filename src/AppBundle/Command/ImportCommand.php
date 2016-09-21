@@ -224,7 +224,11 @@ class ImportCommand extends ContainerAwareCommand {
                 $line++;
                 try {
                     $author = $this->processRow($row);
+                    for($i = 0; $i < count($headers); ++$i) {
+                        $author->setOriginal($headers[$i], $row[$i]);
+                    }
                     if ($line % $batchSize === 0) {
+                        $this->em->flush();
                         $this->em->clear();
                         gc_collect_cycles();
                     }

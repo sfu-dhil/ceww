@@ -63,6 +63,12 @@ class Author extends AbstractEntity{
      * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
+    
+    /**
+     * @ORM\Column(type="array")
+     * @var array
+     */
+    private $original;
 
     /**
      * @ORM\ManyToMany(targetEntity="Alias", inversedBy="authors")
@@ -86,6 +92,7 @@ class Author extends AbstractEntity{
     private $publications;
     
     public function __construct() {
+        $this->original = array();
         $this->aliases = new ArrayCollection();
         $this->residences = new ArrayCollection();
         $this->publications = new ArrayCollection();
@@ -409,5 +416,19 @@ class Author extends AbstractEntity{
     public function getDeathDate()
     {
         return $this->deathDate;
+    }
+    
+    public function getOriginal($key = null) {
+        if($key === null) {
+            return $this->original;
+        }
+        if(array_key_exists($key, $this->original)) {
+            return $this->original[$key];
+        }
+        return null;
+    }
+    
+    public function setOriginal($key, $value) {
+        $this->original[$key] = $value;
     }
 }

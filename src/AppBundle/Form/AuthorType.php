@@ -3,8 +3,9 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AuthorType extends AbstractType
@@ -17,15 +18,38 @@ class AuthorType extends AbstractType
     {    
         $builder->add('fullName');  // string     
         $builder->add('sortableName');  // string     
+        
         $builder->add('birthDate');  // integer     
+        $builder->add('birthplace_id', HiddenType::class, array(
+            'mapped' => false,
+            
+            'attr' => array(
+                'id' => 'birthplace_id',
+            )
+        ));  
+        $builder->add('birthplace', TextType::class, array(
+            'mapped' => false,
+            'attr' => array(
+                'id' => 'birthplace_name',
+            )
+        ));
+        
         $builder->add('deathDate');  // integer     
-        $builder->add('notes');  // text     
-        $builder->add('birthPlace');     
-        $builder->add('deathPlace');     
+        $builder->add('deathplace_id', HiddenType::class, array(
+            'mapped' => false,            
+            'attr' => array(
+                'id' => 'deathplace_id',
+            )
+        ));  
+        $builder->add('deathplace', TextType::class, array(
+            'mapped' => false,
+            'attr' => array(
+                'id' => 'deathplace_name',
+            )
+        ));
+        
+        
         $builder->add('status');     
-        $builder->add('aliases');     
-        $builder->add('residences');     
-        $builder->add('publications');         
     }
     
     /**

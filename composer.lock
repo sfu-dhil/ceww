@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cfefa877e33b5c139b68001b37872d2f",
-    "content-hash": "e1a202c6260b41b1681ad620015df487",
+    "hash": "bb84b2b3eb84761a3005e3c4c76d8e45",
+    "content-hash": "4241a8005a24dd8399250a7dd3ecca16",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -68,6 +68,57 @@
                 "orm"
             ],
             "time": "2016-07-06 17:12:30"
+        },
+        {
+            "name": "components/handlebars.js",
+            "version": "v4.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/handlebars.js.git",
+                "reference": "1e5029661491d012a69ccc2c370837cf362054db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/handlebars.js/zipball/1e5029661491d012a69ccc2c370837cf362054db",
+                "reference": "1e5029661491d012a69ccc2c370837cf362054db",
+                "shasum": ""
+            },
+            "require": {
+                "robloach/component-installer": "*"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "name": "handlebars",
+                    "scripts": [
+                        "handlebars.js"
+                    ],
+                    "files": [
+                        "handlebars.runtime.js"
+                    ],
+                    "shim": {
+                        "exports": "Handlebars"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Wanstrath",
+                    "homepage": "http://chriswanstrath.com"
+                }
+            ],
+            "description": "Handlebars.js and Mustache are both logicless templating languages that keep the view and the code separated like we all know they should be.",
+            "homepage": "http://handlebarsjs.com",
+            "keywords": [
+                "handlebars",
+                "html",
+                "mustache"
+            ],
+            "time": "2015-11-20 05:07:35"
         },
         {
             "name": "components/jquery",
@@ -1581,6 +1632,54 @@
             "time": "2012-12-21 11:40:51"
         },
         {
+            "name": "robloach/component-installer",
+            "version": "0.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobLoach/component-installer.git",
+                "reference": "908a859aa7c4949ba9ad67091e67bac10b66d3d7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/908a859aa7c4949ba9ad67091e67bac10b66d3d7",
+                "reference": "908a859aa7c4949ba9ad67091e67bac10b66d3d7",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "kriswallsmith/assetic": "1.*",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "composer/composer": "1.*@alpha",
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                },
+                "class": "ComponentInstaller\\ComponentInstallerPlugin"
+            },
+            "autoload": {
+                "psr-0": {
+                    "ComponentInstaller": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rob Loach",
+                    "homepage": "http://robloach.net"
+                }
+            ],
+            "description": "Allows installation of Components via Composer.",
+            "time": "2015-08-10 12:35:38"
+        },
+        {
             "name": "sensio/distribution-bundle",
             "version": "v5.0.12",
             "source": {
@@ -2618,6 +2717,39 @@
                 "web"
             ],
             "time": "2016-07-25 15:51:55"
+        },
+        {
+            "name": "twitter/typeahead.js",
+            "version": "v0.11.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twitter/typeahead.js.git",
+                "reference": "588440f66559714280628a4f9799f0c4eb880a4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twitter/typeahead.js/zipball/588440f66559714280628a4f9799f0c4eb880a4a",
+                "reference": "588440f66559714280628a4f9799f0c4eb880a4a",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Twitter Inc.",
+                    "homepage": "https://twitter.com/twitteross"
+                }
+            ],
+            "description": "fast and fully-featured autocomplete library",
+            "homepage": "http://twitter.github.com/typeahead.js",
+            "keywords": [
+                "autocomplete",
+                "typeahead"
+            ],
+            "time": "2015-04-27 04:02:14"
         }
     ],
     "packages-dev": [

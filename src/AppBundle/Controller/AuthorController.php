@@ -133,11 +133,21 @@ class AuthorController extends Controller
     public function editAction(Request $request, Author $author)
     {
         $editForm = $this->createForm('AppBundle\Form\AuthorType', $author);
+        $editForm['birthplace']->setData($author->getBirthPlace()->getName());
+        $editForm['birthplace_id']->setData($author->getBirthPlace()->getId());
+        $editForm['deathplace']->setData($author->getDeathPlace()->getName());
+        $editForm['deathplace_id']->setData($author->getDeathPlace()->getId());
+        
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($author);
+            
+            $birthPlaceId = $editForm['birthplace_id']->getData();
+            $author->setBirthPlace($em->find('AppBundle:Place', $birthPlaceId));
+            
+            $deathPlaceId = $editForm['deathplace_id']->getData();
+            $author->setDeathPlace($em->find('AppBundle:Place', $deathPlaceId));
+            
             $em->flush();
             $this->addFlash('success', 'The author has been updated.');
             return $this->redirectToRoute('admin_author_show', array('id' => $author->getId()));

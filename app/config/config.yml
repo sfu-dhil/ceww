@@ -108,7 +108,17 @@ assetic:
 
         jquery:
             inputs:
-                - %kernel.root_dir%/../vendor/components/jquery/jquery.js   
+                - %kernel.root_dir%/../vendor/components/jquery/jquery.js                   
+        typeahead:
+            inputs:
+                - %kernel.root_dir%/../vendor/twitter/typeahead.js/dist/typeahead.bundle.min.js
+        bloodhound:
+            inputs:
+                - %kernel.root_dir%/../vendor/twitter/typeahead.js/dist/bloodhound.min.js
+        handlebars:
+            inputs:
+                - %kernel.root_dir%/../vendor/components/handlebars.js/handlebars.js
+                
 fos_user:
     db_driver: orm
     firewall_name: main
