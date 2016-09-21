@@ -61,7 +61,7 @@ class PlaceNamesCommand extends ContainerAwareCommand
             $this->logger->notice($place->getName());
             $response = $client->get(self::GEONAMES_SEARCH, array(
                 'query' => array(
-                    'q' => $place->getName(),
+                    'q' => rawurlencode(utf8_encode($place->getName())),
                     'country_bias' => 'ca',
                     'maxRows' => 1,
                     'type' => 'xml',
