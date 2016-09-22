@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * PublicationType
@@ -15,17 +16,20 @@ class PublicationType extends AbstractEntity
 
     /**
      * @ORM\Column(type="string", length=24, nullable=false)
+     * @Groups({"public", "private"})
      */
     private $label;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"private"})
      */
     private $description;
     
     /**
      * @ORM\OneToMany(targetEntity="Publication", mappedBy="publicationType")
      * @var Collection|Publication[]
+     * @Groups({"recursive"})
      */
     private $publications;
     

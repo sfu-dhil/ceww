@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Place
@@ -18,49 +19,58 @@ class Place extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
+     * @Groups({"public", "private"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
+     * @Groups({"public", "private"})
      */
     private $alternateNames;
     
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
+     * @Groups({"public", "private"})
      */
     private $countryName;
     
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
+     * @Groups({"public", "private"})
      */
     private $adminNames;
     
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
+     * @Groups({"public", "private"})
      */
     private $latitude;
     
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
+     * @Groups({"public", "private"})
      */
     private $longitude;
     
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"private"})
      */
     private $description;
     
     /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="birthPlace")
+     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authorsBorn;
     
     /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="deathPlace")
+     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authorsDied;
@@ -68,6 +78,7 @@ class Place extends AbstractEntity
     /**
      * @ORM\ManyToMany(targetEntity="Author", mappedBy="residences")
      * @ORM\JoinTable(name="author_residence")
+     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $residents;

@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Author
@@ -18,6 +19,7 @@ class Author extends AbstractEntity{
 
     /**
      * @ORM\Column(type="string", length=120, nullable=false)
+     * @Groups({"public", "private"})
      */
     private $fullName;
     
@@ -28,12 +30,14 @@ class Author extends AbstractEntity{
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"public", "private"})
      * @var int
      */
     private $birthDate;
     
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"public", "private"})
      * @var int
      */
     private $deathDate;
@@ -41,6 +45,7 @@ class Author extends AbstractEntity{
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsBorn")
      * @ORM\JoinColumn(name="birthplace_id", referencedColumnName="id", nullable=true)
+     * @Groups({"public", "private"})
      * @var Place 
      */
     private $birthPlace;
@@ -48,6 +53,7 @@ class Author extends AbstractEntity{
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsDied")
      * @ORM\JoinColumn(name="deathplace_id", referencedColumnName="id", nullable=true)
+     * @Groups({"public", "private"})
      * @var Place
      */
     private $deathPlace;
@@ -55,17 +61,20 @@ class Author extends AbstractEntity{
     /**
      * @ORM\ManyToOne(targetEntity="Status", inversedBy="publishedAuthors")
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=false)
+     * @Groups({"private"})
      * @var Status 
      */
     private $status;
     
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"private"})
      */
     private $notes;
     
     /**
      * @ORM\Column(type="array")
+     * @Groups({"private"})
      * @var array
      */
     private $original;
@@ -73,6 +82,7 @@ class Author extends AbstractEntity{
     /**
      * @ORM\ManyToMany(targetEntity="Alias", inversedBy="authors")
      * @ORM\JoinTable(name="author_alias");
+     * @Groups({"public", "private"})
      * @var Collection|Alias[]
      */
     private $aliases;
@@ -80,6 +90,7 @@ class Author extends AbstractEntity{
     /**
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
      * @ORM\JoinTable(name="author_residence")
+     * @Groups({"public", "private"})
      * @var Collection|Place[]
      */
     private $residences;
@@ -87,6 +98,7 @@ class Author extends AbstractEntity{
     /**
      * @ORM\ManyToMany(targetEntity="Publication", inversedBy="authors")
      * @ORM\JoinTable(name="author_publication")
+     * @Groups({"public", "private"})
      * @var Collection|Publication[]
      */
     private $publications;

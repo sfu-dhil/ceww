@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\MappedSuperclass 
@@ -17,18 +18,21 @@ abstract class AbstractEntity {
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"public", "private"})
      */
     protected $id;
 
     /**
      * @var DateTime
      * @ORM\Column(type="datetime")
+     * @Groups({"public", "private"})
      */
     protected $created;
 
     /**
      * @var DateTime
      * @ORM\Column(type="datetime")
+     * @Groups({"public", "private"})
      */
     protected $updated;
 
