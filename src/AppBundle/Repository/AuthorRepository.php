@@ -2,9 +2,9 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Author;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\Func;
 
 /**
  * AuthorRepository
@@ -25,6 +25,32 @@ class AuthorRepository extends EntityRepository
         $qb->addOrderBy('a.sortableName');
         $query = $qb->getQuery();
         return $query;
+    }
+    
+    public function next(Author $author) {
+        $qb = $this->createQueryBuilder('a');
+        $qb->where('a.sortableName > :sortableName');
+        $qb->orderBy('a.sortableName');
+        $qb->setMaxResults(1);
+        $qb->setParameter('sortableName', $author->getSortableName());
+        $result = $qb->getQuery()->getResult();
+        if(count($result) === 1) {
+            return $result[0];
+        }
+        return null;
+    }
+    
+    public function previous(Author $author) {
+        $qb = $this->createQueryBuilder('a');
+        $qb->where('a.sortableName < :sortableName');
+        $qb->orderBy('a.sortableName', 'DESC');
+        $qb->setMaxResults(1);
+        $qb->setParameter('sortableName', $author->getSortableName());
+        $result = $qb->getQuery()->getResult();
+        if(count($result) === 1) {
+            return $result[0];
+        }
+        return null;
     }
     
 }

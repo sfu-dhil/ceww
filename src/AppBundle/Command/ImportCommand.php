@@ -100,7 +100,7 @@ class ImportCommand extends ContainerAwareCommand {
         }
         return $entities;
     }
-
+    
     public function findPlaces($placeNames) {
         if ($placeNames === '') {
             return array();
@@ -109,7 +109,12 @@ class ImportCommand extends ContainerAwareCommand {
         $repo = $this->em->getRepository('AppBundle:Place');
         $entities = array();
         foreach ($names as $name) {
-            $name = preg_replace('/\s+\([0-9-]*\)$/', '', $name);
+            $name = preg_replace('/^"[^"]*"\s*/', '', $name);
+            $name = preg_replace('/\s+\([^)]*\)$/', '', $name);
+            $name = preg_replace('/^\s*near\b\s*/i', '', $name);
+            if( ! $name || ctype_space($name)) {
+                continue;
+            }
             $e = $repo->findOneByName($name);
             if ($e === null) {
                 $e = new Place();

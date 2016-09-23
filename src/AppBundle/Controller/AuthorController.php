@@ -115,9 +115,12 @@ class AuthorController extends Controller
      */
     public function showAction(Author $author)
     {
-
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Author');
+        
         return array(
             'author' => $author,
+            'next' => $repo->next($author),
+            'previous' => $repo->previous($author),
         );
     }
 
