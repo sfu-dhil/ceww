@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Status
@@ -16,17 +17,20 @@ class Status extends AbstractEntity {
 
     /**
      * @ORM\Column(type="string", length=24, nullable=false)
+     * @Groups({"public", "private"})
      */
     private $label;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"private"})
      */
     private $description;
 
     /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="status")
      * @var Collection|Author[]
+     * @Groups({"recursive"})
      */
     private $publishedAuthors;
     

@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Publication
@@ -16,28 +17,33 @@ class Publication extends AbstractEntity {
     
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
+     * @Groups({"public", "private"})
      */
     private $title;
     
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"public", "private"})
      */
     private $year;
     
     /**
      * @ORM\ManyToOne(targetEntity="PublicationType", inversedBy="publications")
      * @ORM\JoinColumn(name="publication_type_id")
+     * @Groups({"recursive"})
      * @var PublicationType
      */
     private $publicationType;
     
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"private"})
      */
     private $notes;
     
     /**
      * @ORM\ManyToMany(targetEntity="Author", mappedBy="publications")
+     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authors;
