@@ -4,6 +4,9 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
+    ceww.importer:
+        class: AppBundle\Services\Importer
+        calls:
+            - [ setDoctrine, ["@doctrine"]]
+            - [ setLogger, ["@monolog.logger"]]
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

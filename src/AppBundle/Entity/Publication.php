@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *
  * @ORM\Table(name="publication")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Publication extends AbstractEntity {
     
@@ -20,6 +21,12 @@ class Publication extends AbstractEntity {
      * @Groups({"public", "private"})
      */
     private $title;
+    
+    /**
+     * @ORM\Column(type="string", length=250, nullable=false)
+     * @Groups({"private"})
+     */
+    private $sortableTitle;
     
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -36,6 +43,14 @@ class Publication extends AbstractEntity {
     private $publicationType;
     
     /**
+     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
+     * @ORM\JoinTable(name="publication_genres")
+     * @Groups({"recursive"})
+     * @var Collection|Genre[]
+     */
+    private $genres;
+    
+    /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"private"})
      */
@@ -50,6 +65,7 @@ class Publication extends AbstractEntity {
 
     public function __construct() {
         $this->authors = new ArrayCollection();
+        $this->genres = new ArrayCollection();
     }
     
     public function __toString() {
@@ -186,4 +202,74 @@ class Publication extends AbstractEntity {
     {
         return $this->authors;
     }
+
+    /**
+     * Add genre
+     *
+     * @param \AppBundle\Entity\Genre $genre
+     *
+     * @return Publication
+     */
+    public function addGenre(\AppBundle\Entity\Genre $genre)
+    {
+        $this->genres[] = $genre;
+
+        return $this;
+    }
+
+    /**
+     * Remove genre
+     *
+     * @param \AppBundle\Entity\Genre $genre
+     */
+    public function removeGenre(\AppBundle\Entity\Genre $genre)
+    {
+        $this->genres->removeElement($genre);
+    }
+
+    /**
+     * Get genres
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGenres()
+    {
+        return $this->genres;
+    }
+
+    /**
+     * Set sortableTitle
+     *
+     * @param string $sortableTitle
+     *
+     * @return Publication
+     */
+    public function setSortableTitle($sortableTitle)
+    {
+        $this->sortableTitle = $sortableTitle;
+
+        return $this;
+    }
+
+    /**
+     * Get sortableTitle
+     *
+     * @return string
+     */
+    public function getSortableTitle()
+    {
+        return $this->sortableTitle;
+    }
+    
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function updateSortableTitle() {
+        if($this->sortableTitle === null || $this->sortableTitle === '') {
+            $this->sortableTitle = $this->sortableTitle;
+        }
+    }
+    
+    
 }

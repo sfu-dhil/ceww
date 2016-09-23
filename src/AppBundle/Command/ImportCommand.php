@@ -142,6 +142,10 @@ class ImportCommand extends ContainerAwareCommand {
         $entities = array();
         foreach ($titles as $title) {
             $title = preg_replace('/\s+\([0-9-]*\)$/', '', $title);
+            $matches = array();
+            if(preg_match('/^"([^"]*)"$/', $title, $matches)) {
+                $title = $matches[1];
+            }
             $e = $repo->findBy(array(
                 'publicationType' => $type,
                 'title' => $title,
@@ -150,10 +154,13 @@ class ImportCommand extends ContainerAwareCommand {
                 $this->logger->error("Ambiguous title {$typeName} {$title}");
                 return;
             }
-            if (count($e) === 0) {
+            if (count($e) === 0) {               
+                $sortableTitle = preg_replace("/^\w+/", '', $title);
+                $sortableTitle = preg_replace('/^(The|A|An)(.*)$/', '$2, $1', $sortableTitle);
                 $e = new Publication();
                 $e->setPublicationType($type);
                 $e->setTitle($title);
+                $e->setSortableTitle($sortableTitle);
                 $this->em->persist($e);
                 $this->em->flush($e);
                 $entities[] = $e;

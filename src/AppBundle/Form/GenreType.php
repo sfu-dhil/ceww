@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PublicationType extends AbstractType
+class GenreType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,12 +15,8 @@ class PublicationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
-        $builder->add('title');  // string     
-        $builder->add('sortableTitle');  // string     
-        $builder->add('year');  // integer     
-        $builder->add('notes');  // text     
-        $builder->add('publicationType');     
-        $builder->add('genres');
+        $builder->add('name');  // string     
+        $builder->add('description');  // text     
     }
     
     /**
@@ -29,7 +25,7 @@ class PublicationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Publication'
+            'data_class' => 'AppBundle\Entity\Genre'
         ));
     }
 }

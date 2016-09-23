@@ -1,3 +1,7 @@
+app_genre:
+    resource: "@AppBundle/Controller/GenreController.php"
+    type:     annotation
+
 pub:
     resource: "@PubBundle/Controller/"
     type:     annotation
