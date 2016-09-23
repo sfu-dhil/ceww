@@ -9,7 +9,7 @@
 
 {% block body %}
 
-	<div class='btn-toolbar pull-right'>
+    <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
             <a href="{{ path('publication_search') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Search
@@ -21,22 +21,24 @@
         <thead>
             <tr>
                 <th>Title</th>
-				<th>Authors</th>
+                <th>Type</th>
+                <th>Authors</th>
                 <th>Year</th>
             </tr>
         </thead>
         <tbody>
-			{% for publication in publications %}
-				<tr>
-					<td>
-						<a href="{{ path('publication_show', { 'id': publication.id }) }}">
-							{{ publication.title }}
-						</a>
-					</td>
-					<td>{{ publication.authors|length }}</td>
-					<td>{{ publication.year }}</td>
-				</tr>
-			{% endfor %}
+            {% for publication in publications %}
+                <tr>
+                    <td>
+                        <a href="{{ path('publication_show', { 'id': publication.id }) }}">
+                            {{ publication.title }}
+                        </a>
+                    </td>
+                    <td>{{ publication.publicationType }}</td>
+                    <td>{{ publication.authors|length }}</td>
+                    <td>{{ publication.year }}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 

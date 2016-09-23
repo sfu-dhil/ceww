@@ -15,7 +15,7 @@
     {{ form_end(edit_form) }}
 
 	<script type='text/javascript'>
-		search_api = '{{ path('api_place_search') }}';
+		search_api = '{{ path('api_search', {'type': 'author'}) }}';
 	</script>
 	
 {% endblock %}
