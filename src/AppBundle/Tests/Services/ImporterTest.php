@@ -4,13 +4,17 @@ namespace AppBundle\Tests\Services;
 
 use AppBundle\Entity\Alias;
 use AppBundle\Entity\Author;
+use AppBundle\Entity\Category;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
-use AppBundle\Entity\Category;
+use AppBundle\Services\Importer;
 use AppBundle\Tests\Utilities\AbstractTestCase;
 
 class ImporterTest extends AbstractTestCase {
 
+    /**
+     * @var Importer
+     */
     protected $importer;
 
     public function setUp() {
@@ -292,6 +296,8 @@ class ImporterTest extends AbstractTestCase {
     public function setPublicationsData() {
         return [
             ['How now', 'Book', ['How Now']], # title casing!
+            ['THE TRAIL OF THE CONESTOGA (1924); TOWARD SODOM (1927)', 'Book', ['The Trail Of The Conestoga', 'Toward Sodom']],
         ];
     }
+    
 }

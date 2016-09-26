@@ -283,6 +283,10 @@ class Importer {
         }
     }
     
+    public function setNotes(Author $author, $notes = array()) {
+        $author->setNotes(trim(implode('\n\n', $notes)));
+    }
+    
     public function importArray($row = array()) {
         $author = new Author();
         $author->setFullname($row[0]); // sets sortable name as well.
@@ -293,5 +297,10 @@ class Importer {
         $this->setPublications($author, $row[8], 'Book');
         $this->setPublications($author, $row[9], 'Anthology');
         $this->setPublications($author, $row[10], 'Periodical');
+        $this->setNotes($author, array_slice($row, 11));
+        $status = $this->em->getRepository('AppBundle:Status')->findOneByLabel('Draft');
+        $author->setStatus($status);
+        $this->em->persist($author);
+        $this->em->flush($author);
     }
 }
