@@ -9,7 +9,10 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\Alias;
+use AppBundle\Entity\Author;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Publication;
+use AppBundle\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
@@ -152,7 +155,7 @@ class Importer {
         foreach ($aliases as $name) {
             $e = $repo->findOneByName($name);
             if (!$e) {
-                $e = $this->addAlias($name);
+                $e = $this->createAlias($name);
                 $this->em->persist($e);
                 $this->em->flush($e);
             }
@@ -164,7 +167,7 @@ class Importer {
     public function createPlace($name) {
         $place = new Place();
         $place->setName($name);
-        return $name;
+        return $place;
     }
     
     public function addPlaces($placeNames) {
@@ -188,20 +191,20 @@ class Importer {
         return $entities;
     }
     
-    public function createPublication($title, PublicationType $type) {
+    public function createPublication($title, Category $type) {
         $e = new Publication();
-        $e->setPublicationType($type);
+        $e->setCategory($type);
         $e->setTitle($title);
         $sortableTitle = $this->sortableTitle($title);
         $e->setSortableTitle($sortableTitle);
         return $e;
     }
     
-    public function findPublicationType($typeName) {
-        $typeRepo = $this->em->getRepository('AppBundle:PublicationType');
+    public function findCategory($typeName) {
+        $typeRepo = $this->em->getRepository('AppBundle:Category');
         $type = $typeRepo->findOneByLabel($typeName);
         if ($type === null) {
-            $this->logger->error("Unknown publication type " . $typeName);
+            $this->logger->error("Unknown category " . $typeName);
         }
         return $type;
     }
@@ -211,14 +214,14 @@ class Importer {
             return array();
         }
         $titles = $this->split($titleNames);
-        $type = $this->findPublicationType($typeName);
+        $type = $this->findCategory($typeName);
         
         $repo = $this->em->getRepository('AppBundle:Publication');
         $entities = array();
         foreach ($titles as $title) {
             $title = $this->cleanTitle($title);
             $e = $repo->findBy(array(
-                'publicationType' => $type,
+                'category' => $type,
                 'title' => $title,
             ));
             if (count($e) === 0) {     
@@ -233,6 +236,62 @@ class Importer {
         return $entities;
     }
     
+    public function setDates(Author $author, $birthDateStr, $deathDateStr) {
+        $birthDate = $this->processDate($birthDateStr);
+        if($birthDate !== null) {
+            if(is_array($birthDate)) {
+                $author->setBirthDate($birthDate[0]);
+                $author->setDeathDate($birthDate[1]);
+            } else {
+                $author->setBirthDate($birthDate);
+            }
+        }
+
+        $deathDate = $this->processDate($deathDateStr);
+        if ($deathDate && !is_array($deathDate)) {
+            $author->setDeathDate($deathDate);
+        }
+    }
+    
+    public function setPlaces(Author $author, $birthPlaceStr, $deathPlaceStr) {
+        $birthPlace = $this->addPlaces($birthPlaceStr);
+        if (array_key_exists(0, $birthPlace)) {
+            $author->setBirthPlace($birthPlace[0]);
+        }
+        $deathPlace = $this->addPlaces($deathPlaceStr);
+        if (array_key_exists(0, $deathPlace)) {
+            $author->setDeathPlace($deathPlace[0]);
+        }
+    }
+    
+    public function setAliases(Author $author, $aliasStr) {
+        $aliases = $this->addAliases($aliasStr);
+        foreach($aliases as $alias) {
+            $author->addAlias($alias);
+        }
+    }
+    
+    public function setResidences(Author $author, $residencesStr) {
+        foreach ($this->addPlaces($residencesStr) as $residence) {
+            $author->addResidence($residence);
+        }
+    }
+    
+    public function setPublications(Author $author, $publicationStr, $type) {
+        foreach($this->addPublications($publicationStr, $type) as $publication) {
+            $author->addPublication($publication);
+        }
+    }
+    
     public function importArray($row = array()) {
+        $author = new Author();
+        $author->setFullname($row[0]); // sets sortable name as well.
+        $this->setDates($author, $row[2], $row[4]);
+        $this->setPlaces($author, $row[3], $row[5]);
+        $this->setAliases($author, $row[6]);
+        $this->setResidences($author, $row[7]);
+        $this->setPublications($author, $row[8], 'Book');
+        $this->setPublications($author, $row[9], 'Anthology');
+        $this->setPublications($author, $row[10], 'Periodical');
     }
 }

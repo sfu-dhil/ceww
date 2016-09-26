@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
  {% block pageheader %} 
-    <h1>PublicationType Search</h1>
-	{% if publicationTypes|length %}
+    <h1>Category Search</h1>
+	{% if categories|length %}
     <p class="count">
-        Displaying {{ publicationTypes|length }} publicationTypes of {{ publicationTypes.getTotalItemCount }} total.
+        Displaying {{ categories|length }} categories of {{ categories.getTotalItemCount }} total.
     </p>
 	{% endif %}
  {% endblock %} 
 
 {% block body %}
 
-    <form method="get" action="{{ path('publication_type_search') }}" class="form-horizontal">
+    <form method="get" action="{{ path('admin_category_search') }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -31,7 +31,7 @@
         </fieldset>
     </form>
     
-	{% if publicationTypes|length %}
+	{% if categories|length %}
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
             <tr>
@@ -40,16 +40,16 @@
 				<th>Count</th>
         </thead>
         <tbody>
-        {% for publicationType in publicationTypes %}
+        {% for category in categories %}
             <tr>
                 <td>
-                    <a href="{{ path('publication_type_show', { 'id': publicationType.id }) }}">
-                        {{ publicationType.label }}
+                    <a href="{{ path('admin_category_show', { 'id': category.id }) }}">
+                        {{ category.label }}
                     </a>
                 </td>
-                <td>{{ publicationType.description }}</td>
+                <td>{{ category.description }}</td>
 				<td>
-					{{ publicationType.publications|length }}
+					{{ category.publications|length }}
 				</td>
             </tr>
         {% endfor %}
@@ -57,7 +57,7 @@
     </table>
         
     <div class="navigation">
-        {{ knp_pagination_render(publicationTypes) }}
+        {{ knp_pagination_render(categories) }}
     </div>
 	{% endif %}
 

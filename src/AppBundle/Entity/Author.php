@@ -344,7 +344,7 @@ class Author extends AbstractEntity{
             return $this->publications;
         }
         return $this->publications->filter(function(Publication $p) use($filter) {
-            return $p->getPublicationType()->getLabel() === $filter;
+            return $p->getCategory()->getLabel() === $filter;
         });
     }
 

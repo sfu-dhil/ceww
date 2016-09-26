@@ -35,12 +35,12 @@ class Publication extends AbstractEntity {
     private $year;
     
     /**
-     * @ORM\ManyToOne(targetEntity="PublicationType", inversedBy="publications")
-     * @ORM\JoinColumn(name="publication_type_id")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
+     * @ORM\JoinColumn(name="category_id")
      * @Groups({"recursive"})
-     * @var PublicationType
+     * @var Category
      */
-    private $publicationType;
+    private $category;
     
     /**
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
@@ -146,27 +146,27 @@ class Publication extends AbstractEntity {
     }
 
     /**
-     * Set publicationType
+     * Set category
      *
-     * @param PublicationType $publicationType
+     * @param Category $category
      *
      * @return Publication
      */
-    public function setPublicationType(PublicationType $publicationType = null)
+    public function setCategory(Category $category = null)
     {
-        $this->publicationType = $publicationType;
+        $this->category = $category;
 
         return $this;
     }
 
     /**
-     * Get publicationType
+     * Get category
      *
-     * @return PublicationType
+     * @return Category
      */
-    public function getPublicationType()
+    public function getCategory()
     {
-        return $this->publicationType;
+        return $this->category;
     }
 
     /**

@@ -35,6 +35,7 @@
 		<table class="table table-bordered table-condensed table-hover table-striped">
 			<thead>
 				<tr>
+                                    <th>Category</th>
 					<th>Title</th>
 					<th>Authors</th>
 					<th>Year</th>
@@ -43,6 +44,7 @@
 			<tbody>
 			{% for publication in publications %}
 				<tr>
+                                    <td>{{ publication.category }}</td>
 					<td>
 						<a href="{{ path('admin_publication_show', { 'id': publication.id }) }}">
 							{{ publication.title }}

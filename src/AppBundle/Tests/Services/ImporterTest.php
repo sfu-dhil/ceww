@@ -3,12 +3,13 @@
 namespace AppBundle\Tests\Services;
 
 use AppBundle\Entity\Alias;
+use AppBundle\Entity\Author;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
-use AppBundle\entity\PublicationType;
-use Liip\FunctionalTestBundle\Test\WebTestCase as BaseTestCase;
+use AppBundle\entity\Category;
+use AppBundle\Tests\Utilities\AbstractTestCase;
 
-class ImporterTest extends BaseTestCase {
+class ImporterTest extends AbstractTestCase {
 
     protected $importer;
 
@@ -19,6 +20,12 @@ class ImporterTest extends BaseTestCase {
 
     public function testSetup() {
         $this->assertInstanceOf('AppBundle\Services\Importer', $this->importer);
+    }
+    
+    public function fixtures() {
+        return [
+            'AppBundle\Tests\DataFixtures\ORM\LoadCategories',
+        ];
     }
 
     /**
@@ -173,19 +180,118 @@ class ImporterTest extends BaseTestCase {
         $publication = new Publication();
         $publication->setTitle($title);
         $publication->setSortableTitle($sortableTitle);
-        $publication->setPublicationType($type);
+        $publication->setCategory($type);
         return $publication;
     }
 
     public function createPublicationData() {
-        $publicationType = new PublicationType();
-        $publicationType->setLabel('Test');
+        $category = new Category();
+        $category->setLabel('Test');
         return [
             [
                 'Chairs and stuff',
-                $publicationType,
-                $this->buildPublication('Chairs and stuff', 'chairs and stuff', $publicationType)
+                $category,
+                $this->buildPublication('Chairs and stuff', 'chairs and stuff', $category)
             ],
+        ];
+    }
+    
+    /**
+     * @dataProvider setDatesData
+     */
+    public function testSetDates($bs, $ds, $ebd, $edd) {
+        $author = new Author();
+        $this->importer->setDates($author, $bs, $ds);
+        $this->assertEquals($ebd, $author->getBirthDate());
+        $this->assertEquals($edd, $author->getDeathDate());
+    }
+    public function setDatesData() {
+        return [
+            ['1894', '1990', '1894', '1990'],
+            ['1894-1990', '', '1894', '1990'],
+            ['  1894-1990', '', '1894', '1990'],
+            ['10 November 1823', '5 November 1898', '1823', '1898'],
+            ['Nov-44', 'May-86', '1944', '1986'],
+            ['b.1906 Nov 16', '', '1906', ''],
+            ['c1787-93', '', '1787', ''], 
+            ['1787-', '', '1787', ''], 
+            ['1918-living', '', '1918', ''],
+            ['24-Jul-54', '3 June 1871', '1954', '1871'],
+        ];
+    }
+    
+    /**
+     * @dataProvider setPlacesData
+     */
+    public function testSetPlaces($bs, $ds, $ebs, $eds) {
+        $author = new Author();
+        $this->importer->setPlaces($author, $bs, $ds);
+        $this->assertEquals($ebs, $author->getBirthPlace()->getName());
+        $this->assertEquals($eds, $author->getDeathPlace()->getName());
+    }
+    
+    public function setPlacesData() {
+        return [
+            ['Vic, BC', 'Van, BC', 'Vic, BC', 'Van, BC'],
+            ['near Chesik, Ontario', 'x', 'Chesik, Ontario', 'x'],
+            ['Chesik (Chessick), Oxford', 'x', 'Chesik (Chessick), Oxford', 'x'],
+            ['Chesik, Oxford (1999)', 'x', 'Chesik, Oxford', 'x'],
+        ];
+    }
+
+    /**
+     * @dataProvider setAliasesData
+     */
+    public function testSetAliases($aliasStr, $aliases) {
+        $author = new Author();
+        $this->importer->setAliases($author, $aliasStr);
+        $this->assertCount(count($aliases), $author->getAliases());
+        foreach($author->getAliases() as $alias) {
+            $this->assertContains($alias->getName(), $aliases);
+        }
+    }    
+    public function setAliasesData() {
+        return [
+            ['Lady M.', ['Lady M.']],
+            ['Lady M.; Lady B.; Lady J', ['Lady M.', 'Lady B.', 'Lady J']],
+            ['Lady M., Lady B., Lady J', ['Lady M.', 'Lady B.', 'Lady J']],
+        ];
+    }
+    
+    /**
+     * @dataProvider setResidencesData
+     */
+    public function testSetResidences($residencesStr, $residences) {
+        $author = new Author();
+        $this->importer->setResidences($author, $residencesStr);
+        $this->assertCount(count($residences), $author->getResidences());
+        foreach($author->getResidences() as $residence) {
+            $this->assertContains($residence->getName(), $residences);
+        }
+    }
+    
+    public function setResidencesData() {
+        return [
+            ['Bramford, ON', ['Bramford, ON']],
+            ['Vic, BC; Van, BC', ['Vic, BC', 'Van, BC']],
+            ['Winnipeg, Manitoba (1885-)', ['Winnipeg, Manitoba']],
+        ];
+    }
+    
+    /**
+     * @dataProvider setPublicationsData
+     */
+    public function testSetPublications($pubStr, $type, $pubs) {
+        $author = new Author();
+        $this->importer->setPublications($author, $pubStr, $type);
+        $this->assertCount(count($pubs), $author->getPublications());
+        foreach($author->getPublications() as $publication) {
+            $this->assertContains($publication->getTitle(), $pubs);
+        }
+    }
+    public function setPublicationsData() {
+        return [
+            ['How now', 'Book', ['How now']],
         ];
     }
 }

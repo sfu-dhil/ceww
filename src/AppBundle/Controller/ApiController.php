@@ -1,6 +1,6 @@
 <?php
 
-namespace PubBundle\Controller;
+namespace AppBundle\Controller;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -28,11 +28,11 @@ class ApiController extends Controller {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $objectNormalizer = new ObjectNormalizer($classMetadataFactory);
         $objectNormalizer->setCircularReferenceHandler(function($object){
-            return "";
+            return $object->__toString();
         });
         $dateTimeNormalizer = new DateTimeNormalizer();
 
-        $serializer = new Serializer([$objectNormalizer, $dateTimeNormalizer], [$encoder]);
+        $serializer = new Serializer([$dateTimeNormalizer, $objectNormalizer], [$encoder]);
         return $serializer;
     }
 
@@ -69,7 +69,7 @@ class ApiController extends Controller {
         $data = $serializer->normalize($entity, null, array('groups' => array('public')));
         $content = $serializer->serialize($data, 'json');
         $response = new Response($content, 200);
-        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Content-Type', 'application/json');        
         return $response;
     }
 }

@@ -132,7 +132,7 @@ class ImportCommand extends ContainerAwareCommand {
             return array();
         }
         $titles = $this->split($titleNames);
-        $typeRepo = $this->em->getRepository('AppBundle:PublicationType');
+        $typeRepo = $this->em->getRepository('AppBundle:Category');
         $repo = $this->em->getRepository('AppBundle:Publication');
         $type = $typeRepo->findOneByLabel($typeName);
         if ($type === null) {
@@ -147,7 +147,7 @@ class ImportCommand extends ContainerAwareCommand {
                 $title = $matches[1];
             }
             $e = $repo->findBy(array(
-                'publicationType' => $type,
+                'category' => $type,
                 'title' => $title,
             ));
             if (count($e) > 1) {
@@ -158,7 +158,7 @@ class ImportCommand extends ContainerAwareCommand {
                 $sortableTitle = preg_replace("/^\w+/", '', $title);
                 $sortableTitle = preg_replace('/^(The|A|An)(.*)$/', '$2, $1', $sortableTitle);
                 $e = new Publication();
-                $e->setPublicationType($type);
+                $e->setCategory($type);
                 $e->setTitle($title);
                 $e->setSortableTitle($sortableTitle);
                 $this->em->persist($e);

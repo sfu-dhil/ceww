@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * PublicationType
+ * Category
  *
  * @ORM\Table(name="publication_type")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationTypeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
  */
-class PublicationType extends AbstractEntity
+class Category extends AbstractEntity
 {
 
     /**
@@ -27,7 +27,7 @@ class PublicationType extends AbstractEntity
     private $description;
     
     /**
-     * @ORM\OneToMany(targetEntity="Publication", mappedBy="publicationType")
+     * @ORM\OneToMany(targetEntity="Publication", mappedBy="category")
      * @var Collection|Publication[]
      * @Groups({"recursive"})
      */
@@ -43,7 +43,7 @@ class PublicationType extends AbstractEntity
      *
      * @param string $label
      *
-     * @return PublicationType
+     * @return Category
      */
     public function setLabel($label)
     {
@@ -67,7 +67,7 @@ class PublicationType extends AbstractEntity
      *
      * @param string $description
      *
-     * @return PublicationType
+     * @return Category
      */
     public function setDescription($description)
     {
@@ -98,7 +98,7 @@ class PublicationType extends AbstractEntity
      *
      * @param \AppBundle\Entity\Publication $publication
      *
-     * @return PublicationType
+     * @return Category
      */
     public function addPublication(\AppBundle\Entity\Publication $publication)
     {
