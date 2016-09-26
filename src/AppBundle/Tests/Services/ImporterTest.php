@@ -22,12 +22,12 @@ class ImporterTest extends AbstractTestCase {
         $this->assertInstanceOf('AppBundle\Services\Importer', $this->importer);
     }
     
-    public function fixtures() {
-        return [
-            'AppBundle\Tests\DataFixtures\ORM\LoadCategories',
-        ];
-    }
-
+//    public function fixtures() {
+//        return [
+//            'AppBundle\Tests\DataFixtures\ORM\LoadCategories',
+//        ];
+//    }
+//
     /**
      * @dataProvider processDateData
      */
