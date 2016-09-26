@@ -90,5 +90,4 @@ class PublicationTypeController extends Controller
             'publicationType' => $publicationType,
         );
     }
-
 }

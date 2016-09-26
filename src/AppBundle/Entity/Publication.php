@@ -270,6 +270,4 @@ class Publication extends AbstractEntity {
             $this->sortableTitle = $this->sortableTitle;
         }
     }
-    
-    
 }

@@ -73,5 +73,4 @@ class PlaceNamesCommand extends ContainerAwareCommand
             return;
         }
     }
-
 }

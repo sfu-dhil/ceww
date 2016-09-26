@@ -90,5 +90,4 @@ class AliasController extends Controller
             'alias' => $alias,
         );
     }
-
 }

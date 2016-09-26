@@ -112,7 +112,7 @@ class ImportCommand extends ContainerAwareCommand {
             $name = preg_replace('/^"[^"]*"\s*/', '', $name);
             $name = preg_replace('/\s+\([^)]*\)$/', '', $name);
             $name = preg_replace('/^\s*near\b\s*/i', '', $name);
-            if( ! $name || ctype_space($name)) {
+            if(! $name || ctype_space($name)) {
                 continue;
             }
             $e = $repo->findOneByName($name);
@@ -256,5 +256,4 @@ class ImportCommand extends ContainerAwareCommand {
             }
         }
     }
-
 }

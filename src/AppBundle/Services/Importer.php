@@ -176,7 +176,7 @@ class Importer {
         $entities = array();
         foreach ($names as $name) {
             $name = $this->cleanPlaceName($name);
-            if( ! $name || ctype_space($name)) {
+            if(! $name || ctype_space($name)) {
                 continue;
             }
             $e = $repo->findOneByName($name);
@@ -234,7 +234,5 @@ class Importer {
     }
     
     public function importArray($row = array()) {
-        
     }
-
 }

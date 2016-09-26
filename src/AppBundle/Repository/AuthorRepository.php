@@ -52,5 +52,4 @@ class AuthorRepository extends EntityRepository
         }
         return null;
     }
-    
 }

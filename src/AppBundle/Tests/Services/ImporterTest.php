@@ -188,5 +188,4 @@ class ImporterTest extends BaseTestCase {
             ],
         ];
     }
-
 }

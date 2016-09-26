@@ -19,5 +19,4 @@ class PublicationRepository extends \Doctrine\ORM\EntityRepository {
         $qb->where("e.title like '%$q%'");
         return $qb->getQuery();
     }
-
 }

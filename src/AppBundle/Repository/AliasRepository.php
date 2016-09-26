@@ -19,5 +19,4 @@ class AliasRepository extends \Doctrine\ORM\EntityRepository {
         $qb->where("e.name like '%$q%'");
         return $qb->getQuery();
     }
-
 }
