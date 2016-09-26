@@ -8,6 +8,8 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Alias;
+use AppBundle\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
@@ -134,6 +136,105 @@ class Importer {
             $title = preg_replace($key, $value, $title);
         }
         return trim($title);
+    }
+    
+    public function createAlias($name) {
+        $e = new Alias();
+        $e->setMaiden(preg_match('/\bn(?:é|e)e\b/', $name));
+        $e->setName($name);
+        return $e;
+    }
+    
+    public function addAliases($alternateNames) {
+        $aliases = $this->split($alternateNames, ';', ',');
+        $repo = $this->em->getRepository('AppBundle:Alias');
+        $entities = array();
+        foreach ($aliases as $name) {
+            $e = $repo->findOneByName($name);
+            if (!$e) {
+                $e = $this->addAlias($name);
+                $this->em->persist($e);
+                $this->em->flush($e);
+            }
+            $entities[] = $e;
+        }
+        return $entities;
+    }
+    
+    public function createPlace($name) {
+        $place = new Place();
+        $place->setName($name);
+        return $name;
+    }
+    
+    public function addPlaces($placeNames) {
+        if ($placeNames === '') {
+            return array();
+        }
+        $names = $this->split($placeNames);
+        $repo = $this->em->getRepository('AppBundle:Place');
+        $entities = array();
+        foreach ($names as $name) {
+            $name = $this->cleanPlaceName($name);
+            if( ! $name || ctype_space($name)) {
+                continue;
+            }
+            $e = $repo->findOneByName($name);
+            if ($e === null) {
+                $e = $this->createPlace($name);
+            }
+            $entities[] = $e;
+        }
+        return $entities;
+    }
+    
+    public function createPublication($title, PublicationType $type) {
+        $e = new Publication();
+        $e->setPublicationType($type);
+        $e->setTitle($title);
+        $sortableTitle = $this->sortableTitle($title);
+        $e->setSortableTitle($sortableTitle);
+        return $e;
+    }
+    
+    public function findPublicationType($typeName) {
+        $typeRepo = $this->em->getRepository('AppBundle:PublicationType');
+        $type = $typeRepo->findOneByLabel($typeName);
+        if ($type === null) {
+            $this->logger->error("Unknown publication type " . $typeName);
+        }
+        return $type;
+    }
+    
+    public function addPublications($titleNames, $typeName) {
+        if ($titleNames === '') {
+            return array();
+        }
+        $titles = $this->split($titleNames);
+        $type = $this->findPublicationType($typeName);
+        
+        $repo = $this->em->getRepository('AppBundle:Publication');
+        $entities = array();
+        foreach ($titles as $title) {
+            $title = $this->cleanTitle($title);
+            $e = $repo->findBy(array(
+                'publicationType' => $type,
+                'title' => $title,
+            ));
+            if (count($e) === 0) {     
+                $e = $this->createPublication($title, $type);
+                $this->em->persist($e);
+                $this->em->flush($e);
+                $entities[] = $e;
+            } else {
+                $entities[] = $e[0];
+            }
+        }
+        return $entities;
+    }
+    
+    public function importArray($row = array()) {
+        
     }
 
 }
