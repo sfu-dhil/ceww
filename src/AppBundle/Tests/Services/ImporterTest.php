@@ -6,7 +6,7 @@ use AppBundle\Entity\Alias;
 use AppBundle\Entity\Author;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
-use AppBundle\entity\Category;
+use AppBundle\Entity\Category;
 use AppBundle\Tests\Utilities\AbstractTestCase;
 
 class ImporterTest extends AbstractTestCase {
@@ -22,12 +22,12 @@ class ImporterTest extends AbstractTestCase {
         $this->assertInstanceOf('AppBundle\Services\Importer', $this->importer);
     }
     
-//    public function fixtures() {
-//        return [
-//            'AppBundle\Tests\DataFixtures\ORM\LoadCategories',
-//        ];
-//    }
-//
+    public function fixtures() {
+        return [
+            'AppBundle\DataFixtures\ORM\test\LoadCategories',
+        ];
+    }
+
     /**
      * @dataProvider processDateData
      */
@@ -291,7 +291,7 @@ class ImporterTest extends AbstractTestCase {
     }
     public function setPublicationsData() {
         return [
-            ['How now', 'Book', ['How now']],
+            ['How now', 'Book', ['How Now']], # title casing!
         ];
     }
 }

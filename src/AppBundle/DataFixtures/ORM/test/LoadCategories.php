@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\DataFixtures\ORM\test;
+namespace AppBundle\DataFixtures\ORM\test;
 
 use AppBundle\Entity\Category;
 use AppBundle\Tests\Utilities\AbstractDataFixture;
