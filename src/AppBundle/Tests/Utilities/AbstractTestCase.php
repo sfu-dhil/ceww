@@ -76,8 +76,9 @@ abstract class AbstractTestCase extends BaseTestCase {
 
     public function tearDown() {
         parent::tearDown();
-        $this->em->clear();
-        $this->em->close();
+        if($this->em) {
+            $this->em->clear();
+        }
     }
 
 }
