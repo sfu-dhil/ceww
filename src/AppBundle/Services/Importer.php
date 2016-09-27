@@ -185,6 +185,8 @@ class Importer {
             $e = $repo->findOneByName($name);
             if ($e === null) {
                 $e = $this->createPlace($name);
+                $this->em->persist($e);
+                $this->em->flush($e);
             }
             $entities[] = $e;
         }

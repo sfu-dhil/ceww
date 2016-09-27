@@ -2,6 +2,9 @@
 
 namespace AppBundle\Tests\Utilities;
 
+use Closure;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use Liip\FunctionalTestBundle\Test\WebTestCase as BaseTestCase;
 
 /**
@@ -64,6 +67,8 @@ abstract class AbstractTestCase extends BaseTestCase {
         $fixtures = $this->fixtures();
         if (count($fixtures) > 0) {
             $this->references = $this->loadFixtures($fixtures)->getReferenceRepository();
+        } else {
+            $this->loadFixtures([]);
         }
         $this->em = $this->getContainer()->get('doctrine')->getManager();
     }

@@ -22,7 +22,7 @@ class Status extends AbstractEntity {
     private $label;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      * @Groups({"private"})
      */
     private $description;

@@ -29,6 +29,8 @@ class ImporterTest extends AbstractTestCase {
     public function fixtures() {
         return [
             'AppBundle\DataFixtures\ORM\test\LoadCategories',
+            'AppBundle\DataFixtures\ORM\test\LoadPlaces',
+            'AppBundle\DataFixtures\ORM\test\LoadStatuses',
         ];
     }
 
@@ -227,19 +229,23 @@ class ImporterTest extends AbstractTestCase {
     /**
      * @dataProvider setPlacesData
      */
-    public function testSetPlaces($bs, $ds, $ebs, $eds) {
+    public function testSetPlaces($bs, $ds, $ebs, $eds, $count) {
         $author = new Author();
+        $placeCount = count($this->em->getRepository('AppBundle:Place')->findAll());
         $this->importer->setPlaces($author, $bs, $ds);
+        $this->assertEquals($placeCount+$count, count($this->em->getRepository('AppBundle:Place')->findAll()));
         $this->assertEquals($ebs, $author->getBirthPlace()->getName());
         $this->assertEquals($eds, $author->getDeathPlace()->getName());
     }
     
     public function setPlacesData() {
         return [
-            ['Vic, BC', 'Van, BC', 'Vic, BC', 'Van, BC'],
-            ['near Chesik, Ontario', 'x', 'Chesik, Ontario', 'x'],
-            ['Chesik (Chessick), Oxford', 'x', 'Chesik (Chessick), Oxford', 'x'],
-            ['Chesik, Oxford (1999)', 'x', 'Chesik, Oxford', 'x'],
+            ['Vic, BC', 'Van, BC', 'Vic, BC', 'Van, BC', 2],
+            ['near Chesik, Ontario', 'x', 'Chesik, Ontario', 'x', 2],
+            ['Chesik (Chessick), Oxford', 'x', 'Chesik (Chessick), Oxford', 'x', 2],
+            ['Chesik, Oxford (1999)', 'x', 'Chesik, Oxford', 'x', 2],
+            ['Vic, BC', 'Vic, BC', 'Vic, BC', 'Vic, BC', 1],
+            ['Tuscon, AZ', 'Paris, FR', 'Tuscon, AZ', 'Paris, FR', 0],
         ];
     }
 
