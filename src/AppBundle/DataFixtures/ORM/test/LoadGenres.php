@@ -27,6 +27,9 @@ class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface 
             $genre = new Genre();
             $genre->setName($name);
             $manager->persist($genre);
+            $lc = strtolower($name);
+            $this->setReference("genre.{$lc}", $genre);
+            
         }
         $manager->flush();
     }

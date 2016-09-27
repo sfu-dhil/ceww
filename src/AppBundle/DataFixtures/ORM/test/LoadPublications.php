@@ -8,11 +8,35 @@
 
 namespace AppBundle\DataFixtures\ORM\test;
 
+use AppBundle\Entity\Publication;
+use AppBundle\Tests\Utilities\AbstractDataFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+
 /**
  * Description of LoadPublications
  *
  * @author mjoyce
  */
-class LoadPublications {
-    //put your code here
+class LoadPublications extends AbstractDataFixture implements OrderedFixtureInterface  {
+    
+    protected function doLoad(ObjectManager $manager) {
+        $publication = new Publication();
+        $publication->setCategory($this->getReference('category.book'));
+        $publication->setTitle('Things and Stuff');
+        $publication->setSortableTitle('things and stuff');
+        $publication->setYear(1980);
+        $this->setReference('publication.things', $publication);
+        $manager->persist($publication);
+        $manager->flush();
+    }
+
+    public function getOrder() {
+        return 2;        
+    }
+
+    protected function getEnvironments() {
+        return ['test'];
+    }
+
 }

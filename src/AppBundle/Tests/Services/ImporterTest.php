@@ -245,7 +245,7 @@ class ImporterTest extends AbstractTestCase {
             ['Chesik (Chessick), Oxford', 'x', 'Chesik (Chessick), Oxford', 'x', 2],
             ['Chesik, Oxford (1999)', 'x', 'Chesik, Oxford', 'x', 2],
             ['Vic, BC', 'Vic, BC', 'Vic, BC', 'Vic, BC', 1],
-            ['Tuscon, AZ', 'Paris, FR', 'Tuscon, AZ', 'Paris, FR', 0],
+            ['Tuscon', 'Paris', 'Tuscon', 'Paris', 0],
         ];
     }
 

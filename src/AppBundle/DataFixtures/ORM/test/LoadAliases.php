@@ -27,6 +27,8 @@ class LoadAliases  extends AbstractDataFixture implements OrderedFixtureInterfac
             $alias = new Alias();
             $alias->setName($name);
             $manager->persist($alias);
+            $lc = strtolower($name);
+            $this->setReference("alias.{$lc}", $alias);
         }
         $manager->flush();
     }
