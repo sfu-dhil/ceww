@@ -79,14 +79,16 @@ class Importer {
     }
     
     public function split($s, $delim = ';', $alternate = null) {
-        if ($alternate && substr_count($s, $alternate) > 1 && substr_count($delim, $s) < substr_count($s, $alternate)) {
+        if ($alternate 
+                && mb_substr_count($s, $alternate) > 1 
+                && mb_substr_count($delim, $s) < mb_substr_count($s, $alternate)) {
             $this->logger->warning('Possibly malformed string: ' . $s);
-            $a = explode($alternate, $s);
+            $a = mb_split($alternate, $s);
         } else {
-            $a = explode($delim, $s);
+            $a = mb_split($delim, $s);
         }
         for ($i = 0; $i < count($a); $i++) {
-            $a[$i] = trim($a[$i]);
+            $a[$i] = preg_replace('/^\p{Z}+|\p{Z}+$/u','',$a[$i]);
         }
         return $a;
     }
@@ -106,9 +108,10 @@ class Importer {
     }
     
     public function titleCase($title) {
-        $cased = ucwords(strtolower(trim($title)));
+        $title = preg_replace('/^\p{Z}+|\p{Z}+$/u','',$title);
+        $cased = mb_convert_case($title, MB_CASE_TITLE, 'UTF-8');
         // this is a terrible hack.
-        if($cased[0] === '"') {
+        if($cased && $cased[0] === '"') {
             // embarassing really.
             $cased[1] = strtoupper($cased[1]);
         }
@@ -117,8 +120,8 @@ class Importer {
     
     public function cleanTitle($publicationTitle) {
         $filters = array(
-            '/\(c?\d{4}(-c?\d{4})?\)/' => '', // remove year or range
-            '/^"([^"]*)"$/' => '$1', // remove front/rear quotes.
+            '/\(c?\d{4}(-c?\d{4})?\)/u' => '', // remove year or range
+            '/^"([^"]*)"$/u' => '$1', // remove front/rear quotes.
         );
         
         $title = $publicationTitle;
@@ -130,8 +133,8 @@ class Importer {
     
     public function sortableTitle($cleanTitle) {
         $filters = array(
-            '/^(the|an?)\b\s*(.*)/i' => '$2, $1', // move The, A, An to end.
-            '/^[^[:word:][:space:]]+/' => '', // remove non-word chars at start.
+            '/^(the|an?)\b\s*(.*)/ius' => '$2, $1', // move The, A, An to end.
+            '/^[^[:word:][:space:]]+/us' => '', // remove non-word chars at start.
         );
         
         $title = strtolower($cleanTitle);
@@ -143,7 +146,7 @@ class Importer {
     
     public function createAlias($name) {
         $e = new Alias();
-        $e->setMaiden(preg_match('/\bn(?:é|e)e\b/', $name));
+        $e->setMaiden(preg_match('/\bn(?:é|e)e\b/u', $name));
         $e->setName($name);
         return $e;
     }
@@ -304,5 +307,6 @@ class Importer {
         $author->setStatus($status);
         $this->em->persist($author);
         $this->em->flush($author);
+        return $author;
     }
 }

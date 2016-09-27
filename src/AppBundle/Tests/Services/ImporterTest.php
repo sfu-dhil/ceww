@@ -89,6 +89,7 @@ class ImporterTest extends AbstractTestCase {
             [' near Yaletown Ontario', 'Yaletown Ontario'],
             ['Near Yaletown Ontario', 'Yaletown Ontario'],
             ['Nearing, BC', 'Nearing, BC'],
+            ['', ''],
         ];
     }
 
@@ -113,6 +114,8 @@ class ImporterTest extends AbstractTestCase {
             # quotation marks
             ['"CHEESE IT"', 'Cheese It'],
             ['"About the Cat" by Lillian', '"About The Cat" By Lillian'],
+            ['', ''],
+
         ];
     }
 
@@ -130,7 +133,8 @@ class ImporterTest extends AbstractTestCase {
             ['Then and now', 'then and now'],
             ['Abernathy, a story', 'abernathy, a story'],
             ['"Boo" said the girl', 'boo" said the girl'],
-            ['Accént eh?', 'accént eh?']
+            ['Accént eh?', 'accént eh?'],
+            ['', ''],            
         ];
     }
 
