@@ -14,13 +14,15 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class LoadStatuses extends AbstractDataFixture implements OrderedFixtureInterface {
 
-    private static $STATUSES = array('Draft', 'Needs Review', 'Published');
+    private static $STATUSES = array('Draft', 'Review', 'Published');
     
     protected function doLoad(ObjectManager $manager) {
         foreach(self::$STATUSES as $label) {
             $status = new Status();
             $status->setLabel($label);
             $manager->persist($status);
+            $lc = strtolower($label);
+            $this->setReference("status.{$lc}", $status);
         }
         $manager->flush();
     }

@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Genre
  *
  * @ORM\Table(name="genre")
- * @ORM\Entity(repositoryClass="GenreRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\GenreRepository")
  */
 class Genre extends AbstractEntity
 {

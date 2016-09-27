@@ -14,13 +14,15 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class LoadPlaces extends AbstractDataFixture implements OrderedFixtureInterface {
 
-    private static $PLACES = array('Tuscon, AZ', 'Paris, FR');
+    private static $PLACES = array('Tuscon', 'Paris');
     
     protected function doLoad(ObjectManager $manager) {
         foreach(self::$PLACES as $name) {
             $place = new Place();
             $place->setName($name);
             $manager->persist($place);
+            $lc = strtolower($name);
+            $this->setReference("place.{$lc}", $place);
         }
         $manager->flush();
     }
