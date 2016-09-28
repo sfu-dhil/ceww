@@ -75,16 +75,63 @@ class CategoryController extends Controller
             'q' => $q,
         );
     }
+    /**
+     * Full text search for Category entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Category repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated fulltext.html.twig
+	 * template.
+	 * 
+	//    public function fulltextQuery($q) {
+	//        $qb = $this->createQueryBuilder('e');
+	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
+	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
+	//        $qb->orderBy('score', 'desc');
+	//        $qb->setParameter('q', $q);
+	//        return $qb->getQuery();
+	//    }	 
+	 * 
+	 * Requires a MatchAgainst function be added to doctrine, and appropriate
+	 * fulltext indexes on your Category entity.
+	 *     @ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+	 *
+     *
+     * @Route("/fulltext", name="admin_Category_fulltext")
+     * @Method("GET")
+     * @Template()
+	 * @param Request $request
+	 * @return array
+     */
+    public function fulltextAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Category');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->fulltextQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$categories = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+		} else {
+			$categories = array();
+		}
+
+        return array(
+            'categories' => $categories,
+			'q' => $q,
+        );
+    }
 
     /**
      * Creates a new Category entity.
      *
-     * @Route("/new", name="admin_category_new")
+     * @Route("/new", name="admin_Category_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $category = new Category();
         $form = $this->createForm('AppBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
