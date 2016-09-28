@@ -26,8 +26,7 @@ class PlaceController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Place e ORDER BY e.name';
         $query = $em->createQuery($dql);
@@ -59,8 +58,7 @@ class PlaceController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request)
-    {
+    public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Place');
         $q = $request->query->get('q');
@@ -86,11 +84,10 @@ class PlaceController extends Controller
      * @Template()
      * @param Place $place
      */
-    public function mergeAction(Request $request, Place $place)
-    {
+    public function mergeAction(Request $request, Place $place) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Place');
-        
+
         if ($request->getMethod() === 'POST') {
             $places = $repo->findBy(array('id' => $request->request->get('places')));
             $count = count($places);
@@ -99,7 +96,7 @@ class PlaceController extends Controller
             $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
             return $this->redirect($this->generateUrl('admin_place_show', ['id' => $place->getId()]));
         }
-        
+
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);
@@ -114,6 +111,7 @@ class PlaceController extends Controller
             'q' => $q,
         );
     }
+
     /**
      * Creates a new Place entity.
      *
@@ -122,8 +120,7 @@ class PlaceController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $place = new Place();
         $form = $this->createForm('AppBundle\Form\PlaceType', $place);
         $form->handleRequest($request);
@@ -151,8 +148,7 @@ class PlaceController extends Controller
      * @Template()
      * @param Place $place
      */
-    public function showAction(Place $place)
-    {
+    public function showAction(Place $place) {
 
         return array(
             'place' => $place,
@@ -166,10 +162,9 @@ class PlaceController extends Controller
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
-     * @param Place $place
+     * @param Place   $place
      */
-    public function editAction(Request $request, Place $place)
-    {
+    public function editAction(Request $request, Place $place) {
         $editForm = $this->createForm('AppBundle\Form\PlaceType', $place);
         $editForm->handleRequest($request);
 
@@ -193,10 +188,9 @@ class PlaceController extends Controller
      * @Route("/{id}/delete", name="admin_place_delete")
      * @Method("GET")
      * @param Request $request
-     * @param Place $place
+     * @param Place   $place
      */
-    public function deleteAction(Request $request, Place $place)
-    {
+    public function deleteAction(Request $request, Place $place) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($place);
         $em->flush();
@@ -204,4 +198,5 @@ class PlaceController extends Controller
 
         return $this->redirectToRoute('admin_place_index');
     }
+
 }

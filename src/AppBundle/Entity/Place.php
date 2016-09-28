@@ -29,52 +29,52 @@ class Place extends AbstractEntity
      * @Groups({"public", "private"})
      */
     private $alternateNames;
-    
+
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
      * @Groups({"public", "private"})
      */
     private $countryName;
-    
+
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
      * @Groups({"public", "private"})
      */
     private $adminNames;
-    
+
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
      * @Groups({"public", "private"})
      */
     private $latitude;
-    
+
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
      * @Groups({"public", "private"})
      */
     private $longitude;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"private"})
      */
     private $description;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="birthPlace")
      * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authorsBorn;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="deathPlace")
      * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authorsDied;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Author", mappedBy="residences")
      * @ORM\JoinTable(name="author_residence")
@@ -83,17 +83,15 @@ class Place extends AbstractEntity
      */
     private $residents;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->alternateNames = array();
         $this->adminNames = array();
         $this->authorsBorn = new ArrayCollection();
         $this->authorsDied = new ArrayCollection();
         $this->residents = new ArrayCollection();
     }
-    
-    public function __toString()
-    {
+
+    public function __toString() {
         return $this->name;
     }
 
@@ -104,8 +102,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -116,8 +113,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -128,8 +124,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setAlternateNames($alternateNames)
-    {
+    public function setAlternateNames($alternateNames) {
         $this->alternateNames = $alternateNames;
 
         return $this;
@@ -140,8 +135,7 @@ class Place extends AbstractEntity
      *
      * @return array
      */
-    public function getAlternateNames()
-    {
+    public function getAlternateNames() {
         return $this->alternateNames;
     }
 
@@ -152,8 +146,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setCountryName($countryName)
-    {
+    public function setCountryName($countryName) {
         $this->countryName = $countryName;
 
         return $this;
@@ -164,8 +157,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getCountryName()
-    {
+    public function getCountryName() {
         return $this->countryName;
     }
 
@@ -176,8 +168,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setAdminNames($adminNames)
-    {
+    public function setAdminNames($adminNames) {
         $this->adminNames = $adminNames;
 
         return $this;
@@ -188,8 +179,7 @@ class Place extends AbstractEntity
      *
      * @return array
      */
-    public function getAdminNames()
-    {
+    public function getAdminNames() {
         return $this->adminNames;
     }
 
@@ -200,8 +190,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setLatitude($latitude)
-    {
+    public function setLatitude($latitude) {
         $this->latitude = $latitude;
 
         return $this;
@@ -212,8 +201,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getLatitude()
-    {
+    public function getLatitude() {
         return $this->latitude;
     }
 
@@ -224,8 +212,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setLongitude($longitude)
-    {
+    public function setLongitude($longitude) {
         $this->longitude = $longitude;
 
         return $this;
@@ -236,8 +223,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getLongitude()
-    {
+    public function getLongitude() {
         return $this->longitude;
     }
 
@@ -248,8 +234,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -260,8 +245,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -272,8 +256,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addAuthorsBorn(\AppBundle\Entity\Author $authorsBorn)
-    {
+    public function addAuthorsBorn(\AppBundle\Entity\Author $authorsBorn) {
         $this->authorsBorn[] = $authorsBorn;
 
         return $this;
@@ -284,8 +267,7 @@ class Place extends AbstractEntity
      *
      * @param \AppBundle\Entity\Author $authorsBorn
      */
-    public function removeAuthorsBorn(\AppBundle\Entity\Author $authorsBorn)
-    {
+    public function removeAuthorsBorn(\AppBundle\Entity\Author $authorsBorn) {
         $this->authorsBorn->removeElement($authorsBorn);
     }
 
@@ -294,8 +276,7 @@ class Place extends AbstractEntity
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAuthorsBorn()
-    {
+    public function getAuthorsBorn() {
         return $this->authorsBorn;
     }
 
@@ -306,8 +287,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addAuthorsDied(\AppBundle\Entity\Author $authorsDied)
-    {
+    public function addAuthorsDied(\AppBundle\Entity\Author $authorsDied) {
         $this->authorsDied[] = $authorsDied;
 
         return $this;
@@ -318,8 +298,7 @@ class Place extends AbstractEntity
      *
      * @param \AppBundle\Entity\Author $authorsDied
      */
-    public function removeAuthorsDied(\AppBundle\Entity\Author $authorsDied)
-    {
+    public function removeAuthorsDied(\AppBundle\Entity\Author $authorsDied) {
         $this->authorsDied->removeElement($authorsDied);
     }
 
@@ -328,8 +307,7 @@ class Place extends AbstractEntity
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAuthorsDied()
-    {
+    public function getAuthorsDied() {
         return $this->authorsDied;
     }
 
@@ -340,8 +318,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addResident(\AppBundle\Entity\Author $resident)
-    {
+    public function addResident(\AppBundle\Entity\Author $resident) {
         $this->residents[] = $resident;
 
         return $this;
@@ -352,8 +329,7 @@ class Place extends AbstractEntity
      *
      * @param \AppBundle\Entity\Author $resident
      */
-    public function removeResident(\AppBundle\Entity\Author $resident)
-    {
+    public function removeResident(\AppBundle\Entity\Author $resident) {
         $this->residents->removeElement($resident);
     }
 
@@ -362,8 +338,8 @@ class Place extends AbstractEntity
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getResidents()
-    {
+    public function getResidents() {
         return $this->residents;
     }
+
 }

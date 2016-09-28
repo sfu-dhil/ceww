@@ -15,19 +15,17 @@ class AliasRepository extends \Doctrine\ORM\EntityRepository
      * @param string $q
      * @return Query
      */
-    public function searchQuery($q)
-    {
+    public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->where("e.name like '%$q%'");
         return $qb->getQuery();
     }
-    
+
     /**
      * @param string $q
      * @return Query
      */
-    public function fulltextQuery($q)
-    {
+    public function fulltextQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
         $qb->add('where', "MATCH_AGAINST (e.name, :q) > 0.5");
@@ -35,4 +33,5 @@ class AliasRepository extends \Doctrine\ORM\EntityRepository
         $qb->setParameter('q', $q);
         return $qb->getQuery();
     }
+
 }

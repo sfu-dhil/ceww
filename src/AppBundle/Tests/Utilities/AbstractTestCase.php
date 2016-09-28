@@ -34,14 +34,12 @@ abstract class AbstractTestCase extends BaseTestCase
      */
     private static $kernelModifier = null;
 
-    public function setKernelModifier(Closure $kernelModifier)
-    {
+    public function setKernelModifier(Closure $kernelModifier) {
         self::$kernelModifier = $kernelModifier;
         $this->ensureKernelShutdown();
     }
 
-    protected static function createClient(array $options = [], array $server = [])
-    {
+    protected static function createClient(array $options = [], array $server = []) {
         static::bootKernel($options);
         if (self::$kernelModifier !== null) {
             self::$kernelModifier->__invoke();
@@ -56,18 +54,16 @@ abstract class AbstractTestCase extends BaseTestCase
      * Returns a list of data fixture classes for use in one test class. They
      * will be loaded into the database before each test function in the class.
      *
-     * @return array()
+     * @return array
      */
-    public function fixtures()
-    {
+    public function fixtures() {
         return array();
     }
 
     /**
      * {@inheritDocs}
      */
-    protected function setUp()
-    {
+    protected function setUp() {
         parent::setUp();
         $fixtures = $this->fixtures();
         if (count($fixtures) > 0) {
@@ -78,12 +74,11 @@ abstract class AbstractTestCase extends BaseTestCase
         $this->em = $this->getContainer()->get('doctrine')->getManager();
     }
 
-
-    public function tearDown()
-    {
+    public function tearDown() {
         parent::tearDown();
         if ($this->em) {
             $this->em->clear();
         }
     }
+
 }

@@ -26,8 +26,7 @@ class CategoryController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Category e ORDER BY e.label';
         $query = $em->createQuery($dql);
@@ -59,8 +58,7 @@ class CategoryController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request)
-    {
+    public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Category');
         $q = $request->query->get('q');
@@ -86,8 +84,7 @@ class CategoryController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $category = new Category();
         $form = $this->createForm('AppBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
@@ -115,8 +112,7 @@ class CategoryController extends Controller
      * @Template()
      * @param Category $category
      */
-    public function showAction(Category $category)
-    {
+    public function showAction(Category $category) {
 
         return array(
             'category' => $category,
@@ -129,11 +125,10 @@ class CategoryController extends Controller
      * @Route("/{id}/edit", name="admin_category_edit")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request $request
+     * @param Request  $request
      * @param Category $category
      */
-    public function editAction(Request $request, Category $category)
-    {
+    public function editAction(Request $request, Category $category) {
         $editForm = $this->createForm('AppBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 
@@ -156,11 +151,10 @@ class CategoryController extends Controller
      *
      * @Route("/{id}/delete", name="admin_category_delete")
      * @Method("GET")
-     * @param Request $request
+     * @param Request  $request
      * @param Category $category
      */
-    public function deleteAction(Request $request, Category $category)
-    {
+    public function deleteAction(Request $request, Category $category) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($category);
         $em->flush();
@@ -168,4 +162,5 @@ class CategoryController extends Controller
 
         return $this->redirectToRoute('admin_category_index');
     }
+
 }

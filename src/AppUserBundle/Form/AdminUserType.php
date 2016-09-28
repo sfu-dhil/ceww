@@ -11,12 +11,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class AdminUserType extends AbstractType
 {
+
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
                 ->remove('username')
                 ->add('email')
@@ -38,15 +38,13 @@ class AdminUserType extends AbstractType
                     'multiple' => true,
                     'expanded' => true,
                     'required' => false,
-                ))
-        ;
+                ));
     }
 
     /**
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
+    public function setDefaultOptions(OptionsResolverInterface $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppUserBundle\Entity\User',
         ));
@@ -57,8 +55,8 @@ class AdminUserType extends AbstractType
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return 'appbundle_user';
     }
+
 }

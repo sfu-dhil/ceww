@@ -9,23 +9,25 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenreType extends AbstractType
 {
+
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('name');  // string
-        $builder->add('description');  // text
+    public function buildForm(FormBuilderInterface $builder, array $options) {
+        $builder->add('name');
+// string
+        $builder->add('description');
+// text
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
-    {
+    public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Genre'
         ));
     }
+
 }

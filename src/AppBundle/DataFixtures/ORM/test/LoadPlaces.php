@@ -16,9 +16,8 @@ class LoadPlaces extends AbstractDataFixture implements OrderedFixtureInterface
 {
 
     private static $PLACES = array('Tuscon', 'Paris');
-    
-    protected function doLoad(ObjectManager $manager)
-    {
+
+    protected function doLoad(ObjectManager $manager) {
         foreach (self::$PLACES as $name) {
             $place = new Place();
             $place->setName($name);
@@ -29,13 +28,12 @@ class LoadPlaces extends AbstractDataFixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
-    public function getOrder()
-    {
+    public function getOrder() {
         return 1;
     }
 
-    protected function getEnvironments()
-    {
+    protected function getEnvironments() {
         return ['test'];
     }
+
 }

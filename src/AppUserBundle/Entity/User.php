@@ -19,7 +19,7 @@ class User extends BaseUser
     /**
      * Database ID.
      *
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -43,8 +43,7 @@ class User extends BaseUser
     /**
      * Construct a user.
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->notify = false;
     }
@@ -52,10 +51,9 @@ class User extends BaseUser
     /**
      * Get id.
      *
-     * @return int
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -66,8 +64,7 @@ class User extends BaseUser
      *
      * @return User
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         parent::setUsername($email);
 
         return parent::setEmail($email);
@@ -80,8 +77,7 @@ class User extends BaseUser
      *
      * @return User
      */
-    public function setEmailCanonical($emailCanonical)
-    {
+    public function setEmailCanonical($emailCanonical) {
         parent::setUsernameCanonical($emailCanonical);
 
         return parent::setEmailCanonical($emailCanonical);
@@ -94,8 +90,7 @@ class User extends BaseUser
      *
      * @return User
      */
-    public function setInstitution($institution)
-    {
+    public function setInstitution($institution) {
         $this->institution = $institution;
 
         return $this;
@@ -106,8 +101,7 @@ class User extends BaseUser
      *
      * @return string
      */
-    public function getInstitution()
-    {
+    public function getInstitution() {
         return $this->institution;
     }
 
@@ -118,8 +112,7 @@ class User extends BaseUser
      *
      * @return User
      */
-    public function setFullname($fullname)
-    {
+    public function setFullname($fullname) {
         $this->fullname = $fullname;
 
         return $this;
@@ -130,8 +123,8 @@ class User extends BaseUser
      *
      * @return string
      */
-    public function getFullname()
-    {
+    public function getFullname() {
         return $this->fullname;
     }
+
 }

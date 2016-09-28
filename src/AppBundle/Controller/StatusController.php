@@ -17,6 +17,7 @@ use AppBundle\Form\StatusType;
  */
 class StatusController extends Controller
 {
+
     /**
      * Lists all Status entities.
      *
@@ -25,8 +26,7 @@ class StatusController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Status e ORDER BY e.label';
         $query = $em->createQuery($dql);
@@ -37,6 +37,7 @@ class StatusController extends Controller
             'statuses' => $statuses,
         );
     }
+
     /**
      * Search for Status entities.
      *
@@ -57,8 +58,7 @@ class StatusController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request)
-    {
+    public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Status');
         $q = $request->query->get('q');
@@ -84,8 +84,7 @@ class StatusController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $status = new Status();
         $form = $this->createForm('AppBundle\Form\StatusType', $status);
         $form->handleRequest($request);
@@ -113,8 +112,7 @@ class StatusController extends Controller
      * @Template()
      * @param Status $status
      */
-    public function showAction(Status $status)
-    {
+    public function showAction(Status $status) {
 
         return array(
             'status' => $status,
@@ -128,10 +126,9 @@ class StatusController extends Controller
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
-     * @param Status $status
+     * @param Status  $status
      */
-    public function editAction(Request $request, Status $status)
-    {
+    public function editAction(Request $request, Status $status) {
         $editForm = $this->createForm('AppBundle\Form\StatusType', $status);
         $editForm->handleRequest($request);
 
@@ -155,10 +152,9 @@ class StatusController extends Controller
      * @Route("/{id}/delete", name="admin_status_delete")
      * @Method("GET")
      * @param Request $request
-     * @param Status $status
+     * @param Status  $status
      */
-    public function deleteAction(Request $request, Status $status)
-    {
+    public function deleteAction(Request $request, Status $status) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($status);
         $em->flush();
@@ -166,4 +162,5 @@ class StatusController extends Controller
 
         return $this->redirectToRoute('admin_status_index');
     }
+
 }

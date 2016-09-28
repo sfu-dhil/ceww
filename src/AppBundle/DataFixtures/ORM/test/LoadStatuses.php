@@ -16,9 +16,8 @@ class LoadStatuses extends AbstractDataFixture implements OrderedFixtureInterfac
 {
 
     private static $STATUSES = array('Draft', 'Review', 'Published');
-    
-    protected function doLoad(ObjectManager $manager)
-    {
+
+    protected function doLoad(ObjectManager $manager) {
         foreach (self::$STATUSES as $label) {
             $status = new Status();
             $status->setLabel($label);
@@ -29,13 +28,12 @@ class LoadStatuses extends AbstractDataFixture implements OrderedFixtureInterfac
         $manager->flush();
     }
 
-    public function getOrder()
-    {
+    public function getOrder() {
         return 1;
     }
 
-    protected function getEnvironments()
-    {
+    protected function getEnvironments() {
         return ['test'];
     }
+
 }

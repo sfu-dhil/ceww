@@ -29,7 +29,7 @@ class Alias extends AbstractEntity
      * @Groups({"public", "private"})
      */
     private $maiden;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"private"})
@@ -43,14 +43,12 @@ class Alias extends AbstractEntity
      */
     private $authors;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->maiden = false;
         $this->authors = new ArrayCollection();
     }
-    
-    public function __toString()
-    {
+
+    public function __toString() {
         return $this->name;
     }
 
@@ -61,8 +59,7 @@ class Alias extends AbstractEntity
      *
      * @return Alias
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -73,8 +70,7 @@ class Alias extends AbstractEntity
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -85,8 +81,7 @@ class Alias extends AbstractEntity
      *
      * @return Alias
      */
-    public function setMaiden($maiden)
-    {
+    public function setMaiden($maiden) {
         $this->maiden = $maiden;
 
         return $this;
@@ -97,8 +92,7 @@ class Alias extends AbstractEntity
      *
      * @return boolean
      */
-    public function getMaiden()
-    {
+    public function getMaiden() {
         return $this->maiden;
     }
 
@@ -109,8 +103,7 @@ class Alias extends AbstractEntity
      *
      * @return Alias
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -121,8 +114,7 @@ class Alias extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -133,8 +125,7 @@ class Alias extends AbstractEntity
      *
      * @return Alias
      */
-    public function addAuthor(Author $author)
-    {
+    public function addAuthor(Author $author) {
         $this->authors[] = $author;
 
         return $this;
@@ -145,8 +136,7 @@ class Alias extends AbstractEntity
      *
      * @param Author $author
      */
-    public function removeAuthor(Author $author)
-    {
+    public function removeAuthor(Author $author) {
         $this->authors->removeElement($author);
     }
 
@@ -155,8 +145,8 @@ class Alias extends AbstractEntity
      *
      * @return Collection
      */
-    public function getAuthors()
-    {
+    public function getAuthors() {
         return $this->authors;
     }
+
 }

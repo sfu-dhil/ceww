@@ -21,29 +21,25 @@ class PlaceNamesCommand extends ContainerAwareCommand
      * @var Registry
      */
     protected $em;
-    
+
     protected $geonames_account;
-    
+
     const GEONAMES_SEARCH = 'http://api.geonames.org/search';
 
-    protected function configure()
-    {
+    protected function configure() {
         $this
             ->setName('ceww:placenames')
-            ->setDescription('Update the place names with results from Geonames')
-        ;
+            ->setDescription('Update the place names with results from Geonames');
     }
-    
-    public function setContainer(ContainerInterface $container = null)
-    {
+
+    public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
         $this->logger = $container->get('logger');
         $this->em = $container->get('doctrine')->getManager();
         $this->geonames_account = $container->getParameter('geonames_account');
     }
 
-    protected function getClient()
-    {
+    protected function getClient() {
         $client = new Client(array(
             'headers' => array(
                 'User-Agent' => 'CEWW API Client/1.0',
@@ -52,9 +48,8 @@ class PlaceNamesCommand extends ContainerAwareCommand
         ));
         return $client;
     }
-    
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $client = $this->getClient();
         $query = $this->em->createQuery('SELECT p FROM AppBundle:Place p');
         $iterator = $query->iterate();
@@ -75,4 +70,5 @@ class PlaceNamesCommand extends ContainerAwareCommand
             return;
         }
     }
+
 }

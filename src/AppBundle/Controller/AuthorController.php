@@ -17,6 +17,7 @@ use AppBundle\Form\AuthorType;
  */
 class AuthorController extends Controller
 {
+
     /**
      * Lists all Author entities.
      *
@@ -25,8 +26,7 @@ class AuthorController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Author e ORDER BY e.sortableName';
         $query = $em->createQuery($dql);
@@ -37,6 +37,7 @@ class AuthorController extends Controller
             'authors' => $authors,
         );
     }
+
     /**
      * Search for Author entities.
      *
@@ -57,8 +58,7 @@ class AuthorController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request)
-    {
+    public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Author');
         $q = $request->query->get('q');
@@ -84,8 +84,7 @@ class AuthorController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $author = new Author();
         $form = $this->createForm('AppBundle\Form\AuthorType', $author);
         $form->handleRequest($request);
@@ -113,10 +112,9 @@ class AuthorController extends Controller
      * @Template()
      * @param Author $author
      */
-    public function showAction(Author $author)
-    {
+    public function showAction(Author $author) {
         $repo = $this->getDoctrine()->getRepository('AppBundle:Author');
-        
+
         return array(
             'author' => $author,
             'next' => $repo->next($author),
@@ -131,26 +129,25 @@ class AuthorController extends Controller
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
-     * @param Author $author
+     * @param Author  $author
      */
-    public function editAction(Request $request, Author $author)
-    {
+    public function editAction(Request $request, Author $author) {
         $editForm = $this->createForm('AppBundle\Form\AuthorType', $author);
         $editForm['birthplace']->setData($author->getBirthPlace()->getName());
         $editForm['birthplace_id']->setData($author->getBirthPlace()->getId());
         $editForm['deathplace']->setData($author->getDeathPlace()->getName());
         $editForm['deathplace_id']->setData($author->getDeathPlace()->getId());
-        
+
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            
+
             $birthPlaceId = $editForm['birthplace_id']->getData();
             $author->setBirthPlace($em->find('AppBundle:Place', $birthPlaceId));
-            
+
             $deathPlaceId = $editForm['deathplace_id']->getData();
             $author->setDeathPlace($em->find('AppBundle:Place', $deathPlaceId));
-            
+
             $em->flush();
             $this->addFlash('success', 'The author has been updated.');
             return $this->redirectToRoute('admin_author_show', array('id' => $author->getId()));
@@ -168,10 +165,9 @@ class AuthorController extends Controller
      * @Route("/{id}/delete", name="admin_author_delete")
      * @Method("GET")
      * @param Request $request
-     * @param Author $author
+     * @param Author  $author
      */
-    public function deleteAction(Request $request, Author $author)
-    {
+    public function deleteAction(Request $request, Author $author) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($author);
         $em->flush();
@@ -179,4 +175,5 @@ class AuthorController extends Controller
 
         return $this->redirectToRoute('admin_author_index');
     }
+
 }

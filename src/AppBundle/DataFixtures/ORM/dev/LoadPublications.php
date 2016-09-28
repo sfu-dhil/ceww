@@ -1,9 +1,9 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+    * To change this license header, choose License Headers in Project Properties.
+    * To change this template file, choose Tools | Templates
+    * and open the template in the editor.
  */
 
 namespace AppBundle\DataFixtures\ORM\dev;
@@ -20,9 +20,8 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class LoadPublications extends AbstractDataFixture implements OrderedFixtureInterface
 {
-    
-    protected function doLoad(ObjectManager $manager)
-    {
+
+    protected function doLoad(ObjectManager $manager) {
         $publication = new Publication();
         $publication->setCategory($this->getReference('category.book'));
         $publication->setTitle('Things and Stuff');
@@ -33,13 +32,12 @@ class LoadPublications extends AbstractDataFixture implements OrderedFixtureInte
         $manager->flush();
     }
 
-    public function getOrder()
-    {
+    public function getOrder() {
         return 2;
     }
 
-    protected function getEnvironments()
-    {
+    protected function getEnvironments() {
         return ['dev'];
     }
+
 }

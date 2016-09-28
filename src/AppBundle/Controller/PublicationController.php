@@ -17,6 +17,7 @@ use AppBundle\Form\PublicationType;
  */
 class PublicationController extends Controller
 {
+
     /**
      * Lists all Publication entities.
      *
@@ -25,8 +26,7 @@ class PublicationController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Publication e ORDER BY e.title';
         $query = $em->createQuery($dql);
@@ -37,6 +37,7 @@ class PublicationController extends Controller
             'publications' => $publications,
         );
     }
+
     /**
      * Search for Publication entities.
      *
@@ -57,8 +58,7 @@ class PublicationController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request)
-    {
+    public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Publication');
         $q = $request->query->get('q');
@@ -84,8 +84,7 @@ class PublicationController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $publication = new Publication();
         $form = $this->createForm('AppBundle\Form\PublicationType', $publication);
         $form->handleRequest($request);
@@ -113,8 +112,7 @@ class PublicationController extends Controller
      * @Template()
      * @param Publication $publication
      */
-    public function showAction(Publication $publication)
-    {
+    public function showAction(Publication $publication) {
 
         return array(
             'publication' => $publication,
@@ -127,11 +125,10 @@ class PublicationController extends Controller
      * @Route("/{id}/edit", name="admin_publication_edit")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request $request
+     * @param Request     $request
      * @param Publication $publication
      */
-    public function editAction(Request $request, Publication $publication)
-    {
+    public function editAction(Request $request, Publication $publication) {
         $editForm = $this->createForm('AppBundle\Form\PublicationType', $publication);
         $editForm->handleRequest($request);
 
@@ -154,11 +151,10 @@ class PublicationController extends Controller
      *
      * @Route("/{id}/delete", name="admin_publication_delete")
      * @Method("GET")
-     * @param Request $request
+     * @param Request     $request
      * @param Publication $publication
      */
-    public function deleteAction(Request $request, Publication $publication)
-    {
+    public function deleteAction(Request $request, Publication $publication) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($publication);
         $em->flush();
@@ -166,4 +162,5 @@ class PublicationController extends Controller
 
         return $this->redirectToRoute('admin_publication_index');
     }
+
 }

@@ -16,25 +16,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Publication extends AbstractEntity
 {
-    
+
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
      * @Groups({"public", "private"})
      */
     private $title;
-    
+
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
      * @Groups({"private"})
      */
     private $sortableTitle;
-    
+
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"public", "private"})
      */
     private $year;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
      * @ORM\JoinColumn(name="category_id")
@@ -42,7 +42,7 @@ class Publication extends AbstractEntity
      * @var Category
      */
     private $category;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publication_genres")
@@ -50,13 +50,13 @@ class Publication extends AbstractEntity
      * @var Collection|Genre[]
      */
     private $genres;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"private"})
      */
     private $notes;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Author", mappedBy="publications")
      * @Groups({"recursive"})
@@ -64,17 +64,14 @@ class Publication extends AbstractEntity
      */
     private $authors;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->authors = new ArrayCollection();
         $this->genres = new ArrayCollection();
     }
-    
-    public function __toString()
-    {
+
+    public function __toString() {
         return $this->title;
     }
-
 
     /**
      * Set title
@@ -83,8 +80,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setTitle($title)
-    {
+    public function setTitle($title) {
         $this->title = $title;
 
         return $this;
@@ -95,8 +91,7 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return $this->title;
     }
 
@@ -107,8 +102,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setYear($year)
-    {
+    public function setYear($year) {
         $this->year = $year;
 
         return $this;
@@ -119,8 +113,7 @@ class Publication extends AbstractEntity
      *
      * @return integer
      */
-    public function getYear()
-    {
+    public function getYear() {
         return $this->year;
     }
 
@@ -131,8 +124,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setNotes($notes)
-    {
+    public function setNotes($notes) {
         $this->notes = $notes;
 
         return $this;
@@ -143,8 +135,7 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->notes;
     }
 
@@ -155,8 +146,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setCategory(Category $category = null)
-    {
+    public function setCategory(Category $category = null) {
         $this->category = $category;
 
         return $this;
@@ -167,8 +157,7 @@ class Publication extends AbstractEntity
      *
      * @return Category
      */
-    public function getCategory()
-    {
+    public function getCategory() {
         return $this->category;
     }
 
@@ -179,8 +168,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function addAuthor(Author $author)
-    {
+    public function addAuthor(Author $author) {
         $this->authors[] = $author;
 
         return $this;
@@ -191,8 +179,7 @@ class Publication extends AbstractEntity
      *
      * @param Author $author
      */
-    public function removeAuthor(Author $author)
-    {
+    public function removeAuthor(Author $author) {
         $this->authors->removeElement($author);
     }
 
@@ -201,8 +188,7 @@ class Publication extends AbstractEntity
      *
      * @return Collection
      */
-    public function getAuthors()
-    {
+    public function getAuthors() {
         return $this->authors;
     }
 
@@ -213,8 +199,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function addGenre(\AppBundle\Entity\Genre $genre)
-    {
+    public function addGenre(\AppBundle\Entity\Genre $genre) {
         $this->genres[] = $genre;
 
         return $this;
@@ -225,8 +210,7 @@ class Publication extends AbstractEntity
      *
      * @param \AppBundle\Entity\Genre $genre
      */
-    public function removeGenre(\AppBundle\Entity\Genre $genre)
-    {
+    public function removeGenre(\AppBundle\Entity\Genre $genre) {
         $this->genres->removeElement($genre);
     }
 
@@ -235,8 +219,7 @@ class Publication extends AbstractEntity
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getGenres()
-    {
+    public function getGenres() {
         return $this->genres;
     }
 
@@ -247,8 +230,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setSortableTitle($sortableTitle)
-    {
+    public function setSortableTitle($sortableTitle) {
         $this->sortableTitle = $sortableTitle;
 
         return $this;
@@ -259,19 +241,18 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getSortableTitle()
-    {
+    public function getSortableTitle() {
         return $this->sortableTitle;
     }
-    
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function updateSortableTitle()
-    {
+    public function updateSortableTitle() {
         if ($this->sortableTitle === null || $this->sortableTitle === '') {
             $this->sortableTitle = $this->sortableTitle;
         }
     }
+
 }

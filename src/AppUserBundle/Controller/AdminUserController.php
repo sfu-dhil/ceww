@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminUserController extends Controller
 {
+
     /**
      * Lists all User entities.
      *
@@ -27,8 +28,7 @@ class AdminUserController extends Controller
      *
      * @return array
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserBundle:User')->findAll();
@@ -37,6 +37,7 @@ class AdminUserController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new User entity.
      *
@@ -48,8 +49,7 @@ class AdminUserController extends Controller
      *
      * @return array
      */
-    public function createAction(Request $request)
-    {
+    public function createAction(Request $request) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $entity = new User();
         $form = $this->createCreateForm($entity);
@@ -78,8 +78,7 @@ class AdminUserController extends Controller
      *
      * @return Form The form
      */
-    private function createCreateForm(User $entity)
-    {
+    private function createCreateForm(User $entity) {
         $form = $this->createForm(new AdminUserType(), $entity, array(
             'action' => $this->generateUrl('user_create'),
             'method' => 'POST',
@@ -99,8 +98,7 @@ class AdminUserController extends Controller
      *
      * @return array
      */
-    public function newAction()
-    {
+    public function newAction() {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $entity = new User();
         $form = $this->createCreateForm($entity);
@@ -122,8 +120,7 @@ class AdminUserController extends Controller
      *
      * @return array
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('AppUserBundle:User')->find($id);
@@ -151,8 +148,7 @@ class AdminUserController extends Controller
      *
      * @return array
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
 
@@ -179,8 +175,7 @@ class AdminUserController extends Controller
      *
      * @return Form The form
      */
-    private function createEditForm(User $entity)
-    {
+    private function createEditForm(User $entity) {
         $form = $this->createForm(new AdminUserType(), $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
@@ -190,6 +185,7 @@ class AdminUserController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing User entity.
      *
@@ -202,8 +198,7 @@ class AdminUserController extends Controller
      *
      * @return array
      */
-    public function updateAction(Request $request, $id)
-    {
+    public function updateAction(Request $request, $id) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('AppUserBundle:User')->find($id);
@@ -230,6 +225,7 @@ class AdminUserController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a User entity.
      *
@@ -239,8 +235,7 @@ class AdminUserController extends Controller
      *
      * @return array
      */
-    public function deleteAction($id)
-    {
+    public function deleteAction($id) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('AppUserBundle:User')->find($id);
@@ -262,14 +257,12 @@ class AdminUserController extends Controller
      *
      * @return Form The form
      */
-    private function createDeleteForm($id)
-    {
+    private function createDeleteForm($id) {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('user_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 
     /**
@@ -280,12 +273,11 @@ class AdminUserController extends Controller
      * @Template()
      *
      * @param Request $request
-     * @param int     $id
+     * @param integer $id
      *
      * @return array
      */
-    public function passwordAction(Request $request, $id)
-    {
+    public function passwordAction(Request $request, $id) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('AppUserBundle:User')->find($id);
@@ -319,4 +311,5 @@ class AdminUserController extends Controller
             'form' => $form->createView(),
         );
     }
+
 }

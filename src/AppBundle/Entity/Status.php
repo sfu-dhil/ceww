@@ -34,9 +34,8 @@ class Status extends AbstractEntity
      * @Groups({"recursive"})
      */
     private $publishedAuthors;
-    
-    public function __toString()
-    {
+
+    public function __toString() {
         return $this->label;
     }
 
@@ -47,8 +46,7 @@ class Status extends AbstractEntity
      *
      * @return Status
      */
-    public function setLabel($label)
-    {
+    public function setLabel($label) {
         $this->label = $label;
 
         return $this;
@@ -59,8 +57,7 @@ class Status extends AbstractEntity
      *
      * @return string
      */
-    public function getLabel()
-    {
+    public function getLabel() {
         return $this->label;
     }
 
@@ -71,8 +68,7 @@ class Status extends AbstractEntity
      *
      * @return Status
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -83,16 +79,14 @@ class Status extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->publishedAuthors = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -103,8 +97,7 @@ class Status extends AbstractEntity
      *
      * @return Status
      */
-    public function addPublishedAuthor(\AppBundle\Entity\Author $publishedAuthor)
-    {
+    public function addPublishedAuthor(\AppBundle\Entity\Author $publishedAuthor) {
         $this->publishedAuthors[] = $publishedAuthor;
 
         return $this;
@@ -115,8 +108,7 @@ class Status extends AbstractEntity
      *
      * @param \AppBundle\Entity\Author $publishedAuthor
      */
-    public function removePublishedAuthor(\AppBundle\Entity\Author $publishedAuthor)
-    {
+    public function removePublishedAuthor(\AppBundle\Entity\Author $publishedAuthor) {
         $this->publishedAuthors->removeElement($publishedAuthor);
     }
 
@@ -125,8 +117,8 @@ class Status extends AbstractEntity
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getPublishedAuthors()
-    {
+    public function getPublishedAuthors() {
         return $this->publishedAuthors;
     }
+
 }

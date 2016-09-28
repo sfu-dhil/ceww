@@ -1,9 +1,9 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+    * To change this license header, choose License Headers in Project Properties.
+    * To change this template file, choose Tools | Templates
+    * and open the template in the editor.
  */
 
 namespace AppBundle\Services;
@@ -39,8 +39,7 @@ class Merger
      *
      * @param Logger $logger
      */
-    public function setLogger(Logger $logger)
-    {
+    public function setLogger(Logger $logger) {
         $this->logger = $logger;
     }
 
@@ -49,26 +48,23 @@ class Merger
      *
      * @param Registry $registry
      */
-    public function setDoctrine(Registry $registry)
-    {
+    public function setDoctrine(Registry $registry) {
         $this->em = $registry->getManager();
     }
-    
+
     /**
      * @param Place[]
      */
-    public function getPlaces($placeIds)
-    {
+    public function getPlaces($placeIds) {
         $repo = $this->em->getRepository('AppBundle:Place');
         return $repo->findBy(array('id' => $placeIds));
     }
-    
+
     /**
-     * @param Place $destination
+     * @param Place   $destination
      * @param Place[] $places
      */
-    public function places(Place $destination, $places)
-    {
+    public function places(Place $destination, $places) {
         foreach ($places as $p) {
             foreach ($p->getAuthorsBorn() as $a) {
                 $a->setBirthPlace($destination);
@@ -88,4 +84,5 @@ class Merger
         }
         $this->em->flush();
     }
+
 }

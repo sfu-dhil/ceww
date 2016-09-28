@@ -14,22 +14,20 @@ use Doctrine\ORM\Query;
  */
 class AuthorRepository extends EntityRepository
 {
-    
+
     /**
      * @param string $q
      * @return Query
      */
-    public function searchQuery($q)
-    {
+    public function searchQuery($q) {
         $qb = $this->createQueryBuilder('a');
         $qb->where("a.fullName like '%$q%'");
         $qb->addOrderBy('a.sortableName');
         $query = $qb->getQuery();
         return $query;
     }
-    
-    public function next(Author $author)
-    {
+
+    public function next(Author $author) {
         $qb = $this->createQueryBuilder('a');
         $qb->where('a.sortableName > :sortableName');
         $qb->orderBy('a.sortableName');
@@ -41,9 +39,8 @@ class AuthorRepository extends EntityRepository
         }
         return null;
     }
-    
-    public function previous(Author $author)
-    {
+
+    public function previous(Author $author) {
         $qb = $this->createQueryBuilder('a');
         $qb->where('a.sortableName < :sortableName');
         $qb->orderBy('a.sortableName', 'DESC');
@@ -55,4 +52,5 @@ class AuthorRepository extends EntityRepository
         }
         return null;
     }
+
 }

@@ -14,12 +14,12 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class ProfileType extends AbstractType
 {
+
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
                 ->remove('username')
                 ->add('email')
@@ -33,18 +33,16 @@ class ProfileType extends AbstractType
      *
      * @return string
      */
-    public function getParent()
-    {
+    public function getParent() {
         return 'FOS\UserBundle\Form\Type\ProfileFormType';
     }
-    
-    public function getBlockPrefix()
-    {
+
+    public function getBlockPrefix() {
         return 'app_user_profile';
     }
 
-    public function getName()
-    {
+    public function getName() {
         $this->getBlockPrefix();
     }
+
 }

@@ -1,17 +1,17 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+    * To change this license header, choose License Headers in Project Properties.
+    * To change this template file, choose Tools | Templates
+    * and open the template in the editor.
  */
 
 namespace AppBundle\Extensions\Doctrine;
 
-/**
- *
- * @link http://www.xsolve.pl/blog/full-text-searching-in-symfony2-2/
- * @author mjoyce
+/*
+    *
+    * @link http://www.xsolve.pl/blog/full-text-searching-in-symfony2-2/
+    * @author mjoyce
  */
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
@@ -28,8 +28,8 @@ class MatchAgainstFunction extends FunctionNode
     public $columns = array();
     public $needle;
     public $mode;
-    public function parse(Parser $parser)
-    {
+
+    public function parse(Parser $parser) {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
         do {
@@ -42,8 +42,8 @@ class MatchAgainstFunction extends FunctionNode
         }
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
-    public function getSql(SqlWalker $sqlWalker)
-    {
+
+    public function getSql(SqlWalker $sqlWalker) {
         $haystack = null;
         $first = true;
         foreach ($this->columns as $column) {
@@ -59,4 +59,5 @@ class MatchAgainstFunction extends FunctionNode
         }
         return $query;
     }
+
 }

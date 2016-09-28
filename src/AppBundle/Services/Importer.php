@@ -1,9 +1,9 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+    * To change this license header, choose License Headers in Project Properties.
+    * To change this template file, choose Tools | Templates
+    * and open the template in the editor.
  */
 
 namespace AppBundle\Services;
@@ -43,8 +43,7 @@ class Importer
      *
      * @param Logger $logger
      */
-    public function setLogger(Logger $logger)
-    {
+    public function setLogger(Logger $logger) {
         $this->logger = $logger;
     }
 
@@ -53,13 +52,11 @@ class Importer
      *
      * @param Registry $registry
      */
-    public function setDoctrine(Registry $registry)
-    {
+    public function setDoctrine(Registry $registry) {
         $this->em = $registry->getManager();
     }
-    
-    public function processDate($str)
-    {
+
+    public function processDate($str) {
         if (!$str || ctype_space($str)) {
             return null;
         }
@@ -79,9 +76,8 @@ class Importer
         $this->logger->warning("Unparseable date: {$str}");
         return null;
     }
-    
-    public function split($s, $delim = ';', $alternate = null)
-    {
+
+    public function split($s, $delim = ';', $alternate = null) {
         if ($alternate
                 && mb_substr_count($s, $alternate) > 1
                 && mb_substr_count($delim, $s) < mb_substr_count($s, $alternate)) {
@@ -96,23 +92,24 @@ class Importer
         return $a;
     }
 
-    public function cleanPlaceName($placeName)
-    {
+    public function cleanPlaceName($placeName) {
         $filters = array(
-            '/^"[^"]*"\s*/' => '', // remove quoted place name at start
-            '/\s+\([^)]*\)$/' => '', // remove parenthesized location
-            '/^\s*near\b\s*/i' => '', // remove "near "
+            '/^"[^"]*"\s*/' => '',
+// remove quoted place name at start
+            '/\s+\([^)]*\)$/' => '',
+// remove parenthesized location
+            '/^\s*near\b\s*/i' => '',
+// remove "near "
         );
-        
+
         $name = $placeName;
         foreach ($filters as $key => $value) {
             $name = preg_replace($key, $value, $name);
         }
         return trim($name);
     }
-    
-    public function titleCase($title)
-    {
+
+    public function titleCase($title) {
         $title = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $title);
         $cased = mb_convert_case($title, MB_CASE_TITLE, 'UTF-8');
         // this is a terrible hack.
@@ -122,45 +119,45 @@ class Importer
         }
         return $cased;
     }
-    
-    public function cleanTitle($publicationTitle)
-    {
+
+    public function cleanTitle($publicationTitle) {
         $filters = array(
-            '/\(c?\d{4}(-c?\d{4})?\)/u' => '', // remove year or range
-            '/^"([^"]*)"$/u' => '$1', // remove front/rear quotes.
+            '/\(c?\d{4}(-c?\d{4})?\)/u' => '',
+// remove year or range
+            '/^"([^"]*)"$/u' => '$1',
+// remove front/rear quotes.
         );
-        
+
         $title = $publicationTitle;
         foreach ($filters as $key => $value) {
             $title = preg_replace($key, $value, $title);
         }
         return $this->titleCase($title);
     }
-    
-    public function sortableTitle($cleanTitle)
-    {
+
+    public function sortableTitle($cleanTitle) {
         $filters = array(
-            '/^(the|an?)\b\s*(.*)/ius' => '$2, $1', // move The, A, An to end.
-            '/^[^[:word:][:space:]]+/us' => '', // remove non-word chars at start.
+            '/^(the|an?)\b\s*(.*)/ius' => '$2, $1',
+// move The, A, An to end.
+            '/^[^[:word:][:space:]]+/us' => '',
+// remove non-word chars at start.
         );
-        
+
         $title = strtolower($cleanTitle);
         foreach ($filters as $key => $value) {
             $title = preg_replace($key, $value, $title);
         }
         return trim($title);
     }
-    
-    public function createAlias($name)
-    {
+
+    public function createAlias($name) {
         $e = new Alias();
         $e->setMaiden(preg_match('/\bn(?:é|e)e\b/u', $name));
         $e->setName($name);
         return $e;
     }
-    
-    public function addAliases($alternateNames)
-    {
+
+    public function addAliases($alternateNames) {
         $aliases = $this->split($alternateNames, ';', ',');
         $repo = $this->em->getRepository('AppBundle:Alias');
         $entities = array();
@@ -175,16 +172,14 @@ class Importer
         }
         return $entities;
     }
-    
-    public function createPlace($name)
-    {
+
+    public function createPlace($name) {
         $place = new Place();
         $place->setName($name);
         return $place;
     }
-    
-    public function addPlaces($placeNames)
-    {
+
+    public function addPlaces($placeNames) {
         if ($placeNames === '') {
             return array();
         }
@@ -206,9 +201,8 @@ class Importer
         }
         return $entities;
     }
-    
-    public function createPublication($title, Category $type)
-    {
+
+    public function createPublication($title, Category $type) {
         $e = new Publication();
         $e->setCategory($type);
         $e->setTitle($title);
@@ -216,9 +210,8 @@ class Importer
         $e->setSortableTitle($sortableTitle);
         return $e;
     }
-    
-    public function findCategory($typeName)
-    {
+
+    public function findCategory($typeName) {
         $typeRepo = $this->em->getRepository('AppBundle:Category');
         $type = $typeRepo->findOneByLabel($typeName);
         if ($type === null) {
@@ -226,15 +219,14 @@ class Importer
         }
         return $type;
     }
-    
-    public function addPublications($titleNames, $typeName)
-    {
+
+    public function addPublications($titleNames, $typeName) {
         if ($titleNames === '') {
             return array();
         }
         $titles = $this->split($titleNames);
         $type = $this->findCategory($typeName);
-        
+
         $repo = $this->em->getRepository('AppBundle:Publication');
         $entities = array();
         foreach ($titles as $title) {
@@ -254,9 +246,8 @@ class Importer
         }
         return $entities;
     }
-    
-    public function setDates(Author $author, $birthDateStr, $deathDateStr)
-    {
+
+    public function setDates(Author $author, $birthDateStr, $deathDateStr) {
         $birthDate = $this->processDate($birthDateStr);
         if ($birthDate !== null) {
             if (is_array($birthDate)) {
@@ -272,9 +263,8 @@ class Importer
             $author->setDeathDate($deathDate);
         }
     }
-    
-    public function setPlaces(Author $author, $birthPlaceStr, $deathPlaceStr)
-    {
+
+    public function setPlaces(Author $author, $birthPlaceStr, $deathPlaceStr) {
         $birthPlace = $this->addPlaces($birthPlaceStr);
         if (array_key_exists(0, $birthPlace)) {
             $author->setBirthPlace($birthPlace[0]);
@@ -284,38 +274,34 @@ class Importer
             $author->setDeathPlace($deathPlace[0]);
         }
     }
-    
-    public function setAliases(Author $author, $aliasStr)
-    {
+
+    public function setAliases(Author $author, $aliasStr) {
         $aliases = $this->addAliases($aliasStr);
         foreach ($aliases as $alias) {
             $author->addAlias($alias);
         }
     }
-    
-    public function setResidences(Author $author, $residencesStr)
-    {
+
+    public function setResidences(Author $author, $residencesStr) {
         foreach ($this->addPlaces($residencesStr) as $residence) {
             $author->addResidence($residence);
         }
     }
-    
-    public function setPublications(Author $author, $publicationStr, $type)
-    {
+
+    public function setPublications(Author $author, $publicationStr, $type) {
         foreach ($this->addPublications($publicationStr, $type) as $publication) {
             $author->addPublication($publication);
         }
     }
-    
-    public function setNotes(Author $author, $notes = array())
-    {
+
+    public function setNotes(Author $author, $notes = array()) {
         $author->setNotes(trim(implode('\n\n', $notes)));
     }
-    
-    public function importArray($row = array())
-    {
+
+    public function importArray($row = array()) {
         $author = new Author();
-        $author->setFullname($row[0]); // sets sortable name as well.
+        $author->setFullname($row[0]);
+// sets sortable name as well.
         $this->setDates($author, $row[2], $row[4]);
         $this->setPlaces($author, $row[3], $row[5]);
         $this->setAliases($author, $row[6]);
@@ -330,4 +316,5 @@ class Importer
         $this->em->flush($author);
         return $author;
     }
+
 }

@@ -15,10 +15,10 @@ class PublicationRepository extends \Doctrine\ORM\EntityRepository
      * @param string $q
      * @return Query
      */
-    public function searchQuery($q)
-    {
+    public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->where("e.title like '%$q%'");
         return $qb->getQuery();
     }
+
 }

@@ -17,8 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Usage: `./bin/console ceww:import path/to/files`.
  */
-class ImportCommand extends ContainerAwareCommand
-{
+class ImportCommand extends ContainerAwareCommand {
 
     /**
      * PSR Log compatible logger.
@@ -33,7 +32,7 @@ class ImportCommand extends ContainerAwareCommand
      * @var Registry
      */
     protected $em;
-    
+
     /**
      * Importer service.
      *
@@ -41,25 +40,21 @@ class ImportCommand extends ContainerAwareCommand
      */
     protected $importer;
 
-    protected function configure()
-    {
+    protected function configure() {
         $this
-            ->setName('ceww:import')
-            ->setDescription('Import one or more CSV files.')
-            ->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import')
-        ;
+                ->setName('ceww:import')
+                ->setDescription('Import one or more CSV files.')
+                ->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import');
     }
 
-    public function setContainer(ContainerInterface $container = null)
-    {
+    public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
         $this->logger = $container->get('logger');
         $this->em = $container->get('doctrine')->getManager();
         $this->importer = $container->get('ceww.importer');
     }
-    
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $files = $input->getArgument('files');
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         $batchSize = 50;
@@ -94,4 +89,5 @@ class ImportCommand extends ContainerAwareCommand
             }
         }
     }
+
 }

@@ -17,11 +17,11 @@ use Symfony\Component\Console\Question\Question;
  */
 class CreateUserCommand extends ContainerAwareCommand
 {
+
     /**
      * @see Command
      */
-    protected function configure()
-    {
+    protected function configure() {
         $this
             ->setName('fos:user:create')
             ->setDescription('Create a user.')
@@ -59,8 +59,7 @@ EOT
     /**
      * @see Command
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $email = $input->getArgument('email');
         $password = $input->getArgument('password');
         $fullname = $input->getArgument('fullname');
@@ -77,8 +76,7 @@ EOT
     /**
      * @see Command
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
+    protected function interact(InputInterface $input, OutputInterface $output) {
         $questions = array();
 
         if (!$input->getArgument('email')) {
@@ -128,10 +126,11 @@ EOT
             });
             $questions['password'] = $question;
         }
-        
+
         foreach ($questions as $name => $question) {
             $answer = $this->getHelper('question')->ask($input, $output, $question);
             $input->setArgument($name, $answer);
         }
     }
+
 }

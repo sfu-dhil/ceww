@@ -17,6 +17,7 @@ use AppBundle\Form\GenreType;
  */
 class GenreController extends Controller
 {
+
     /**
      * Lists all Genre entities.
      *
@@ -25,8 +26,7 @@ class GenreController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Genre e ORDER BY e.id';
         $query = $em->createQuery($dql);
@@ -37,6 +37,7 @@ class GenreController extends Controller
             'genres' => $genres,
         );
     }
+
     /**
      * Search for Genre entities.
      *
@@ -57,8 +58,7 @@ class GenreController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request)
-    {
+    public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Genre');
         $q = $request->query->get('q');
@@ -84,8 +84,7 @@ class GenreController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $genre = new Genre();
         $form = $this->createForm('AppBundle\Form\GenreType', $genre);
         $form->handleRequest($request);
@@ -113,8 +112,7 @@ class GenreController extends Controller
      * @Template()
      * @param Genre $genre
      */
-    public function showAction(Genre $genre)
-    {
+    public function showAction(Genre $genre) {
 
         return array(
             'genre' => $genre,
@@ -128,10 +126,9 @@ class GenreController extends Controller
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
-     * @param Genre $genre
+     * @param Genre   $genre
      */
-    public function editAction(Request $request, Genre $genre)
-    {
+    public function editAction(Request $request, Genre $genre) {
         $editForm = $this->createForm('AppBundle\Form\GenreType', $genre);
         $editForm->handleRequest($request);
 
@@ -154,10 +151,9 @@ class GenreController extends Controller
      * @Route("/{id}/delete", name="admin_genre_delete")
      * @Method("GET")
      * @param Request $request
-     * @param Genre $genre
+     * @param Genre   $genre
      */
-    public function deleteAction(Request $request, Genre $genre)
-    {
+    public function deleteAction(Request $request, Genre $genre) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($genre);
         $em->flush();
@@ -165,4 +161,5 @@ class GenreController extends Controller
 
         return $this->redirectToRoute('admin_genre_index');
     }
+
 }

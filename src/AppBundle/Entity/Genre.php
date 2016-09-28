@@ -24,13 +24,13 @@ class Genre extends AbstractEntity
      * @Groups({"public", "private"})
      */
     private $name;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"private"})
      */
     private $description;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Publication", mappedBy="genres")
      * @Groups({"public", "private"})
@@ -38,16 +38,14 @@ class Genre extends AbstractEntity
      */
     private $publications;
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->name;
     }
 
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->publications = new ArrayCollection();
     }
 
@@ -58,8 +56,7 @@ class Genre extends AbstractEntity
      *
      * @return Genre
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -70,8 +67,7 @@ class Genre extends AbstractEntity
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -82,8 +78,7 @@ class Genre extends AbstractEntity
      *
      * @return Genre
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -94,8 +89,7 @@ class Genre extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -106,8 +100,7 @@ class Genre extends AbstractEntity
      *
      * @return Genre
      */
-    public function addPublication(Publication $publication)
-    {
+    public function addPublication(Publication $publication) {
         $this->publications[] = $publication;
 
         return $this;
@@ -118,8 +111,7 @@ class Genre extends AbstractEntity
      *
      * @param Publication $publication
      */
-    public function removePublication(Publication $publication)
-    {
+    public function removePublication(Publication $publication) {
         $this->publications->removeElement($publication);
     }
 
@@ -128,8 +120,8 @@ class Genre extends AbstractEntity
      *
      * @return Collection|Publication[]
      */
-    public function getPublications()
-    {
+    public function getPublications() {
         return $this->publications;
     }
+
 }

@@ -17,8 +17,7 @@ class LoadCategories extends AbstractDataFixture implements OrderedFixtureInterf
 
     private static $CATEGORIES = array('Book', 'Periodical', 'Anthology');
 
-    protected function doLoad(ObjectManager $manager)
-    {
+    protected function doLoad(ObjectManager $manager) {
         foreach (self::$CATEGORIES as $label) {
             $category = new Category();
             $category->setLabel($label);
@@ -29,13 +28,12 @@ class LoadCategories extends AbstractDataFixture implements OrderedFixtureInterf
         $manager->flush();
     }
 
-    public function getOrder()
-    {
+    public function getOrder() {
         return 1;
     }
 
-    protected function getEnvironments()
-    {
+    protected function getEnvironments() {
         return ['test'];
     }
+
 }

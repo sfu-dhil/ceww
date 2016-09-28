@@ -23,7 +23,7 @@ class Author extends AbstractEntity
      * @Groups({"public", "private"})
      */
     private $fullName;
-    
+
     /**
      * @ORM\Column(type="string", length=120, nullable=false)
      */
@@ -32,17 +32,17 @@ class Author extends AbstractEntity
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"public", "private"})
-     * @var int
+     * @var integer
      */
     private $birthDate;
-    
+
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"public", "private"})
-     * @var int
+     * @var integer
      */
     private $deathDate;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsBorn")
      * @ORM\JoinColumn(name="birthplace_id", referencedColumnName="id", nullable=true)
@@ -50,7 +50,7 @@ class Author extends AbstractEntity
      * @var Place
      */
     private $birthPlace;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsDied")
      * @ORM\JoinColumn(name="deathplace_id", referencedColumnName="id", nullable=true)
@@ -58,7 +58,7 @@ class Author extends AbstractEntity
      * @var Place
      */
     private $deathPlace;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Status", inversedBy="publishedAuthors")
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=false)
@@ -66,13 +66,13 @@ class Author extends AbstractEntity
      * @var Status
      */
     private $status;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"private"})
      */
     private $notes;
-    
+
     /**
      * @ORM\Column(type="array")
      * @Groups({"private"})
@@ -87,7 +87,7 @@ class Author extends AbstractEntity
      * @var Collection|Alias[]
      */
     private $aliases;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
      * @ORM\JoinTable(name="author_residence")
@@ -95,7 +95,7 @@ class Author extends AbstractEntity
      * @var Collection|Place[]
      */
     private $residences;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="Publication", inversedBy="authors")
      * @ORM\JoinTable(name="author_publication")
@@ -103,17 +103,15 @@ class Author extends AbstractEntity
      * @var Collection|Publication[]
      */
     private $publications;
-    
-    public function __construct()
-    {
+
+    public function __construct() {
         $this->original = array();
         $this->aliases = new ArrayCollection();
         $this->residences = new ArrayCollection();
         $this->publications = new ArrayCollection();
     }
-    
-    public function __toString()
-    {
+
+    public function __toString() {
         return $this->fullName;
     }
 
@@ -124,8 +122,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setFullName($fullName)
-    {
+    public function setFullName($fullName) {
         $this->fullName = $fullName;
 
         return $this;
@@ -136,8 +133,7 @@ class Author extends AbstractEntity
      *
      * @return string
      */
-    public function getFullName()
-    {
+    public function getFullName() {
         return $this->fullName;
     }
 
@@ -148,8 +144,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setSortableName($sortableName)
-    {
+    public function setSortableName($sortableName) {
         $this->sortableName = $sortableName;
 
         return $this;
@@ -160,25 +155,23 @@ class Author extends AbstractEntity
      *
      * @return string
      */
-    public function getSortableName()
-    {
+    public function getSortableName() {
         if ($this->sortableName === null) {
             return $this->fullName;
         }
         return $this->sortableName;
     }
-    
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function updateSortableName()
-    {
+    public function updateSortableName() {
         if ($this->sortableName === null || $this->sortableName === '') {
             $this->sortableName = $this->fullName;
         }
     }
-    
+
     /**
      * Set birthPlace
      *
@@ -186,8 +179,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setBirthPlace(Place $birthPlace = null)
-    {
+    public function setBirthPlace(Place $birthPlace = null) {
         $this->birthPlace = $birthPlace;
 
         return $this;
@@ -198,8 +190,7 @@ class Author extends AbstractEntity
      *
      * @return Place
      */
-    public function getBirthPlace()
-    {
+    public function getBirthPlace() {
         return $this->birthPlace;
     }
 
@@ -210,8 +201,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setDeathPlace(Place $deathPlace = null)
-    {
+    public function setDeathPlace(Place $deathPlace = null) {
         $this->deathPlace = $deathPlace;
 
         return $this;
@@ -222,8 +212,7 @@ class Author extends AbstractEntity
      *
      * @return Place
      */
-    public function getDeathPlace()
-    {
+    public function getDeathPlace() {
         return $this->deathPlace;
     }
 
@@ -234,8 +223,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setStatus(Status $status)
-    {
+    public function setStatus(Status $status) {
         $this->status = $status;
 
         return $this;
@@ -246,8 +234,7 @@ class Author extends AbstractEntity
      *
      * @return Status
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->status;
     }
 
@@ -258,8 +245,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setNotes($notes)
-    {
+    public function setNotes($notes) {
         $this->notes = $notes;
 
         return $this;
@@ -270,8 +256,7 @@ class Author extends AbstractEntity
      *
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->notes;
     }
 
@@ -282,8 +267,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function addResidence(Place $residence)
-    {
+    public function addResidence(Place $residence) {
         if (! $this->residences->contains($residence)) {
             $this->residences[] = $residence;
         }
@@ -296,8 +280,7 @@ class Author extends AbstractEntity
      *
      * @param Place $residence
      */
-    public function removeResidence(Place $residence)
-    {
+    public function removeResidence(Place $residence) {
         $this->residences->removeElement($residence);
     }
 
@@ -306,8 +289,7 @@ class Author extends AbstractEntity
      *
      * @return Collection
      */
-    public function getResidences()
-    {
+    public function getResidences() {
         return $this->residences;
     }
 
@@ -318,8 +300,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function addPublication(Publication $publication)
-    {
+    public function addPublication(Publication $publication) {
         if (! $this->publications->contains($publication)) {
             $this->publications[] = $publication;
         }
@@ -332,8 +313,7 @@ class Author extends AbstractEntity
      *
      * @param Publication $publication
      */
-    public function removePublication(Publication $publication)
-    {
+    public function removePublication(Publication $publication) {
         $this->publications->removeElement($publication);
     }
 
@@ -342,8 +322,7 @@ class Author extends AbstractEntity
      *
      * @return Collection
      */
-    public function getPublications($filter = null)
-    {
+    public function getPublications($filter = null) {
         if ($filter===null) {
             return $this->publications;
         }
@@ -359,8 +338,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function addAlias(Alias $alias)
-    {
+    public function addAlias(Alias $alias) {
         $this->aliases[] = $alias;
 
         return $this;
@@ -371,8 +349,7 @@ class Author extends AbstractEntity
      *
      * @param Alias $alias
      */
-    public function removeAlias(Alias $alias)
-    {
+    public function removeAlias(Alias $alias) {
         $this->aliases->removeElement($alias);
     }
 
@@ -381,8 +358,7 @@ class Author extends AbstractEntity
      *
      * @return Collection
      */
-    public function getAliases()
-    {
+    public function getAliases() {
         return $this->aliases;
     }
 
@@ -393,8 +369,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setBirthDate($birthDate)
-    {
+    public function setBirthDate($birthDate) {
         $this->birthDate = $birthDate;
 
         return $this;
@@ -405,8 +380,7 @@ class Author extends AbstractEntity
      *
      * @return integer
      */
-    public function getBirthDate()
-    {
+    public function getBirthDate() {
         return $this->birthDate;
     }
 
@@ -417,8 +391,7 @@ class Author extends AbstractEntity
      *
      * @return Author
      */
-    public function setDeathDate($deathDate)
-    {
+    public function setDeathDate($deathDate) {
         $this->deathDate = $deathDate;
 
         return $this;
@@ -429,13 +402,11 @@ class Author extends AbstractEntity
      *
      * @return integer
      */
-    public function getDeathDate()
-    {
+    public function getDeathDate() {
         return $this->deathDate;
     }
-    
-    public function getOriginal($key = null)
-    {
+
+    public function getOriginal($key = null) {
         if ($key === null) {
             return $this->original;
         }
@@ -444,9 +415,9 @@ class Author extends AbstractEntity
         }
         return null;
     }
-    
-    public function setOriginal($key, $value)
-    {
+
+    public function setOriginal($key, $value) {
         $this->original[$key] = $value;
     }
+
 }

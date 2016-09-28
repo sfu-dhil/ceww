@@ -1,9 +1,9 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+    * To change this license header, choose License Headers in Project Properties.
+    * To change this template file, choose Tools | Templates
+    * and open the template in the editor.
  */
 
 namespace AppBundle\DataFixtures\ORM\dev;
@@ -20,9 +20,8 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class LoadAuthors extends AbstractDataFixture implements OrderedFixtureInterface
 {
-    
-    protected function doLoad(ObjectManager $manager)
-    {
+
+    protected function doLoad(ObjectManager $manager) {
         $author = new Author();
         $author->setFullName('Sarah Simons');
         $author->setBirthPlace($this->getReference('place.paris'));
@@ -37,13 +36,12 @@ class LoadAuthors extends AbstractDataFixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
-    public function getOrder()
-    {
+    public function getOrder() {
         return 3;
     }
 
-    protected function getEnvironments()
-    {
+    protected function getEnvironments() {
         return ['dev'];
     }
+
 }

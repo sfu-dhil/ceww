@@ -9,25 +9,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AliasType extends AbstractType
 {
+
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('name');  // string
-        $builder->add('maiden');  // boolean
-        $builder->add('description');  // text
+    public function buildForm(FormBuilderInterface $builder, array $options) {
+        $builder->add('name');
+// string
+        $builder->add('maiden');
+// boolean
+        $builder->add('description');
+// text
         $builder->add('authors');
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
-    {
+    public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Alias'
         ));
     }
+
 }

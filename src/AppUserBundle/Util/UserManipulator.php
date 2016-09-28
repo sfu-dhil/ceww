@@ -20,25 +20,23 @@ class UserManipulator
      */
     private $userManager;
 
-    public function __construct(UserManagerInterface $userManager)
-    {
+    public function __construct(UserManagerInterface $userManager) {
         $this->userManager = $userManager;
     }
 
     /**
      * Creates a user and returns it.
      *
-     * @param string $email
-     * @param string $password
-     * @param string $fullname
-     * @param string $institution
-     * @param bool   $active
-     * @param bool   $superadmin
+     * @param string  $email
+     * @param string  $password
+     * @param string  $fullname
+     * @param string  $institution
+     * @param boolean $active
+     * @param boolean $superadmin
      *
      * @return User
      */
-    public function create($email, $password, $fullname, $institution, $active, $superadmin)
-    {
+    public function create($email, $password, $fullname, $institution, $active, $superadmin) {
         $user = $this->userManager->createUser();
         $user->setEmail($email);
         $user->setPlainPassword($password);
@@ -50,4 +48,5 @@ class UserManipulator
 
         return $user;
     }
+
 }

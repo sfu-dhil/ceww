@@ -25,19 +25,17 @@ class Category extends AbstractEntity
      * @Groups({"private"})
      */
     private $description;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Publication", mappedBy="category")
      * @var Collection|Publication[]
      * @Groups({"recursive"})
      */
     private $publications;
-    
-    public function __toString()
-    {
+
+    public function __toString() {
         return $this->label;
     }
-
 
     /**
      * Set label
@@ -46,8 +44,7 @@ class Category extends AbstractEntity
      *
      * @return Category
      */
-    public function setLabel($label)
-    {
+    public function setLabel($label) {
         $this->label = $label;
 
         return $this;
@@ -58,8 +55,7 @@ class Category extends AbstractEntity
      *
      * @return string
      */
-    public function getLabel()
-    {
+    public function getLabel() {
         return $this->label;
     }
 
@@ -70,8 +66,7 @@ class Category extends AbstractEntity
      *
      * @return Category
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -82,15 +77,14 @@ class Category extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
+
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->publications = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -101,8 +95,7 @@ class Category extends AbstractEntity
      *
      * @return Category
      */
-    public function addPublication(\AppBundle\Entity\Publication $publication)
-    {
+    public function addPublication(\AppBundle\Entity\Publication $publication) {
         $this->publications[] = $publication;
 
         return $this;
@@ -113,8 +106,7 @@ class Category extends AbstractEntity
      *
      * @param \AppBundle\Entity\Publication $publication
      */
-    public function removePublication(\AppBundle\Entity\Publication $publication)
-    {
+    public function removePublication(\AppBundle\Entity\Publication $publication) {
         $this->publications->removeElement($publication);
     }
 
@@ -123,8 +115,8 @@ class Category extends AbstractEntity
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getPublications()
-    {
+    public function getPublications() {
         return $this->publications;
     }
+
 }
