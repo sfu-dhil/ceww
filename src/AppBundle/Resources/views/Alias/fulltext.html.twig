@@ -4,7 +4,7 @@
     <h1>Alias Full Text Search</h1>
 	{% if aliases|length %}
 		<p class="count">
-        Displaying {{ aliases|length }} aliases of {{ aliases.getTotalItemCount }} total.
+			Displaying {{ aliases|length }} aliases of {{ aliases.getTotalItemCount }} total.
 		</p>
 	{% endif %}
 {% endblock %} 
@@ -28,6 +28,16 @@
                     </div>
                 </div>
             </div>
+			<p>	Full text searching options:</p>
+			<ul>
+				<li><code>shakespeare</code> - shakespeare should be present, but might not be</li>
+				<li><code>shakes*</code> - words starting with shakes should be present</li>
+				<li><code>+agnes</code> - agnes must be present</li>
+				<li><code>-fisher</code> - fisher must not be present</li>
+				<li>Combinations are OK: <code>+agnes -fisher</code> finds Anges who isn't a Fisher</li>
+				<li>Phrases are OK: <code>"nee agnes"</code> finds rows that contain the literal phrase.
+			</ul>
+
         </fieldset>
     </form>
 
@@ -50,7 +60,7 @@
 		</table>
 
 		<div class="navigation">
-        {{ knp_pagination_render(aliases) }}
+			{{ knp_pagination_render(aliases) }}
 		</div>
 	{% endif %}
 
