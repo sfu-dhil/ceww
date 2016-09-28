@@ -18,9 +18,11 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadAuthors extends AbstractDataFixture implements OrderedFixtureInterface  {
+class LoadAuthors extends AbstractDataFixture implements OrderedFixtureInterface
+{
     
-    protected function doLoad(ObjectManager $manager) {
+    protected function doLoad(ObjectManager $manager)
+    {
         $author = new Author();
         $author->setFullName('Sarah Simons');
         $author->setBirthPlace($this->getReference('place.paris'));
@@ -35,12 +37,13 @@ class LoadAuthors extends AbstractDataFixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
-    public function getOrder() {
-        return 3;        
+    public function getOrder()
+    {
+        return 3;
     }
 
-    protected function getEnvironments() {
+    protected function getEnvironments()
+    {
         return ['dev'];
     }
-
 }

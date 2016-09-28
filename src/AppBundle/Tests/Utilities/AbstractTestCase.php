@@ -11,7 +11,8 @@ use Liip\FunctionalTestBundle\Test\WebTestCase as BaseTestCase;
  * Thin wrapper around Liip\FunctionalTestBundle\Test\WebTestCase to preload
  * fixtures into the database.
  */
-abstract class AbstractTestCase extends BaseTestCase {
+abstract class AbstractTestCase extends BaseTestCase
+{
 
     /**
      * @var ObjectManager
@@ -21,24 +22,26 @@ abstract class AbstractTestCase extends BaseTestCase {
     /**
      * As the fixtures load data, they save references. Use $this->references
      * to get them.
-     * 
+     *
      * @var ReferenceRepository
      */
     protected $references;
 
     /**
      * http://stackoverflow.com/a/32879462/9316
-     * 
+     *
      * @var Closure
      */
     private static $kernelModifier = null;
 
-    public function setKernelModifier(Closure $kernelModifier) {
+    public function setKernelModifier(Closure $kernelModifier)
+    {
         self::$kernelModifier = $kernelModifier;
         $this->ensureKernelShutdown();
     }
 
-    protected static function createClient(array $options = [], array $server = []) {
+    protected static function createClient(array $options = [], array $server = [])
+    {
         static::bootKernel($options);
         if (self::$kernelModifier !== null) {
             self::$kernelModifier->__invoke();
@@ -50,19 +53,21 @@ abstract class AbstractTestCase extends BaseTestCase {
     }
 
     /**
-     * Returns a list of data fixture classes for use in one test class. They 
+     * Returns a list of data fixture classes for use in one test class. They
      * will be loaded into the database before each test function in the class.
-     * 
+     *
      * @return array()
      */
-    public function fixtures() {
+    public function fixtures()
+    {
         return array();
     }
 
     /**
      * {@inheritDocs}
      */
-    protected function setUp() {
+    protected function setUp()
+    {
         parent::setUp();
         $fixtures = $this->fixtures();
         if (count($fixtures) > 0) {
@@ -74,11 +79,11 @@ abstract class AbstractTestCase extends BaseTestCase {
     }
 
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
-        if($this->em) {
+        if ($this->em) {
             $this->em->clear();
         }
     }
-
 }

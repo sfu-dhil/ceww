@@ -54,7 +54,7 @@ class AdminUserType extends AbstractType
 
     /**
      * Get the name of the form.
-     * 
+     *
      * @return string
      */
     public function getName()

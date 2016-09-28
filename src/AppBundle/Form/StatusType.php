@@ -14,9 +14,9 @@ class StatusType extends AbstractType
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {    
-        $builder->add('label');  // string     
-        $builder->add('description');  // text         
+    {
+        $builder->add('label');  // string
+        $builder->add('description');  // text
     }
     
     /**

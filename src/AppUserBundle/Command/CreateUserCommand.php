@@ -12,7 +12,7 @@ use Symfony\Component\Console\Question\Question;
 /**
  * Overrides the CreateUserCommand from FOSUserBundle to add support for
  * fullname and institution.
- * 
+ *
  * Requires Symfony > 3.0
  */
 class CreateUserCommand extends ContainerAwareCommand
@@ -83,7 +83,7 @@ EOT
 
         if (!$input->getArgument('email')) {
             $question = new Question('Please choose an email:');
-            $question->setValidator(function($email) {
+            $question->setValidator(function ($email) {
                 if (empty($email)) {
                     throw new \Exception('Email can not be empty');
                 }
@@ -95,7 +95,7 @@ EOT
 
         if (!$input->getArgument('fullname')) {
             $question = new Question('Please choose an fullname:');
-            $question->setValidator(function($fullname) {
+            $question->setValidator(function ($fullname) {
                 if (empty($fullname)) {
                     throw new \Exception('Email can not be empty');
                 }
@@ -107,7 +107,7 @@ EOT
 
         if (!$input->getArgument('institution')) {
             $question = new Question('Please choose an institution:');
-            $question->setValidator(function($institution) {
+            $question->setValidator(function ($institution) {
                 if (empty($institution)) {
                     throw new \Exception('Email can not be empty');
                 }
@@ -119,7 +119,7 @@ EOT
 
         if (!$input->getArgument('password')) {
             $question = new Question('Please choose an password:');
-            $question->setValidator(function($password) {
+            $question->setValidator(function ($password) {
                 if (empty($password)) {
                     throw new \Exception('Email can not be empty');
                 }
@@ -128,7 +128,7 @@ EOT
             });
             $questions['password'] = $question;
         }
-		
+        
         foreach ($questions as $name => $question) {
             $answer = $this->getHelper('question')->ask($input, $output, $question);
             $input->setArgument($name, $answer);

@@ -18,16 +18,18 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * @Route("/api")
  */
-class ApiController extends Controller {
+class ApiController extends Controller
+{
 
     /**
      * @return Serializer
      */
-    private function getSerializer() {
+    private function getSerializer()
+    {
         $encoder = new JsonEncoder();
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $objectNormalizer = new ObjectNormalizer($classMetadataFactory);
-        $objectNormalizer->setCircularReferenceHandler(function($object){
+        $objectNormalizer->setCircularReferenceHandler(function ($object) {
             return $object->__toString();
         });
         $dateTimeNormalizer = new DateTimeNormalizer();
@@ -41,7 +43,8 @@ class ApiController extends Controller {
      * @Method("GET")
      * @param Request $request
      */
-    public function searchAction(Request $request, $type) {
+    public function searchAction(Request $request, $type)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $repo = $em->getRepository('AppBundle:' . ucfirst($type));
@@ -61,7 +64,8 @@ class ApiController extends Controller {
      * @Route("/{type}/{id}", name="api_entity")
      * @Method("GET")
      */
-    public function entityAction($type, $id) {
+    public function entityAction($type, $id)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->find('AppBundle:' . ucfirst($type), $id);
@@ -69,7 +73,7 @@ class ApiController extends Controller {
         $data = $serializer->normalize($entity, null, array('groups' => array('public')));
         $content = $serializer->serialize($data, 'json');
         $response = new Response($content, 200);
-        $response->headers->set('Content-Type', 'application/json');        
+        $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
 }

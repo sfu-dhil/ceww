@@ -14,7 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class Publication extends AbstractEntity {
+class Publication extends AbstractEntity
+{
     
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
@@ -63,13 +64,15 @@ class Publication extends AbstractEntity {
      */
     private $authors;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->authors = new ArrayCollection();
         $this->genres = new ArrayCollection();
     }
     
-    public function __toString() {
-        return $this->title;        
+    public function __toString()
+    {
+        return $this->title;
     }
 
 
@@ -265,8 +268,9 @@ class Publication extends AbstractEntity {
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function updateSortableTitle() {
-        if($this->sortableTitle === null || $this->sortableTitle === '') {
+    public function updateSortableTitle()
+    {
+        if ($this->sortableTitle === null || $this->sortableTitle === '') {
             $this->sortableTitle = $this->sortableTitle;
         }
     }

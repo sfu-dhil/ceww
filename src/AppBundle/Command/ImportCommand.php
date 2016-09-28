@@ -12,24 +12,37 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ImportCommand extends ContainerAwareCommand {
+/**
+ * Import one or more .CSV files.
+ *
+ * Usage: `./bin/console ceww:import path/to/files`.
+ */
+class ImportCommand extends ContainerAwareCommand
+{
 
     /**
+     * PSR Log compatible logger.
+     *
      * @var Logger
      */
     private $logger;
 
     /**
+     * Database registry.
+     *
      * @var Registry
      */
     protected $em;
     
     /**
+     * Importer service.
+     *
      * @var Importer
      */
     protected $importer;
 
-    protected function configure() {
+    protected function configure()
+    {
         $this
             ->setName('ceww:import')
             ->setDescription('Import one or more CSV files.')
@@ -37,14 +50,16 @@ class ImportCommand extends ContainerAwareCommand {
         ;
     }
 
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
         parent::setContainer($container);
         $this->logger = $container->get('logger');
         $this->em = $container->get('doctrine')->getManager();
         $this->importer = $container->get('ceww.importer');
     }
     
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $files = $input->getArgument('files');
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         $batchSize = 50;
@@ -58,7 +73,7 @@ class ImportCommand extends ContainerAwareCommand {
                 $line++;
                 try {
                     $author = $this->importer->importArray($row);
-                    for($i = 0; $i < count($headers); ++$i) {
+                    for ($i = 0; $i < count($headers); ++$i) {
                         $author->setOriginal($headers[$i], $row[$i]);
                     }
                     if ($line % $batchSize === 0) {

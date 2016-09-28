@@ -18,9 +18,11 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadPublications extends AbstractDataFixture implements OrderedFixtureInterface  {
+class LoadPublications extends AbstractDataFixture implements OrderedFixtureInterface
+{
     
-    protected function doLoad(ObjectManager $manager) {
+    protected function doLoad(ObjectManager $manager)
+    {
         $publication = new Publication();
         $publication->setCategory($this->getReference('category.book'));
         $publication->setTitle('Things and Stuff');
@@ -31,12 +33,13 @@ class LoadPublications extends AbstractDataFixture implements OrderedFixtureInte
         $manager->flush();
     }
 
-    public function getOrder() {
-        return 2;        
+    public function getOrder()
+    {
+        return 2;
     }
 
-    protected function getEnvironments() {
+    protected function getEnvironments()
+    {
         return ['test'];
     }
-
 }

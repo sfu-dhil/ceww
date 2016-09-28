@@ -15,7 +15,8 @@ use AppBundle\Form\AliasType;
  *
  * @Route("/admin/alias")
  */
-class AliasController extends Controller {
+class AliasController extends Controller
+{
 
     /**
      * Lists all Alias entities.
@@ -25,7 +26,8 @@ class AliasController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Alias e ORDER BY e.name';
         $query = $em->createQuery($dql);
@@ -45,7 +47,8 @@ class AliasController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Alias');
         $q = $request->query->get('q');
@@ -71,7 +74,8 @@ class AliasController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function fulltextAction(Request $request) {
+    public function fulltextAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Alias');
         $q = $request->query->get('q');
@@ -98,7 +102,8 @@ class AliasController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $alias = new Alias();
         $form = $this->createForm('AppBundle\Form\AliasType', $alias);
         $form->handleRequest($request);
@@ -126,7 +131,8 @@ class AliasController extends Controller {
      * @Template()
      * @param Alias $alias
      */
-    public function showAction(Alias $alias) {
+    public function showAction(Alias $alias)
+    {
 
         return array(
             'alias' => $alias,
@@ -142,7 +148,8 @@ class AliasController extends Controller {
      * @param Request $request
      * @param Alias $alias
      */
-    public function editAction(Request $request, Alias $alias) {
+    public function editAction(Request $request, Alias $alias)
+    {
         $editForm = $this->createForm('AppBundle\Form\AliasType', $alias);
         $editForm->handleRequest($request);
 
@@ -168,7 +175,8 @@ class AliasController extends Controller {
      * @param Request $request
      * @param Alias $alias
      */
-    public function deleteAction(Request $request, Alias $alias) {
+    public function deleteAction(Request $request, Alias $alias)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($alias);
         $em->flush();
@@ -176,5 +184,4 @@ class AliasController extends Controller {
 
         return $this->redirectToRoute('admin_alias_index');
     }
-
 }

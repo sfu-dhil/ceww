@@ -34,14 +34,16 @@ class PlaceNamesCommand extends ContainerAwareCommand
         ;
     }
     
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
         parent::setContainer($container);
         $this->logger = $container->get('logger');
         $this->em = $container->get('doctrine')->getManager();
         $this->geonames_account = $container->getParameter('geonames_account');
     }
 
-    protected function getClient() {
+    protected function getClient()
+    {
         $client = new Client(array(
             'headers' => array(
                 'User-Agent' => 'CEWW API Client/1.0',
@@ -56,7 +58,7 @@ class PlaceNamesCommand extends ContainerAwareCommand
         $client = $this->getClient();
         $query = $this->em->createQuery('SELECT p FROM AppBundle:Place p');
         $iterator = $query->iterate();
-        foreach($iterator as $row) {
+        foreach ($iterator as $row) {
             $place = $row[0];
             $this->logger->notice($place->getName());
             $response = $client->get(self::GEONAMES_SEARCH, array(

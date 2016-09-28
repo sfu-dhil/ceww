@@ -15,18 +15,18 @@ class AuthorType extends AbstractType
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {    
-        $builder->add('fullName');  // string     
-        $builder->add('sortableName');  // string     
+    {
+        $builder->add('fullName');  // string
+        $builder->add('sortableName');  // string
         
-        $builder->add('birthDate');  // integer     
+        $builder->add('birthDate');  // integer
         $builder->add('birthplace_id', HiddenType::class, array(
             'mapped' => false,
             
             'attr' => array(
                 'id' => 'birthplace_id',
             )
-        ));  
+        ));
         $builder->add('birthplace', TextType::class, array(
             'mapped' => false,
             'attr' => array(
@@ -34,13 +34,13 @@ class AuthorType extends AbstractType
             )
         ));
         
-        $builder->add('deathDate');  // integer     
+        $builder->add('deathDate');  // integer
         $builder->add('deathplace_id', HiddenType::class, array(
-            'mapped' => false,            
+            'mapped' => false,
             'attr' => array(
                 'id' => 'deathplace_id',
             )
-        ));  
+        ));
         $builder->add('deathplace', TextType::class, array(
             'mapped' => false,
             'attr' => array(
@@ -49,7 +49,7 @@ class AuthorType extends AbstractType
         ));
         
         
-        $builder->add('status');     
+        $builder->add('status');
     }
     
     /**

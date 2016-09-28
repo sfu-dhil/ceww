@@ -12,12 +12,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadStatuses extends AbstractDataFixture implements OrderedFixtureInterface {
+class LoadStatuses extends AbstractDataFixture implements OrderedFixtureInterface
+{
 
     private static $STATUSES = array('Draft', 'Review', 'Published');
     
-    protected function doLoad(ObjectManager $manager) {
-        foreach(self::$STATUSES as $label) {
+    protected function doLoad(ObjectManager $manager)
+    {
+        foreach (self::$STATUSES as $label) {
             $status = new Status();
             $status->setLabel($label);
             $manager->persist($status);
@@ -27,12 +29,13 @@ class LoadStatuses extends AbstractDataFixture implements OrderedFixtureInterfac
         $manager->flush();
     }
 
-    public function getOrder() {
-        return 1;        
+    public function getOrder()
+    {
+        return 1;
     }
 
-    protected function getEnvironments() {
+    protected function getEnvironments()
+    {
         return ['dev'];
     }
-
 }

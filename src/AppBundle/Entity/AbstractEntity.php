@@ -7,10 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ORM\MappedSuperclass 
+ * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  */
-abstract class AbstractEntity {
+abstract class AbstractEntity
+{
 
     /**
      * @var int
@@ -36,36 +37,42 @@ abstract class AbstractEntity {
      */
     protected $updated;
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
     
-    private function setCreated() {
+    private function setCreated()
+    {
         // nop
     }
     
     /**
      * @return DateTime
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->created;
     }
 
-    private function setUpdated() {
+    private function setUpdated()
+    {
         // nop
     }
     
     /**
      * @return DateTime
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->updated;
     }
 
     /**
      * @ORM\PrePersist()
      */
-    public function prePersist() {
+    public function prePersist()
+    {
         $this->created = new DateTime();
         $this->updated = new DateTime();
     }
@@ -73,7 +80,8 @@ abstract class AbstractEntity {
     /**
      * @ORM\PreUpdate()
      */
-    public function preUpdate() {
+    public function preUpdate()
+    {
         $this->updated = new DateTime();
     }
     

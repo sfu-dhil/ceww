@@ -18,27 +18,30 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface {
+class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface
+{
     
     private static $GENRES = array('Fiction', 'Non-fiction');
     
-    protected function doLoad(ObjectManager $manager) {
-        foreach(self::$GENRES as $name) {
+    protected function doLoad(ObjectManager $manager)
+    {
+        foreach (self::$GENRES as $name) {
             $genre = new Genre();
             $genre->setName($name);
             $manager->persist($genre);
             $lc = strtolower($name);
             $this->setReference("genre.{$lc}", $genre);
-            
         }
         $manager->flush();
     }
 
-    public function getOrder() {
-        return 1;        
+    public function getOrder()
+    {
+        return 1;
     }
 
-    protected function getEnvironments() {
+    protected function getEnvironments()
+    {
         return ['dev'];
     }
 

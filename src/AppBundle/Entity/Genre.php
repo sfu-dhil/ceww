@@ -38,7 +38,8 @@ class Genre extends AbstractEntity
      */
     private $publications;
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name;
     }
 

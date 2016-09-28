@@ -19,7 +19,8 @@ class AuthorRepository extends EntityRepository
      * @param string $q
      * @return Query
      */
-    public function searchQuery($q) {
+    public function searchQuery($q)
+    {
         $qb = $this->createQueryBuilder('a');
         $qb->where("a.fullName like '%$q%'");
         $qb->addOrderBy('a.sortableName');
@@ -27,27 +28,29 @@ class AuthorRepository extends EntityRepository
         return $query;
     }
     
-    public function next(Author $author) {
+    public function next(Author $author)
+    {
         $qb = $this->createQueryBuilder('a');
         $qb->where('a.sortableName > :sortableName');
         $qb->orderBy('a.sortableName');
         $qb->setMaxResults(1);
         $qb->setParameter('sortableName', $author->getSortableName());
         $result = $qb->getQuery()->getResult();
-        if(count($result) === 1) {
+        if (count($result) === 1) {
             return $result[0];
         }
         return null;
     }
     
-    public function previous(Author $author) {
+    public function previous(Author $author)
+    {
         $qb = $this->createQueryBuilder('a');
         $qb->where('a.sortableName < :sortableName');
         $qb->orderBy('a.sortableName', 'DESC');
         $qb->setMaxResults(1);
         $qb->setParameter('sortableName', $author->getSortableName());
         $result = $qb->getQuery()->getResult();
-        if(count($result) === 1) {
+        if (count($result) === 1) {
             return $result[0];
         }
         return null;

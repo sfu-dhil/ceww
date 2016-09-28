@@ -13,7 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\StatusRepository")
  * @UniqueEntity("label")
  */
-class Status extends AbstractEntity {
+class Status extends AbstractEntity
+{
 
     /**
      * @ORM\Column(type="string", length=24, nullable=false)
@@ -34,7 +35,8 @@ class Status extends AbstractEntity {
      */
     private $publishedAuthors;
     
-    public function __toString() {
+    public function __toString()
+    {
         return $this->label;
     }
 

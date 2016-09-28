@@ -14,12 +14,12 @@ class PublicationType extends AbstractType
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {    
-        $builder->add('title');  // string     
-        $builder->add('sortableTitle');  // string     
-        $builder->add('year');  // integer     
-        $builder->add('notes');  // text     
-        $builder->add('category');     
+    {
+        $builder->add('title');  // string
+        $builder->add('sortableTitle');  // string
+        $builder->add('year');  // integer
+        $builder->add('notes');  // text
+        $builder->add('category');
         $builder->add('genres');
     }
     

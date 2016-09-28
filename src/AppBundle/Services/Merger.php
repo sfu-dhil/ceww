@@ -18,7 +18,8 @@ use Monolog\Logger;
  *
  * @author mjoyce
  */
-class Merger {
+class Merger
+{
     /**
      * ORM entity manager.
      *
@@ -56,7 +57,8 @@ class Merger {
     /**
      * @param Place[]
      */
-    public function getPlaces($placeIds) {
+    public function getPlaces($placeIds)
+    {
         $repo = $this->em->getRepository('AppBundle:Place');
         return $repo->findBy(array('id' => $placeIds));
     }
@@ -65,25 +67,25 @@ class Merger {
      * @param Place $destination
      * @param Place[] $places
      */
-    public function places(Place $destination, $places) {
-        foreach($places as $p) {
-            foreach($p->getAuthorsBorn() as $a) {
+    public function places(Place $destination, $places)
+    {
+        foreach ($places as $p) {
+            foreach ($p->getAuthorsBorn() as $a) {
                 $a->setBirthPlace($destination);
                 $p->removeAuthorsBorn($a);
             }
-            foreach($p->getAuthorsDied() as $a) {
+            foreach ($p->getAuthorsDied() as $a) {
                 $a->setDeathPlace($destination);
                 $p->removeAuthorsDied($a);
             }
-            foreach($p->getResidents() as $a) {
+            foreach ($p->getResidents() as $a) {
                 $a->removeResidence($p);
                 $a->addResidence($destination);
             }
         }
-        foreach($places as $p) {
+        foreach ($places as $p) {
             $this->em->remove($p);
         }
         $this->em->flush();
     }
-    
 }

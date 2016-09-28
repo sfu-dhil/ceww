@@ -12,12 +12,14 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadPlaces extends AbstractDataFixture implements OrderedFixtureInterface {
+class LoadPlaces extends AbstractDataFixture implements OrderedFixtureInterface
+{
 
     private static $PLACES = array('Tuscon', 'Paris');
     
-    protected function doLoad(ObjectManager $manager) {
-        foreach(self::$PLACES as $name) {
+    protected function doLoad(ObjectManager $manager)
+    {
+        foreach (self::$PLACES as $name) {
             $place = new Place();
             $place->setName($name);
             $manager->persist($place);
@@ -27,12 +29,13 @@ class LoadPlaces extends AbstractDataFixture implements OrderedFixtureInterface 
         $manager->flush();
     }
 
-    public function getOrder() {
-        return 1;        
+    public function getOrder()
+    {
+        return 1;
     }
 
-    protected function getEnvironments() {
+    protected function getEnvironments()
+    {
         return ['test'];
     }
-
 }

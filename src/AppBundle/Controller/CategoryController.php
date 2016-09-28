@@ -15,7 +15,8 @@ use AppBundle\Form\CategoryType;
  *
  * @Route("/admin/category")
  */
-class CategoryController extends Controller {
+class CategoryController extends Controller
+{
 
     /**
      * Lists all Category entities.
@@ -25,7 +26,8 @@ class CategoryController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Category e ORDER BY e.label';
         $query = $em->createQuery($dql);
@@ -40,11 +42,11 @@ class CategoryController extends Controller {
     /**
      * Search for Category entities.
      *
-     * To make this work, add a method like this one to the 
+     * To make this work, add a method like this one to the
      * AppBundle:Category repository. Replace the fieldName with
      * something appropriate, and adjust the generated search.html.twig
      * template.
-     * 
+     *
       //    public function searchQuery($q) {
       //        $qb = $this->createQueryBuilder('e');
       //        $qb->where("e.fieldName like '%$q%'");
@@ -57,7 +59,8 @@ class CategoryController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Category');
         $q = $request->query->get('q');
@@ -83,7 +86,8 @@ class CategoryController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $category = new Category();
         $form = $this->createForm('AppBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
@@ -111,7 +115,8 @@ class CategoryController extends Controller {
      * @Template()
      * @param Category $category
      */
-    public function showAction(Category $category) {
+    public function showAction(Category $category)
+    {
 
         return array(
             'category' => $category,
@@ -127,7 +132,8 @@ class CategoryController extends Controller {
      * @param Request $request
      * @param Category $category
      */
-    public function editAction(Request $request, Category $category) {
+    public function editAction(Request $request, Category $category)
+    {
         $editForm = $this->createForm('AppBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 
@@ -153,7 +159,8 @@ class CategoryController extends Controller {
      * @param Request $request
      * @param Category $category
      */
-    public function deleteAction(Request $request, Category $category) {
+    public function deleteAction(Request $request, Category $category)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($category);
         $em->flush();
@@ -161,5 +168,4 @@ class CategoryController extends Controller {
 
         return $this->redirectToRoute('admin_category_index');
     }
-
 }

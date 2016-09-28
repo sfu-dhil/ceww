@@ -15,7 +15,8 @@ use AppBundle\Form\PlaceType;
  *
  * @Route("/admin/place")
  */
-class PlaceController extends Controller {
+class PlaceController extends Controller
+{
 
     /**
      * Lists all Place entities.
@@ -25,7 +26,8 @@ class PlaceController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Place e ORDER BY e.name';
         $query = $em->createQuery($dql);
@@ -40,11 +42,11 @@ class PlaceController extends Controller {
     /**
      * Search for Place entities.
      *
-     * To make this work, add a method like this one to the 
+     * To make this work, add a method like this one to the
      * AppBundle:Place repository. Replace the fieldName with
      * something appropriate, and adjust the generated search.html.twig
      * template.
-     * 
+     *
       //    public function searchQuery($q) {
       //        $qb = $this->createQueryBuilder('e');
       //        $qb->where("e.fieldName like '%$q%'");
@@ -57,7 +59,8 @@ class PlaceController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Place');
         $q = $request->query->get('q');
@@ -83,11 +86,12 @@ class PlaceController extends Controller {
      * @Template()
      * @param Place $place
      */
-    public function mergeAction(Request $request, Place $place) {
+    public function mergeAction(Request $request, Place $place)
+    {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Place');
         
-        if($request->getMethod() === 'POST') {
+        if ($request->getMethod() === 'POST') {
             $places = $repo->findBy(array('id' => $request->request->get('places')));
             $count = count($places);
             $merger = $this->container->get('ceww.merger');
@@ -118,7 +122,8 @@ class PlaceController extends Controller {
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $place = new Place();
         $form = $this->createForm('AppBundle\Form\PlaceType', $place);
         $form->handleRequest($request);
@@ -146,7 +151,8 @@ class PlaceController extends Controller {
      * @Template()
      * @param Place $place
      */
-    public function showAction(Place $place) {
+    public function showAction(Place $place)
+    {
 
         return array(
             'place' => $place,
@@ -162,7 +168,8 @@ class PlaceController extends Controller {
      * @param Request $request
      * @param Place $place
      */
-    public function editAction(Request $request, Place $place) {
+    public function editAction(Request $request, Place $place)
+    {
         $editForm = $this->createForm('AppBundle\Form\PlaceType', $place);
         $editForm->handleRequest($request);
 
@@ -188,7 +195,8 @@ class PlaceController extends Controller {
      * @param Request $request
      * @param Place $place
      */
-    public function deleteAction(Request $request, Place $place) {
+    public function deleteAction(Request $request, Place $place)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($place);
         $em->flush();
@@ -196,5 +204,4 @@ class PlaceController extends Controller {
 
         return $this->redirectToRoute('admin_place_index');
     }
-
 }

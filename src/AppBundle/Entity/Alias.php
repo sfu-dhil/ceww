@@ -43,12 +43,14 @@ class Alias extends AbstractEntity
      */
     private $authors;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->maiden = false;
         $this->authors = new ArrayCollection();
     }
     
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name;
     }
 

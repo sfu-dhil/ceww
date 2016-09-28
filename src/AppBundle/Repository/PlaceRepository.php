@@ -14,7 +14,8 @@ class PlaceRepository extends \Doctrine\ORM\EntityRepository
      * @param string $q
      * @return Query
      */
-    public function searchQuery($q) {
+    public function searchQuery($q)
+    {
         $qb = $this->createQueryBuilder('e');
         $qb->where("e.name like '%$q%'");
         return $qb->getQuery();

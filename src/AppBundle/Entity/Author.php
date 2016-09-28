@@ -15,7 +15,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class Author extends AbstractEntity{
+class Author extends AbstractEntity
+{
 
     /**
      * @ORM\Column(type="string", length=120, nullable=false)
@@ -46,7 +47,7 @@ class Author extends AbstractEntity{
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsBorn")
      * @ORM\JoinColumn(name="birthplace_id", referencedColumnName="id", nullable=true)
      * @Groups({"public", "private"})
-     * @var Place 
+     * @var Place
      */
     private $birthPlace;
     
@@ -62,7 +63,7 @@ class Author extends AbstractEntity{
      * @ORM\ManyToOne(targetEntity="Status", inversedBy="publishedAuthors")
      * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=false)
      * @Groups({"private"})
-     * @var Status 
+     * @var Status
      */
     private $status;
     
@@ -103,14 +104,16 @@ class Author extends AbstractEntity{
      */
     private $publications;
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->original = array();
         $this->aliases = new ArrayCollection();
         $this->residences = new ArrayCollection();
         $this->publications = new ArrayCollection();
     }
     
-    public function __toString() {
+    public function __toString()
+    {
         return $this->fullName;
     }
 
@@ -159,7 +162,7 @@ class Author extends AbstractEntity{
      */
     public function getSortableName()
     {
-        if($this->sortableName === null) {
+        if ($this->sortableName === null) {
             return $this->fullName;
         }
         return $this->sortableName;
@@ -169,8 +172,9 @@ class Author extends AbstractEntity{
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function updateSortableName() {
-        if($this->sortableName === null || $this->sortableName === '') {
+    public function updateSortableName()
+    {
+        if ($this->sortableName === null || $this->sortableName === '') {
             $this->sortableName = $this->fullName;
         }
     }
@@ -280,8 +284,8 @@ class Author extends AbstractEntity{
      */
     public function addResidence(Place $residence)
     {
-        if(! $this->residences->contains($residence)) {
-            $this->residences[] = $residence;        
+        if (! $this->residences->contains($residence)) {
+            $this->residences[] = $residence;
         }
 
         return $this;
@@ -316,7 +320,7 @@ class Author extends AbstractEntity{
      */
     public function addPublication(Publication $publication)
     {
-        if(! $this->publications->contains($publication)) {
+        if (! $this->publications->contains($publication)) {
             $this->publications[] = $publication;
         }
 
@@ -338,12 +342,12 @@ class Author extends AbstractEntity{
      *
      * @return Collection
      */
-    public function getPublications($filter=null)
+    public function getPublications($filter = null)
     {
-        if($filter===null) {
+        if ($filter===null) {
             return $this->publications;
         }
-        return $this->publications->filter(function(Publication $p) use($filter) {
+        return $this->publications->filter(function (Publication $p) use ($filter) {
             return $p->getCategory()->getLabel() === $filter;
         });
     }
@@ -430,17 +434,19 @@ class Author extends AbstractEntity{
         return $this->deathDate;
     }
     
-    public function getOriginal($key = null) {
-        if($key === null) {
+    public function getOriginal($key = null)
+    {
+        if ($key === null) {
             return $this->original;
         }
-        if(array_key_exists($key, $this->original)) {
+        if (array_key_exists($key, $this->original)) {
             return $this->original[$key];
         }
         return null;
     }
     
-    public function setOriginal($key, $value) {
+    public function setOriginal($key, $value)
+    {
         $this->original[$key] = $value;
     }
 }

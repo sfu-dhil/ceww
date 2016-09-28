@@ -83,7 +83,8 @@ class Place extends AbstractEntity
      */
     private $residents;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->alternateNames = array();
         $this->adminNames = array();
         $this->authorsBorn = new ArrayCollection();
@@ -91,7 +92,8 @@ class Place extends AbstractEntity
         $this->residents = new ArrayCollection();
     }
     
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name;
     }
 
