@@ -19,4 +19,17 @@ class AliasRepository extends \Doctrine\ORM\EntityRepository {
         $qb->where("e.name like '%$q%'");
         return $qb->getQuery();
     }
+    
+    /**
+     * @param string $q
+     * @return Query
+     */
+    public function fulltextQuery($q) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
+        $qb->add('where', "MATCH_AGAINST (e.name, :q) > 0.5");
+        $qb->orderBy('score');
+        $qb->setParameter('q', $q);
+        return $qb->getQuery();
+    }
 }

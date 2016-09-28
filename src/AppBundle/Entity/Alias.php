@@ -10,7 +10,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Alias
  *
- * @ORM\Table(name="alias")
+ * @ORM\Table(name="alias", indexes={
+    @ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+ })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AliasRepository")
  */
 class Alias extends AbstractEntity
