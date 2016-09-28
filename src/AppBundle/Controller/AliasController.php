@@ -67,25 +67,6 @@ class AliasController extends Controller
     
     /**
      * Full text search for Alias entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Alias repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated fulltext.html.twig
-	 * template.
-	 * 
-	//    public function fulltextQuery($q) {
-	//        $qb = $this->createQueryBuilder('e');
-	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
-	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
-	//        $qb->orderBy('score', 'desc');
-	//        $qb->setParameter('q', $q);
-	//        return $qb->getQuery();
-	//    }	 
-	 * 
-	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Alias entity.
-	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
-	 *
      *
      * @Route("/fulltext", name="admin_alias_fulltext")
      * @Method("GET")

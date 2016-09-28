@@ -41,18 +41,6 @@ class AuthorController extends Controller
     /**
      * Search for Author entities.
      *
-     * To make this work, add a method like this one to the
-     * AppBundle:Author repository. Replace the fieldName with
-     * something appropriate, and adjust the generated search.html.twig
-     * template.
-     *
-     //    public function searchQuery($q) {
-     //        $qb = $this->createQueryBuilder('e');
-     //        $qb->where("e.fieldName like '%$q%'");
-     //        return $qb->getQuery();
-     //    }
-     *
-     *
      * @Route("/search", name="admin_author_search")
      * @Method("GET")
      * @Template()
@@ -77,20 +65,6 @@ class AuthorController extends Controller
     }
     /**
      * Full text search for Author entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Author repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated fulltext.html.twig
-	 * template.
-	 * 
-	//    public function fulltextQuery($q) {
-	//        $qb = $this->createQueryBuilder('e');
-	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
-	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
-	//        $qb->orderBy('score', 'desc');
-	//        $qb->setParameter('q', $q);
-	//        return $qb->getQuery();
-	//    }	 
 	 * 
 	 * Requires a MatchAgainst function be added to doctrine, and appropriate
 	 * fulltext indexes on your Author entity.
