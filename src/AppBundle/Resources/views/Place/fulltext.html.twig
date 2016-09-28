@@ -48,14 +48,12 @@
                 <th>Alternatenames</th>
                 <th>Countryname</th>
                 <th>Adminnames</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
                 <th>Description</th>
-                <th>Created</th>
-                <th>Updated</th>            </tr>
+            </tr>
         </thead>
         <tbody>
-        {% for place in places %}
+        {% for result in places %}
+			{% set place = result[0] %}
             <tr>
                 <td>
                     <a href="{{ path('admin_place_show', { 'id': place.id }) }}">
@@ -65,11 +63,7 @@
                 <td>{% if place.alternateNames %}{{ place.alternateNames|join(', ') }}{% endif %}</td>
                 <td>{{ place.countryName }}</td>
                 <td>{% if place.adminNames %}{{ place.adminNames|join(', ') }}{% endif %}</td>
-                <td>{{ place.latitude }}</td>
-                <td>{{ place.longitude }}</td>
                 <td>{{ place.description }}</td>
-                <td>{% if place.created %}{{ place.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if place.updated %}{{ place.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

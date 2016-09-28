@@ -21,4 +21,12 @@ class PlaceRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery();
     }
 
+    public function fulltextQuery($q) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->addSelect("MATCH_AGAINST (e.name, e.alternateNames, e.countryName, e.adminNames, e.description, :q 'IN BOOLEAN MODE') as score");
+        $qb->add('where', "MATCH_AGAINST (e.name, e.alternateNames, e.countryName, e.adminNames, e.description, :q 'IN BOOLEAN MODE') > 0.5");
+        $qb->orderBy('score', 'desc');
+        $qb->setParameter('q', $q);
+        return $qb->getQuery();
+    }	 
 }

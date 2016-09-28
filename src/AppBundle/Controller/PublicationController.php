@@ -31,7 +31,7 @@ class PublicationController extends Controller
         $dql = 'SELECT e FROM AppBundle:Publication e ORDER BY e.title';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
-        $publications = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $publications = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 
         return array(
             'publications' => $publications,
@@ -94,7 +94,7 @@ class PublicationController extends Controller
 	 * 
 	 * Requires a MatchAgainst function be added to doctrine, and appropriate
 	 * fulltext indexes on your Publication entity.
-	 *     @ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
 	 *
      *
      * @Route("/fulltext", name="admin_publication_fulltext")

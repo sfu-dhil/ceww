@@ -31,7 +31,7 @@ class PlaceController extends Controller
         $dql = 'SELECT e FROM AppBundle:Place e ORDER BY e.name';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
-        $places = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 
         return array(
             'places' => $places,

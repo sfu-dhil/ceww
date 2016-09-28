@@ -94,7 +94,7 @@ class AuthorController extends Controller
 	 * 
 	 * Requires a MatchAgainst function be added to doctrine, and appropriate
 	 * fulltext indexes on your Author entity.
-	 *     @ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
 	 *
      *
      * @Route("/fulltext", name="admin_author_fulltext")

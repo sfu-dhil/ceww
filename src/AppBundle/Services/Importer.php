@@ -299,6 +299,7 @@ class Importer
     }
 
     public function setNotes(Author $author, $notes = array()) {
+        $notes = array_filter($notes);
         $author->setNotes(trim(implode('\n\n', $notes)));
     }
 

@@ -45,29 +45,25 @@
         <thead>
             <tr>
                 <th>Fullname</th>
-                <th>Sortablename</th>
                 <th>Birthdate</th>
                 <th>Deathdate</th>
                 <th>Notes</th>
                 <th>Original</th>
-                <th>Created</th>
-                <th>Updated</th>            </tr>
+			</tr>
         </thead>
         <tbody>
-        {% for author in authors %}
+        {% for result in authors %}
+			{% set author = result[0] %}
             <tr>
                 <td>
                     <a href="{{ path('admin_author_show', { 'id': author.id }) }}">
                         {{ author.fullName }}
                     </a>
                 </td>
-                <td>{{ author.sortableName }}</td>
                 <td>{{ author.birthDate }}</td>
                 <td>{{ author.deathDate }}</td>
                 <td>{{ author.notes }}</td>
                 <td>{% if author.original %}{{ author.original|join(', ') }}{% endif %}</td>
-                <td>{% if author.created %}{{ author.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if author.updated %}{{ author.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

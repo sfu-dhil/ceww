@@ -13,11 +13,10 @@ use AppBundle\Form\CategoryType;
 /**
  * Category controller.
  *
- * @Route("/admin/category")
+ * @Route("/admin/Category")
  */
 class CategoryController extends Controller
 {
-
     /**
      * Lists all Category entities.
      *
@@ -125,7 +124,7 @@ class CategoryController extends Controller
     /**
      * Creates a new Category entity.
      *
-     * @Route("/new", name="admin_Category_new")
+     * @Route("/new", name="admin_category_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -159,7 +158,8 @@ class CategoryController extends Controller
      * @Template()
      * @param Category $category
      */
-    public function showAction(Category $category) {
+    public function showAction(Category $category)
+    {
 
         return array(
             'category' => $category,
@@ -175,13 +175,13 @@ class CategoryController extends Controller
      * @param Request  $request
      * @param Category $category
      */
-    public function editAction(Request $request, Category $category) {
+    public function editAction(Request $request, Category $category)
+    {
         $editForm = $this->createForm('AppBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($category);
             $em->flush();
             $this->addFlash('success', 'The category has been updated.');
             return $this->redirectToRoute('admin_category_show', array('id' => $category->getId()));
