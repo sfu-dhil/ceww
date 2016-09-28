@@ -53,7 +53,9 @@ class MatchAgainstFunction extends FunctionNode
         $query = "MATCH(" . $haystack .
             ") AGAINST (" . $this->needle->dispatch($sqlWalker);
         if ($this->mode) {
-            $query .= " " . $this->mode->dispatch($sqlWalker) . " )";
+            $mode = $this->mode->dispatch($sqlWalker);
+            $mode = preg_replace("/^'([^']*)'$/", '$1', $mode);
+            $query .= " " . $mode . " )";
         } else {
             $query .= " )";
         }

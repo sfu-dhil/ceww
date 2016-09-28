@@ -94,12 +94,9 @@ class Importer
 
     public function cleanPlaceName($placeName) {
         $filters = array(
-            '/^"[^"]*"\s*/' => '',
-// remove quoted place name at start
-            '/\s+\([^)]*\)$/' => '',
-// remove parenthesized location
-            '/^\s*near\b\s*/i' => '',
-// remove "near "
+            '/^"[^"]*"\s*/' => '', // remove quoted place name at start
+            '/\s+\([^)]*\)$/' => '', // remove parenthesized location
+            '/^\s*near\b\s*/i' => '', // remove "near "
         );
 
         $name = $placeName;
@@ -122,10 +119,8 @@ class Importer
 
     public function cleanTitle($publicationTitle) {
         $filters = array(
-            '/\(c?\d{4}(-c?\d{4})?\)/u' => '',
-// remove year or range
-            '/^"([^"]*)"$/u' => '$1',
-// remove front/rear quotes.
+            '/\(c?\d{4}(-c?\d{4})?\)/u' => '', // remove year or range
+            '/^"([^"]*)"$/u' => '$1', // remove front/rear quotes.
         );
 
         $title = $publicationTitle;
@@ -137,10 +132,8 @@ class Importer
 
     public function sortableTitle($cleanTitle) {
         $filters = array(
-            '/^(the|an?)\b\s*(.*)/ius' => '$2, $1',
-// move The, A, An to end.
-            '/^[^[:word:][:space:]]+/us' => '',
-// remove non-word chars at start.
+            '/^(the|an?)\b\s*(.*)/ius' => '$2, $1', // move The, A, An to end.
+            '/^[^[:word:][:space:]]+/us' => '', // remove non-word chars at start.
         );
 
         $title = strtolower($cleanTitle);
@@ -156,12 +149,23 @@ class Importer
         $e->setName($name);
         return $e;
     }
+    
+    public function cleanAlias($name) {
+        $filters = array(
+            '/^"([^"]*)"$/' => '$1', // strip quotes from start and end.
+        );
+        foreach($filters as $key => $value) {
+            $name = preg_replace($key, $value, $name);
+        }
+        return $name;
+    }
 
     public function addAliases($alternateNames) {
         $aliases = $this->split($alternateNames, ';', ',');
         $repo = $this->em->getRepository('AppBundle:Alias');
         $entities = array();
         foreach ($aliases as $name) {
+            $name = $this->cleanAlias($name);
             $e = $repo->findOneByName($name);
             if (!$e) {
                 $e = $this->createAlias($name);

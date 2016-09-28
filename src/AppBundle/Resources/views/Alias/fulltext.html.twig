@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
- {% block pageheader %} 
+{% block pageheader %} 
     <h1>Alias Full Text Search</h1>
 	{% if aliases|length %}
-    <p class="count">
+		<p class="count">
         Displaying {{ aliases|length }} aliases of {{ aliases.getTotalItemCount }} total.
-    </p>
+		</p>
 	{% endif %}
- {% endblock %} 
+{% endblock %} 
 
 {% block body %}
 
@@ -30,31 +30,28 @@
             </div>
         </fieldset>
     </form>
-    
+
 	{% if aliases|length %}
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Maiden</th>
-                <th>Description</th>
-                <th>Created</th>
-                <th>Updated</th>            </tr>
-        </thead>
-        <tbody>
-        {% for alias in aliases %}
-            <tr>
-                <td>
-                    {{ dump(alias) }}
-                <td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-        
-    <div class="navigation">
+		<table class="table table-bordered table-condensed table-hover table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Maiden</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for alias in aliases %}
+					<tr>
+						<td><a href="{{ path('admin_alias_show', {'id': alias[0].id }) }}">{{ alias[0].name }}</a></td>
+						<td>{% if alias[0].maiden %}Yes{% else %}No{% endif %}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<div class="navigation">
         {{ knp_pagination_render(aliases) }}
-    </div>
+		</div>
 	{% endif %}
 
 {% endblock %}

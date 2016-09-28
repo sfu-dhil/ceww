@@ -160,7 +160,22 @@ class ImporterTest extends AbstractTestCase
             ["Goodfrey Barbican", $this->buildAlias(0, "Goodfrey Barbican")],
         ];
     }
+    
+    /**
+     * @dataProvider cleanAliasData
+     */
+    public function testCleanAlias($name, $clean) {
+        $this->assertEquals($clean, $this->importer->cleanAlias($name));
+    }
 
+    public function cleanAliasData() {
+        return [
+            ['Agnes Beresford', 'Agnes Beresford'],
+            ['"Agnes Beresford"', 'Agnes Beresford'],
+            ['Agnes "Aggie" Beresford', 'Agnes "Aggie" Beresford'],
+        ];
+    }
+    
     /**
      * @dataProvider createPlaceData
      */
