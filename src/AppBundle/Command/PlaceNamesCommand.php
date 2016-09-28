@@ -10,28 +10,49 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Update place data from Geonames.
+ */
 class PlaceNamesCommand extends ContainerAwareCommand
 {
     /**
+     * PSR Logger.
+     *
      * @var Logger
      */
     private $logger;
 
     /**
+     * Doctrine database connection.
+     *
      * @var Registry
      */
     protected $em;
 
+    /**
+     * Geonames username, from parameters.yml.
+     *
+     * @var string
+     */
     protected $geonames_account;
 
+    /**
+     * Geonames endpoint.
+     */
     const GEONAMES_SEARCH = 'http://api.geonames.org/search';
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure() {
         $this
             ->setName('ceww:placenames')
             ->setDescription('Update the place names with results from Geonames');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
         $this->logger = $container->get('logger');
@@ -39,6 +60,9 @@ class PlaceNamesCommand extends ContainerAwareCommand
         $this->geonames_account = $container->getParameter('geonames_account');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getClient() {
         $client = new Client(array(
             'headers' => array(
@@ -49,6 +73,9 @@ class PlaceNamesCommand extends ContainerAwareCommand
         return $client;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $client = $this->getClient();
         $query = $this->em->createQuery('SELECT p FROM AppBundle:Place p');

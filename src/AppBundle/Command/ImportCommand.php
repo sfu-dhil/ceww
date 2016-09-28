@@ -40,6 +40,9 @@ class ImportCommand extends ContainerAwareCommand {
      */
     protected $importer;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure() {
         $this
                 ->setName('ceww:import')
@@ -47,6 +50,9 @@ class ImportCommand extends ContainerAwareCommand {
                 ->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
         $this->logger = $container->get('logger');
@@ -54,6 +60,9 @@ class ImportCommand extends ContainerAwareCommand {
         $this->importer = $container->get('ceww.importer');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $files = $input->getArgument('files');
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);

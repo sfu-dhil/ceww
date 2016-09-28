@@ -25,6 +25,7 @@ class AliasController extends Controller
      * @Method("GET")
      * @Template()
      * @param Request $request
+     * @return array for template processing
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
