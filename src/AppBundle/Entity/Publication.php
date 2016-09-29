@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Publication
  *
- * @ORM\Table(name="publication")
+ * @ORM\Table(name="publication", indexes={
+    @ORM\Index(name="publication_ft_idx",columns={"title","notes"}, flags={"fulltext"})
+   })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
  * @ORM\HasLifecycleCallbacks
  */

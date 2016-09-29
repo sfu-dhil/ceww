@@ -138,7 +138,7 @@ class ImporterTest extends AbstractTestCase
             ['', ''],
         ];
     }
-
+    
     /**
      * @dataProvider createAliasData
      */
@@ -162,17 +162,20 @@ class ImporterTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider cleanAliasData
+     * @dataProvider cleanNameData
      */
-    public function testCleanAlias($name, $clean) {
-        $this->assertEquals($clean, $this->importer->cleanAlias($name));
+    public function testCleanName($name, $clean) {
+        $this->assertEquals($clean, $this->importer->cleanName($name));
     }
 
-    public function cleanAliasData() {
+    public function cleanNameData() {
         return [
             ['Agnes Beresford', 'Agnes Beresford'],
             ['"Agnes Beresford"', 'Agnes Beresford'],
             ['Agnes "Aggie" Beresford', 'Agnes "Aggie" Beresford'],
+            ['  Agnes Beresford', 'Agnes Beresford'],
+            ['Agnes Beresford  ', 'Agnes Beresford'],
+            ["\nAgnes Beresford", 'Agnes Beresford'],
         ];
     }
 

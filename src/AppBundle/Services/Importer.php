@@ -157,10 +157,10 @@ class Importer
         return $e;
     }
 
-    public function cleanAlias($name) {
+    public function cleanName($name) {
         $filters = array(
-            '/^"([^"]*)"$/' => '$1',
-// strip quotes from start and end.
+            '/^"([^"]*)"$/u' => '$1', // strip quotes from start and end.
+            '/(^\s*)|(\s*$)/msu' => '',
         );
         foreach($filters as $key => $value) {
             $name = preg_replace($key, $value, $name);
@@ -173,7 +173,10 @@ class Importer
         $repo = $this->em->getRepository('AppBundle:Alias');
         $entities = array();
         foreach ($aliases as $name) {
-            $name = $this->cleanAlias($name);
+            if( ! $name) {
+                continue;
+            }
+            $name = $this->cleanName($name);
             $e = $repo->findOneByName($name);
             if (!$e) {
                 $e = $this->createAlias($name);
@@ -313,8 +316,8 @@ class Importer
 
     public function importArray($row = array()) {
         $author = new Author();
-        $author->setFullname($row[0]);
-        $author->setSortableName(mb_convert_case($row[0], MB_CASE_LOWER));
+        $author->setFullname($this->cleanName($row[0]));
+        $author->setSortableName(mb_convert_case($row[0], MB_CASE_LOWER, 'UTF-8'));
         $this->setDates($author, $row[2], $row[4]);
         $this->setPlaces($author, $row[3], $row[5]);
         $this->setAliases($author, $row[6]);

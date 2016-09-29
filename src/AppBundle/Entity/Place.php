@@ -11,7 +11,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Place
  *
- * @ORM\Table(name="place")
+ * @ORM\Table(name="place", indexes={
+    @ORM\Index(name="place_ft_idx",columns={"name","alternate_names","country_name", "admin_names", "description"}, flags={"fulltext"})
+   })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PlaceRepository")
  * @UniqueEntity("name")
  */

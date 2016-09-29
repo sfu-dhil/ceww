@@ -10,7 +10,9 @@ use JsonSerializable;
 /**
  * Author
  *
- * @ORM\Table(name="author")
+ * @ORM\Table(name="author", indexes={
+    @ORM\Index(name="author_ft_idx",columns={"full_name","original","notes"}, flags={"fulltext"})
+   })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")
  * @ORM\HasLifecycleCallbacks
  */

@@ -63,18 +63,8 @@
             <tr>
                 <th>Aliases</th>
                 <td>
-                    {% if author.aliases|length %}
-                        <ul>
-                            {% for alias in author.aliases %}
-                                <li>
-                                    <a href="{{ path('admin_alias_show', {'id': alias.id}) }}">
-                                        {{ alias }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </td>
+					{{ self.pubList(author.aliases, 'admin_alias_show') }}
+				</td>
                 <td>{{ author.getOriginal('ALTERNATIVE NAMES') }}</td>
             </tr>
             <tr>
