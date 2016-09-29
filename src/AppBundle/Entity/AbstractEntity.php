@@ -4,13 +4,13 @@ namespace AppBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use JsonSerializable;
 
 /**
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  */
-abstract class AbstractEntity
+abstract class AbstractEntity implements JsonSerializable
 {
 
     /**
@@ -19,21 +19,18 @@ abstract class AbstractEntity
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"public", "private"})
      */
     protected $id;
 
     /**
      * @var DateTime
      * @ORM\Column(type="datetime")
-     * @Groups({"public", "private"})
      */
     protected $created;
 
     /**
      * @var DateTime
      * @ORM\Column(type="datetime")
-     * @Groups({"public", "private"})
      */
     protected $updated;
 
@@ -79,5 +76,13 @@ abstract class AbstractEntity
     }
 
     abstract public function __toString();
+    
+    public function jsonSerialize() {
+        return array(
+            'id' => $this->id,
+            'created' => $this->created->format('c'),
+            'updated' => $this->updated->format('c'),
+        );
+    }
 
 }

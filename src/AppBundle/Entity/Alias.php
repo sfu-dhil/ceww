@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Alias
@@ -20,26 +19,22 @@ class Alias extends AbstractEntity
 
     /**
      * @ORM\Column(type="string", length=120, nullable=false)
-     * @Groups({"public", "private"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
-     * @Groups({"public", "private"})
      */
     private $maiden;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"private"})
      */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity="Author", mappedBy="aliases")
      * @var Collection|Author[]
-     * @Groups({"recursive"})
      */
     private $authors;
 

@@ -2,21 +2,20 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Author;
+use JsonSerializable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Author;
-use AppBundle\Form\AuthorType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Author controller.
  *
  * @Route("/admin/author")
  */
-class AuthorController extends Controller
-{
+class AuthorController extends Controller {
 
     /**
      * Lists all Author entities.
@@ -63,36 +62,36 @@ class AuthorController extends Controller
             'q' => $q,
         );
     }
+
     /**
      * Full text search for Author entities.
-	 * 
-	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Author entity.
-	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
-	 *
+     * 
+     * Requires a MatchAgainst function be added to doctrine, and appropriate
+     * fulltext indexes on your Author entity.
+     *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+     *
      *
      * @Route("/fulltext", name="admin_author_fulltext")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
-	 * @return array
+     * @param Request $request
+     * @return array
      */
-    public function fulltextAction(Request $request)
-    {
+    public function fulltextAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Author');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$authors = $paginator->paginate($query, $request->query->getint('page', 1), 25);
-		} else {
-			$authors = array();
-		}
+        $repo = $em->getRepository('AppBundle:Author');
+        $q = $request->query->get('q');
+        if ($q) {
+            $query = $repo->fulltextQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $authors = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $authors = array();
+        }
 
         return array(
             'authors' => $authors,
-			'q' => $q,
+            'q' => $q,
         );
     }
 
@@ -153,10 +152,14 @@ class AuthorController extends Controller
      */
     public function editAction(Request $request, Author $author) {
         $editForm = $this->createForm('AppBundle\Form\AuthorType', $author);
-        $editForm['birthplace']->setData($author->getBirthPlace()->getName());
-        $editForm['birthplace_id']->setData($author->getBirthPlace()->getId());
-        $editForm['deathplace']->setData($author->getDeathPlace()->getName());
-        $editForm['deathplace_id']->setData($author->getDeathPlace()->getId());
+        if ($author->getBirthPlace()) {
+            $editForm['birthplace']->setData($author->getBirthPlace()->getName());
+            $editForm['birthplace_id']->setData($author->getBirthPlace()->getId());
+        }
+        if ($author->getDeathPlace()) {
+            $editForm['deathplace']->setData($author->getDeathPlace()->getName());
+            $editForm['deathplace_id']->setData($author->getDeathPlace()->getId());
+        }
 
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -195,5 +198,4 @@ class AuthorController extends Controller
 
         return $this->redirectToRoute('admin_author_index');
     }
-
 }

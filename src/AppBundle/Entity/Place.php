@@ -3,10 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints\Collection;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Place
@@ -15,62 +15,53 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PlaceRepository")
  * @UniqueEntity("name")
  */
-class Place extends AbstractEntity
+class Place extends AbstractEntity implements JsonSerializable
 {
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
-     * @Groups({"public", "private"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
-     * @Groups({"public", "private"})
      */
     private $alternateNames;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
-     * @Groups({"public", "private"})
      */
     private $countryName;
 
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
-     * @Groups({"public", "private"})
      */
     private $adminNames;
 
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
-     * @Groups({"public", "private"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
-     * @Groups({"public", "private"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"private"})
      */
     private $description;
 
     /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="birthPlace")
-     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authorsBorn;
 
     /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="deathPlace")
-     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authorsDied;
@@ -78,7 +69,6 @@ class Place extends AbstractEntity
     /**
      * @ORM\ManyToMany(targetEntity="Author", mappedBy="residences")
      * @ORM\JoinTable(name="author_residence")
-     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $residents;
@@ -252,11 +242,11 @@ class Place extends AbstractEntity
     /**
      * Add authorsBorn
      *
-     * @param \AppBundle\Entity\Author $authorsBorn
+     * @param Author $authorsBorn
      *
      * @return Place
      */
-    public function addAuthorsBorn(\AppBundle\Entity\Author $authorsBorn) {
+    public function addAuthorsBorn(Author $authorsBorn) {
         $this->authorsBorn[] = $authorsBorn;
 
         return $this;
@@ -265,16 +255,16 @@ class Place extends AbstractEntity
     /**
      * Remove authorsBorn
      *
-     * @param \AppBundle\Entity\Author $authorsBorn
+     * @param Author $authorsBorn
      */
-    public function removeAuthorsBorn(\AppBundle\Entity\Author $authorsBorn) {
+    public function removeAuthorsBorn(Author $authorsBorn) {
         $this->authorsBorn->removeElement($authorsBorn);
     }
 
     /**
      * Get authorsBorn
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection2
      */
     public function getAuthorsBorn() {
         return $this->authorsBorn;
@@ -283,11 +273,11 @@ class Place extends AbstractEntity
     /**
      * Add authorsDied
      *
-     * @param \AppBundle\Entity\Author $authorsDied
+     * @param Author $authorsDied
      *
      * @return Place
      */
-    public function addAuthorsDied(\AppBundle\Entity\Author $authorsDied) {
+    public function addAuthorsDied(Author $authorsDied) {
         $this->authorsDied[] = $authorsDied;
 
         return $this;
@@ -296,16 +286,16 @@ class Place extends AbstractEntity
     /**
      * Remove authorsDied
      *
-     * @param \AppBundle\Entity\Author $authorsDied
+     * @param Author $authorsDied
      */
-    public function removeAuthorsDied(\AppBundle\Entity\Author $authorsDied) {
+    public function removeAuthorsDied(Author $authorsDied) {
         $this->authorsDied->removeElement($authorsDied);
     }
 
     /**
      * Get authorsDied
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection2
      */
     public function getAuthorsDied() {
         return $this->authorsDied;
@@ -314,11 +304,11 @@ class Place extends AbstractEntity
     /**
      * Add resident
      *
-     * @param \AppBundle\Entity\Author $resident
+     * @param Author $resident
      *
      * @return Place
      */
-    public function addResident(\AppBundle\Entity\Author $resident) {
+    public function addResident(Author $resident) {
         $this->residents[] = $resident;
 
         return $this;
@@ -327,19 +317,30 @@ class Place extends AbstractEntity
     /**
      * Remove resident
      *
-     * @param \AppBundle\Entity\Author $resident
+     * @param Author $resident
      */
-    public function removeResident(\AppBundle\Entity\Author $resident) {
+    public function removeResident(Author $resident) {
         $this->residents->removeElement($resident);
     }
 
     /**
      * Get residents
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection2
      */
     public function getResidents() {
         return $this->residents;
     }
 
+
+    public function jsonSerialize() {
+        return array_merge(parent::jsonSerialize(), array(
+            'name' => $this->name,
+            'alternateNames' => $this->alternateNames,
+            'countryName' => $this->countryName,
+            'adminNames' => $this->adminNames,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+        ));
+    }
 }

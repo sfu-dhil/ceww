@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Publication
@@ -19,26 +18,22 @@ class Publication extends AbstractEntity
 
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
-     * @Groups({"public", "private"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
-     * @Groups({"private"})
      */
     private $sortableTitle;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"public", "private"})
      */
     private $year;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
      * @ORM\JoinColumn(name="category_id")
-     * @Groups({"recursive"})
      * @var Category
      */
     private $category;
@@ -46,20 +41,17 @@ class Publication extends AbstractEntity
     /**
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publication_genres")
-     * @Groups({"recursive"})
      * @var Collection|Genre[]
      */
     private $genres;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"private"})
      */
     private $notes;
 
     /**
      * @ORM\ManyToMany(targetEntity="Author", mappedBy="publications")
-     * @Groups({"recursive"})
      * @var Collection|Author[]
      */
     private $authors;

@@ -306,7 +306,7 @@ class Importer
     public function importArray($row = array()) {
         $author = new Author();
         $author->setFullname($row[0]);
-// sets sortable name as well.
+        $author->setSortableName(mb_convert_case($row[0], MB_CASE_LOWER));
         $this->setDates($author, $row[2], $row[4]);
         $this->setPlaces($author, $row[3], $row[5]);
         $this->setAliases($author, $row[6]);

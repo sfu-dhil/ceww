@@ -16,20 +16,17 @@ class Category extends AbstractEntity
 
     /**
      * @ORM\Column(type="string", length=24, nullable=false)
-     * @Groups({"public", "private"})
      */
     private $label;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"private"})
      */
     private $description;
 
     /**
      * @ORM\OneToMany(targetEntity="Publication", mappedBy="category")
      * @var Collection|Publication[]
-     * @Groups({"recursive"})
      */
     private $publications;
 

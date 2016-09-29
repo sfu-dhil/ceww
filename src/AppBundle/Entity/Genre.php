@@ -4,11 +4,9 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\AbstractEntity;
 use AppBundle\Entity\Genre;
-use AppBundle\Repository\GenreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Genre
@@ -21,19 +19,16 @@ class Genre extends AbstractEntity
 
     /**
      * @ORM\Column(type="string", length=120, nullable=false)
-     * @Groups({"public", "private"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"private"})
      */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity="Publication", mappedBy="genres")
-     * @Groups({"public", "private"})
      * @var Collection|Publication[]
      */
     private $publications;
