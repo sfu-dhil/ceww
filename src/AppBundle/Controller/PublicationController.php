@@ -63,31 +63,31 @@ class PublicationController extends Controller
             'q' => $q,
         );
     }
+
     /**
      * Full text search for Publication entities.
-     * 
+     *
      * @Route("/fulltext", name="admin_publication_fulltext")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
-	 * @return array
+     * @param Request $request
+     * @return array
      */
-    public function fulltextAction(Request $request)
-    {
+    public function fulltextAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Publication');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$publications = $paginator->paginate($query, $request->query->getint('page', 1), 25);
-		} else {
-			$publications = array();
-		}
+        $repo = $em->getRepository('AppBundle:Publication');
+        $q = $request->query->get('q');
+        if($q) {
+            $query = $repo->fulltextQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $publications = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $publications = array();
+        }
 
         return array(
             'publications' => $publications,
-			'q' => $q,
+            'q' => $q,
         );
     }
 

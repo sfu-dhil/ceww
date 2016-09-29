@@ -28,5 +28,6 @@ class PlaceRepository extends \Doctrine\ORM\EntityRepository
         $qb->orderBy('score', 'desc');
         $qb->setParameter('q', $q);
         return $qb->getQuery();
-    }	 
+    }
+
 }

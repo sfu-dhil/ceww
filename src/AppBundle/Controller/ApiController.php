@@ -20,6 +20,7 @@ use Symfony\Component\Serializer\Serializer;
  */
 class ApiController extends Controller
 {
+
     /**
      * @Route("/typeahead/place", name="typeahead_place")
      * @Method("GET")
@@ -38,4 +39,5 @@ class ApiController extends Controller
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
 }

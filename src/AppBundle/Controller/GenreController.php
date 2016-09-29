@@ -17,6 +17,7 @@ use AppBundle\Form\GenreType;
  */
 class GenreController extends Controller
 {
+
     /**
      * Lists all Genre entities.
      *
@@ -45,8 +46,7 @@ class GenreController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $genre = new Genre();
         $form = $this->createForm('AppBundle\Form\GenreType', $genre);
         $form->handleRequest($request);

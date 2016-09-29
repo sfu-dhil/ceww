@@ -332,7 +332,6 @@ class Place extends AbstractEntity implements JsonSerializable
         return $this->residents;
     }
 
-
     public function jsonSerialize() {
         return array_merge(parent::jsonSerialize(), array(
             'name' => $this->name,
@@ -343,4 +342,5 @@ class Place extends AbstractEntity implements JsonSerializable
             'longitude' => $this->longitude,
         ));
     }
+
 }

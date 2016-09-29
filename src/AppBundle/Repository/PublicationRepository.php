@@ -20,7 +20,7 @@ class PublicationRepository extends \Doctrine\ORM\EntityRepository
         $qb->where("e.title like '%$q%'");
         return $qb->getQuery();
     }
-    
+
     public function fulltextQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH_AGAINST (e.title, e.notes, :q 'IN BOOLEAN MODE') as score");
@@ -28,7 +28,6 @@ class PublicationRepository extends \Doctrine\ORM\EntityRepository
         $qb->orderBy('score', 'desc');
         $qb->setParameter('q', $q);
         return $qb->getQuery();
-    }	 
-    
+    }
 
 }

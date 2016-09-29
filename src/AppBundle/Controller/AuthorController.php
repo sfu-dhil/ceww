@@ -65,7 +65,7 @@ class AuthorController extends Controller {
 
     /**
      * Full text search for Author entities.
-     * 
+     *
      * Requires a MatchAgainst function be added to doctrine, and appropriate
      * fulltext indexes on your Author entity.
      *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
@@ -198,4 +198,5 @@ class AuthorController extends Controller {
 
         return $this->redirectToRoute('admin_author_index');
     }
+
 }

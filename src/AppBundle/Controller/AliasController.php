@@ -24,7 +24,7 @@ class AliasController extends Controller
      * @Route("/", name="admin_alias_index")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
+     * @param Request $request
      * @return array for template processing
      */
     public function indexAction(Request $request) {
@@ -41,55 +41,54 @@ class AliasController extends Controller
 
     /**
      * Search for Alias entities.
-	 *
+     *
      * @Route("/search", name="admin_alias_search")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
+     * @param Request $request
      */
     public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Alias');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->searchQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$aliases = $paginator->paginate($query, $request->query->getint('page', 1), 25);
-		} else {
-			$aliases = array();
-		}
+        $repo = $em->getRepository('AppBundle:Alias');
+        $q = $request->query->get('q');
+        if($q) {
+            $query = $repo->searchQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $aliases = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $aliases = array();
+        }
 
         return array(
             'aliases' => $aliases,
-			'q' => $q,
+            'q' => $q,
         );
     }
-    
+
     /**
      * Full text search for Alias entities.
      *
      * @Route("/fulltext", name="admin_alias_fulltext")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
-	 * @return array
+     * @param Request $request
+     * @return array
      */
-    public function fulltextAction(Request $request)
-    {
+    public function fulltextAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Alias');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$aliases = $paginator->paginate($query, $request->query->getint('page', 1), 25);
-		} else {
-			$aliases = array();
-		}
+        $repo = $em->getRepository('AppBundle:Alias');
+        $q = $request->query->get('q');
+        if($q) {
+            $query = $repo->fulltextQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $aliases = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $aliases = array();
+        }
 
         return array(
             'aliases' => $aliases,
-			'q' => $q,
+            'q' => $q,
         );
     }
 
@@ -99,7 +98,7 @@ class AliasController extends Controller
      * @Route("/new", name="admin_alias_new")
      * @Method({"GET", "POST"})
      * @Template()
-	 * @param Request $request
+     * @param Request $request
      */
     public function newAction(Request $request) {
         $alias = new Alias();
@@ -127,7 +126,7 @@ class AliasController extends Controller
      * @Route("/{id}", name="admin_alias_show")
      * @Method("GET")
      * @Template()
-	 * @param Alias $alias
+     * @param Alias $alias
      */
     public function showAction(Alias $alias) {
 
@@ -142,8 +141,8 @@ class AliasController extends Controller
      * @Route("/{id}/edit", name="admin_alias_edit")
      * @Method({"GET", "POST"})
      * @Template()
-	 * @param Request $request
-	 * @param Alias $alias
+     * @param Request $request
+     * @param Alias   $alias
      */
     public function editAction(Request $request, Alias $alias) {
         $editForm = $this->createForm('AppBundle\Form\AliasType', $alias);
@@ -168,8 +167,8 @@ class AliasController extends Controller
      *
      * @Route("/{id}/delete", name="admin_alias_delete")
      * @Method("GET")
-	 * @param Request $request
-	 * @param Alias $alias
+     * @param Request $request
+     * @param Alias   $alias
      */
     public function deleteAction(Request $request, Alias $alias) {
         $em = $this->getDoctrine()->getManager();

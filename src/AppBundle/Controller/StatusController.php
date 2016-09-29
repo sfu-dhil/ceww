@@ -63,31 +63,31 @@ class StatusController extends Controller
             'q' => $q,
         );
     }
+
     /**
      * Full text search for Status entities.
-	 *
+     *
      * @Route("/fulltext", name="admin_status_fulltext")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
-	 * @return array
+     * @param Request $request
+     * @return array
      */
-    public function fulltextAction(Request $request)
-    {
+    public function fulltextAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Status');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$statuses = $paginator->paginate($query, $request->query->getint('page', 1), 25);
-		} else {
-			$statuses = array();
-		}
+        $repo = $em->getRepository('AppBundle:Status');
+        $q = $request->query->get('q');
+        if($q) {
+            $query = $repo->fulltextQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $statuses = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $statuses = array();
+        }
 
         return array(
             'statuses' => $statuses,
-			'q' => $q,
+            'q' => $q,
         );
     }
 

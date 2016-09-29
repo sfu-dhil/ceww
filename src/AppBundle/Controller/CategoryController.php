@@ -17,6 +17,7 @@ use AppBundle\Form\CategoryType;
  */
 class CategoryController extends Controller
 {
+
     /**
      * Lists all Category entities.
      *
@@ -45,8 +46,7 @@ class CategoryController extends Controller
      * @Template()
      * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $category = new Category();
         $form = $this->createForm('AppBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
@@ -74,8 +74,7 @@ class CategoryController extends Controller
      * @Template()
      * @param Category $category
      */
-    public function showAction(Category $category)
-    {
+    public function showAction(Category $category) {
 
         return array(
             'category' => $category,
@@ -91,8 +90,7 @@ class CategoryController extends Controller
      * @param Request  $request
      * @param Category $category
      */
-    public function editAction(Request $request, Category $category)
-    {
+    public function editAction(Request $request, Category $category) {
         $editForm = $this->createForm('AppBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 

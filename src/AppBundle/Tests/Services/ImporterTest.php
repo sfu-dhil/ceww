@@ -160,7 +160,7 @@ class ImporterTest extends AbstractTestCase
             ["Goodfrey Barbican", $this->buildAlias(0, "Goodfrey Barbican")],
         ];
     }
-    
+
     /**
      * @dataProvider cleanAliasData
      */
@@ -175,7 +175,7 @@ class ImporterTest extends AbstractTestCase
             ['Agnes "Aggie" Beresford', 'Agnes "Aggie" Beresford'],
         ];
     }
-    
+
     /**
      * @dataProvider createPlaceData
      */

@@ -76,7 +76,7 @@ abstract class AbstractEntity implements JsonSerializable
     }
 
     abstract public function __toString();
-    
+
     public function jsonSerialize() {
         return array(
             'id' => $this->id,
