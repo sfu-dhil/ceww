@@ -22,13 +22,29 @@ class LoadPublications extends AbstractDataFixture implements OrderedFixtureInte
 {
 
     protected function doLoad(ObjectManager $manager) {
-        $publication = new Publication();
-        $publication->setCategory($this->getReference('category.book'));
-        $publication->setTitle('Things and Stuff');
-        $publication->setSortableTitle('things and stuff');
-        $publication->setYear(1980);
-        $this->setReference('publication.things', $publication);
-        $manager->persist($publication);
+        $book = new Publication();
+        $book->setCategory($this->getReference('category.book'));
+        $book->setTitle('Things and Stuff');
+        $book->setSortableTitle('things and stuff');
+        $book->setYear(1980);
+        $this->setReference('publication.book', $book);
+        $manager->persist($book);
+
+        $periodical = new Publication();
+        $periodical->setCategory($this->getReference('category.periodical'));
+        $periodical->setTitle('Things and stuff and things');
+        $periodical->setSortableTitle('things and stuff');
+        $periodical->setYear(1980);
+        $this->setReference('publication.periodical', $periodical);
+        $manager->persist($periodical);
+
+        $anthology = new Publication();
+        $anthology->setCategory($this->getReference('category.anthology'));
+        $anthology->setTitle('Things and Stuff, An Anthology');
+        $anthology->setSortableTitle('things and stuff');
+        $anthology->setYear(1980);
+        $this->setReference('publication.anthology', $anthology);
+        $manager->persist($anthology);
         $manager->flush();
     }
 

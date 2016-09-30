@@ -21,7 +21,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadAliases extends AbstractDataFixture implements OrderedFixtureInterface
 {
 
-    private static $ALIASES = array('Alice', 'Gertrude');
+    private static $ALIASES = array('Alice', 'Gertrude', 'Estelle');
 
     protected function doLoad(ObjectManager $manager) {
         foreach (self::$ALIASES as $name) {

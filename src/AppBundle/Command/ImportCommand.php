@@ -85,7 +85,8 @@ class ImportCommand extends ContainerAwareCommand {
                         $this->em->clear();
                         gc_collect_cycles();
                     }
-                } catch (DriverException $e) {
+                } catch (\Exception $e) {
+                    $this->logger->error($e->getMessage());
                     $this->logger->error(implode(':', array(
                         basename($filePath),
                         $line,

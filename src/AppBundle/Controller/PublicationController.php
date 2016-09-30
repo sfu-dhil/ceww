@@ -28,7 +28,7 @@ class PublicationController extends Controller
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $dql = 'SELECT e FROM AppBundle:Publication e ORDER BY e.title';
+        $dql = 'SELECT e FROM AppBundle:Publication e ORDER BY e.sortableTitle';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $publications = $paginator->paginate($query, $request->query->getInt('page', 1), 25);

@@ -30,8 +30,11 @@ class LoadAuthors extends AbstractDataFixture implements OrderedFixtureInterface
         $author->setDeathDate('1998');
         $author->setStatus($this->getReference('status.draft'));
         $author->addAlias($this->getReference('alias.alice'));
+        $author->addAlias($this->getReference('alias.estelle'));
         $author->addResidence($this->getReference('place.paris'));
-        $author->addPublication($this->getReference('publication.things'));
+        $author->addPublication($this->getReference('publication.book'));
+        $author->addPublication($this->getReference('publication.periodical'));
+        $author->addPublication($this->getReference('publication.anthology'));
         $manager->persist($author);
         $manager->flush();
     }

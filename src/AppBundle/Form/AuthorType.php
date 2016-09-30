@@ -3,13 +3,13 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AuthorType extends AbstractType
-{
+class AuthorType extends AbstractType {
 
     /**
      * @param FormBuilderInterface $builder
@@ -17,27 +17,29 @@ class AuthorType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('fullName');
-// string
-        $builder->add('sortableName');
-// string
+        $builder->add('sortableName', TextType::class, array(
+            'attr' => array(
+                'help_block' => "hi there.",
+            )
+        ));
+
         $builder->add('birthDate');
-// integer
         $builder->add('birthplace_id', HiddenType::class, array(
             'mapped' => false,
-
             'attr' => array(
-                'id' => 'birthplace_id',
+                'class' => 'typeahead',
+                'data-typeahead' => 'place',
             )
         ));
         $builder->add('birthplace', TextType::class, array(
             'mapped' => false,
             'attr' => array(
-                'id' => 'birthplace_name',
+                'class' => 'typeahead',
+                'data-typeahead' => 'place',
             )
         ));
 
         $builder->add('deathDate');
-// integer
         $builder->add('deathplace_id', HiddenType::class, array(
             'mapped' => false,
             'attr' => array(
@@ -50,6 +52,26 @@ class AuthorType extends AbstractType
                 'id' => 'deathplace_name',
             )
         ));
+
+        $builder->add('aliases', CollectionType::class, array(
+            'entry_type' => AliasEmbeddedType::class,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype' => true,
+            'prototype_name' => '__alias__',
+            'attr' => array(
+                'help_block' => 'Try adding Gertrude as an alias',
+            ),
+            'required' => false,
+        ));
+
+//        $builder->add('residences', CollectionType::class, array(
+//            'entry_type' => PlaceEmbeddedType::class,
+//        ));
+//
+//        $builder->add('publications', CollectionType::class, array(
+//            'entry_type' => PublicationEmbeddedType::class,
+//        ));
 
         $builder->add('status');
     }

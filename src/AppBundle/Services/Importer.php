@@ -128,7 +128,7 @@ class Importer
 // remove front/rear quotes.
         );
 
-        $title = $publicationTitle;
+        $title = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $publicationTitle);
         foreach ($filters as $key => $value) {
             $title = preg_replace($key, $value, $title);
         }
@@ -143,11 +143,12 @@ class Importer
 // remove non-word chars at start.
         );
 
-        $title = strtolower($cleanTitle);
+        $title = mb_convert_case($cleanTitle, MB_CASE_LOWER, 'UTF-8');
         foreach ($filters as $key => $value) {
             $title = preg_replace($key, $value, $title);
         }
-        return trim($title);
+        $title = trim($title);
+        return $title;
     }
 
     public function createAlias($name) {
@@ -246,6 +247,9 @@ class Importer
         $entities = array();
         foreach ($titles as $title) {
             $title = $this->cleanTitle($title);
+            if(! $title) {
+                continue;
+            }
             $e = $repo->findBy(array(
                 'category' => $type,
                 'title' => $title,
