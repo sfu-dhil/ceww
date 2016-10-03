@@ -16,14 +16,22 @@ class AuthorType extends AbstractType {
      * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('fullName');
+        $builder->add('fullName', TextType::class, array(
+            'attr' => array(
+                'help_block' => "The author's full legal name with appropriate capitalization."
+            )
+        ));
         $builder->add('sortableName', TextType::class, array(
             'attr' => array(
-                'help_block' => "hi there.",
+                'help_block' => "The sortable name of the author should be all lower case and should be formatted last name, first name middle names.",
             )
         ));
 
-        $builder->add('birthDate');
+        $builder->add('birthDate', \Symfony\Component\Form\Extension\Core\Type\IntegerType::class, array(
+            'attr' => array(
+                'help_block' => 'The author\'s year of birth.'
+            )
+        ));
         $builder->add('birthplace_id', HiddenType::class, array(
             'mapped' => false,
             'attr' => array(
@@ -36,10 +44,15 @@ class AuthorType extends AbstractType {
             'attr' => array(
                 'class' => 'typeahead',
                 'data-typeahead' => 'place',
+                'label' => 'Birth place',
             )
         ));
 
-        $builder->add('deathDate');
+        $builder->add('deathDate', \Symfony\Component\Form\Extension\Core\Type\IntegerType::class, array(
+            'attr' => array(
+                'help_block' => 'The author\'s year of death.'
+            )
+        ));
         $builder->add('deathplace_id', HiddenType::class, array(
             'mapped' => false,
             'attr' => array(
@@ -49,30 +62,11 @@ class AuthorType extends AbstractType {
         $builder->add('deathplace', TextType::class, array(
             'mapped' => false,
             'attr' => array(
-                'id' => 'deathplace_name',
+                'class' => 'typeahead',
+                'data-typeahead' => 'place',
+                'label' => 'Birth place',
             )
         ));
-
-        $builder->add('aliases', CollectionType::class, array(
-            'entry_type' => AliasEmbeddedType::class,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'prototype' => true,
-            'prototype_name' => '__alias__',
-            'attr' => array(
-                'help_block' => 'Try adding Gertrude as an alias',
-            ),
-            'required' => false,
-        ));
-
-// $builder->add('residences', CollectionType::class, array(
-// 'entry_type' => PlaceEmbeddedType::class,
-// ));
-//
-// $builder->add('publications', CollectionType::class, array(
-// 'entry_type' => PublicationEmbeddedType::class,
-// ));
-        $builder->add('status');
     }
 
     /**
