@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block pageheader %} 
-    <h1>Residence Add</h1>
-    <p>Use the form below to search for residences by name and add them to {{ author.fullname }} ({{ author.birthDate }}-{{author.deathDate}}).</p>
-    <p>Current residences: {{ author.residences|join(',')}}</p>
+    <h1>Publication Add</h1>
+    <p>Use the form below to search for publications by name and add them to {{ author.fullname }} ({{ author.birthDate }}-{{author.deathDate}}).</p>
+    <p>Current publications: {{ author.publications|join(',')}}</p>
 {% endblock %} 
 
 {% block body %}
 
-    <form method="get" action="{{ path('admin_author_residence_add', {'id': author.id}) }}" class="form-horizontal">
+    <form method="get" action="{{ path('admin_author_publication_add', {'id': author.id}) }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -28,18 +28,18 @@
         </fieldset>
     </form>
 
-    {% if residences|length %}
-        <form method="post" action="{{ path('admin_author_residence_add', {'id': author.id}) }}" class="form-horizontal">
+    {% if publications|length %}
+        <form method="post" action="{{ path('admin_author_publication_add', {'id': author.id}) }}" class="form-horizontal">
             <fieldset>
-                <legend>Residences</legend>
+                <legend>Publications</legend>
 
-                {% for a in residences %}
+                {% for a in publications %}
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="residence_id[]" value="{{a.id}}">
-                                    {{ a.name }}
+                                    <input type="checkbox" name="publication_id[]" value="{{a.id}}">
+                                    {{ a.title }}
                                 </label>
                             </div>
                         </div>

@@ -16,20 +16,12 @@ class PlaceType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('name');
-// string
         $builder->add('alternateNames');
-// array
         $builder->add('countryName');
-// string
         $builder->add('adminNames');
-// array
         $builder->add('latitude');
-// decimal
         $builder->add('longitude');
-// decimal
         $builder->add('description');
-// text
-        $builder->add('residents');
     }
 
     /**

@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Alias;
 use AppBundle\Entity\Author;
+use AppBundle\Entity\Place;
+use AppBundle\Entity\Publication;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -266,7 +268,7 @@ class AuthorController extends Controller {
         }
 
         return array(
-            'q' => '',
+            'q' => $q,
             'author' => $author,
             'aliases' => $aliases,
         );
@@ -306,9 +308,235 @@ class AuthorController extends Controller {
         }
 
         return array(
-            'q' => '',
+            'q' => $q,
             'author' => $author,
             'aliases' => $aliases,
+        );
+    }
+
+    /**
+     * Create a new residence for an author.
+     *
+     * @Route("/{id}/residence/new", name="admin_author_residence_new")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author  $author
+     */
+    public function newResidenceAction(Request $request, Author $author) {
+        $residence = new Place();
+        $form = $this->createForm('AppBundle\Form\PlaceType', $residence);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($residence);
+            $author->addResidence($residence);
+            $em->flush();
+
+            $this->addFlash('success', 'The new residence was created and added to ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+
+        return array(
+            'author' => $author,
+            'residence' => $residence,
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Add residences to an author.
+     *
+     * @Route("/{id}/residence/add", name="admin_author_residence_add")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author  $author
+     */
+    public function addResidenceAction(Request $request, Author $author) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Place');
+        $q = $request->query->get('q');
+
+        if($request->getMethod() === 'POST') {
+            $ids = $request->request->get('residence_id', array());
+            foreach($ids as $id) {
+                $residence = $repo->find($id);
+                $author->addResidence($residence);
+            }
+            $em->flush();
+            $this->addFlash('success', 'The residences have been added to ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+
+        if($q) {
+            $residences = $query = $repo->searchQuery($q)->execute();
+        } else {
+            $residences = array();
+        }
+
+        return array(
+            'q' => $q,
+            'author' => $author,
+            'residences' => $residences,
+        );
+    }
+
+    /**
+     * Remove residences from an author.
+     *
+     * @Route("/{id}/residence/remove", name="admin_author_residence_remove")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author  $author
+     */
+    public function removeResidenceAction(Request $request, Author $author) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Place');
+        $q = $request->query->get('q');
+
+        if($request->getMethod() === 'POST') {
+            $ids = $request->request->get('residence_id', array());
+            foreach($ids as $id) {
+                $residence = $repo->find($id);
+                $author->removeResidence($residence);
+            }
+            $em->flush();
+            $this->addFlash('success', 'The residences have been removed from ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+
+        if($q) {
+            $residences = $query = $repo->searchQuery($q)->execute();
+        } else {
+            $residences = array();
+        }
+
+        return array(
+            'q' => $q,
+            'author' => $author,
+            'residences' => $residences,
+        );
+    }
+
+    /**
+     * Create a new publication for an author.
+     *
+     * @Route("/{id}/publication/new", name="admin_author_publication_new")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author  $author
+     */
+    public function newPublicationAction(Request $request, Author $author) {
+        $publication = new Publication();
+        $form = $this->createForm('AppBundle\Form\PublicationType', $publication);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($publication);
+            $author->addPublication($publication);
+            $em->flush();
+
+            $this->addFlash('success', 'The new publication was created and added to ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+
+        return array(
+            'author' => $author,
+            'publication' => $publication,
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Add publications to an author.
+     *
+     * @Route("/{id}/publication/add", name="admin_author_publication_add")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author  $author
+     */
+    public function addPublicationAction(Request $request, Author $author) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Publication');
+        $q = $request->query->get('q');
+
+        if($request->getMethod() === 'POST') {
+            $ids = $request->request->get('publication_id', array());
+            foreach($ids as $id) {
+                $publication = $repo->find($id);
+                $author->addPublication($publication);
+            }
+            $em->flush();
+            $this->addFlash('success', 'The publications have been added to ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+
+        if($q) {
+            $publications = $query = $repo->searchQuery($q)->execute();
+        } else {
+            $publications = array();
+        }
+
+        return array(
+            'q' => $q,
+            'author' => $author,
+            'publications' => $publications,
+        );
+    }
+
+    /**
+     * Remove publications from an author.
+     *
+     * @Route("/{id}/publication/remove", name="admin_author_publication_remove")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author  $author
+     */
+    public function removePublicationAction(Request $request, Author $author) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Publication');
+        $q = $request->query->get('q');
+
+        if($request->getMethod() === 'POST') {
+            $ids = $request->request->get('publication_id', array());
+            foreach($ids as $id) {
+                $publication = $repo->find($id);
+                $author->removePublication($publication);
+            }
+            $em->flush();
+            $this->addFlash('success', 'The publications have been removed from ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+
+        if($q) {
+            $publications = $query = $repo->searchQuery($q)->execute();
+        } else {
+            $publications = array();
+        }
+
+        return array(
+            'q' => $q,
+            'author' => $author,
+            'publications' => $publications,
         );
     }
 

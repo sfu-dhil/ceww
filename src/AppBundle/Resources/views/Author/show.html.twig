@@ -144,7 +144,18 @@
                         <th>Residences</th>
                         <td>
                             {{ self.pubList(author.residences, 'admin_place_show') }}
-                            <p>Create new residence | Add existing residence | Remove residence</p>
+                            <p>
+                                <a href="{{ path('admin_author_residence_new', {'id': author.id}) }}">
+                                    Create new residence
+                                </a>
+                                    |
+                                <a href="{{ path('admin_author_residence_add', {'id': author.id}) }}">
+                                    Add existing residence
+                                </a>
+                                    | 
+                                <a href="{{ path('admin_author_residence_remove', {'id': author.id}) }}">
+                                    Remove residence
+                                </a></p>
                         </td>
                         <td>{{ author.getOriginal('RESIDENCES') }}</td>
                     <tr>
@@ -156,14 +167,25 @@
                             {% if pubs|length > 0 %}
                                 <ul>
                                     {% for p in pubs %}
-                                    <li>
+                                    <li>{{ p.category }}: 
                                         <a href='{{ path('admin_publication_show', {'id': p.id }) }}'>
                                             {{ p }}
-                                        </a> ({{ p.category }}) (remove)
+                                        </a> 
                                     </li>                                        
                                     {% endfor %}
                                 </ul>
-                            <p>Create new publication | Add existing publication | Remove publication</p>
+                            <p>
+                                <a href="{{ path('admin_author_publication_new', {'id': author.id}) }}">
+                                    Create new publication
+                                </a>
+                                    |
+                                <a href="{{ path('admin_author_publication_add', {'id': author.id}) }}">
+                                    Add existing publication
+                                </a>
+                                    | 
+                                <a href="{{ path('admin_author_publication_remove', {'id': author.id}) }}">
+                                    Remove publication
+                                </a></p>
                             {% endif %}
                         </td>
                         <td>

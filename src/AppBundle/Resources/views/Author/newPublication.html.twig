@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Residence Creation</h1>
-    <p>Use the form below to add a place as a residence for {{ author.fullname }} ({{ author.birthDate }}-{{author.deathDate}}).</p>
-    <p>Current residences: {{ author.residences|join(', ')}}</p>
+    <h1>Publication Creation</h1>
+    <p>Use the form below to add a place as a publication for {{ author.fullname }} ({{ author.birthDate }}-{{author.deathDate}}).</p>
+    <p>Current publications: {{ author.publications|join(', ')}}</p>
 
         {{ form_start(form) }}
         {{ form_widget(form) }}
