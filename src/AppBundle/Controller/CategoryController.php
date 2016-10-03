@@ -13,7 +13,7 @@ use AppBundle\Form\CategoryType;
 /**
  * Category controller.
  *
- * @Route("/admin/Category")
+ * @Route("/admin/category")
  */
 class CategoryController extends Controller
 {

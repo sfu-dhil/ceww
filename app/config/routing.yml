@@ -2,6 +2,10 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
+pub:
+    resource: "@PubBundle/Controller/"
+    type: annotation
+
 user:
     resource: "@AppUserBundle/Controller/"
     type:     annotation

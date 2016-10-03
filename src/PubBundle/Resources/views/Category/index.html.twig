@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block pageheader %} 
+    <h1>PublicationType List</h1>
+    <p class="count">
+        Displaying {{ categories|length }} categories of {{ categories.getTotalItemCount }} total.
+    </p>
+{% endblock %} 
+
+{% block body %}
+
+	<div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            <a href="{{ path('category_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Label</th>
+                <th>Description</th>
+				<th>Count</th>
+        </thead>
+        <tbody>
+			{% for category in categories %}
+				<tr>
+					<td>
+						<a href="{{ path('category_show', { 'id': category.id }) }}">
+							{{ category.label }}
+						</a>
+					</td>
+					<td>{{ category.description }}</td>
+					<td>
+						{{ category.publications|length }}
+					</td>
+				</tr>
+			{% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(categories) }}
+    </div>
+
+{% endblock %}
