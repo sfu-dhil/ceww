@@ -38,7 +38,7 @@ class AliasController extends Controller
             'aliases' => $aliases,
         );
     }
-
+    
     /**
      * Search for Alias entities.
      *
