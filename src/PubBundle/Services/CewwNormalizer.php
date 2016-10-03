@@ -8,5 +8,5 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
  * @author mjoyce
  */
 class CewwNormalizer extends ObjectNormalizer {
-    
+
 }

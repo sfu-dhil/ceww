@@ -178,5 +178,5 @@ class AliasController extends Controller
 
         return $this->redirectToRoute('admin_alias_index');
     }
-    
+
 }
