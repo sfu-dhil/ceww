@@ -16,12 +16,8 @@ class AliasType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('name');
-// string
         $builder->add('maiden');
-// boolean
         $builder->add('description');
-// text
-        $builder->add('authors');
     }
 
     /**

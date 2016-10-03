@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
- {% block pageheader %} 
+{% block pageheader %} 
     <h1>Category Search</h1>
-	{% if categories|length %}
-    <p class="count">
-        Displaying {{ categories|length }} categories of {{ categories.getTotalItemCount }} total.
-    </p>
-	{% endif %}
- {% endblock %} 
+    {% if categories|length %}
+        <p class="count">
+            Displaying {{ categories|length }} categories of {{ categories.getTotalItemCount }} total.
+        </p>
+    {% endif %}
+{% endblock %} 
 
 {% block body %}
 
@@ -30,35 +30,35 @@
             </div>
         </fieldset>
     </form>
-    
-	{% if categories|length %}
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Label</th>
-                <th>Description</th>
-				<th>Count</th>
-        </thead>
-        <tbody>
-        {% for category in categories %}
-            <tr>
-                <td>
-                    <a href="{{ path('admin_category_show', { 'id': category.id }) }}">
-                        {{ category.label }}
-                    </a>
-                </td>
-                <td>{{ category.description }}</td>
-				<td>
-					{{ category.publications|length }}
-				</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-        
-    <div class="navigation">
-        {{ knp_pagination_render(categories) }}
-    </div>
-	{% endif %}
+
+    {% if categories|length %}
+        <table class="table table-bordered table-condensed table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Description</th>
+                    <th>Count</th>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('admin_category_show', { 'id': category.id }) }}">
+                                {{ category.label }}
+                            </a>
+                        </td>
+                        <td>{{ category.description }}</td>
+                        <td>
+                            {{ category.publications|length }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(categories) }}
+        </div>
+    {% endif %}
 
 {% endblock %}

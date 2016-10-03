@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
- {% block pageheader %} 
+{% block pageheader %} 
     <h1>Status Search</h1>
-	{% if statuses|length %}
-    <p class="count">
-        Displaying {{ statuses|length }} statuses of {{ statuses.getTotalItemCount }} total.
-    </p>
-	{% endif %}
- {% endblock %} 
+    {% if statuses|length %}
+        <p class="count">
+            Displaying {{ statuses|length }} statuses of {{ statuses.getTotalItemCount }} total.
+        </p>
+    {% endif %}
+{% endblock %} 
 
 {% block body %}
 
@@ -30,35 +30,35 @@
             </div>
         </fieldset>
     </form>
-    
-	{% if statuses|length %}
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Label</th>
-                <th>Description</th>
-                <th>Created</th>
-                <th>Updated</th>            </tr>
-        </thead>
-        <tbody>
-        {% for status in statuses %}
-            <tr>
-                <td>
-                    <a href="{{ path('admin_status_show', { 'id': status.id }) }}">
-                        {{ status.label }}
-                    </a>
-                </td>
-                <td>{{ status.description }}</td>
-                <td>{% if status.created %}{{ status.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if status.updated %}{{ status.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-        
-    <div class="navigation">
-        {{ knp_pagination_render(statuses) }}
-    </div>
-	{% endif %}
+
+    {% if statuses|length %}
+        <table class="table table-bordered table-condensed table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Description</th>
+                    <th>Created</th>
+                    <th>Updated</th>            </tr>
+            </thead>
+            <tbody>
+                {% for status in statuses %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('admin_status_show', { 'id': status.id }) }}">
+                                {{ status.label }}
+                            </a>
+                        </td>
+                        <td>{{ status.description }}</td>
+                        <td>{% if status.created %}{{ status.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{% if status.updated %}{{ status.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(statuses) }}
+        </div>
+    {% endif %}
 
 {% endblock %}

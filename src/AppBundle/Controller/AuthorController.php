@@ -2,8 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Alias;
 use AppBundle\Entity\Author;
-use JsonSerializable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -197,6 +197,119 @@ class AuthorController extends Controller {
         $this->addFlash('success', 'The author was deleted.');
 
         return $this->redirectToRoute('admin_author_index');
+    }
+
+    /**
+     * Create a new alias for an author.
+     * 
+     * @Route("/{id}/alias/new", name="admin_author_alias_new")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author $author
+     */
+    public function newAliasAction(Request $request, Author $author) {
+        $alias = new Alias();
+        $form = $this->createForm('AppBundle\Form\AliasType', $alias);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($alias);
+            $author->addAlias($alias);
+            $em->flush();
+
+            $this->addFlash('success', 'The new alias was created and added to ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+
+        return array(
+            'author' => $author,
+            'alias' => $alias,
+            'form' => $form->createView(),
+        );
+    }
+    
+    /**
+     * Add aliases to an author.
+     * 
+     * @Route("/{id}/alias/add", name="admin_author_alias_add")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author $author
+     */
+    public function addAliasAction(Request $request, Author $author) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Alias');
+        $q = $request->query->get('q');
+        
+        if($request->getMethod() === 'POST') {
+            $ids = $request->request->get('alias_id', array());
+            foreach($ids as $id) {
+                $alias = $repo->find($id);
+                $author->addAlias($alias);                
+            }
+            $em->flush();
+            $this->addFlash('success', 'The aliases have been added to ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+        
+        if($q) {
+            $aliases = $query = $repo->searchQuery($q)->execute();
+        } else {
+            $aliases = array();
+        }
+        
+        return array(
+            'q' => '',
+            'author' => $author,
+            'aliases' => $aliases,
+        );
+    }
+    
+    /**
+     * Remove aliases from an author.
+     * 
+     * @Route("/{id}/alias/remove", name="admin_author_alias_remove")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Request $request
+     * @param Author $author
+     */
+    public function removeAliasAction(Request $request, Author $author) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Alias');
+        $q = $request->query->get('q');
+        
+        if($request->getMethod() === 'POST') {
+            $ids = $request->request->get('alias_id', array());
+            foreach($ids as $id) {
+                $alias = $repo->find($id);
+                $author->removeAlias($alias);                
+            }
+            $em->flush();
+            $this->addFlash('success', 'The aliases have been removed from ' . $author->getFullName());
+            return $this->redirectToRoute('admin_author_show', array(
+                'id' => $author->getId()
+            ));
+        }
+        
+        if($q) {
+            $aliases = $query = $repo->searchQuery($q)->execute();
+        } else {
+            $aliases = array();
+        }
+        
+        return array(
+            'q' => '',
+            'author' => $author,
+            'aliases' => $aliases,
+        );
     }
 
 }

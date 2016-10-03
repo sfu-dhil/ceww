@@ -41,7 +41,7 @@
                     <td>{% if place.alternateNames %}{{ place.alternateNames|join(', ') }}{% endif %}</td>
                     <td>{{ place.countryName }}</td>
                     <td>{% if place.adminNames %}{{ place.adminNames|join(', ') }}{% endif %}</td>
-                        <td>{{ place.authorsBorn|length }}\{{ place.authorsDied|length }}\{{ place.residents|length }}</td>
+                    <td>{{ place.authorsBorn|length }}\{{ place.authorsDied|length }}\{{ place.residents|length }}</td>
                 </tr>
             {% endfor %}
         </tbody>

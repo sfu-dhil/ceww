@@ -1,22 +1,22 @@
 {% extends 'base.html.twig' %}
 
- {% block pageheader %} 
+{% block pageheader %} 
     <h1>Genre List</h1>
     <p class="count">
         Displaying {{ genres|length }} genres of {{ genres.getTotalItemCount }} total.
     </p>
- {% endblock %} 
+{% endblock %} 
 
 {% block body %}
 
-        <div class='btn-toolbar pull-right'>
+    <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
             <a href="{{ path('admin_genre_new') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span> New
             </a>
         </div>
     </div>
-        
+
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
             <tr>
@@ -26,21 +26,21 @@
                 <th>Updated</th>            </tr>
         </thead>
         <tbody>
-        {% for genre in genres %}
-            <tr>
-                <td>
-                    <a href="{{ path('admin_genre_show', { 'id': genre.id }) }}">
-                        {{ genre.name }}
-                    </a>
-                </td>
-                <td>{{ genre.description }}</td>
-                <td>{% if genre.created %}{{ genre.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if genre.updated %}{{ genre.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        {% endfor %}
+            {% for genre in genres %}
+                <tr>
+                    <td>
+                        <a href="{{ path('admin_genre_show', { 'id': genre.id }) }}">
+                            {{ genre.name }}
+                        </a>
+                    </td>
+                    <td>{{ genre.description }}</td>
+                    <td>{% if genre.created %}{{ genre.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if genre.updated %}{{ genre.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
-        
+
     <div class="navigation">
         {{ knp_pagination_render(genres) }}
     </div>
