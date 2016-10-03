@@ -16,7 +16,7 @@ class AliasEmbeddedType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('alias_id', HiddenType::class, array(
-            'mapped' => false, 
+            'mapped' => false,
         ));
         $builder->add('name', TextType::class, array(
             'mapped' => 'false',

@@ -65,14 +65,13 @@ class AuthorType extends AbstractType {
             'required' => false,
         ));
 
-//        $builder->add('residences', CollectionType::class, array(
-//            'entry_type' => PlaceEmbeddedType::class,
-//        ));
+// $builder->add('residences', CollectionType::class, array(
+// 'entry_type' => PlaceEmbeddedType::class,
+// ));
 //
-//        $builder->add('publications', CollectionType::class, array(
-//            'entry_type' => PublicationEmbeddedType::class,
-//        ));
-
+// $builder->add('publications', CollectionType::class, array(
+// 'entry_type' => PublicationEmbeddedType::class,
+// ));
         $builder->add('status');
     }
 

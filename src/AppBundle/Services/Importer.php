@@ -160,7 +160,8 @@ class Importer
 
     public function cleanName($name) {
         $filters = array(
-            '/^"([^"]*)"$/u' => '$1', // strip quotes from start and end.
+            '/^"([^"]*)"$/u' => '$1',
+// strip quotes from start and end.
             '/(^\s*)|(\s*$)/msu' => '',
         );
         foreach($filters as $key => $value) {

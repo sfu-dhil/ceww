@@ -138,7 +138,7 @@ class ImporterTest extends AbstractTestCase
             ['', ''],
         ];
     }
-    
+
     /**
      * @dataProvider createAliasData
      */

@@ -80,8 +80,7 @@ class AdminUserController extends Controller
      *
      * @return Form The form
      */
-    private function createCreateForm(User $entity)
-    {
+    private function createCreateForm(User $entity) {
         $form = $this->createForm(AdminUserType::class, $entity, array(
             'action' => $this->generateUrl('user_create'),
             'method' => 'POST',
@@ -178,8 +177,7 @@ class AdminUserController extends Controller
      *
      * @return Form The form
      */
-    private function createEditForm(User $entity)
-    {
+    private function createEditForm(User $entity) {
         $form = $this->createForm(AdminUserType::class, $entity, array(
             'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
@@ -266,8 +264,7 @@ class AdminUserController extends Controller
             ->setAction($this->generateUrl('user_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', ButtonType::class, array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 
     /**

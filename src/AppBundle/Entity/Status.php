@@ -19,7 +19,7 @@ class Status extends AbstractEntity
      * @ORM\Column(type="string", length=24, nullable=false)
      */
     private $label;
-    
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
@@ -35,15 +35,15 @@ class Status extends AbstractEntity
      * @var Collection|Author[]
      */
     private $publishedAuthors;
-    
+
     /**
      * Constructor
      */
     public function __construct() {
         $this->public = false;
         $this->publishedAuthors = new \Doctrine\Common\Collections\ArrayCollection();
-    }    
-    
+    }
+
     public function __toString() {
         return $this->label;
     }
@@ -123,7 +123,6 @@ class Status extends AbstractEntity
         return $this->publishedAuthors;
     }
 
-
     /**
      * Set public
      *
@@ -131,8 +130,7 @@ class Status extends AbstractEntity
      *
      * @return Status
      */
-    public function setPublic($public)
-    {
+    public function setPublic($public) {
         $this->public = $public;
 
         return $this;
@@ -143,8 +141,8 @@ class Status extends AbstractEntity
      *
      * @return boolean
      */
-    public function getPublic()
-    {
+    public function getPublic() {
         return $this->public;
     }
+
 }
