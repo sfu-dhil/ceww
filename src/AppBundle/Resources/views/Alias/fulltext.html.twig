@@ -51,7 +51,8 @@
                     <th>Updated</th>            </tr>
             </thead>
             <tbody>
-                {% for alias in aliases %}
+                {% for result in aliases %}
+                    {% set alias = result[0] %}
                     <tr>
                         <td>
                             <a href="{{ path('admin_alias_show', { 'id': alias.id }) }}">
