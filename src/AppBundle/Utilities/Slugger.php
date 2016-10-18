@@ -21,17 +21,14 @@ class Slugger {
      * @return string
      */
     public function slug($string, $separator = '-') {
-        // trim spaces.
+        // trim spaces and periods.
         $s = preg_replace('/(^[\s.]*)|([\s.]*$)/u', '', $string);
         
-        // transliterate digraphs
+        // transliterate digraphs and accents
         $s = iconv('utf-8', 'us-ascii//TRANSLIT', $s);
         
         // lowercase
         $s = mb_convert_case($s, MB_CASE_LOWER, 'UTF-8');
-        
-        // trailing periods.
-        $s = preg_replace('/\.+$/u', '', $s);
         
         // strip non letter/digit/period/space chars
         $s = preg_replace('/[^-_a-z0-9. ]/u', '', $s);
