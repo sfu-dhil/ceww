@@ -74,6 +74,33 @@ class AliasController extends Controller
             'q' => $q,
         );
     }
+    
+    /**
+     * Full text search for Alias entities.
+     *
+     * @Route("/fulltext", name="alias_fulltext")
+     * @Method("GET")
+     * @Template()
+     * @param Request $request
+     * @return array
+     */
+    public function fulltextAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Alias');
+        $q = $request->query->get('q');
+        if($q) {
+            $query = $repo->fulltextQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $aliases = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $aliases = array();
+        }
+
+        return array(
+            'aliases' => $aliases,
+            'q' => $q,
+        );
+    }    
 
     /**
      * Finds and displays a Alias entity.

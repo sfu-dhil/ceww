@@ -40,18 +40,6 @@ class PublicationController extends Controller
     /**
      * Search for Publication entities.
      *
-     * To make this work, add a method like this one to the
-     * AppBundle:Publication repository. Replace the fieldName with
-     * something appropriate, and adjust the generated search.html.twig
-     * template.
-     *
-     //    public function searchQuery($q) {
-     //        $qb = $this->createQueryBuilder('e');
-     //        $qb->where("e.fieldName like '%$q%'");
-     //        return $qb->getQuery();
-     //    }
-     *
-     *
      * @Route("/search", name="publication_search")
      * @Method("GET")
      * @Template()
@@ -63,6 +51,33 @@ class PublicationController extends Controller
         $q = $request->query->get('q');
         if($q) {
             $query = $repo->searchQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $publications = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        } else {
+            $publications = array();
+        }
+
+        return array(
+            'publications' => $publications,
+            'q' => $q,
+        );
+    }
+
+    /**
+     * Full text search for Publication entities.
+     *
+     * @Route("/fulltext", name="publication_fulltext")
+     * @Method("GET")
+     * @Template()
+     * @param Request $request
+     * @return array
+     */
+    public function fulltextAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Publication');
+        $q = $request->query->get('q');
+        if($q) {
+            $query = $repo->fulltextQuery($q);
             $paginator = $this->get('knp_paginator');
             $publications = $paginator->paginate($query, $request->query->getint('page', 1), 25);
         } else {
