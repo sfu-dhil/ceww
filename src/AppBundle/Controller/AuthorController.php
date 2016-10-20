@@ -129,17 +129,28 @@ class AuthorController extends Controller {
      * Finds and displays a Author entity.
      *
      * @Route("/{id}", name="admin_author_show")
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Template()
      * @param Author $author
      */
-    public function showAction(Author $author) {
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Author');
-
+    public function showAction(Request $request, Author $author) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Author');
+        $statuses = $em->getRepository('AppBundle:Status')->findAll();
+        
+        if($request->getMethod() === 'POST') {
+            $status = $em->getRepository('AppBundle:Status')->find($request->request->get('status_id'));
+            $author->setStatus($status);
+            $em->flush();
+            $this->addFlash('success', 'The author status has been updated');
+            return $this->redirectToRoute('admin_author_show', array('id' => $author->getId()));
+        }
+        
         return array(
             'author' => $author,
             'next' => $repo->next($author),
             'previous' => $repo->previous($author),
+            'statuses' => $statuses,
         );
     }
 

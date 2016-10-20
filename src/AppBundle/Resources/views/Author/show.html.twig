@@ -93,26 +93,26 @@
                             </td>
                             <td>{{ author.getOriginal('DEATH PLACE') }}</td>
                         </tr>
-                    <tr>
-                        <th>Notes</th>
-                        <td>{{ author.notes|nl2br }}</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Created</th>
-                        <td>{% if author.created %}{{ author.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Updated</th>
-                        <td>{% if author.updated %}{{ author.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-                        <td></td>
-                    </tr>
+                        <tr>
+                            <th>Notes</th>
+                            <td>{{ author.notes|nl2br }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Created</th>
+                            <td>{% if author.created %}{{ author.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Updated</th>
+                            <td>{% if author.updated %}{{ author.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
-                        
+
                 <h2>Other information</h2>
-                        
+
                 <table class="table table-bordered table-condensed table-hover table-striped">
                     <thead>
                         <tr>
@@ -129,11 +129,11 @@
                                 <a href="{{ path('admin_author_alias_new', {'id': author.id}) }}">
                                     Create new alias
                                 </a>
-                                    |
+                                |
                                 <a href="{{ path('admin_author_alias_add', {'id': author.id}) }}">
                                     Add existing alias
                                 </a>
-                                    | 
+                                | 
                                 <a href="{{ path('admin_author_alias_remove', {'id': author.id}) }}">
                                     Remove alias
                                 </a></p>
@@ -148,11 +148,11 @@
                                 <a href="{{ path('admin_author_residence_new', {'id': author.id}) }}">
                                     Create new residence
                                 </a>
-                                    |
+                                |
                                 <a href="{{ path('admin_author_residence_add', {'id': author.id}) }}">
                                     Add existing residence
                                 </a>
-                                    | 
+                                | 
                                 <a href="{{ path('admin_author_residence_remove', {'id': author.id}) }}">
                                     Remove residence
                                 </a></p>
@@ -167,26 +167,26 @@
                             {% if pubs|length > 0 %}
                                 <ul>
                                     {% for p in pubs %}
-                                    <li>{{ p.category }}: 
-                                        <a href='{{ path('admin_publication_show', {'id': p.id }) }}'>
-                                            {{ p }}
-                                        </a> 
-                                    </li>                                        
+                                        <li>{{ p.category }}: 
+                                            <a href='{{ path('admin_publication_show', {'id': p.id }) }}'>
+                                                {{ p }}
+                                            </a> 
+                                        </li>                                        
                                     {% endfor %}
                                 </ul>
-                            <p>
-                                <a href="{{ path('admin_author_publication_new', {'id': author.id}) }}">
-                                    Create new publication
-                                </a>
+                                <p>
+                                    <a href="{{ path('admin_author_publication_new', {'id': author.id}) }}">
+                                        Create new publication
+                                    </a>
                                     |
-                                <a href="{{ path('admin_author_publication_add', {'id': author.id}) }}">
-                                    Add existing publication
-                                </a>
+                                    <a href="{{ path('admin_author_publication_add', {'id': author.id}) }}">
+                                        Add existing publication
+                                    </a>
                                     | 
-                                <a href="{{ path('admin_author_publication_remove', {'id': author.id}) }}">
-                                    Remove publication
-                                </a></p>
-                            {% endif %}
+                                    <a href="{{ path('admin_author_publication_remove', {'id': author.id}) }}">
+                                        Remove publication
+                                    </a></p>
+                                {% endif %}
                         </td>
                         <td>
                             <p><b>Books</b><br/>
@@ -199,8 +199,20 @@
                     </tr>
                     <tr>
                         <th>Status</th>
-                        <td>{{ author.status }}</td>
-                        <td></td>
+                        <td colspan="2">
+                            <div class="btn-toolbar">
+                                <div class="btn-group pull-left">
+                                    <a href="" class="btn btn-primary disabled">Current: {{ author.status }}</a>
+                                </div>
+                                <div class="btn-group pull-right"> 
+                                    <form method="post">
+                                        {% for status in statuses if status != author.status %}
+                                            <button type="submit" name="status_id" value="{{status.id}}" class="btn btn-primary">{{ status }}</button>
+                                        {% endfor %}
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

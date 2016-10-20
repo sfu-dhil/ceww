@@ -65,9 +65,11 @@ class Importer
             return array($matches[1], $matches[2]);
         }
         if (preg_match('/^(\d{2})-([a-zA-Z]{3})-(\d{2})$/', $str, $matches)) {
+            // flag this somehow.
             return $matches[3] + 1900;
         }
         if (preg_match('/^([a-zA-Z]{3})-(\d{2})$/', $str, $matches)) {
+            // flag this somehow.
             return $matches[2] + 1900;
         }
         if (preg_match('/(\d{4})/', $str, $matches)) {
