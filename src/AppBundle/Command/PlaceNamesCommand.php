@@ -27,14 +27,14 @@ class PlaceNamesCommand extends ContainerAwareCommand
      *
      * @var Registry
      */
-    protected $em;
+    private $em;
 
     /**
      * Geonames username, from parameters.yml.
      *
      * @var string
      */
-    protected $geonames_account;
+    private $geonames_account;
 
     /**
      * Geonames endpoint.
@@ -42,7 +42,7 @@ class PlaceNamesCommand extends ContainerAwareCommand
     const GEONAMES_SEARCH = 'http://api.geonames.org/search';
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure() {
         $this
@@ -51,7 +51,7 @@ class PlaceNamesCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
@@ -61,9 +61,11 @@ class PlaceNamesCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritdoc}
+     * Get an HTTP Client.
+     *
+     * @return Client a Guzzle Client.
      */
-    protected function getClient() {
+    private function getClient() {
         $client = new Client(array(
             'headers' => array(
                 'User-Agent' => 'CEWW API Client/1.0',
@@ -74,7 +76,7 @@ class PlaceNamesCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $client = $this->getClient();

@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Database &#8212; CEWW 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="CEWW 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="&lt;no title&gt;" href="public-interface.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="database">
+<h1>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h1>
+<p>The CEWW database backend is MySQL/MariaDB. The front-end interacts
+with it via Doctrine. Porting to other database platforms should be
+fairly easy, although some care will be needed for the full text
+search. <a class="footnote-reference" href="#f1" id="id1">[1]</a></p>
+<div class="section" id="author">
+<h2>Author<a class="headerlink" href="#author" title="Permalink to this headline">¶</a></h2>
+<p>Authors are the central entites in CEWW. The authors table has columns
+for full name, sortable name, birth year, death year, birth place,
+death place, and status.</p>
+<p>Sortable name is never shown in the public interface. All lists are
+sorted by sortable name. Birth place and death place are foreign keys
+to the Place table.</p>
+<p>The authors table has several many-to-many relationships with other
+tables.</p>
+<p><strong>Aliases</strong> is a list of aliases or psuednyms or pen names. A
+one-to-many relationship wouldn&#8217;t work here, because several authors
+published under the same pen name, and some authors have multiple pen
+names.</p>
+<p><strong>Residences</strong> is a list of places where the author is known to have
+lived.</p>
+<p><strong>Publications</strong> is a list of publications the author contributed to.</p>
+<p>Doctrine implements each of these many-to-many relationships with an
+additional join table (author_alias, author_residence,
+author_publication)</p>
+</div>
+<div class="section" id="alias">
+<h2>Alias<a class="headerlink" href="#alias" title="Permalink to this headline">¶</a></h2>
+<p>An alias is a psuedonym or pen name for one or more authors. Aliases
+include maiden names.</p>
+</div>
+<div class="section" id="publication">
+<h2>Publication<a class="headerlink" href="#publication" title="Permalink to this headline">¶</a></h2>
+<p>Publications are any printed work. Periodicals, serials, anthologies,
+and books are all included and more categories of publications may be
+added. The table contains columns for title, sortable title, year,
+category, genres, and notes. Sortable title is never shown in the
+public interface. Category is a many-to-one relationship iwth the
+category table. Genres is a many-to-many relationship with the genre
+table. Notes are any information editors wish to share with one
+another about a publication.</p>
+</div>
+<div class="section" id="place">
+<h2>Place<a class="headerlink" href="#place" title="Permalink to this headline">¶</a></h2>
+<p>A place is a city, usually in Canada. The database tracks where an
+author was born, lived, or died. The table contains columns for the
+place name, alternate names, country name, administrative names
+(province or state), latitude, and longitude. There is also a column
+for description, which may be unusued.</p>
+</div>
+<div class="section" id="category">
+<h2>Category<a class="headerlink" href="#category" title="Permalink to this headline">¶</a></h2>
+<p>Category is a lookup table for publication, and describes the type of
+the publication (eg. book, serial, periodical, anthology).</p>
+</div>
+<div class="section" id="genre">
+<h2>Genre<a class="headerlink" href="#genre" title="Permalink to this headline">¶</a></h2>
+<p>Genres describe the content of a publication (eg. poetry, fiction).</p>
+</div>
+<div class="section" id="status">
+<h2>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
+<p>Author information may be saved as a draft or published. The status
+table has columns for the status label, public, and
+description. Authors with a status where public is true will be shown
+in the public interface.</p>
+<img alt="_images/schema.png" src="_images/schema.png" />
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="f1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Doctrine doesn&#8217;t have support for MySQL&#8217;s full text search,
+so we wrote a doctrine extension to add support. Porting to
+another database may require a similar extension.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Database</a><ul>
+<li><a class="reference internal" href="#author">Author</a></li>
+<li><a class="reference internal" href="#alias">Alias</a></li>
+<li><a class="reference internal" href="#publication">Publication</a></li>
+<li><a class="reference internal" href="#place">Place</a></li>
+<li><a class="reference internal" href="#category">Category</a></li>
+<li><a class="reference internal" href="#genre">Genre</a></li>
+<li><a class="reference internal" href="#status">Status</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="public-interface.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/database.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Michael Joyce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/database.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

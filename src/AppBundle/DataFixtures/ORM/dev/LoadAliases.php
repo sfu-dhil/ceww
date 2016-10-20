@@ -15,14 +15,15 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Description of LoadAliases
- *
- * @author mjoyce
  */
 class LoadAliases extends AbstractDataFixture implements OrderedFixtureInterface
 {
 
     private static $ALIASES = array('Alice', 'Gertrude', 'Estelle');
 
+    /**
+     * {@inheritDoc}
+     */
     protected function doLoad(ObjectManager $manager) {
         foreach (self::$ALIASES as $name) {
             $alias = new Alias();
@@ -34,6 +35,9 @@ class LoadAliases extends AbstractDataFixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getEnvironments() {
         return ['dev'];
     }

@@ -43,7 +43,8 @@
         "symfony/var-dumper": "^3.1",
         "squizlabs/php_codesniffer": "^2.7",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "drupal/coder": "^8.2"
+        "drupal/coder": "^8.2",
+        "friendsofphp/php-cs-fixer": "^1.12"
     },
     "scripts": {
         "symfony-scripts": [

@@ -1,5 +1,7 @@
 <?php
 
+namespace PubBundle\Services;
+
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 /**

@@ -31,17 +31,17 @@ class ImportCommand extends ContainerAwareCommand {
      *
      * @var Registry
      */
-    protected $em;
+    private $em;
 
     /**
      * Importer service.
      *
      * @var Importer
      */
-    protected $importer;
+    private $importer;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function configure() {
         $this
@@ -51,7 +51,7 @@ class ImportCommand extends ContainerAwareCommand {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
@@ -61,7 +61,7 @@ class ImportCommand extends ContainerAwareCommand {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $files = $input->getArgument('files');
