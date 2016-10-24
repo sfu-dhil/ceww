@@ -76,10 +76,7 @@ class ImportCommand extends ContainerAwareCommand {
             while ($row = fgetcsv($fh)) {
                 $line++;
                 try {
-                    $author = $this->importer->importArray($row);
-                    for ($i = 0; $i < count($headers); ++$i) {
-                        $author->setOriginal($headers[$i], $row[$i]);
-                    }
+                    $author = $this->importer->import($row);
                     if ($line % $batchSize === 0) {
                         $this->em->flush();
                         $this->em->clear();

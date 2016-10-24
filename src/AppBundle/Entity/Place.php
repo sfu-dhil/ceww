@@ -57,6 +57,11 @@ class Place extends AbstractEntity implements JsonSerializable
     private $description;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $researchNotes;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Author", mappedBy="birthPlace")
      * @var Collection|Author[]
      */
