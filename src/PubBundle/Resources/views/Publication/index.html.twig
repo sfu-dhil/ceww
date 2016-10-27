@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block pageheader %} 
+    <h1>Publication List</h1>
+    <p class="count">
+        Displaying {{ publications|length }} publications of {{ publications.getTotalItemCount }} total.
+    </p>
+{% endblock %} 
+
+{% block body %}
+
+    <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            <a href="{{ path('publication_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+            <a href="{{ path('publication_fulltext') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Fulltext Search
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Authors</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for publication in publications %}
+                <tr>
+                    <td>
+                        <a href="{{ path('publication_show', { 'id': publication.id }) }}">
+                            {{ publication.title }}
+                        </a>
+                    </td>
+                    <td>{{ publication.category }}</td>
+                    <td>{{ publication.authors|length }}</td>
+                    <td>{{ publication.year }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(publications) }}
+    </div>
+
+{% endblock %}

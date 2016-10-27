@@ -1,0 +1,19 @@
+page:
+    resource: "@PageBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+pub:
+    resource: "@PubBundle/Controller/"
+    type: annotation
+
+user:
+    resource: "@AppUserBundle/Controller/"
+    type:     annotation
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
