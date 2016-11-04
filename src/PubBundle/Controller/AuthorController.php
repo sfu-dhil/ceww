@@ -3,6 +3,7 @@
 namespace PubBundle\Controller;
 
 use AppBundle\Entity\Author;
+use FeedbackBundle\Entity\Comment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -103,9 +104,24 @@ class AuthorController extends Controller
      * @Template()
      * @param Author $author
      */
-    public function showAction(Author $author) {
+    public function showAction(Request $request, Author $author) {
 
+        $comment = new Comment();
+        $comment->setUrl($request->getPathInfo());
+        $form = $this->createForm('FeedbackBundle\Form\CommentType', $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+
+            $this->addFlash('success', 'Thank you for your suggestion.');
+        }
+        
         return array(
+            'comment' => $comment,
+            'form' => $form->createView(),
             'author' => $author,
         );
     }

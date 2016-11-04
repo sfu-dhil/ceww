@@ -21,6 +21,7 @@ class AppKernel extends Kernel {
             new AppUserBundle\AppUserBundle(),
             new PubBundle\PubBundle(),
             new PageBundle\PageBundle(),
+            new FeedbackBundle\FeedbackBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
