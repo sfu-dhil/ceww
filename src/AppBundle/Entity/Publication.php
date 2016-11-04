@@ -34,12 +34,6 @@ class Publication extends AbstractEntity
     private $year;
     
     /**
-     * @var string
-     * @ORM\Column(type="string", length=250, nullable=true)
-     */
-    private $location;
-    
-    /**
      * @var array
      * @ORM\Column(type="array", nullable=false)
      */
@@ -301,29 +295,5 @@ class Publication extends AbstractEntity
             });
         }
         return $this;
-    }
-
-    /**
-     * Set location
-     *
-     * @param string $location
-     *
-     * @return Publication
-     */
-    public function setLocation($location)
-    {
-        $this->location = $location;
-
-        return $this;
-    }
-
-    /**
-     * Get location
-     *
-     * @return string
-     */
-    public function getLocation()
-    {
-        return $this->location;
     }
 }
