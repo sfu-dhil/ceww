@@ -59,6 +59,14 @@
                 <td>{{ publication.year }}</td>
             </tr>
             <tr>
+                <th>Location</th>
+            <td>{{ publication.location }}</td>
+            </tr>
+            <tr>
+                <th>Links</th>
+                <td>{% if publication.links %}{{ publication.links|join(', ') }}{% endif %}</td>
+            </tr>
+            <tr>
                 <th>Notes</th>
                 <td>{{ publication.notes }}</td>
             </tr>
