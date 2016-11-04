@@ -23,40 +23,28 @@ class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface 
     private static $GENRES = [
         [
             'name' => 'Fiction',
-            'description' => 'This category includes all prose writing that is '
-            . 'understood to be the invention of the author, regardless of '
-            . 'length (for example, novel, short story, short story collection).'
+            'description' => 'This category includes all prose writing that is understood to be the invention of the author, regardless of length (for example, novel, short story, short story collection).'
         ], [
             'name' => 'Non-fiction',
             'description' => '',
         ], [
             'name' => 'Poetry',
-            'description' => 'This category includes all items in poetic form, '
-            . 'regardless of length.',
+            'description' => 'This category includes all items in poetic form, regardless of length.',
         ], [
             'name' => 'Drama',
-            'description' => 'This category includes all titles prepared for '
-            . 'presentation in a dramatic forum (for example, plays, dialogues, '
-            . 'spoken monologues).',
+            'description' => 'This category includes all titles prepared for presentation in a dramatic forum (for example, plays, dialogues, spoken monologues).',
         ], [
             'name' => 'Autobiography',
-            'description' => 'This category includes all form of writing about '
-            . 'the author\'s own life (for example, memoirs, diaries, letters, '
-            . 'personal travel writing).',
+            'description' => 'This category includes all form of writing about the author\'s own life (for example, memoirs, diaries, letters, personal travel writing).',
         ], [
             'name' => 'Biography',
-            'description' => 'This category includes all biographies of '
-            . 'individuals other than the author, regardless of degree of '
-            . 'scholarly detail (for example, popular biographies, accounts '
-            . 'of historical personalities).',
+            'description' => 'This category includes all biographies of individuals other than the author, regardless of degree of scholarly detail (for example, popular biographies, accounts of historical personalities).',
         ], [
             'name' => 'Mixed',
-            'description' => 'This category is used for published volumes '
-            . 'containing more than one type of writing.',
+            'description' => 'This category is used for published volumes containing more than one type of writing.',
         ], [
             'name' => 'Uncertain',
-            'description' => 'This is the default category, used for titles for '
-            . 'which the genre is unknown or difficult to determine.',
+            'description' => 'This is the default category, used for titles for which the genre is unknown or difficult to determine.',
         ]
         
     ];
@@ -67,7 +55,7 @@ class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface 
             $genre->setName($g['name']);
             $genre->setDescription($g['description']);
             $manager->persist($genre);
-            $lc = strtolower($g);
+            $lc = strtolower($g['name']);
             $this->setReference("genre.{$lc}", $genre);
         }
         $manager->flush();

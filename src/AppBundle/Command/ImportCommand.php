@@ -71,7 +71,8 @@ class ImportCommand extends ContainerAwareCommand {
         foreach ($files as $filePath) {
             $output->writeln($filePath);
             $fh = fopen($filePath, 'r');
-            $headers = fgetcsv($fh);
+            $headers = fgetcsv($fh); // col numbers.
+            $headers = fgetcsv($fh); // actual headers.
             $line = 1;
             while ($row = fgetcsv($fh)) {
                 $line++;

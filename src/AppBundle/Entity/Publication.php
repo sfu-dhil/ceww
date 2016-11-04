@@ -32,7 +32,13 @@ class Publication extends AbstractEntity
      * @ORM\Column(type="integer", nullable=true)
      */
     private $year;
-
+    
+    /**
+     * @var array
+     * @ORM\Column(type="array", nullable=false)
+     */
+    private $links;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
      * @ORM\JoinColumn(name="category_id")
@@ -61,6 +67,7 @@ class Publication extends AbstractEntity
     public function __construct() {
         $this->authors = new ArrayCollection();
         $this->genres = new ArrayCollection();
+        $this->links = array();
     }
 
     public function __toString() {
@@ -249,4 +256,44 @@ class Publication extends AbstractEntity
         }
     }
 
+
+    /**
+     * Set links
+     *
+     * @param array $links
+     *
+     * @return Publication
+     */
+    public function setLinks($links)
+    {
+        $this->links = $links;
+
+        return $this;
+    }
+
+    /**
+     * Get links
+     *
+     * @return array
+     */
+    public function getLinks()
+    {
+        return $this->links;
+    }
+    
+    public function addLink($link) {
+        if( ! in_array($link, $this->links)) {
+            $this->links[] = $link;
+        }
+        return $this;
+    }
+    
+    public function removeLink($link) {
+        if( in_array($link, $this->links)) {
+            $this->links = array_filter($this->links, function($v) use ($link) {
+                return $v !== $link;
+            });
+        }
+        return $this;
+    }
 }

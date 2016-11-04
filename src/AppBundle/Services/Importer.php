@@ -10,9 +10,10 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\Alias;
 use AppBundle\Entity\Author;
+use AppBundle\Entity\Category;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
-use AppBundle\Entity\Category;
+use AppBundle\Utilities\TitleCaser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
@@ -39,6 +40,15 @@ class Importer {
     private $logger;
 
     /**
+     * @var TitleCaser
+     */
+    private $titleCaser;
+
+    public function __construct() {
+        $this->titleCaser = new TitleCaser();
+    }
+
+    /**
      * Set the service logger.
      *
      * @param Logger $logger
@@ -58,9 +68,9 @@ class Importer {
 
     public function split($s, $delim = ';') {
         $result = mb_split($delim, $s);
-        return array_map(function($value) {
+        return array_filter(array_map(function($value) {
             return preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $value);
-        }, $result);
+        }, $result));
     }
 
     public function processName($string) {
@@ -91,7 +101,7 @@ class Importer {
 
         if (preg_match('/(\d{2})/', $string, $matches)) {
             // two digit year? Can't be a circa.
-            return $matches[1]+1900;
+            return $matches[1] + 1900;
         }
         return null;
     }
@@ -99,44 +109,93 @@ class Importer {
     public function processPlace($string) {
         $s = preg_replace('/\bnear\s+/ui', '', $string);
         $matches = array();
-        if( ! preg_match('/^(.+)\((.*)\)/', $s, $matches)) {
+        if (!preg_match('/^(.+)\((.*)\)/', $s, $matches)) {
             return array($s, null);
-        }        
+        }
         $placeName = $matches[1];
-        $note = $matches[2];        
-        if(preg_match('/[^0-9, c-]+/', $note)) {
+        $note = $matches[2];
+        if (preg_match('/[^0-9, c-]+/', $note)) {
             return array($placeName, $note);
         }
         return array($placeName, null);
     }
-    
+
     public function getPlace($placeName, $notes = '') {
         $repo = $this->em->getRepository('AppBundle:Place');
         $place = $repo->findOneBy(array(
             'name' => $placeName,
         ));
-        if( ! $place) {
+        if (!$place) {
             $place = new Place();
             $place->setName($placeName);
             $this->em->persist($place);
             $this->em->flush($place);
             $this->em->clear('AppBundle:Place');
         }
-        if($notes && strpos($place->getDescription(), $notes) === false) {
+        if ($notes && strpos($place->getDescription(), $notes) === false) {
             $place->setDescription($place->getDescription() . "\n" . $notes);
             $this->em->flush($place);
         }
         return $place;
     }
-   
+    
+    public function getAlias($name) {
+        $repo = $this->em->getRepository('AppBundle:Alias');
+        $alias = $repo->findOneBy(array(
+            'name' => $name,
+        ));
+        if( ! $alias) {
+            $alias = new Alias();
+            $alias->setName($name);
+            $alias->setMaiden(preg_match('/\bn(?:é|e)e\b/u', $name));
+            $this->em->persist($alias);
+            $this->em->flush($alias);
+            $this->em->clear('AppBundle:Alias');
+        }
+        return $alias;
+    }
+
+    /**
+        'linked_title' => '',
+        'url' => '',
+        'title' => 'Wanted, a Wife',
+        'loc' => '',
+        'year' => '',
+        'genre' => ''
+     * 
+     * @param string $string
+     * @return array
+     */
     public function processTitle($string) {
+        $matches = array();
+        $genre_re = '(?:\{(?P<genre>\w+)\})';
+        $year_re = '(?P<year>(?:\d{4})|(?:n\.d\.))';
+        $loc_re = '(?:(?P<loc>.*), )?';
+        $pub_re = '(?:\(' . $loc_re . $year_re . '\))';
         
+        $unlinked_re = '(?P<title>.*?)';
+        $linked_re = "\<(?P<linked_title>.*?)\p{Z}(?P<url>https?:\/\/.*?)\s*\>";
+        $title = "(?:(?:$linked_re)|(?:$unlinked_re))";
+        $re = "$title\p{Z}*$pub_re?\p{Z}*$genre_re?";
+        print $re . "\n\n\n";
+        preg_match("/^$re$/u", $string, $matches);
+        return $matches;
     }
 
     public function sortableTitle($string) {
-        
+        $filters = array(
+            '/^(the|an?)\b\s*(.*)/ius' => '$2, $1',
+            // move The, A, An to end.
+            '/^[^[:word:][:space:]]+/us' => '',
+            // remove non-word chars at start.
+        );
+        $title = mb_convert_case($string, MB_CASE_LOWER);
+        foreach($filters as $pattern => $replacement) {
+            $title = preg_replace($pattern, $replacement, $title);
+        }
+        return $title;
     }
-    
+
     public function getPublication() {
         
     }
@@ -146,34 +205,40 @@ class Importer {
         $author->setFullName($this->processName($row[0]));
         $author->setSortableName($this->sortableName($row[0]));
         $birthDate = $this->processDate($row[1]);
-        if(is_array($birthDate)) {
+        if (is_array($birthDate)) {
             $author->setBirthDate($birthDate[0]);
             $author->setDeathDate($birthDate[1]);
         } else {
             $author->setBirthDate($birthDate);
             $author->setDeathDate($this->processDate($row[3]));
         }
-        if($author->getBirthDate() && $author->getDeathDate() && 
+        if ($author->getBirthDate() && $author->getDeathDate() &&
             $author->getDeathDate() < $author->getBirthDate()) {
             $this->logger->warning('Died before Birth');
         }
-        
+
         list($birthPlaceName, $birthPlaceNotes) = $this->processPlace($row[2]);
         $birthPlace = $this->getPlace($birthPlaceName, $birthPlaceNotes);
         $author->setBirthPlace($birthPlace);
-        
+
         list($deathPlaceName, $deathPlaceNotes) = $this->processPlace($row[4]);
         $deathPlace = $this->getPlace($deathPlaceName, $deathPlaceNotes);
         $author->setDeathPlace($deathPlace);
         
+        $aliases = $this->split($row[5]);
+        foreach($aliases as $name) {
+            $alias = $this->getAlias($name);
+            $author->addAlias($alias);
+        }
+
         $residenceNames = $this->split($row[6]);
-        foreach($residenceNames as $name) {
+        foreach ($residenceNames as $name) {
             list($placeName, $desc) = $this->processPlace($name);
             $place = $this->getPlace($placeName, $desc);
             $author->addResidence($place);
         }
         
-        //dump($author);
+        // dump($author);
     }
 
 }
