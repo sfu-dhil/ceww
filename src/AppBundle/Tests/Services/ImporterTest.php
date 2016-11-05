@@ -1092,7 +1092,19 @@ class ImporterTest extends AbstractTestCase {
                     'year' => '1880',
                     'genre' => 'drama'
                 ]
-            ],        ];
+            ],        
+            [
+                '<From Distant Shores: Poems Https://archive.org/details/fromdistantshore00Adam>(Toronto: Briggs, c1898)',
+                [
+                    'linked_title' => 'From Distant Shores: Poems',
+                    'url' => 'Https://archive.org/details/fromdistantshore00Adam',
+                    'title' => '',
+                    'loc' => 'Toronto: Briggs',
+                    'year' => 'c1898',
+                    'genre' => ''
+                ]
+            ]
+        ];
     }
 
 }

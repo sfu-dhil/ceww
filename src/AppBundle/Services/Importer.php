@@ -169,7 +169,7 @@ class Importer {
     public function processTitle($string) {
         $matches = array();
         $genre_re = '(?:\{(?P<genre>\w+)\})';
-        $year_re = '(?P<year>(?:\d{4})|(?:n\.d\.))';
+        $year_re = '(?P<year>c?(?:\d{4})|(?:n\.d\.)?)';
         $loc_re = '(?:(?P<loc>.*), )?';
         $pub_re = '(?:\(' . $loc_re . $year_re . '\))';
         
@@ -177,8 +177,7 @@ class Importer {
         $linked_re = "\<(?P<linked_title>.*?)\p{Z}(?P<url>https?:\/\/.*?)\s*\>";
         $title = "(?:(?:$linked_re)|(?:$unlinked_re))";
         $re = "$title\p{Z}*$pub_re?\p{Z}*$genre_re?";
-        print $re . "\n\n\n";
-        preg_match("/^$re$/u", $string, $matches);
+        preg_match("/^$re$/iu", $string, $matches);
         return $matches;
     }
 
@@ -196,48 +195,87 @@ class Importer {
         return $title;
     }
 
-    public function getPublication() {
+    public function getPublication($string, Category $category) {
+        $pubData = $this->processTitle($string);
+        $url = null;
+        $title = $pubData['title'];
+        $year = null;
+        if(array_key_exists('year', $pubData) && $pubData['year'] !== 'n.d.') {
+            $year = $pubData['year'];
+        }
+        if($pubData['linked_title'] && $pubData['url']) {
+            $title = $pubData['linked_title'];
+            $url = $pubData['url'];
+        }
         
+        $repo = $this->em->getRepository('AppBundle:Publication');
+        $publication = $repo->findOneBy(array(
+            'title' => $title,
+            'year' => $year,
+        ));
+        if( ! $publication) {
+            $publication = new Publication();
+            $publication->setTitle($this->titleCaser->titlecase($title));
+            $publication->setSortableTitle($this->sortableTitle($title));
+            $publication->setYear($year);
+            if(array_key_exists('loc', $pubData) && $pubData['loc']) {
+                $publication->setLocation($pubData['loc']);
+            }
+            $publication->setCategory($category);
+            $this->em->persist($publication);
+        }
+        
+        if($url) {
+            $publication->addLink($url);
+        }
+        $this->em->flush($publication);
+        return $publication;
     }
 
     public function import(array $row) {
-        $author = new Author();
-        $author->setFullName($this->processName($row[0]));
-        $author->setSortableName($this->sortableName($row[0]));
-        $birthDate = $this->processDate($row[1]);
-        if (is_array($birthDate)) {
-            $author->setBirthDate($birthDate[0]);
-            $author->setDeathDate($birthDate[1]);
-        } else {
-            $author->setBirthDate($birthDate);
-            $author->setDeathDate($this->processDate($row[3]));
+//        $author = new Author();
+//        $author->setFullName($this->processName($row[0]));
+//        $author->setSortableName($this->sortableName($row[0]));
+//        $birthDate = $this->processDate($row[1]);
+//        if (is_array($birthDate)) {
+//            $author->setBirthDate($birthDate[0]);
+//            $author->setDeathDate($birthDate[1]);
+//        } else {
+//            $author->setBirthDate($birthDate);
+//            $author->setDeathDate($this->processDate($row[3]));
+//        }
+//        if ($author->getBirthDate() && $author->getDeathDate() &&
+//            $author->getDeathDate() < $author->getBirthDate()) {
+//            $this->logger->warning('Died before Birth');
+//        }
+//
+//        list($birthPlaceName, $birthPlaceNotes) = $this->processPlace($row[2]);
+//        $birthPlace = $this->getPlace($birthPlaceName, $birthPlaceNotes);
+//        $author->setBirthPlace($birthPlace);
+//
+//        list($deathPlaceName, $deathPlaceNotes) = $this->processPlace($row[4]);
+//        $deathPlace = $this->getPlace($deathPlaceName, $deathPlaceNotes);
+//        $author->setDeathPlace($deathPlace);
+//        
+//        $aliases = $this->split($row[5]);
+//        foreach($aliases as $name) {
+//            $alias = $this->getAlias($name);
+//            $author->addAlias($alias);
+//        }
+//
+//        $residenceNames = $this->split($row[6]);
+//        foreach ($residenceNames as $name) {
+//            list($placeName, $desc) = $this->processPlace($name);
+//            $place = $this->getPlace($placeName, $desc);
+//            $author->addResidence($place);
+//        }
+        $books = $this->split($row[7]);
+        $bookCategory = $this->em->getRepository('AppBundle:Category')->findOneBy(array(
+            'label' => 'Book',
+        ));
+        foreach($books as $book) {
+            $publication = $this->getPublication($book, $bookCategory);
         }
-        if ($author->getBirthDate() && $author->getDeathDate() &&
-            $author->getDeathDate() < $author->getBirthDate()) {
-            $this->logger->warning('Died before Birth');
-        }
-
-        list($birthPlaceName, $birthPlaceNotes) = $this->processPlace($row[2]);
-        $birthPlace = $this->getPlace($birthPlaceName, $birthPlaceNotes);
-        $author->setBirthPlace($birthPlace);
-
-        list($deathPlaceName, $deathPlaceNotes) = $this->processPlace($row[4]);
-        $deathPlace = $this->getPlace($deathPlaceName, $deathPlaceNotes);
-        $author->setDeathPlace($deathPlace);
-        
-        $aliases = $this->split($row[5]);
-        foreach($aliases as $name) {
-            $alias = $this->getAlias($name);
-            $author->addAlias($alias);
-        }
-
-        $residenceNames = $this->split($row[6]);
-        foreach ($residenceNames as $name) {
-            list($placeName, $desc) = $this->processPlace($name);
-            $place = $this->getPlace($placeName, $desc);
-            $author->addResidence($place);
-        }
-        
         // dump($author);
     }
 
