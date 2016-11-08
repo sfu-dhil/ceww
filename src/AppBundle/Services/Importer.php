@@ -178,6 +178,9 @@ class Importer {
         $title = "(?:(?:$linked_re)|(?:$unlinked_re))";
         $re = "$title\p{Z}*$pub_re?\p{Z}*$genre_re?";
         preg_match("/^$re$/iu", $string, $matches);
+        
+        print "\n\n\n" . $re . "\n\n\n";
+        
         return $matches;
     }
 
