@@ -3,6 +3,7 @@
 namespace PubBundle\Controller;
 
 use AppBundle\Entity\Publication;
+use FeedbackBundle\Entity\Comment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -94,14 +95,24 @@ class PublicationController extends Controller
      * Finds and displays a Publication entity.
      *
      * @Route("/{id}", name="publication_show")
-     * @Method("GET")
+     * @Method({"GET","POST"})
      * @Template()
      * @param Publication $publication
      */
-    public function showAction(Publication $publication) {
+    public function showAction(Request $request, Publication $publication) {
+        $comment = new Comment();
+        $form = $this->createForm('FeedbackBundle\Form\CommentType', $comment);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('feedback.comment')->addComment($publication, $comment);
+            $this->addFlash('success', 'Thank you for your suggestion.');
+            return $this->redirect($this->generateUrl('publication_show', array('id' => $publication->getId())));
+        }
+        
         return array(
             'publication' => $publication,
+            'form' => $form->createView(),
         );
     }
 

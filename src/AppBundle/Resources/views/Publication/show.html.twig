@@ -83,4 +83,6 @@
 
     {{ self.pubList('Authors', publication.authors, 'admin_author_show') }}				
 
+    {% include 'FeedbackBundle:Comment:comments-view.html.twig' %}
+    
 {% endblock %}

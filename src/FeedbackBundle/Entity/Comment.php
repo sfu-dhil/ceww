@@ -40,9 +40,8 @@ class Comment extends AbstractEntity
     
     /**
      * @ORM\Column(type="string", length=120)
-     * @Assert\Url()
      */
-    private $url;
+    private $entity;
     
     /**
      * @ORM\Column(type="string", length=120)
@@ -151,30 +150,6 @@ class Comment extends AbstractEntity
     }
 
     /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return Comment
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Get url
-     *
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
      * Set content
      *
      * @param string $content
@@ -196,5 +171,29 @@ class Comment extends AbstractEntity
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Set entity
+     *
+     * @param string $entity
+     *
+     * @return Comment
+     */
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+
+        return $this;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 }

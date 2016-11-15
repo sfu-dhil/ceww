@@ -128,8 +128,10 @@ class PublicationController extends Controller
      * @param Publication $publication
      */
     public function showAction(Publication $publication) {
+        $comments = $this->get('feedback.comment')->findComments($publication);
 
         return array(
+            'comments' => $comments,
             'publication' => $publication,
         );
     }

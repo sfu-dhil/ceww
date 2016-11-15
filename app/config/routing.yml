@@ -1,12 +1,6 @@
 feedback:
     resource: "@FeedbackBundle/Controller/"
     type:     annotation
-    prefix:   /
-
-page:
-    resource: "@PageBundle/Controller/"
-    type:     annotation
-    prefix:   /
 
 app:
     resource: "@AppBundle/Controller/"

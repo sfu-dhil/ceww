@@ -62,4 +62,6 @@
 
     {{ self.pubList('Authors', alias.authors, 'admin_author_show') }}
 
+    {% include 'FeedbackBundle:Comment:comments-view.html.twig' %}
+    
 {% endblock %}

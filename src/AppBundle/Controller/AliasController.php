@@ -129,9 +129,11 @@ class AliasController extends Controller
      * @param Alias $alias
      */
     public function showAction(Alias $alias) {
+        $comments = $this->get('feedback.comment')->findComments($alias);
 
         return array(
             'alias' => $alias,
+            'comments' => $comments,
         );
     }
 

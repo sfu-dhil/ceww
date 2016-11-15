@@ -3,6 +3,7 @@
 namespace PubBundle\Controller;
 
 use AppBundle\Entity\Alias;
+use FeedbackBundle\Entity\Comment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -106,13 +107,24 @@ class AliasController extends Controller
      * Finds and displays a Alias entity.
      *
      * @Route("/{id}", name="alias_show")
-     * @Method("GET")
+     * @Method({"GET","POST"})
      * @Template()
      * @param Alias $alias
      */
-    public function showAction(Alias $alias) {
+    public function showAction(Request $request, Alias $alias) {
 
+        $comment = new Comment();
+        $form = $this->createForm('FeedbackBundle\Form\CommentType', $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('feedback.comment')->addComment($alias, $comment);
+            $this->addFlash('success', 'Thank you for your suggestion.');
+            return $this->redirect($this->generateUrl('alias_show', array('id' => $alias->getId())));
+        }
+        
         return array(
+            'form' => $form->createView(),
             'alias' => $alias,
         );
     }

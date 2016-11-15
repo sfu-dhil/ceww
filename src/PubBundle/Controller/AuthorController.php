@@ -100,27 +100,23 @@ class AuthorController extends Controller
      * Finds and displays a Author entity.
      *
      * @Route("/{id}", name="author_show")
-     * @Method("GET")
+     * @Method({"GET","POST"})
      * @Template()
      * @param Author $author
      */
     public function showAction(Request $request, Author $author) {
 
         $comment = new Comment();
-        $comment->setUrl($request->getPathInfo());
         $form = $this->createForm('FeedbackBundle\Form\CommentType', $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($comment);
-            $em->flush();
-
+            $this->get('feedback.comment')->addComment($author, $comment);
             $this->addFlash('success', 'Thank you for your suggestion.');
+            return $this->redirect($this->generateUrl('author_show', array('id' => $author->getId())));
         }
         
         return array(
-            'comment' => $comment,
             'form' => $form->createView(),
             'author' => $author,
         );

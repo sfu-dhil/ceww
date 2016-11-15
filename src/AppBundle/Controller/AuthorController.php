@@ -138,6 +138,8 @@ class AuthorController extends Controller {
         $repo = $em->getRepository('AppBundle:Author');
         $statuses = $em->getRepository('AppBundle:Status')->findAll();
         
+        $comments = $this->get('feedback.comment')->findComments($author);
+        
         if($request->getMethod() === 'POST') {
             $status = $em->getRepository('AppBundle:Status')->find($request->request->get('status_id'));
             $author->setStatus($status);
@@ -148,6 +150,7 @@ class AuthorController extends Controller {
         
         return array(
             'author' => $author,
+            'comments' => $comments,
             'next' => $repo->next($author),
             'previous' => $repo->previous($author),
             'statuses' => $statuses,

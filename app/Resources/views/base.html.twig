@@ -43,7 +43,7 @@
                         <li><a href="{{ path('alias_index') }}">Pen Names</a></li>
                         <li><a href="{{ path('publication_index') }}">Publications</a></li>
                         <li><a href="{{ path('place_index') }}">Places</a></li>
-                        
+
                         {% if app.user is not null and is_granted('ROLE_ADMIN') %}
 
                             <li>
@@ -88,14 +88,20 @@
                                         </li>
                                         <li role="separator" class="divider"></li>
                                         <li>
+                                            <a href="{{ path('admin_comment_index') }}">
+                                                Comments
+                                            </a>
+                                        </li>
+                                        <li role="separator" class="divider"></li>
+                                        <li>
                                             <a href="{{ path('user') }}">
                                                 Users
                                             </a>
                                         </li>
                                     </ul>
                                 </a>
-							</li>
-						{% endif %}
+                            </li>
+                        {% endif %}
 
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

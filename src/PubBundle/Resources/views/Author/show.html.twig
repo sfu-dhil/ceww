@@ -112,10 +112,6 @@
         </div>
     </div>
 
-    <div>   
-        {{ form_start(form) }}
-        {{ form(form) }}
-        {{ form_end(form) }}
-    </div>
+    {% include('FeedbackBundle:Comment:comment-form.html.twig') %}
 
 {% endblock %}
