@@ -40,7 +40,7 @@
             <tr>
                 <th>Entity</th>
                 {% set entity = service.findEntity(comment) %}
-                <td>{{ entity }}</td>
+                <td>{{ service.entityType(comment) }} <a href="{{ service.entityUrl(comment)}}">{{ entity }}</a></td>
             </tr>
             <tr>
                 <th>Content</th>

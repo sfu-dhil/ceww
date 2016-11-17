@@ -6,6 +6,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use FeedbackBundle\Entity\Comment;
 use Monolog\Logger;
+use Symfony\Component\Routing\Router;
 
 // service id: feedback.comment
 class CommentService {
@@ -17,6 +18,17 @@ class CommentService {
     
     private $logger;
     
+    /**
+     * @var Router
+     */
+    private $router;
+    
+    private $routing;
+    
+    public function __construct($routing) {
+        $this->routing = $routing;
+    }
+    
     public function setDoctrine(Registry $registry) {
         $this->em = $registry->getManager();
     }
@@ -25,10 +37,28 @@ class CommentService {
         $this->logger = $logger;
     }
     
+    public function setRouter(Router $router) {
+        $this->router = $router;
+    }
+    
     public function findEntity(Comment $comment) {
         list($class, $id) = explode(':', $comment->getEntity());
         $entity = $this->em->getRepository($class)->find($id);
         return $entity;
+    }
+    
+    public function entityType(Comment $comment) {
+        $entity = $this->findEntity($comment);
+        $reflection = new \ReflectionClass($entity);
+        return $reflection->getShortName();
+    }
+    
+    public function entityUrl(Comment $comment) {
+        list($class, $id) = explode(':', $comment->getEntity());
+        if( ! array_key_exists($class, $this->routing)) {
+            throw new \Exception("Cannot map {$class} to a route.");
+        }
+        return $this->router->generate($this->routing[$class], ['id' => $id]);
     }
     
     public function findComments($entity) {

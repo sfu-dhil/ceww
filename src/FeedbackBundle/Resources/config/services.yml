@@ -1,7 +1,8 @@
 services:
     feedback.comment:
         class: FeedbackBundle\Services\CommentService
-        arguments: []
+        arguments: [ "%feedback.routing%" ]
         calls:
             - [ setDoctrine, ["@doctrine"]]
             - [ setLogger, ["@monolog.logger"]]
+            - [ setRouter, ["@router"]]

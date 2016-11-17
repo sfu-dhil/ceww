@@ -145,3 +145,18 @@ knp_paginator:
     template:
         pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig     # bootstrapy pagination
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+
+feedback:
+    commenting:
+        author:
+            class: AppBundle\Entity\Author
+            route: admin_author_show
+        alias:
+            class: AppBundle\Entity\Alias
+            route: admin_alias_show
+        publication:
+            class: AppBundle\Entity\Publication
+            route: admin_publication_show
+        place:
+            class: AppBundle\Entity\Place
+            route: admin_place_show
