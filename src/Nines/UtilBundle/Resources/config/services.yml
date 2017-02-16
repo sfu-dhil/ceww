@@ -1,0 +1,10 @@
+services:
+    nines.util.word_trim:
+        class: Nines\UtilBundle\Services\WordTrim
+        calls:
+            - [ setLogger, ["@monolog.logger"]]
+
+    nines.util.twig:
+        class: Nines\UtilBundle\Extensions\Twig\TwigExtension
+        tags: 
+            - { name: twig.extension }

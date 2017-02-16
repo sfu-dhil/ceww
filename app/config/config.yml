@@ -2,8 +2,6 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-    - { resource: "@PageBundle/Resources/config/services.yml" }
-    - { resource: "@FeedbackBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -61,9 +59,6 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
-        dql:
-            string_functions:
-                MATCH_AGAINST: AppBundle\Extensions\Doctrine\MatchAgainstFunction
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -124,17 +119,6 @@ assetic:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/handlebars.js/handlebars.js"
                 
-fos_user:
-    db_driver: orm
-    firewall_name: main
-    user_class: AppUserBundle\Entity\User
-    profile:
-        form:
-            type: AppUserBundle\Form\ProfileType
-    change_password:
-        form:
-            type: AppUserBundle\Form\PasswordType
-            
 knp_paginator:
     page_range: 5                      # default page range used in pagination control
     default_options:
@@ -146,17 +130,14 @@ knp_paginator:
         pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig     # bootstrapy pagination
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
-feedback:
-    commenting:
-        author:
-            class: AppBundle\Entity\Author
-            route: admin_author_show
-        alias:
-            class: AppBundle\Entity\Alias
-            route: admin_alias_show
-        publication:
-            class: AppBundle\Entity\Publication
-            route: admin_publication_show
-        place:
-            class: AppBundle\Entity\Place
-            route: admin_place_show
+#fos_user:
+#    db_driver: orm
+#    firewall_name: main
+#    user_class: AppUserBundle\Entity\User
+#    profile:
+#        form:
+#            type: AppUserBundle\Form\ProfileType
+#    change_password:
+#        form:
+#            type: AppUserBundle\Form\PasswordType
+#            

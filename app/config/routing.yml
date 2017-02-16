@@ -1,18 +1,6 @@
-feedback:
-    resource: "@FeedbackBundle/Controller/"
-    type:     annotation
-
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
-
-pub:
-    resource: "@PubBundle/Controller/"
-    type: annotation
-
-user:
-    resource: "@AppUserBundle/Controller/"
-    type:     annotation
-
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+    
+#fos_user:
+#    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
