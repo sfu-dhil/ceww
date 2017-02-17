@@ -15,14 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Author controller.
  *
- * @Route("/admin/author")
+ * @Route("/author")
  */
 class AuthorController extends Controller {
 
     /**
      * Lists all Author entities.
      *
-     * @Route("/", name="admin_author_index")
+     * @Route("/", name="author_index")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -42,7 +42,7 @@ class AuthorController extends Controller {
     /**
      * Search for Author entities.
      *
-     * @Route("/search", name="admin_author_search")
+     * @Route("/search", name="author_search")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -73,7 +73,7 @@ class AuthorController extends Controller {
      *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
      *
      *
-     * @Route("/fulltext", name="admin_author_fulltext")
+     * @Route("/fulltext", name="author_fulltext")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -100,7 +100,7 @@ class AuthorController extends Controller {
     /**
      * Creates a new Author entity.
      *
-     * @Route("/new", name="admin_author_new")
+     * @Route("/new", name="author_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -116,7 +116,7 @@ class AuthorController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new author was created.');
-            return $this->redirectToRoute('admin_author_show', array('id' => $author->getId()));
+            return $this->redirectToRoute('author_show', array('id' => $author->getId()));
         }
 
         return array(
@@ -128,7 +128,7 @@ class AuthorController extends Controller {
     /**
      * Finds and displays a Author entity.
      *
-     * @Route("/{id}", name="admin_author_show")
+     * @Route("/{id}", name="author_show")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Author $author
@@ -145,7 +145,7 @@ class AuthorController extends Controller {
             $author->setStatus($status);
             $em->flush();
             $this->addFlash('success', 'The author status has been updated');
-            return $this->redirectToRoute('admin_author_show', array('id' => $author->getId()));
+            return $this->redirectToRoute('author_show', array('id' => $author->getId()));
         }
         
         return array(
@@ -160,7 +160,7 @@ class AuthorController extends Controller {
     /**
      * Displays a form to edit an existing Author entity.
      *
-     * @Route("/{id}/edit", name="admin_author_edit")
+     * @Route("/{id}/edit", name="author_edit")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -189,7 +189,7 @@ class AuthorController extends Controller {
 
             $em->flush();
             $this->addFlash('success', 'The author has been updated.');
-            return $this->redirectToRoute('admin_author_show', array('id' => $author->getId()));
+            return $this->redirectToRoute('author_show', array('id' => $author->getId()));
         }
 
         return array(
@@ -201,7 +201,7 @@ class AuthorController extends Controller {
     /**
      * Deletes a Author entity.
      *
-     * @Route("/{id}/delete", name="admin_author_delete")
+     * @Route("/{id}/delete", name="author_delete")
      * @Method("GET")
      * @param Request $request
      * @param Author  $author
@@ -212,13 +212,13 @@ class AuthorController extends Controller {
         $em->flush();
         $this->addFlash('success', 'The author was deleted.');
 
-        return $this->redirectToRoute('admin_author_index');
+        return $this->redirectToRoute('author_index');
     }
 
     /**
      * Create a new alias for an author.
      *
-     * @Route("/{id}/alias/new", name="admin_author_alias_new")
+     * @Route("/{id}/alias/new", name="author_alias_new")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -236,7 +236,7 @@ class AuthorController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new alias was created and added to ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -251,7 +251,7 @@ class AuthorController extends Controller {
     /**
      * Add aliases to an author.
      *
-     * @Route("/{id}/alias/add", name="admin_author_alias_add")
+     * @Route("/{id}/alias/add", name="author_alias_add")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -270,7 +270,7 @@ class AuthorController extends Controller {
             }
             $em->flush();
             $this->addFlash('success', 'The aliases have been added to ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -291,7 +291,7 @@ class AuthorController extends Controller {
     /**
      * Remove aliases from an author.
      *
-     * @Route("/{id}/alias/remove", name="admin_author_alias_remove")
+     * @Route("/{id}/alias/remove", name="author_alias_remove")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -310,7 +310,7 @@ class AuthorController extends Controller {
             }
             $em->flush();
             $this->addFlash('success', 'The aliases have been removed from ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -331,7 +331,7 @@ class AuthorController extends Controller {
     /**
      * Create a new residence for an author.
      *
-     * @Route("/{id}/residence/new", name="admin_author_residence_new")
+     * @Route("/{id}/residence/new", name="author_residence_new")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -349,7 +349,7 @@ class AuthorController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new residence was created and added to ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -364,7 +364,7 @@ class AuthorController extends Controller {
     /**
      * Add residences to an author.
      *
-     * @Route("/{id}/residence/add", name="admin_author_residence_add")
+     * @Route("/{id}/residence/add", name="author_residence_add")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -383,7 +383,7 @@ class AuthorController extends Controller {
             }
             $em->flush();
             $this->addFlash('success', 'The residences have been added to ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -404,7 +404,7 @@ class AuthorController extends Controller {
     /**
      * Remove residences from an author.
      *
-     * @Route("/{id}/residence/remove", name="admin_author_residence_remove")
+     * @Route("/{id}/residence/remove", name="author_residence_remove")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -423,7 +423,7 @@ class AuthorController extends Controller {
             }
             $em->flush();
             $this->addFlash('success', 'The residences have been removed from ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -444,7 +444,7 @@ class AuthorController extends Controller {
     /**
      * Create a new publication for an author.
      *
-     * @Route("/{id}/publication/new", name="admin_author_publication_new")
+     * @Route("/{id}/publication/new", name="author_publication_new")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -462,7 +462,7 @@ class AuthorController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new publication was created and added to ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -477,7 +477,7 @@ class AuthorController extends Controller {
     /**
      * Add publications to an author.
      *
-     * @Route("/{id}/publication/add", name="admin_author_publication_add")
+     * @Route("/{id}/publication/add", name="author_publication_add")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -496,7 +496,7 @@ class AuthorController extends Controller {
             }
             $em->flush();
             $this->addFlash('success', 'The publications have been added to ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }
@@ -517,7 +517,7 @@ class AuthorController extends Controller {
     /**
      * Remove publications from an author.
      *
-     * @Route("/{id}/publication/remove", name="admin_author_publication_remove")
+     * @Route("/{id}/publication/remove", name="author_publication_remove")
      * @Method({"GET","POST"})
      * @Template()
      * @param Request $request
@@ -536,7 +536,7 @@ class AuthorController extends Controller {
             }
             $em->flush();
             $this->addFlash('success', 'The publications have been removed from ' . $author->getFullName());
-            return $this->redirectToRoute('admin_author_show', array(
+            return $this->redirectToRoute('author_show', array(
                 'id' => $author->getId()
             ));
         }

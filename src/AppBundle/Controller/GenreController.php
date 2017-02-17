@@ -21,7 +21,7 @@ class GenreController extends Controller
     /**
      * Lists all Genre entities.
      *
-     * @Route("/", name="admin_genre_index")
+     * @Route("/", name="genre_index")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -41,7 +41,7 @@ class GenreController extends Controller
     /**
      * Creates a new Genre entity.
      *
-     * @Route("/new", name="admin_genre_new")
+     * @Route("/new", name="genre_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -57,7 +57,7 @@ class GenreController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new genre was created.');
-            return $this->redirectToRoute('admin_genre_show', array('id' => $genre->getId()));
+            return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
         }
 
         return array(
@@ -69,7 +69,7 @@ class GenreController extends Controller
     /**
      * Finds and displays a Genre entity.
      *
-     * @Route("/{id}", name="admin_genre_show")
+     * @Route("/{id}", name="genre_show")
      * @Method("GET")
      * @Template()
      * @param Genre $genre
@@ -84,7 +84,7 @@ class GenreController extends Controller
     /**
      * Displays a form to edit an existing Genre entity.
      *
-     * @Route("/{id}/edit", name="admin_genre_edit")
+     * @Route("/{id}/edit", name="genre_edit")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -98,7 +98,7 @@ class GenreController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The genre has been updated.');
-            return $this->redirectToRoute('admin_genre_show', array('id' => $genre->getId()));
+            return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
         }
 
         return array(
@@ -110,7 +110,7 @@ class GenreController extends Controller
     /**
      * Deletes a Genre entity.
      *
-     * @Route("/{id}/delete", name="admin_genre_delete")
+     * @Route("/{id}/delete", name="genre_delete")
      * @Method("GET")
      * @param Request $request
      * @param Genre   $genre
@@ -121,7 +121,7 @@ class GenreController extends Controller
         $em->flush();
         $this->addFlash('success', 'The genre was deleted.');
 
-        return $this->redirectToRoute('admin_genre_index');
+        return $this->redirectToRoute('genre_index');
     }
 
 }

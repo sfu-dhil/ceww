@@ -21,7 +21,7 @@ class PublicationController extends Controller
     /**
      * Lists all Publication entities.
      *
-     * @Route("/", name="admin_publication_index")
+     * @Route("/", name="publication_index")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -41,7 +41,7 @@ class PublicationController extends Controller
     /**
      * Search for Publication entities.
      *
-     * @Route("/search", name="admin_publication_search")
+     * @Route("/search", name="publication_search")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -67,7 +67,7 @@ class PublicationController extends Controller
     /**
      * Full text search for Publication entities.
      *
-     * @Route("/fulltext", name="admin_publication_fulltext")
+     * @Route("/fulltext", name="publication_fulltext")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -94,7 +94,7 @@ class PublicationController extends Controller
     /**
      * Creates a new Publication entity.
      *
-     * @Route("/new", name="admin_publication_new")
+     * @Route("/new", name="publication_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -110,7 +110,7 @@ class PublicationController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new publication was created.');
-            return $this->redirectToRoute('admin_publication_show', array('id' => $publication->getId()));
+            return $this->redirectToRoute('publication_show', array('id' => $publication->getId()));
         }
 
         return array(
@@ -122,7 +122,7 @@ class PublicationController extends Controller
     /**
      * Finds and displays a Publication entity.
      *
-     * @Route("/{id}", name="admin_publication_show")
+     * @Route("/{id}", name="publication_show")
      * @Method("GET")
      * @Template()
      * @param Publication $publication
@@ -139,7 +139,7 @@ class PublicationController extends Controller
     /**
      * Displays a form to edit an existing Publication entity.
      *
-     * @Route("/{id}/edit", name="admin_publication_edit")
+     * @Route("/{id}/edit", name="publication_edit")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request     $request
@@ -154,7 +154,7 @@ class PublicationController extends Controller
             $em->persist($publication);
             $em->flush();
             $this->addFlash('success', 'The publication has been updated.');
-            return $this->redirectToRoute('admin_publication_show', array('id' => $publication->getId()));
+            return $this->redirectToRoute('publication_show', array('id' => $publication->getId()));
         }
 
         return array(
@@ -166,7 +166,7 @@ class PublicationController extends Controller
     /**
      * Deletes a Publication entity.
      *
-     * @Route("/{id}/delete", name="admin_publication_delete")
+     * @Route("/{id}/delete", name="publication_delete")
      * @Method("GET")
      * @param Request     $request
      * @param Publication $publication
@@ -177,7 +177,7 @@ class PublicationController extends Controller
         $em->flush();
         $this->addFlash('success', 'The publication was deleted.');
 
-        return $this->redirectToRoute('admin_publication_index');
+        return $this->redirectToRoute('publication_index');
     }
 
 }

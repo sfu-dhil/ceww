@@ -16,9 +16,17 @@ class AppKernel extends Kernel {
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
-            //new FOS\UserBundle\FOSUserBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
+            new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new Bmatzner\JQueryUIBundle\BmatznerJQueryUIBundle(),
             
             new AppBundle\AppBundle(),
+            
+            new Nines\UserBundle\NinesUserBundle(),
+            new Nines\FeedbackBundle\FeedbackBundle(),
+            new Nines\BlogBundle\NinesBlogBundle(),
+            new Nines\UtilBundle\UtilBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

@@ -11,13 +11,13 @@
 
     <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
-            <a href="{{ path('admin_author_new') }}" class="btn btn-default">
+            <a href="{{ path('author_new') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span> New
             </a>
-            <a href="{{ path('admin_author_search') }}" class="btn btn-default">
+            <a href="{{ path('author_search') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Search
             </a>
-            <a href="{{ path('admin_author_fulltext') }}" class="btn btn-default">
+            <a href="{{ path('author_fulltext') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Fulltext
             </a>
         </div>
@@ -38,22 +38,22 @@
             {% for author in authors %}
                 <tr>
                     <td>
-                        <a href="{{ path('admin_author_show', { 'id': author.id }) }}">
+                        <a href="{{ path('author_show', { 'id': author.id }) }}">
                             {{ author.fullName }}
                         </a>
                     </td>
-                    <td>{{ author.birthDate }}</td>
+                    <td>{{ author.formattedBirthDate }}</td>
                     <td>
                         {% if author.birthPlace %}
-                            <a href='{{ path('admin_place_show', {'id': author.birthPlace.id}) }}'>
+                            <a href='{{ path('place_show', {'id': author.birthPlace.id}) }}'>
                                 {{ author.birthPlace }}
                             </a>
                         {% endif %}
                     </td>
-                    <td>{{ author.deathDate }}</td>
+                    <td>{{ author.formattedDeathDate }}</td>
                     <td>
                         {% if author.deathPlace %}
-                            <a href='{{ path('admin_place_show', {'id': author.deathPlace.id}) }}'>
+                            <a href='{{ path('place_show', {'id': author.deathPlace.id}) }}'>
                                 {{ author.deathPlace }}
                             </a>
                         {% endif %}

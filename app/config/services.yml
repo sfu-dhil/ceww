@@ -4,6 +4,11 @@ parameters:
 #    parameter_name: value
 
 services:
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - { name: twig.extension }
+            
     ceww.importer:
         class: AppBundle\Services\Importer
         calls:

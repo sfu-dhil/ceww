@@ -13,7 +13,7 @@ use AppBundle\Form\StatusType;
 /**
  * Status controller.
  *
- * @Route("/admin/status")
+ * @Route("status")
  */
 class StatusController extends Controller
 {
@@ -21,7 +21,7 @@ class StatusController extends Controller
     /**
      * Lists all Status entities.
      *
-     * @Route("/", name="admin_status_index")
+     * @Route("/", name="status_index")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -41,7 +41,7 @@ class StatusController extends Controller
     /**
      * Search for Status entities.
      *
-     * @Route("/search", name="admin_status_search")
+     * @Route("/search", name="status_search")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -67,7 +67,7 @@ class StatusController extends Controller
     /**
      * Full text search for Status entities.
      *
-     * @Route("/fulltext", name="admin_status_fulltext")
+     * @Route("/fulltext", name="status_fulltext")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -94,7 +94,7 @@ class StatusController extends Controller
     /**
      * Creates a new Status entity.
      *
-     * @Route("/new", name="admin_status_new")
+     * @Route("/new", name="status_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -110,7 +110,7 @@ class StatusController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new status was created.');
-            return $this->redirectToRoute('admin_status_show', array('id' => $status->getId()));
+            return $this->redirectToRoute('status_show', array('id' => $status->getId()));
         }
 
         return array(
@@ -122,7 +122,7 @@ class StatusController extends Controller
     /**
      * Finds and displays a Status entity.
      *
-     * @Route("/{id}", name="admin_status_show")
+     * @Route("/{id}", name="status_show")
      * @Method("GET")
      * @Template()
      * @param Status $status
@@ -137,7 +137,7 @@ class StatusController extends Controller
     /**
      * Displays a form to edit an existing Status entity.
      *
-     * @Route("/{id}/edit", name="admin_status_edit")
+     * @Route("/{id}/edit", name="status_edit")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -152,7 +152,7 @@ class StatusController extends Controller
             $em->persist($status);
             $em->flush();
             $this->addFlash('success', 'The status has been updated.');
-            return $this->redirectToRoute('admin_status_show', array('id' => $status->getId()));
+            return $this->redirectToRoute('status_show', array('id' => $status->getId()));
         }
 
         return array(
@@ -164,7 +164,7 @@ class StatusController extends Controller
     /**
      * Deletes a Status entity.
      *
-     * @Route("/{id}/delete", name="admin_status_delete")
+     * @Route("/{id}/delete", name="status_delete")
      * @Method("GET")
      * @param Request $request
      * @param Status  $status
@@ -175,7 +175,7 @@ class StatusController extends Controller
         $em->flush();
         $this->addFlash('success', 'The status was deleted.');
 
-        return $this->redirectToRoute('admin_status_index');
+        return $this->redirectToRoute('status_index');
     }
 
 }

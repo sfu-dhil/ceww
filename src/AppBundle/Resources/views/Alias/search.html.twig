@@ -11,7 +11,7 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('admin_alias_search') }}" class="form-horizontal">
+    <form method="get" action="{{ path('alias_search') }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -45,7 +45,7 @@
                 {% for alias in aliases %}
                     <tr>
                         <td>
-                            <a href="{{ path('admin_alias_show', { 'id': alias.id }) }}">
+                            <a href="{{ path('alias_show', { 'id': alias.id }) }}">
                                 {{ alias.name }}
                             </a>
                         </td>

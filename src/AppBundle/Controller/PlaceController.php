@@ -21,7 +21,7 @@ class PlaceController extends Controller
     /**
      * Lists all Place entities.
      *
-     * @Route("/", name="admin_place_index")
+     * @Route("/", name="place_index")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -46,7 +46,7 @@ class PlaceController extends Controller
      * something appropriate, and adjust the generated search.html.twig
      * template.
      *
-     * @Route("/search", name="admin_place_search")
+     * @Route("/search", name="place_search")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -77,7 +77,7 @@ class PlaceController extends Controller
      * something appropriate, and adjust the generated search.html.twig
      * template.
      *
-     * @Route("/fulltext", name="admin_place_fulltext")
+     * @Route("/fulltext", name="place_fulltext")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -103,7 +103,7 @@ class PlaceController extends Controller
     /**
      * Finds and displays a Place entity.
      *
-     * @Route("/merge/{id}", name="admin_place_merge")
+     * @Route("/merge/{id}", name="place_merge")
      * @Method({"GET","POST"})
      * @Template()
      * @param Place $place
@@ -118,7 +118,7 @@ class PlaceController extends Controller
             $merger = $this->container->get('ceww.merger');
             $merger->places($place, $places);
             $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
-            return $this->redirect($this->generateUrl('admin_place_show', ['id' => $place->getId()]));
+            return $this->redirect($this->generateUrl('place_show', ['id' => $place->getId()]));
         }
 
         $q = $request->query->get('q');
@@ -139,7 +139,7 @@ class PlaceController extends Controller
     /**
      * Creates a new Place entity.
      *
-     * @Route("/new", name="admin_place_new")
+     * @Route("/new", name="place_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -155,7 +155,7 @@ class PlaceController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new place was created.');
-            return $this->redirectToRoute('admin_place_show', array('id' => $place->getId()));
+            return $this->redirectToRoute('place_show', array('id' => $place->getId()));
         }
 
         return array(
@@ -167,7 +167,7 @@ class PlaceController extends Controller
     /**
      * Finds and displays a Place entity.
      *
-     * @Route("/{id}", name="admin_place_show")
+     * @Route("/{id}", name="place_show")
      * @Method("GET")
      * @Template()
      * @param Place $place
@@ -182,7 +182,7 @@ class PlaceController extends Controller
     /**
      * Displays a form to edit an existing Place entity.
      *
-     * @Route("/{id}/edit", name="admin_place_edit")
+     * @Route("/{id}/edit", name="place_edit")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -197,7 +197,7 @@ class PlaceController extends Controller
             $em->persist($place);
             $em->flush();
             $this->addFlash('success', 'The place has been updated.');
-            return $this->redirectToRoute('admin_place_show', array('id' => $place->getId()));
+            return $this->redirectToRoute('place_show', array('id' => $place->getId()));
         }
 
         return array(
@@ -209,7 +209,7 @@ class PlaceController extends Controller
     /**
      * Deletes a Place entity.
      *
-     * @Route("/{id}/delete", name="admin_place_delete")
+     * @Route("/{id}/delete", name="place_delete")
      * @Method("GET")
      * @param Request $request
      * @param Place   $place
@@ -220,7 +220,7 @@ class PlaceController extends Controller
         $em->flush();
         $this->addFlash('success', 'The place was deleted.');
 
-        return $this->redirectToRoute('admin_place_index');
+        return $this->redirectToRoute('place_index');
     }
 
 }

@@ -11,7 +11,7 @@
 
     <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
-            <a href="{{ path('admin_category_new') }}" class="btn btn-default">
+            <a href="{{ path('category_new') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span> New
             </a>
         </div>
@@ -28,7 +28,7 @@
             {% for category in categories %}
                 <tr>
                     <td>
-                        <a href="{{ path('admin_category_show', { 'id': category.id }) }}">
+                        <a href="{{ path('category_show', { 'id': category.id }) }}">
                             {{ category.label }}
                         </a>
                     </td>

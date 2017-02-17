@@ -11,7 +11,7 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('admin_author_search') }}" class="form-horizontal">
+    <form method="get" action="{{ path('author_search') }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -47,22 +47,22 @@
                 {% for author in authors %}
                     <tr>
                         <td>
-                            <a href="{{ path('admin_author_show', { 'id': author.id }) }}">
+                            <a href="{{ path('author_show', { 'id': author.id }) }}">
                                 {{ author.fullName }}
                             </a>
                         </td>
-                        <td>{{ author.birthDate }}</td>
+                        <td>{{ author.formattedBirthDate }}</td>
                         <td>
                             {% if author.birthPlace %}
-                                <a href='{{ path('admin_place_show', {'id': author.birthPlace.id}) }}'>
+                                <a href='{{ path('place_show', {'id': author.birthPlace.id}) }}'>
                                     {{ author.birthPlace }}
                                 </a>
                             {% endif %}
                         </td>
                         <td>{{ author.deathDate }}</td>
                         <td>
-                            {% if author.deathPlace %}
-                                <a href='{{ path('admin_place_show', {'id': author.deathPlace.id}) }}'>
+                            {% if author.formattedDeathPlace %}
+                                <a href='{{ path('place_show', {'id': author.deathPlace.id}) }}'>
                                     {{ author.deathPlace }}
                                 </a>
                             {% endif %}

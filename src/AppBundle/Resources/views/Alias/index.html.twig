@@ -11,10 +11,10 @@
 
     <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
-            <a href="{{ path('admin_alias_new') }}" class="btn btn-default">
+            <a href="{{ path('alias_new') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span> New
             </a>
-            <a href="{{ path('admin_alias_search') }}" class="btn btn-default">
+            <a href="{{ path('alias_search') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Search
             </a>
         </div>
@@ -32,7 +32,7 @@
             {% for alias in aliases %}
                 <tr>
                     <td>
-                        <a href="{{ path('admin_alias_show', { 'id': alias.id }) }}">
+                        <a href="{{ path('alias_show', { 'id': alias.id }) }}">
                             {{ alias.name }}
                         </a>
                     </td>

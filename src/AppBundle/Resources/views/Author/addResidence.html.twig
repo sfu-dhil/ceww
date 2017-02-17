@@ -8,7 +8,7 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('admin_author_residence_add', {'id': author.id}) }}" class="form-horizontal">
+    <form method="get" action="{{ path('author_residence_add', {'id': author.id}) }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -29,7 +29,7 @@
     </form>
 
     {% if residences|length %}
-        <form method="post" action="{{ path('admin_author_residence_add', {'id': author.id}) }}" class="form-horizontal">
+        <form method="post" action="{{ path('author_residence_add', {'id': author.id}) }}" class="form-horizontal">
             <fieldset>
                 <legend>Residences</legend>
 
@@ -50,7 +50,7 @@
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
                     <input type="submit" value="Update" class="btn btn-primary" />
-                    <a href="{{ path('admin_author_show', { 'id': author.id }) }}" class="btn btn-warning">Cancel</a>
+                    <a href="{{ path('author_show', { 'id': author.id }) }}" class="btn btn-warning">Cancel</a>
                 </div>
             </div>
         </form>

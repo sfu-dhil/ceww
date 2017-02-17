@@ -35,11 +35,23 @@ class Author extends AbstractEntity {
     private $birthDate;
 
     /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    private $birthDateCertain;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      * @var integer
      */
     private $deathDate;
 
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    private $deathDateCertain;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="authorsBorn")
      * @ORM\JoinColumn(name="birthplace_id", referencedColumnName="id", nullable=true)
@@ -95,6 +107,8 @@ class Author extends AbstractEntity {
 
     public function __construct() {
         $this->original = array();
+        $this->birthDateCertain = true;
+        $this->deathDateCertain = true;
         $this->aliases = new ArrayCollection();
         $this->residences = new ArrayCollection();
         $this->publications = new ArrayCollection();
@@ -235,7 +249,7 @@ class Author extends AbstractEntity {
      * @return Author
      */
     public function setNotes($notes) {
-        $this->notes = $notes;
+        $this->notes = trim($notes);
 
         return $this;
     }
@@ -359,7 +373,12 @@ class Author extends AbstractEntity {
      * @return Author
      */
     public function setBirthDate($birthDate) {
-        $this->birthDate = $birthDate;
+        if(strtolower($birthDate[0]) === 'c') {
+            $this->birthDateCertain = false;
+            $this->birthDate = substr($birthDate, 1);
+        } else {
+            $this->birthDate = $birthDate;
+        }
 
         return $this;
     }
@@ -372,28 +391,55 @@ class Author extends AbstractEntity {
     public function getBirthDate() {
         return $this->birthDate;
     }
-
-    /**
-     * Set deathDate
-     *
-     * @param integer $deathDate
-     *
-     * @return Author
-     */
-    public function setDeathDate($deathDate) {
-        $this->deathDate = $deathDate;
-
-        return $this;
+    
+    public function getFormattedBirthDate() {
+        if( ! $this->birthDate) {
+            return '';
+        }
+        return ($this->birthDateCertain ? '' : 'c') . $this->birthDate;
     }
 
+    
     /**
-     * Get deathDate
+     * Get birthDate
      *
      * @return integer
      */
     public function getDeathDate() {
         return $this->deathDate;
     }
+    
+    /**
+     * Set deathDate
+     * 
+     * @param integer $deathDate
+     *
+     * @return Author
+     */
+    public function setDeathDate($deathDate) {
+        if($deathDate[0] === 'c') {
+            $this->deathDateCertain = false;
+            $this->deathDate = substr($deathDate, 1);
+        } else {
+            $this->deathDate = $deathDate;
+        }
+
+        return $this;
+    }
+    
+    /**
+     * Get deathDate
+     *
+     * @return integer
+     */
+    public function getFormattedDeathDate() {
+        if( ! $this->deathDate) {
+            return '';
+        }
+        return ($this->deathDateCertain ? '' : 'c') . $this->deathDate;
+    }
+
+
 
     public function getOriginal($key = null) {
         if ($key === null) {
@@ -409,4 +455,52 @@ class Author extends AbstractEntity {
         $this->original[$key] = $value;
     }
 
+
+    /**
+     * Set birthDateCertain
+     *
+     * @param boolean $birthDateCertain
+     *
+     * @return Author
+     */
+    public function setBirthDateCertain($birthDateCertain)
+    {
+        $this->birthDateCertain = $birthDateCertain;
+
+        return $this;
+    }
+
+    /**
+     * Get birthDateCertain
+     *
+     * @return boolean
+     */
+    public function getBirthDateCertain()
+    {
+        return $this->birthDateCertain;
+    }
+
+    /**
+     * Set deathDateCertain
+     *
+     * @param boolean $deathDateCertain
+     *
+     * @return Author
+     */
+    public function setDeathDateCertain($deathDateCertain)
+    {
+        $this->deathDateCertain = $deathDateCertain;
+
+        return $this;
+    }
+
+    /**
+     * Get deathDateCertain
+     *
+     * @return boolean
+     */
+    public function getDeathDateCertain()
+    {
+        return $this->deathDateCertain;
+    }
 }

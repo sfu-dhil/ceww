@@ -18,6 +18,7 @@ class PublicationType extends AbstractType
         $builder->add('title');  // string     
         $builder->add('sortableTitle');  // string     
         $builder->add('year');  // integer     
+        $builder->add('yearCertain');
         $builder->add('location');  // string     
         $builder->add('links');  // array     
         $builder->add('notes');  // text     

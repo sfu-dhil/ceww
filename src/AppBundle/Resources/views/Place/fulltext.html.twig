@@ -11,7 +11,7 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('admin_place_fulltext') }}" class="form-horizontal">
+    <form method="get" action="{{ path('place_fulltext') }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -56,7 +56,7 @@
                     {% set place = result[0] %}
                     <tr>
                         <td>
-                            <a href="{{ path('admin_place_show', { 'id': place.id }) }}">
+                            <a href="{{ path('place_show', { 'id': place.id }) }}">
                                 {{ place.name }}
                             </a>
                         </td>

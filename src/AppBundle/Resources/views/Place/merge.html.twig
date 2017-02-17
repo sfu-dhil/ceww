@@ -11,10 +11,10 @@
         be updated to match this one.</p>
     <dl class="dl-horizontal">
         <dt>Name</dt>
-        <dd><a href="{{ path('admin_place_show', {'id': place.id}) }}">{{ place.name }}</a>.</dd>
+        <dd><a href="{{ path('place_show', {'id': place.id}) }}">{{ place.name }}</a>.</dd>
     </dl>
 
-    <form method="get" action="{{ path('admin_place_merge', {'id': place.id}) }}" class="form-horizontal">
+    <form method="get" action="{{ path('place_merge', {'id': place.id}) }}" class="form-horizontal">
         <fieldset>
             <legend>Search for places to merge</legend>
             <div class='form-group'>
@@ -35,14 +35,14 @@
     </form>
 
     {% if places|length %}
-        <form method="post" action="{{ path('admin_place_merge', {'id': place.id}) }}" class="form-horizontal">
+        <form method="post" action="{{ path('place_merge', {'id': place.id}) }}" class="form-horizontal">
             {% for p in places if p.id != place.id %}
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="places[]" value="{{p.id}}"> {{ p.name }}
                     </label>
                     <span id="helpBlock" class="help-block">
-                        <a href="{{ path('admin_place_show', {'id': p.id}) }}">{{ p.name }}</a>.                         
+                        <a href="{{ path('place_show', {'id': p.id}) }}">{{ p.name }}</a>.                         
                         {{ p.authorsBorn|length }}\{{ p.authorsDied|length }}\{{ p.residents|length }}
                     </span>
                 </div>

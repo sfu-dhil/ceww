@@ -21,7 +21,7 @@ class AliasController extends Controller
     /**
      * Lists all Alias entities.
      *
-     * @Route("/", name="admin_alias_index")
+     * @Route("/", name="alias_index")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -42,7 +42,7 @@ class AliasController extends Controller
     /**
      * Search for Alias entities.
      *
-     * @Route("/search", name="admin_alias_search")
+     * @Route("/search", name="alias_search")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -68,7 +68,7 @@ class AliasController extends Controller
     /**
      * Full text search for Alias entities.
      *
-     * @Route("/fulltext", name="admin_alias_fulltext")
+     * @Route("/fulltext", name="alias_fulltext")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -95,7 +95,7 @@ class AliasController extends Controller
     /**
      * Creates a new Alias entity.
      *
-     * @Route("/new", name="admin_alias_new")
+     * @Route("/new", name="alias_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -111,7 +111,7 @@ class AliasController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new alias was created.');
-            return $this->redirectToRoute('admin_alias_show', array('id' => $alias->getId()));
+            return $this->redirectToRoute('alias_show', array('id' => $alias->getId()));
         }
 
         return array(
@@ -123,7 +123,7 @@ class AliasController extends Controller
     /**
      * Finds and displays a Alias entity.
      *
-     * @Route("/{id}", name="admin_alias_show")
+     * @Route("/{id}", name="alias_show")
      * @Method("GET")
      * @Template()
      * @param Alias $alias
@@ -140,7 +140,7 @@ class AliasController extends Controller
     /**
      * Displays a form to edit an existing Alias entity.
      *
-     * @Route("/{id}/edit", name="admin_alias_edit")
+     * @Route("/{id}/edit", name="alias_edit")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -155,7 +155,7 @@ class AliasController extends Controller
             $em->persist($alias);
             $em->flush();
             $this->addFlash('success', 'The alias has been updated.');
-            return $this->redirectToRoute('admin_alias_show', array('id' => $alias->getId()));
+            return $this->redirectToRoute('alias_show', array('id' => $alias->getId()));
         }
 
         return array(
@@ -167,7 +167,7 @@ class AliasController extends Controller
     /**
      * Deletes a Alias entity.
      *
-     * @Route("/{id}/delete", name="admin_alias_delete")
+     * @Route("/{id}/delete", name="alias_delete")
      * @Method("GET")
      * @param Request $request
      * @param Alias   $alias
@@ -178,7 +178,7 @@ class AliasController extends Controller
         $em->flush();
         $this->addFlash('success', 'The alias was deleted.');
 
-        return $this->redirectToRoute('admin_alias_index');
+        return $this->redirectToRoute('alias_index');
     }
 
 }

@@ -11,7 +11,7 @@
 
     <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
-            <a href="{{ path('admin_genre_new') }}" class="btn btn-default">
+            <a href="{{ path('genre_new') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span> New
             </a>
         </div>
@@ -29,7 +29,7 @@
             {% for genre in genres %}
                 <tr>
                     <td>
-                        <a href="{{ path('admin_genre_show', { 'id': genre.id }) }}">
+                        <a href="{{ path('genre_show', { 'id': genre.id }) }}">
                             {{ genre.name }}
                         </a>
                     </td>

@@ -34,6 +34,12 @@ class Publication extends AbstractEntity
     private $year;
     
     /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */    
+    private $yearCertain;
+    
+    /**
      * @var string
      * @ORM\Column(type="string", length=250, nullable=true)
      */
@@ -71,6 +77,7 @@ class Publication extends AbstractEntity
     private $authors;
 
     public function __construct() {
+        $this->yearCertain = true;
         $this->authors = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->links = array();
@@ -110,7 +117,12 @@ class Publication extends AbstractEntity
      * @return Publication
      */
     public function setYear($year) {
-        $this->year = $year;
+        if($year[0] === 'c') {
+            $this->yearCertain = false;
+            $this->year = substr($year, 1);
+        } else {
+            $this->year = $year;
+        }
 
         return $this;
     }
@@ -122,6 +134,13 @@ class Publication extends AbstractEntity
      */
     public function getYear() {
         return $this->year;
+    }
+    
+    public function getFormattedYear() {
+        if( ! $this->year) {
+            return '';
+        }
+        return ($this->yearCertain ? '' : 'c') . $this->year;
     }
 
     /**
@@ -325,5 +344,29 @@ class Publication extends AbstractEntity
     public function getLocation()
     {
         return $this->location;
+    }
+
+    /**
+     * Set yearCertain
+     *
+     * @param boolean $yearCertain
+     *
+     * @return Publication
+     */
+    public function setYearCertain($yearCertain)
+    {
+        $this->yearCertain = $yearCertain;
+
+        return $this;
+    }
+
+    /**
+     * Get yearCertain
+     *
+     * @return boolean
+     */
+    public function getYearCertain()
+    {
+        return $this->yearCertain;
     }
 }

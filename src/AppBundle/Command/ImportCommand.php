@@ -4,11 +4,11 @@ namespace AppBundle\Command;
 
 use AppBundle\Services\Importer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Exception\DriverException;
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -44,10 +44,10 @@ class ImportCommand extends ContainerAwareCommand {
      * {@inheritDoc}
      */
     protected function configure() {
-        $this
-                ->setName('ceww:import')
-                ->setDescription('Import one or more CSV files.')
-                ->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import');
+        $this->setName('ceww:import');
+        $this->setDescription('Import one or more CSV files.');
+        $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Only process $limit rows.');
+        $this->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import');
     }
 
     /**
@@ -65,15 +65,16 @@ class ImportCommand extends ContainerAwareCommand {
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $files = $input->getArgument('files');
+        $limit = $input->getOption('limit');
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         $batchSize = 50;
 
+        $line = 0;
         foreach ($files as $filePath) {
             $output->writeln($filePath);
             $fh = fopen($filePath, 'r');
             $headers = fgetcsv($fh); // col numbers.
             $headers = fgetcsv($fh); // actual headers.
-            $line = 1;
             while ($row = fgetcsv($fh)) {
                 $line++;
                 try {
@@ -96,6 +97,8 @@ class ImportCommand extends ContainerAwareCommand {
                 }
             }
         }
+        $this->em->flush();
+        $this->em->clear();            
     }
 
 }

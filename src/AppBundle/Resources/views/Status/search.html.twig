@@ -11,7 +11,7 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('admin_status_search') }}" class="form-horizontal">
+    <form method="get" action="{{ path('status_search') }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -44,7 +44,7 @@
                 {% for status in statuses %}
                     <tr>
                         <td>
-                            <a href="{{ path('admin_status_show', { 'id': status.id }) }}">
+                            <a href="{{ path('status_show', { 'id': status.id }) }}">
                                 {{ status.label }}
                             </a>
                         </td>

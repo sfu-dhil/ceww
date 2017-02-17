@@ -21,7 +21,7 @@ class CategoryController extends Controller
     /**
      * Lists all Category entities.
      *
-     * @Route("/", name="admin_category_index")
+     * @Route("/", name="category_index")
      * @Method("GET")
      * @Template()
      * @param Request $request
@@ -41,7 +41,7 @@ class CategoryController extends Controller
     /**
      * Creates a new Category entity.
      *
-     * @Route("/new", name="admin_category_new")
+     * @Route("/new", name="category_new")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request $request
@@ -57,7 +57,7 @@ class CategoryController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new category was created.');
-            return $this->redirectToRoute('admin_category_show', array('id' => $category->getId()));
+            return $this->redirectToRoute('category_show', array('id' => $category->getId()));
         }
 
         return array(
@@ -69,7 +69,7 @@ class CategoryController extends Controller
     /**
      * Finds and displays a Category entity.
      *
-     * @Route("/{id}", name="admin_category_show")
+     * @Route("/{id}", name="category_show")
      * @Method("GET")
      * @Template()
      * @param Category $category
@@ -84,7 +84,7 @@ class CategoryController extends Controller
     /**
      * Displays a form to edit an existing Category entity.
      *
-     * @Route("/{id}/edit", name="admin_category_edit")
+     * @Route("/{id}/edit", name="category_edit")
      * @Method({"GET", "POST"})
      * @Template()
      * @param Request  $request
@@ -98,7 +98,7 @@ class CategoryController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The category has been updated.');
-            return $this->redirectToRoute('admin_category_show', array('id' => $category->getId()));
+            return $this->redirectToRoute('category_show', array('id' => $category->getId()));
         }
 
         return array(
@@ -110,7 +110,7 @@ class CategoryController extends Controller
     /**
      * Deletes a Category entity.
      *
-     * @Route("/{id}/delete", name="admin_category_delete")
+     * @Route("/{id}/delete", name="category_delete")
      * @Method("GET")
      * @param Request  $request
      * @param Category $category
@@ -121,7 +121,7 @@ class CategoryController extends Controller
         $em->flush();
         $this->addFlash('success', 'The category was deleted.');
 
-        return $this->redirectToRoute('admin_category_index');
+        return $this->redirectToRoute('category_index');
     }
 
 }

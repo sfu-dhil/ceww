@@ -11,7 +11,7 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('admin_publication_fulltext') }}" class="form-horizontal">
+    <form method="get" action="{{ path('publication_fulltext') }}" class="form-horizontal">
         <fieldset>
             <legend>Search</legend>
             <div class='form-group'>
@@ -56,11 +56,11 @@
                     <tr>
                         <td>{{ publication.category }}</td>
                         <td>
-                            <a href="{{ path('admin_publication_show', { 'id': publication.id }) }}">
+                            <a href="{{ path('publication_show', { 'id': publication.id }) }}">
                                 {{ publication.title }}
                             </a>
                         </td>
-                        <td>{{ publication.year }}</td>
+                        <td>{{ publication.formattedYear }}</td>
                         <td>{{ publication.notes }}</td>
                     </tr>
                 {% endfor %}

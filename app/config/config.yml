@@ -18,9 +18,6 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
-    serializer:      
-        enabled: true
-        enable_annotations: true
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -41,6 +38,11 @@ twig:
         - 'form/fields.html.twig'
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    paths:
+        '%kernel.root_dir%/../src/Nines/UtilBundle/Resources/views': UtilBundle
+    exception_controller:  UtilBundle:Error:showException
+    globals:
+        comment_service: "@feedback.comment"
 
 # Doctrine Configuration
 doctrine:
@@ -59,6 +61,12 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        dql:
+            string_functions:
+                MATCH_AGAINST: Nines\UtilBundle\Extensions\Doctrine\MatchAgainstFunction
+            numeric_functions:
+                INT: Nines\UtilBundle\Extensions\Doctrine\CastAsIntegerFunction
+                RAND: Nines\UtilBundle\Extensions\Doctrine\RandFunction
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -130,14 +138,57 @@ knp_paginator:
         pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig     # bootstrapy pagination
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
-#fos_user:
-#    db_driver: orm
-#    firewall_name: main
-#    user_class: AppUserBundle\Entity\User
-#    profile:
-#        form:
-#            type: AppUserBundle\Form\ProfileType
-#    change_password:
-#        form:
-#            type: AppUserBundle\Form\PasswordType
-#            
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: Nines\UserBundle\Entity\User
+    profile:
+        form:
+            type: Nines\UserBundle\Form\ProfileType
+    change_password:
+        form:
+            type: Nines\UserBundle\Form\PasswordType
+            
+knp_paginator:
+    page_range: 5                      # default page range used in pagination control
+    default_options:
+        page_name: page                # page query parameter name
+        sort_field_name: sort          # sort field query parameter name
+        sort_direction_name: dir       # sort direction query parameter name
+        distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
+    template:
+        pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig     # bootstrapy pagination
+        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+
+ivory_ck_editor:
+    input_sync: true
+    default_config: ceww_config
+    configs:
+        ceww_config:
+            toolbar: standard
+
+knp_menu:
+    twig:
+        template: KnpMenuBundle::menu.html.twig
+
+feedback:
+    default_status: submitted
+    public_status: published
+    commenting:
+        author:
+            class: AppBundle\Entity\Author
+            route: author_show
+        publication:
+            class: AppBundle\Entity\Publication
+            route: publication_show
+        blog_post:
+            class: Nines\BlogBundle\Post
+            route: post_show
+        blog_page:
+            class: Nines\BlogBundle\Page
+            route: page_show
+
+nines_blog:
+    default_status: draft
+    published_status: published
+    default_category: none

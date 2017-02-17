@@ -20,12 +20,12 @@
     <p>
         {% if previous %}
             <span class='text-left'>
-                Previous author: <a href="{{ path('admin_author_show', {'id': previous.id }) }}">{{ previous.fullname }}</a>
+                Previous author: <a href="{{ path('author_show', {'id': previous.id }) }}">{{ previous.fullname }}</a>
             </span>
         {% endif %}
         {% if next %}
             <span class='text-right'>
-                Next author: <a href="{{ path('admin_author_show', {'id': next.id }) }}">{{ next.fullname }}</a>
+                Next author: <a href="{{ path('author_show', {'id': next.id }) }}">{{ next.fullname }}</a>
             </span>
         {% endif %}
     </p>
@@ -36,13 +36,13 @@
 
     <div class="btn-toolbar">
         <div class="btn-group pull-right">
-            <a href="{{ path('admin_author_index') }}" class="btn btn-default">
+            <a href="{{ path('author_index') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-arrow-left"></span> Back
             </a>
-            <a href="{{ path('admin_author_edit', { 'id': author.id }) }}" class="btn btn-default">
+            <a href="{{ path('author_edit', { 'id': author.id }) }}" class="btn btn-default">
                 <span class='glyphicon glyphicon-edit'></span> Edit
             </a>
-            <a href="{{ path('admin_author_delete', { 'id': author.id }) }}" class="btn btn-default" data-confirm="Are you sure you want to delete this Author?">
+            <a href="{{ path('author_delete', { 'id': author.id }) }}" class="btn btn-default" data-confirm="Are you sure you want to delete this Author?">
                 <span class='glyphicon glyphicon-remove'></span> Delete
             </a>
         </div>
@@ -68,28 +68,28 @@
             </tr>
             <tr>
                 <th>Birthdate</th>
-                <td>{{ author.birthDate }}</td>
+                <td>{{ author.formattedBirthDate }}</td>
                 <td>{{ author.getOriginal('BIRTH DATE') }}</td>
             </tr>
             <tr>
                 <th>Birthplace</th>
                 <td>
                     {% if author.birthPlace %}
-                        <a href="{{ path('admin_place_show', {'id': author.birthPlace.id}) }}">{{ author.birthPlace }}</a>
+                        <a href="{{ path('place_show', {'id': author.birthPlace.id}) }}">{{ author.birthPlace }}</a>
                     {% endif %}
                 </td>
                 <td>{{ author.getOriginal('BIRTH PLACE') }}</td>
             </tr>
             <tr>
                 <th>Deathdate</th>
-                <td>{{ author.deathDate }}</td>
+                <td>{{ author.formattedDeathDate }}</td>
                 <td>{{ author.getOriginal('DEATH DATE') }}</td>
             </tr>
             <tr>
                 <th>Deathplace</th>					
                 <td>
                     {% if author.deathPlace %}
-                        <a href="{{ path('admin_place_show', {'id': author.deathPlace.id}) }}">{{ author.deathPlace }}</a>
+                        <a href="{{ path('place_show', {'id': author.deathPlace.id}) }}">{{ author.deathPlace }}</a>
                     {% endif %}
                 </td>
                 <td>{{ author.getOriginal('DEATH PLACE') }}</td>
@@ -125,17 +125,17 @@
         <tr>
             <th>Aliases</th>
             <td>
-                {{ self.pubList(author.aliases, 'admin_alias_show') }}
+                {{ self.pubList(author.aliases, 'alias_show') }}
                 <p>
-                    <a href="{{ path('admin_author_alias_new', {'id': author.id}) }}">
+                    <a href="{{ path('author_alias_new', {'id': author.id}) }}">
                         Create new alias
                     </a>
                     |
-                    <a href="{{ path('admin_author_alias_add', {'id': author.id}) }}">
+                    <a href="{{ path('author_alias_add', {'id': author.id}) }}">
                         Add existing alias
                     </a>
                     | 
-                    <a href="{{ path('admin_author_alias_remove', {'id': author.id}) }}">
+                    <a href="{{ path('author_alias_remove', {'id': author.id}) }}">
                         Remove alias
                     </a></p>
             </td>
@@ -144,17 +144,17 @@
         <tr>
             <th>Residences</th>
             <td>
-                {{ self.pubList(author.residences, 'admin_place_show') }}
+                {{ self.pubList(author.residences, 'place_show') }}
                 <p>
-                    <a href="{{ path('admin_author_residence_new', {'id': author.id}) }}">
+                    <a href="{{ path('author_residence_new', {'id': author.id}) }}">
                         Create new residence
                     </a>
                     |
-                    <a href="{{ path('admin_author_residence_add', {'id': author.id}) }}">
+                    <a href="{{ path('author_residence_add', {'id': author.id}) }}">
                         Add existing residence
                     </a>
                     | 
-                    <a href="{{ path('admin_author_residence_remove', {'id': author.id}) }}">
+                    <a href="{{ path('author_residence_remove', {'id': author.id}) }}">
                         Remove residence
                     </a></p>
             </td>
@@ -169,26 +169,26 @@
                     <ul>
                         {% for p in pubs %}
                             <li>{{ p.category }}: 
-                                <a href='{{ path('admin_publication_show', {'id': p.id }) }}'>
+                                <a href='{{ path('publication_show', {'id': p.id }) }}'>
                                     {{ p }}
                                 </a> 
                             </li>                                        
                         {% endfor %}
                     </ul>
                     <p>
-                        <a href="{{ path('admin_author_publication_new', {'id': author.id}) }}">
+                        <a href="{{ path('author_publication_new', {'id': author.id}) }}">
                             Create new publication
                         </a>
                         |
-                        <a href="{{ path('admin_author_publication_add', {'id': author.id}) }}">
+                        <a href="{{ path('author_publication_add', {'id': author.id}) }}">
                             Add existing publication
                         </a>
                         | 
-                        <a href="{{ path('admin_author_publication_remove', {'id': author.id}) }}">
+                        <a href="{{ path('author_publication_remove', {'id': author.id}) }}">
                             Remove publication
                         </a>
                     </p>
-                    {% endif %}
+                {% endif %}
             </td>
             <td>
                 <p><b>Books</b><br/>
@@ -222,6 +222,6 @@
     </tbody>
 </table>
 
-{% include 'FeedbackBundle:Comment:comments-view.html.twig' %}                            
-                            
+    {% include 'FeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': author } %}				
+
 {% endblock %}
