@@ -13,10 +13,10 @@ use AppBundle\Entity\Author;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
-use AppBundle\Utilities\TitleCaser;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
+use Nines\UtilBundle\Services\TitleCaser;
 
 /**
  * Description of Importer
@@ -44,8 +44,8 @@ class Importer {
      */
     private $titleCaser;
 
-    public function __construct() {
-        $this->titleCaser = new TitleCaser();
+    public function setTitleCaser(TitleCaser $titleCaser) {
+        $this->titleCaser = $titleCaser;
     }
 
     /**

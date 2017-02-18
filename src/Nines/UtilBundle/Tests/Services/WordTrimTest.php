@@ -1,6 +1,6 @@
 <?php
 
-namespace Nines\UtilBundle\Tests\Entity;
+namespace Nines\UtilBundle\Tests\Services;
 
 use Nines\UtilBundle\Services\WordTrim;
 use PHPUnit_Framework_TestCase;

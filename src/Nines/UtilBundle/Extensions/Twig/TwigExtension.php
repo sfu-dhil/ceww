@@ -12,7 +12,7 @@ use \Twig_SimpleFilter;
  *
  * @author mjoyce
  */
-class TwigExtension extends \Twig_Extension {
+class TwigExtension extends Twig_Extension {
     
     /**
      * {@inheritDocs}

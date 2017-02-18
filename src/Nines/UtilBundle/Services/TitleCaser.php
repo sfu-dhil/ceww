@@ -17,7 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace AppBundle\Utilities;
+namespace Nines\UtilBundle\Services;
+
+use Monolog\Logger;
 
 /**
  * Description of TitleCaser
@@ -25,6 +27,22 @@ namespace AppBundle\Utilities;
  * @author Michael Joyce <mjoyce@sfu.ca>
  */
 class TitleCaser {
+    
+    /**
+     * Monolog logger.
+     * 
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * Set the service's logger.
+     * 
+     * @param Logger $logger
+     */
+    public function setLogger(Logger $logger) {
+        $this->logger = $logger;
+    }
     
     private $lower = array(
         'and', 'at', 'a', 'an', 'are', 'in', 'or', 'of', 'on', 'to', 'for',

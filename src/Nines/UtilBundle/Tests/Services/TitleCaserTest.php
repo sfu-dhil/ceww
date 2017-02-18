@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace AppBundle\Tests\Utilities;
+namespace Nines\UtilBundle\Tests\Services;
 
-use AppBundle\Utilities\TitleCaser;
 use AppBundle\Tests\Utilities\AbstractTestCase;
+use Nines\UtilBundle\Services\TitleCaser;
 
 /**
  * Description of TitleCaserTest

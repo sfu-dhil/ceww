@@ -28,7 +28,7 @@ doctrine:
             default:
                 driver:   pdo_sqlite
                 path:     "%kernel.cache_dir%/test.sqlite"
-                charset: UTF8
+                charset:  UTF8
                 
 security:
     firewalls:

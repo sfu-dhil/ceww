@@ -14,6 +14,8 @@ services:
         calls:
             - [ setDoctrine, ["@doctrine"]]
             - [ setLogger, ["@monolog.logger"]]
+            - [ setTitleCaser, ["@nines.util.title_caser"]]
+            
     ceww.merger:
         class: AppBundle\Services\Merger
         calls:
