@@ -24,6 +24,11 @@ class PostStatus extends AbstractEntity
      * @ORM\Column(type="string", length=120)
      */
     private $label;
+    
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $public;
 
     /**
      * @ORM\Column(type="text")
@@ -38,6 +43,7 @@ class PostStatus extends AbstractEntity
 
     public function __construct() {
         parent::__construct();
+        $this->public = false;
         $this->posts = new ArrayCollection();
     }
     
@@ -150,5 +156,29 @@ class PostStatus extends AbstractEntity
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * Set public
+     *
+     * @param boolean $public
+     *
+     * @return PostStatus
+     */
+    public function setPublic($public)
+    {
+        $this->public = $public;
+
+        return $this;
+    }
+
+    /**
+     * Get public
+     *
+     * @return boolean
+     */
+    public function getPublic()
+    {
+        return $this->public;
     }
 }

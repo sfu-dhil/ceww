@@ -1,6 +1,6 @@
 services:
     nines.util.text:
-        class: Nines\UtilBundle\Services\WordTrim
+        class: Nines\UtilBundle\Services\Text
         calls:
             - [ setLogger, ["@monolog.logger"]]
 

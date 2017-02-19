@@ -8,6 +8,8 @@
 
 namespace Nines\UtilBundle\Services;
 
+use Monolog\Logger;
+
 /**
  * Description of Text
  *

@@ -21,18 +21,18 @@ class PostRepository extends EntityRepository {
         $qb->setParameter('q', $q);
         return $qb->getQuery();
     }
-
-    public function findRecent($statusName, $limit = null) {
-        $em = $this->getEntityManager()->getRepository('NinesBlogBundle:PostStatus');
-        $status = $em->findOneBy(array(
-            'name' => $statusName
-        ));
-
-        return $this->findBy(
-            array('status' => $status), 
-            array('id' => 'DESC'), 
-            $limit
-        );
+    
+    public function recentQuery($private = false) {
+        $em = $this->getEntityManager();
+        $qb = $this->createQueryBuilder('e');
+        if( ! $private) {
+            $statuses = $em->getRepository(PostStatus::class)->findBy(array(
+                'public' => true,
+            ));
+            $qb->andWhere('e.status = :status');
+            $qb->setParameter('status', $statuses);
+        }
+        $qb->orderBy('e.id', 'DESC');
+        return $qb->getQuery();
     }
-
 }

@@ -179,5 +179,4 @@ feedback:
 
 nines_blog:
     default_status: draft
-    published_status: published
     default_category: none

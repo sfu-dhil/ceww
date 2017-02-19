@@ -117,9 +117,11 @@ class PageController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $text = $this->get('nines.util.text');
             if( ! $page->getExcerpt()) {
-                $page->setExcerpt($this->get('nines.util.word_trim')->trim($page->getContent(), $this->getParameter('nines_blog.excerpt_length')));
+                $page->setExcerpt($text->trim($page->getContent(), $this->getParameter('nines_blog.excerpt_length')));
             }
+            $page->setSearchable($text->plain($page->getContent()));
             $em = $this->getDoctrine()->getManager();
             $em->persist($page);
             $em->flush();
@@ -165,9 +167,11 @@ class PageController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $text = $this->get('nines.util.text');
             if( ! $page->getExcerpt()) {
-                $page->setExcerpt($this->get('nines.util.word_trim')->trim($page->getContent(), $this->getParameter('nines_blog.excerpt_length')));
+                $page->setExcerpt($text->trim($page->getContent(), $this->getParameter('nines_blog.excerpt_length')));
             }
+            $page->setSearchable($text->plain($page->getContent()));
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The page has been updated.');

@@ -1,9 +1,9 @@
 <?php
 
 
-namespace AppUserBundle\Entity;
+namespace Nines\UserBundle\Tests\Entity;
 
-use AppUserBundle\Entity\User;
+use Nines\UserBundle\Entity\User;
 use PHPUnit_Framework_TestCase;
 
 class UserTest extends PHPUnit_Framework_TestCase {
@@ -12,10 +12,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$this->user = new User();
-	}
-	
-	public function testConstructor() {
-		$this->assertFalse($this->user->getNotify());
 	}
 	
 	public function testUsername() {

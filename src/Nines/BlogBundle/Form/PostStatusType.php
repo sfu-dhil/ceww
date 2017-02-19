@@ -16,7 +16,8 @@ class PostStatusType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
         $builder->add('name');     
-        $builder->add('label');     
+        $builder->add('label');    
+        $builder->add('public');
         $builder->add('description');         
     }
     
