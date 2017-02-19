@@ -1,9 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @file
+ * 
+ * Text processing serivce.
  */
 
 namespace Nines\UtilBundle\Services;
@@ -11,11 +11,10 @@ namespace Nines\UtilBundle\Services;
 use Monolog\Logger;
 
 /**
- * Description of Text
- *
- * @author michael
+ * Various text mangling functions for twig and for other symfony stuff.
  */
 class Text {
+    
     /**
      * Monolog logger.
      * 
@@ -33,12 +32,7 @@ class Text {
     }
     
     /**
-     * Build a plain, searchable version of the marked up text.
-     * 
-     * @todo Refactor this into a service.
-     * 
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
+     * Build a plain, searchable version of a marked up text.
      */
     public function plain($content) {
         $plain = strip_tags($content);
@@ -52,8 +46,6 @@ class Text {
     /**
      * Find the keyword in the plain text and highlight it. Returns a list
      * of the higlights as KWIC results.
-     * 
-     * @todo Refactor this into a service.
      * 
      * @param string $keyword
      * @return array

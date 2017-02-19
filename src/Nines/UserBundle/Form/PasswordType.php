@@ -30,11 +30,17 @@ class PasswordType extends AbstractType
         return 'FOS\UserBundle\Form\Type\ChangePasswordFormType';
     }
 
+    /**
+     * {@inheritdoc}
+     */
 	public function getBlockPrefix()
     {
         return 'app_user_password';
     }
 	
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         $this->getBlockPrefix();
