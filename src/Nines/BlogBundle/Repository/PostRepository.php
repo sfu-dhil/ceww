@@ -3,6 +3,7 @@
 namespace Nines\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Nines\BlogBundle\Entity\PostStatus;
 
 /**
@@ -13,6 +14,13 @@ use Nines\BlogBundle\Entity\PostStatus;
  */
 class PostRepository extends EntityRepository {
 
+    /**
+     * Return a full text query, respecting private comments.
+     * 
+     * @param string $q
+     * @param string $private
+     * @return Query
+     */
     public function fulltextQuery($q, $private = false) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') as HIDDEN score");
@@ -30,6 +38,12 @@ class PostRepository extends EntityRepository {
         return $qb->getQuery();
     }
     
+    /**
+     * Get a query to list recent blog posts.
+     * 
+     * @param bool $private
+     * @return Query
+     */
     public function recentQuery($private = false) {
         $em = $this->getEntityManager();
         $qb = $this->createQueryBuilder('e');

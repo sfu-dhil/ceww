@@ -18,12 +18,15 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 class Page extends AbstractEntity {
 
     /**
+     * Heavier weighted pages will sort to the bottom.
+     * 
      * @var int
      * @ORM\Column(name="weight", type="integer", nullable=false)
      */
     private $weight;
     
     /**
+     * True if the page is public. Defaults to false.
      *
      * @var boolean
      * @ORM\Column(name="public", type="boolean")
@@ -75,6 +78,9 @@ class Page extends AbstractEntity {
      */
     private $user;
 
+    /**
+     * Build a page.
+     */
     public function __construct() {
         parent::__construct();
         $this->weight = 0;

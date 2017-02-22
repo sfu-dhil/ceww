@@ -7,9 +7,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Blog Post form type.
+ */
 class PostType extends AbstractType
 {
     /**
+     * Build a post form.
+     * 
      * @param FormBuilderInterface $builder
      * @param array $options
      */

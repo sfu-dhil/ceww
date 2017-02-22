@@ -30,7 +30,6 @@ class AdminUserController extends Controller
      */
     public function indexAction()
     {
-        $user = $this->getUser();
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('NinesUserBundle:User')->findAll();

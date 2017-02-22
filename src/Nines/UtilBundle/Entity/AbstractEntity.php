@@ -100,7 +100,8 @@ abstract class AbstractEntity
     }
 
     /**
-     * Sets the created and updated timestamps.
+     * Sets the created and updated timestamps. This method should be
+     * private or protected, but that interferes with the life cycle callbacks.
      * 
      * @ORM\PrePersist()
      */

@@ -22,7 +22,7 @@ namespace Nines\UtilBundle\Services;
 use Monolog\Logger;
 
 /**
- * Description of TitleCaser
+ * Apply title casing to a string.
  *
  * @author Michael Joyce <mjoyce@sfu.ca>
  */

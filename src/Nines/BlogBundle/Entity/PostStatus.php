@@ -16,37 +16,55 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 class PostStatus extends AbstractEntity
 {
     /**
+     * Name of the status.
+     * 
      * @ORM\Column(type="string", length=120)
+     * @var string
      */
     private $name;
 
     /**
+     * Human readable status label.
+     * @var string
      * @ORM\Column(type="string", length=120)
      */
     private $label;
     
     /**
+     * True if the status is meant to be public.
+     * @var bool
      * @ORM\Column(type="boolean")
      */
     private $public;
 
     /**
+     * Descriptino of the status.
+     * @var title
      * @ORM\Column(type="text")
      */
     private $description;
     
     /**
+     * List of the posts with this status.
+     * 
      * @var Collection|Post[]
      * @ORM\OneToMany(targetEntity="Post", mappedBy="status")
      */
     private $posts;
 
+    /**
+     * Build the post.
+     */
     public function __construct() {
         parent::__construct();
         $this->public = false;
         $this->posts = new ArrayCollection();
     }
     
+    /**
+     * Get the status label.
+     * @return string
+     */
     public function __toString() {
         return $this->label;
     }
@@ -127,11 +145,11 @@ class PostStatus extends AbstractEntity
     /**
      * Add post
      *
-     * @param \Nines\BlogBundle\Entity\Post $post
+     * @param Post $post
      *
      * @return PostStatus
      */
-    public function addPost(\Nines\BlogBundle\Entity\Post $post)
+    public function addPost(Post $post)
     {
         $this->posts[] = $post;
 
@@ -141,9 +159,9 @@ class PostStatus extends AbstractEntity
     /**
      * Remove post
      *
-     * @param \Nines\BlogBundle\Entity\Post $post
+     * @param Post $post
      */
-    public function removePost(\Nines\BlogBundle\Entity\Post $post)
+    public function removePost(Post $post)
     {
         $this->posts->removeElement($post);
     }
@@ -151,7 +169,7 @@ class PostStatus extends AbstractEntity
     /**
      * Get posts
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPosts()
     {

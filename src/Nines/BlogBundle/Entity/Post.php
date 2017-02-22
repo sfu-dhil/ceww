@@ -3,8 +3,8 @@
 namespace Nines\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nines\UtilBundle\Entity\AbstractEntity;
 use Nines\UserBundle\Entity\User;
+use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * A blog post.
@@ -77,7 +77,7 @@ class Post extends AbstractEntity {
      * User that created the post.
      * 
      * @var User
-     * @ORM\ManyToOne(targetEntity="Nines\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -142,7 +142,7 @@ class Post extends AbstractEntity {
      *
      * @return Post
      */
-    public function setCategory(\Nines\BlogBundle\Entity\PostCategory $category = null) {
+    public function setCategory(PostCategory $category = null) {
         $this->category = $category;
 
         return $this;

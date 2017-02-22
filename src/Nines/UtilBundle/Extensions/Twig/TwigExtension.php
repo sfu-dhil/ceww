@@ -8,7 +8,7 @@ use \Twig_Extension;
 use \Twig_SimpleFilter;
 
 /**
- * Description of TwigExtension
+ * Add some class reflection methods to Twig. 
  *
  * @author mjoyce
  */
