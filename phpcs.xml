@@ -134,6 +134,21 @@
   <rule ref="Squiz.Commenting.FileComment.Missing">
     <severity>0</severity>
   </rule>
+  <rule ref="Squiz.Commenting.FileComment.PackageTagOrder">
+      <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.Commenting.FileComment.MissingPackageTag">
+      <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.Commenting.FileComment.MissingSubPackageTag">
+      <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.Commenting.FunctionComment.SpacingAfterParamName">
+      <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.Commenting.FunctionComment.SpacingAfterParamType">
+      <severity>0</severity>
+  </rule>
   <rule ref="Squiz.Commenting.ClosingDeclarationComment.Missing">
     <severity>0</severity>
   </rule>

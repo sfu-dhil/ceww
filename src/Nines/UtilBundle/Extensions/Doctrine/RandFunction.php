@@ -1,8 +1,6 @@
 <?php
 
 /**
- * @file
- * 
  * Doctrine doesn't have a random function. This extension 
  * adds one.
  */
