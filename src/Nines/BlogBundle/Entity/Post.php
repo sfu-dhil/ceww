@@ -77,7 +77,7 @@ class Post extends AbstractEntity {
      * User that created the post.
      * 
      * @var User
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Nines\UserBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
