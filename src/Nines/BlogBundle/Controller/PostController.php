@@ -50,10 +50,11 @@ class PostController extends Controller
     public function fulltextAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('NinesBlogBundle:Post');
+        $private = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+		$repo = $em->getRepository(Post::class);
 		$q = $request->query->get('q');
 		if($q) {
-	        $query = $repo->fulltextQuery($q);
+	        $query = $repo->fulltextQuery($q, $private);
 			$paginator = $this->get('knp_paginator');
 			$posts = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {

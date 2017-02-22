@@ -3,6 +3,7 @@
 namespace Nines\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Nines\BlogBundle\Entity\PostStatus;
 
 /**
  * PageRepository
@@ -12,12 +13,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class PageRepository extends EntityRepository
 {
-    public function fulltextQuery($q) {
+    public function listQuery($private = false) {
         $qb = $this->createQueryBuilder('e');
-        $qb->addSelect("MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') as score");
-        $qb->add('where', "MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') > 0");
+        if( ! $private ) {
+            $qb->andWhere('e.public = true');
+        }
+        $qb->orderBy('e.weight', 'asc');
+        return $qb->getQuery();
+    }
+    
+    public function fulltextQuery($q, $private = false) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->addSelect("MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') as HIDDEN score");
+        $qb->andWhere("MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') > 0");
+        if( ! $private) {
+            $qb->andWhere('e.public = true');
+        }
         $qb->orderBy('score', 'desc');
         $qb->setParameter('q', $q);
         return $qb->getQuery();
-    }	 
+    }
+    
 }

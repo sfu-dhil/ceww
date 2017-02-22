@@ -13,10 +13,18 @@ use Nines\BlogBundle\Entity\PostStatus;
  */
 class PostRepository extends EntityRepository {
 
-    public function fulltextQuery($q) {
+    public function fulltextQuery($q, $private = false) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') as HIDDEN score");
-        $qb->add('where', "MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') > 0");
+        $qb->andWhere("MATCH_AGAINST (e.title, e.searchable, :q 'IN BOOLEAN MODE') > 0");
+        if( ! $private) {
+            $em = $this->getEntityManager();
+            $statuses = $em->getRepository(PostStatus::class)->findBy(array(
+                'public' => true,
+            ));
+            $qb->andWhere('e.status = :status');
+            $qb->setParameter('status', $statuses);
+        }
         $qb->orderBy('score', 'desc');
         $qb->setParameter('q', $q);
         return $qb->getQuery();

@@ -3,6 +3,7 @@
 namespace Nines\BlogBundle\Tests\Controller;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Nines\BlogBundle\Entity\Post;
 use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadCategories;
 use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadPosts;
 use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadStatuses;
@@ -14,7 +15,7 @@ class PageControllerTest extends WebTestCase {
         parent::setUp();
     }
 
-    public function testAnonIndex() {
+    public function testIndex() {
         $this->loadFixtures(array(
             LoadUsers::class,
             LoadStatuses::class,
@@ -29,26 +30,6 @@ class PageControllerTest extends WebTestCase {
         $content = $crawler->text();
         $this->assertTrue(strpos($content, 'Hello world.') !== false);
         $this->assertTrue(strpos($content, 'Hello draft.') === false);
-    }
-
-    public function testAdminIndex() {
-        $this->loadFixtures(array(
-            LoadUsers::class,
-            LoadStatuses::class,
-            LoadCategories::class,
-            LoadPosts::class,
-        )); 
-
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $crawler = $client->request('GET', '/post/');
-        $this->assertStatusCode(200, $client);
-        
-        $content = $crawler->text();
-        $this->assertTrue(strpos($content, 'Hello world.') !== false);
-        $this->assertTrue(strpos($content, 'Hello draft.') !== false);
     }
     
     public function testFullText() {
@@ -76,28 +57,61 @@ class PageControllerTest extends WebTestCase {
         $this->assertStatusCode(302, $client);
         $this->assertStringEndsWith('/login', $client->getResponse()->headers->get('Location'));
     }
-
-    public function testAdminNew() {
+    
+    public function testAnonShowDraft() {
         $this->loadFixtures(array(
             LoadUsers::class,
             LoadStatuses::class,
             LoadCategories::class,
             LoadPosts::class,
         )); 
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $crawler = $client->request('GET', '/post/new');
-        $this->assertStatusCode(200, $client);
-        
-        $form = $crawler->selectButton('Create')->form(array(
-            'post[title]' => "Test Post",
-            'post[category]' => 1,
-            'post[status]' => 1,
-            'post[excerpt]' => '',
-            'post[content]' => '',
-        ));
-        
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/post/1');
+        $this->assertStatusCode(302, $client);
+        $this->assertStringEndsWith('/login', $client->getResponse()->headers->get('Location'));
     }
+    
+    public function testAnonShowPublished() {
+        $this->loadFixtures(array(
+            LoadUsers::class,
+            LoadStatuses::class,
+            LoadCategories::class,
+            LoadPosts::class,
+        )); 
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/post/2');
+        $this->assertStatusCode(200, $client);        
+    }
+    
+    public function testAnonEdit() {
+        $this->loadFixtures(array(
+            LoadUsers::class,
+            LoadStatuses::class,
+            LoadCategories::class,
+            LoadPosts::class,
+        )); 
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/post/1/edit');
+        $this->assertStatusCode(302, $client);
+        $this->assertStringEndsWith('/login', $client->getResponse()->headers->get('Location'));        
+        
+        $crawler = $client->request('POST', '/post/1/edit');
+        $this->assertStatusCode(302, $client);
+        $this->assertStringEndsWith('/login', $client->getResponse()->headers->get('Location'));        
+    }
+    
+    public function testAnonDelete() {
+        $this->loadFixtures(array(
+            LoadUsers::class,
+            LoadStatuses::class,
+            LoadCategories::class,
+            LoadPosts::class,
+        )); 
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/post/1/delete');
+        $this->assertStatusCode(302, $client);
+        $this->assertStringEndsWith('/login', $client->getResponse()->headers->get('Location'));
+    }
+
+    
 } 
