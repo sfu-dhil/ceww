@@ -9,7 +9,7 @@ use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadPages;
 use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadStatuses;
 use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadUsers;
 
-class PageControllerTest extends WebTestCase {
+class PageControllerAdminTest extends WebTestCase {
 
     public function setUp() {
         parent::setUp();

@@ -6,7 +6,7 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadPages;
 use Nines\BlogBundle\Tests\DataFixtures\ORM\LoadUsers;
 
-class PageControllerTest extends WebTestCase {
+class PageControllerAnonTest extends WebTestCase {
 
     public function setUp() {
         parent::setUp();

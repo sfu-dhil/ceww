@@ -2,11 +2,11 @@
 
 namespace Nines\UtilBundle\Tests\Services;
 
-use AppBundle\Tests\Utilities\AbstractTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Nines\UtilBundle\Services\Slugger;
 use Nines\UtilBundle\Services\Text;
 
-class SluggerTest extends AbstractTestCase
+class SluggerTest extends WebTestCase
 {
 
     /**

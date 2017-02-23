@@ -19,7 +19,7 @@
 
 namespace Nines\UtilBundle\Tests\Services;
 
-use AppBundle\Tests\Utilities\AbstractTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Nines\UtilBundle\Services\TitleCaser;
 
 /**
@@ -27,7 +27,7 @@ use Nines\UtilBundle\Services\TitleCaser;
  *
  * @author Michael Joyce <mjoyce@sfu.ca>
  */
-class TitleCaserTest extends AbstractTestCase {
+class TitleCaserTest extends WebTestCase {
     
     /**
      * @var TitleCaser
@@ -35,7 +35,7 @@ class TitleCaserTest extends AbstractTestCase {
     protected $caser;
     
     public function setUp() {
-        parent::setUp();
+        parent::setUp();        
         $this->caser = new TitleCaser();
     }
     

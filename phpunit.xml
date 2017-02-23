@@ -15,9 +15,9 @@
         <testsuite name="AppBundle">
             <directory>src/AppBundle/Tests</directory>
         </testsuite>
-        <testSuit name="Nines">
+        <testsuite name="Nines">
             <directory>src/Nines/*/Tests</directory>
-        </testSuit>
+        </testsuite>
     </testsuites>
 
     <filter>
