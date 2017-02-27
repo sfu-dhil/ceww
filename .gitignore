@@ -18,3 +18,4 @@ components
 docs/api/
 docs/src/build
 data
+/nbproject/private/
