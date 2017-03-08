@@ -24,9 +24,9 @@ class AppKernel extends Kernel {
             new AppBundle\AppBundle(),
             
             new Nines\UserBundle\NinesUserBundle(),
-            new Nines\FeedbackBundle\FeedbackBundle(),
+            new Nines\FeedbackBundle\NinesFeedbackBundle(),
             new Nines\BlogBundle\NinesBlogBundle(),
-            new Nines\UtilBundle\UtilBundle(),
+            new Nines\UtilBundle\NinesUtilBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
