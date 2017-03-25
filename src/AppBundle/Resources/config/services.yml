@@ -1,0 +1,13 @@
+services:
+    ceww.importer:
+        class: AppBundle\Services\Importer
+        calls:
+            - [ setDoctrine, ["@doctrine"]]
+            - [ setLogger, ["@monolog.logger"]]
+            - [ setTitleCaser, ["@nines.util.title_caser"]]
+            
+    ceww.merger:
+        class: AppBundle\Services\Merger
+        calls:
+            - [ setDoctrine, ["@doctrine"]]
+            - [ setLogger, ["@monolog.logger"]]

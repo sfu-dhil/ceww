@@ -1,5 +1,5 @@
 # To get started with security, check out the documentation:
-# http://symfony.com/doc/current/book/security.html
+# http://symfony.com/doc/current/security.html
 security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
@@ -13,10 +13,6 @@ security:
             id: fos_user.user_provider.username
 
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
         main:
             pattern: ^/
             form_login:

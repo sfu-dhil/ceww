@@ -1,29 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta name="google" content="notranslate" />        
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}
-            {% stylesheets '@AppBundle/Resources/public/css/*' %}
-            <link rel='stylesheet' href='{{ asset_url }}'>
-            {% endstylesheets %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">        
+        <link rel="stylesheet" href="{{ asset('bower/bootstrap/dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bower/bootstrap/dist/css/bootstrap-theme.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/base.css') }}">        
+        <script src="{{ asset('bower/jquery/dist/jquery.min.js') }}"></script>        
+        {% block styles %}
         {% endblock %}
-
-        {% stylesheets '@bootstrap_css' %}
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}">
-        {% endstylesheets %}
-
-        {% stylesheets 'bundles/app/css/*' filter='cssrewrite' %}
-        <link rel='stylesheet' href='{{ asset_url }}'>
-        {% endstylesheets %}
-
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     </head>
     <body>
-
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -134,7 +125,7 @@
             </div>
         </nav>
         <div class="container">
-            
+
             {% if block('pageheader') is defined %}
                 <div class="page-header">
                     {{ block('pageheader') }}
@@ -150,18 +141,13 @@
                 {% endfor %}
             {% endfor %}
 
-        {% block body %}{% endblock %}
+            {% block body %}
+            {% endblock %}
+        </div>
 
-    </div>
-
-    {% javascripts '@jquery' '@bootstrap_js' 'bundles/app/js/*' '@typeahead' '@bloodhound' '@handlebars' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts '@AppBundle/Resources/public/js/*' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-{% block javascripts %}{% endblock %}
-</body>
+        <script src="{{ asset('bower/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('bundles/app/js/form.js') }}"></script>
+        {% block javascripts %}
+        {% endblock %}
+    </body>
 </html>

@@ -20,3 +20,5 @@ docs/src/build
 data
 /nbproject/private/
 nbproject/
+phpunit.xml
+/web/bower/

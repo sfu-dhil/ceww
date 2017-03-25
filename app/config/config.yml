@@ -10,7 +10,7 @@ parameters:
 
 framework:
     #esi:             ~
-    translator:      ~
+    #translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -18,6 +18,7 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
+    #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -30,12 +31,14 @@ framework:
     fragments:       ~
     http_method_override: true
     assets: ~
+    php_errors:
+        log: true
 
 # Twig Configuration
 twig:
     form_themes:      
         - 'bootstrap_3_horizontal_layout.html.twig'
-        - 'form/fields.html.twig'
+        - '@NinesUtilBundle/Form/fields.html.twig'
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     paths:
@@ -43,6 +46,9 @@ twig:
     exception_controller:  NinesUtilBundle:Error:showException
     globals:
         comment_service: "@feedback.comment"
+    date:
+        format: d.m.Y, H:i:s
+        interval_format: '%%d days'        
 
 # Doctrine Configuration
 doctrine:
@@ -62,6 +68,10 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
         dql:
+            datetime_functions:
+                YEAR: DoctrineExtensions\Query\Mysql\Year 
+                DATE: DoctrineExtensions\Query\Mysql\Date
+                STRTODATE: DoctrineExtensions\Query\Mysql\StrToDate                
             string_functions:
                 MATCH_AGAINST: Nines\UtilBundle\Extensions\Doctrine\MatchAgainstFunction
             numeric_functions:
@@ -76,57 +86,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-assetic:
-    debug:          '%kernel.debug%'
-    use_controller: '%kernel.debug%'
-    filters:
-        cssrewrite: ~
-    bundles: 
-        - AppBundle
-    assets:
-        bootstrap_js:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.js"
-        bootstrap_css:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/css/bootstrap.css"
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/css/bootstrap-theme.css"
-            filters: [cssrewrite]
-
-        bootstrap_glyphicons_ttf:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf"
-            output: "fonts/glyphicons-halflings-regular.ttf"
-        bootstrap_glyphicons_eot:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.eot"
-            output: "fonts/glyphicons-halflings-regular.eot"
-#        bootstrap_glyphicons_svg:
-#            inputs:
-#                - "'%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.svg"
-#            output: "fonts/glyphicons-halflings-regular.svg"
-        bootstrap_glyphicons_woff:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff"
-            output: "fonts/glyphicons-halflings-regular.woff"
-        bootstrap_glyphicons_woff2:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2"
-            output: "fonts/glyphicons-halflings-regular.woff2"
-
-        jquery:
-            inputs:
-                - "%kernel.root_dir%/../vendor/components/jquery/jquery.js"                   
-        typeahead:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/typeahead.js/dist/typeahead.bundle.min.js"
-        bloodhound:
-            inputs:
-                - "%kernel.root_dir%/../vendor/twitter/typeahead.js/dist/bloodhound.min.js"
-        handlebars:
-            inputs:
-                - "%kernel.root_dir%/../vendor/components/handlebars.js/handlebars.js"
-                
 knp_paginator:
     page_range: 5                      # default page range used in pagination control
     default_options:
@@ -154,7 +113,10 @@ ivory_ck_editor:
     default_config: ceww_config
     configs:
         ceww_config:
-            toolbar: standard
+            toolbar:
+                - [ Source, -, Cut, Copy, Paste, PasteText, PasteFromWord, -, Undo, Redo ]
+                - [ Link, Unlink, Anchor, -, SpecialChar ]
+                - [ Format, Styles, -, Bold, Italic, Strike, -, RemoveFormat, -, NumberedList, BulletedList, -, Indent, Outdent, -, Blockquote, -, JustifyLeft, JustifyCenter, JustifyRight, JustifyBlock ]
 
 knp_menu:
     twig:
