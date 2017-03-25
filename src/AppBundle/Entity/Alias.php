@@ -5,46 +5,57 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * Alias
  *
  * @ORM\Table(name="alias", indexes={
-    @ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
- })
+ *  @ORM\Index(columns="name", flags={"fulltext"})
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AliasRepository")
  */
 class Alias extends AbstractEntity
 {
-
     /**
-     * @ORM\Column(type="string", length=120, nullable=false)
+     * @var string
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
     private $maiden;
-
+    
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * public research notes.
+     * @var string
+     * @ORM\Column(type="text")
      */
     private $description;
-
+    
     /**
-     * @ORM\ManyToMany(targetEntity="Author", mappedBy="aliases")
-     * @var Collection|Author[]
+     * private research notes.
+     * @var string
+     * @ORM\Column(type="text")
      */
-    private $authors;
-
+    private $notes;
+    
+    /**
+     * @var Collection|Person[]
+     * @ORM\ManyToMany(targetEntity="Person", mappedBy="aliases")
+     */
+    private $people;
+    
     public function __construct() {
-        $this->maiden = false;
-        $this->authors = new ArrayCollection();
+        parent::__construct();
+        $this->people = new ArrayCollection();
     }
-
+    
     public function __toString() {
-        return $this->name;
+        return $this->id;
     }
 
     /**
@@ -54,7 +65,8 @@ class Alias extends AbstractEntity
      *
      * @return Alias
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
 
         return $this;
@@ -65,7 +77,8 @@ class Alias extends AbstractEntity
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -76,7 +89,8 @@ class Alias extends AbstractEntity
      *
      * @return Alias
      */
-    public function setMaiden($maiden) {
+    public function setMaiden($maiden)
+    {
         $this->maiden = $maiden;
 
         return $this;
@@ -87,7 +101,8 @@ class Alias extends AbstractEntity
      *
      * @return boolean
      */
-    public function getMaiden() {
+    public function getMaiden()
+    {
         return $this->maiden;
     }
 
@@ -98,7 +113,8 @@ class Alias extends AbstractEntity
      *
      * @return Alias
      */
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
 
         return $this;
@@ -109,39 +125,66 @@ class Alias extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
     /**
-     * Add author
+     * Set notes
      *
-     * @param Author $author
+     * @param string $notes
      *
      * @return Alias
      */
-    public function addAuthor(Author $author) {
-        $this->authors[] = $author;
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
 
         return $this;
     }
 
     /**
-     * Remove author
+     * Get notes
      *
-     * @param Author $author
+     * @return string
      */
-    public function removeAuthor(Author $author) {
-        $this->authors->removeElement($author);
+    public function getNotes()
+    {
+        return $this->notes;
     }
 
     /**
-     * Get authors
+     * Add person
+     *
+     * @param Person $person
+     *
+     * @return Alias
+     */
+    public function addPerson(Person $person)
+    {
+        $this->people[] = $person;
+
+        return $this;
+    }
+
+    /**
+     * Remove person
+     *
+     * @param Person $person
+     */
+    public function removePerson(Person $person)
+    {
+        $this->people->removeElement($person);
+    }
+
+    /**
+     * Get people
      *
      * @return Collection
      */
-    public function getAuthors() {
-        return $this->authors;
+    public function getPeople()
+    {
+        return $this->people;
     }
-
 }

@@ -14,6 +14,9 @@
             <a href="{{ path('genre_new') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span> New
             </a>
+            <a href="{{ path('genre_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
         </div>
     </div>
 
@@ -21,23 +24,24 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Description</th>
+                <th>Label</th>
                 <th>Created</th>
-                <th>Updated</th>            </tr>
+                <th>Updated</th>     
+            </tr>
         </thead>
         <tbody>
             {% for genre in genres %}
-                <tr>
+                <tr>                    
                     <td>
                         <a href="{{ path('genre_show', { 'id': genre.id }) }}">
-                            {{ genre.name }}
+                            {{ genre.name}}
                         </a>
                     </td>
-                    <td>{{ genre.description }}</td>
+                    <td>{{ genre.label }}</td>
                     <td>{% if genre.created %}{{ genre.created|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>{% if genre.updated %}{{ genre.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 </tr>
-            {% endfor %}
+             {% endfor %}
         </tbody>
     </table>
 

@@ -4,23 +4,6 @@
     <h1>Publication</h1>
 {% endblock %} 
 
-
-{% macro pubList(title, list, pathname) %}
-    {% if list|length %}
-        <h2>{{ title }}</h2>
-        <ul class='columnated'>
-            {% for p in list %}
-                <li>
-                    <a href='{{ path(pathname, {'id': p.id }) }}'>
-                        {{ p }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endmacro %}
-{% import _self as self %}
-
 {% block body %}
 
     <div class="btn-toolbar">
@@ -43,28 +26,16 @@
                 <td>{{ publication.title }}</td>
             </tr>
             <tr>
-                <th>Sortable Title</th>
+                <th>Sortabletitle</th>
                 <td>{{ publication.sortableTitle }}</td>
-            </tr>
-            <tr>
-                <th>Type</th>
-                <td>
-                    <a href='{{ path('category_show', {'id': publication.category.id}) }}'>
-                        {{ publication.category }}
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <th>Year</th>
-                <td>{{ publication.formattedYear }}</td>
-            </tr>
-            <tr>
-                <th>Location</th>
-            <td>{{ publication.location }}</td>
             </tr>
             <tr>
                 <th>Links</th>
                 <td>{% if publication.links %}{{ publication.links|join(', ') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ publication.description }}</td>
             </tr>
             <tr>
                 <th>Notes</th>
@@ -81,8 +52,4 @@
         </tbody>
     </table>
 
-    {{ self.pubList('Authors', publication.authors, 'author_show') }}				
-
-    {% include 'FeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': publication } %}				    
-    
 {% endblock %}

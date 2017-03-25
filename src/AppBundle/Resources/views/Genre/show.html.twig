@@ -22,14 +22,18 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody>
             <tr>
+            <tr>
                 <th>Name</th>
                 <td>{{ genre.name }}</td>
             </tr>
             <tr>
-                <th>Description</th>
-                <td>{{ genre.description }}</td>
+                <th>Label</th>
+                <td>{{ genre.label}}</td>
             </tr>
             <tr>
+                <th>Description</th>
+                <td>{{ genre.description }}</td>
+            </tr>            
                 <th>Created</th>
                 <td>{% if genre.created %}{{ genre.created|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>

@@ -13,28 +13,112 @@ use AppBundle\Form\GenreType;
 /**
  * Genre controller.
  *
- * @Route("/admin/Genre")
+ * @Route("/genre")
  */
 class GenreController extends Controller
 {
-
     /**
      * Lists all Genre entities.
      *
      * @Route("/", name="genre_index")
      * @Method("GET")
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $dql = 'SELECT e FROM AppBundle:Genre e ORDER BY e.id';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
-        $genres = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+        $genres = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
         return array(
             'genres' => $genres,
+        );
+    }
+    /**
+     * Search for Genre entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Genre repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated search.html.twig
+	 * template.
+	 * 
+     //    public function searchQuery($q) {
+     //        $qb = $this->createQueryBuilder('e');
+     //        $qb->where("e.fieldName like '%$q%'");
+     //        return $qb->getQuery();
+     //    }
+	 *
+     *
+     * @Route("/search", name="genre_search")
+     * @Method("GET")
+     * @Template()
+	 * @param Request $request
+     */
+    public function searchAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Genre');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->searchQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$genres = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+		} else {
+			$genres = array();
+		}
+
+        return array(
+            'genres' => $genres,
+			'q' => $q,
+        );
+    }
+    /**
+     * Full text search for Genre entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Genre repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated fulltext.html.twig
+	 * template.
+	 * 
+	//    public function fulltextQuery($q) {
+	//        $qb = $this->createQueryBuilder('e');
+	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
+	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
+	//        $qb->orderBy('score', 'desc');
+	//        $qb->setParameter('q', $q);
+	//        return $qb->getQuery();
+	//    }	 
+	 * 
+	 * Requires a MatchAgainst function be added to doctrine, and appropriate
+	 * fulltext indexes on your Genre entity.
+	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+	 *
+     *
+     * @Route("/fulltext", name="genre_fulltext")
+     * @Method("GET")
+     * @Template()
+	 * @param Request $request
+	 * @return array
+     */
+    public function fulltextAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Genre');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->fulltextQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$genres = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+		} else {
+			$genres = array();
+		}
+
+        return array(
+            'genres' => $genres,
+			'q' => $q,
         );
     }
 
@@ -44,9 +128,10 @@ class GenreController extends Controller
      * @Route("/new", name="genre_new")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $genre = new Genre();
         $form = $this->createForm('AppBundle\Form\GenreType', $genre);
         $form->handleRequest($request);
@@ -72,9 +157,10 @@ class GenreController extends Controller
      * @Route("/{id}", name="genre_show")
      * @Method("GET")
      * @Template()
-     * @param Genre $genre
+	 * @param Genre $genre
      */
-    public function showAction(Genre $genre) {
+    public function showAction(Genre $genre)
+    {
 
         return array(
             'genre' => $genre,
@@ -87,10 +173,11 @@ class GenreController extends Controller
      * @Route("/{id}/edit", name="genre_edit")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request $request
-     * @param Genre   $genre
+	 * @param Request $request
+	 * @param Genre $genre
      */
-    public function editAction(Request $request, Genre $genre) {
+    public function editAction(Request $request, Genre $genre)
+    {
         $editForm = $this->createForm('AppBundle\Form\GenreType', $genre);
         $editForm->handleRequest($request);
 
@@ -112,10 +199,11 @@ class GenreController extends Controller
      *
      * @Route("/{id}/delete", name="genre_delete")
      * @Method("GET")
-     * @param Request $request
-     * @param Genre   $genre
+	 * @param Request $request
+	 * @param Genre $genre
      */
-    public function deleteAction(Request $request, Genre $genre) {
+    public function deleteAction(Request $request, Genre $genre)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($genre);
         $em->flush();
@@ -123,5 +211,4 @@ class GenreController extends Controller
 
         return $this->redirectToRoute('genre_index');
     }
-
 }

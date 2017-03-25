@@ -9,28 +9,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlaceType extends AbstractType
 {
-
     /**
      * @param FormBuilderInterface $builder
-     * @param array                $options
+     * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('name');
-        $builder->add('alternateNames');
-        $builder->add('countryName');
-        $builder->add('adminNames');
-        $builder->add('latitude');
-        $builder->add('longitude');
-        $builder->add('description');
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {    
+        $builder->add('name');     
+        $builder->add('alternateNames');     
+        $builder->add('countryName');     
+        $builder->add('adminNames');     
+        $builder->add('latitude');     
+        $builder->add('longitude');     
+        $builder->add('description');     
+        $builder->add('notes');     
+        $builder->add('residents');         
     }
-
+    
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Place'
         ));
     }
-
 }

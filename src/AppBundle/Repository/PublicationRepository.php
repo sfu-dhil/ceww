@@ -10,24 +10,4 @@ namespace AppBundle\Repository;
  */
 class PublicationRepository extends \Doctrine\ORM\EntityRepository
 {
-
-    /**
-     * @param string $q
-     * @return Query
-     */
-    public function searchQuery($q) {
-        $qb = $this->createQueryBuilder('e');
-        $qb->where("e.title like '%$q%'");
-        return $qb->getQuery();
-    }
-
-    public function fulltextQuery($q) {
-        $qb = $this->createQueryBuilder('e');
-        $qb->addSelect("MATCH_AGAINST (e.title, e.notes, :q 'IN BOOLEAN MODE') as score");
-        $qb->add('where', "MATCH_AGAINST (e.title, e.notes, :q 'IN BOOLEAN MODE') > 0.5");
-        $qb->orderBy('score', 'desc');
-        $qb->setParameter('q', $q);
-        return $qb->getQuery();
-    }
-
 }

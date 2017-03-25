@@ -2,11 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\AbstractEntity;
-use AppBundle\Entity\Genre;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Collection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nines\UtilBundle\Entity\AbstractTerm;
 
 /**
  * Genre
@@ -14,80 +13,19 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="genre")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GenreRepository")
  */
-class Genre extends AbstractEntity
+class Genre extends AbstractTerm
 {
-
     /**
-     * @ORM\Column(type="string", length=120, nullable=false)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Publication", mappedBy="genres")
      * @var Collection|Publication[]
+     * @ORM\ManyToMany(targetEntity="Publication", mappedBy="genres")
      */
     private $publications;
 
-    public function __toString() {
-        return $this->name;
-    }
-
-    /**
-     * Constructor
-     */
     public function __construct() {
+        parent::__construct();
         $this->publications = new ArrayCollection();
     }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Genre
-     */
-    public function setName($name) {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return Genre
-     */
-    public function setDescription($description) {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription() {
-        return $this->description;
-    }
-
+    
     /**
      * Add publication
      *
@@ -95,7 +33,8 @@ class Genre extends AbstractEntity
      *
      * @return Genre
      */
-    public function addPublication(Publication $publication) {
+    public function addPublication(Publication $publication)
+    {
         $this->publications[] = $publication;
 
         return $this;
@@ -106,17 +45,18 @@ class Genre extends AbstractEntity
      *
      * @param Publication $publication
      */
-    public function removePublication(Publication $publication) {
+    public function removePublication(Publication $publication)
+    {
         $this->publications->removeElement($publication);
     }
 
     /**
      * Get publications
      *
-     * @return Collection|Publication[]
+     * @return Collection
      */
-    public function getPublications() {
+    public function getPublications()
+    {
         return $this->publications;
     }
-
 }

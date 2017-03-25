@@ -5,86 +5,91 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * Publication
  *
  * @ORM\Table(name="publication", indexes={
-    @ORM\Index(name="publication_ft_idx",columns={"title","notes"}, flags={"fulltext"})
-   })
+ *  @ORM\Index(columns={"title"}, flags={"fulltext"}),
+ *  @ORM\Index(columns={"sortable_title"})
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
- * @ORM\HasLifecycleCallbacks
  */
 class Publication extends AbstractEntity
 {
-
     /**
-     * @ORM\Column(type="string", length=250, nullable=false)
+     * @var string
+     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $title;
-
-    /**
-     * @ORM\Column(type="string", length=250, nullable=false)
-     */
-    private $sortableTitle;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $year;
-    
-    /**
-     * @var boolean
-     * @ORM\Column(type="boolean")
-     */    
-    private $yearCertain;
     
     /**
      * @var string
-     * @ORM\Column(type="string", length=250, nullable=true)
+     * @ORM\Column(type="string", length=200, nullable=false)
      */
-    private $location;
-    
+    private $sortableTitle;
+        
     /**
-     * @var array
-     * @ORM\Column(type="array", nullable=false)
+     * @var Collection|string[]
+     * @ORM\Column(type="array")
      */
     private $links;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
-     * @ORM\JoinColumn(name="category_id")
-     * @var Category
+     * public research notes.
+     * @var string
+     * @ORM\Column(type="text")
      */
-    private $category;
-
+    private $description;
+    
     /**
-     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
-     * @ORM\JoinTable(name="publication_genres")
-     * @var Collection|Genre[]
-     */
-    private $genres;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
+     * private research notes.
+     * @var string
+     * @ORM\Column(type="text")
      */
     private $notes;
-
+    
     /**
-     * @ORM\ManyToMany(targetEntity="Author", mappedBy="publications")
-     * @var Collection|Author[]
+     * @var DateYear
+     * @ORM\OneToOne(targetEntity="DateYear")
      */
-    private $authors;
-
+    private $dateYear;
+    
+    /**
+     * @var Place
+     * @ORM\ManyToOne(targetEntity="Place", inversedBy="publications")
+     */
+    private $location;
+    
+    /**
+     * @var Category
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
+     */
+    private $category;
+    
+    /**
+     * @var Collection|Genre[]
+     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
+     * @ORM\JoinTable(name="publications_genres")
+     */
+    private $genres;
+    
+    /**
+     * @var Collection|Contribution[]
+     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="publication", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $contributions;
+    
     public function __construct() {
-        $this->yearCertain = true;
-        $this->authors = new ArrayCollection();
+        parent::__construct();
+        $this->links = new ArrayCollection();
         $this->genres = new ArrayCollection();
-        $this->links = array();
+        $this->contributions = new ArrayCollection();
     }
-
+    
     public function __toString() {
-        return $this->title;
+        return $this->id;
     }
 
     /**
@@ -94,7 +99,8 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
 
         return $this;
@@ -105,148 +111,9 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
-    }
-
-    /**
-     * Set year
-     *
-     * @param integer $year
-     *
-     * @return Publication
-     */
-    public function setYear($year) {
-        if($year[0] === 'c') {
-            $this->yearCertain = false;
-            $this->year = substr($year, 1);
-        } else {
-            $this->year = $year;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get year
-     *
-     * @return integer
-     */
-    public function getYear() {
-        return $this->year;
-    }
-    
-    public function getFormattedYear() {
-        if( ! $this->year) {
-            return '';
-        }
-        return ($this->yearCertain ? '' : 'c') . $this->year;
-    }
-
-    /**
-     * Set notes
-     *
-     * @param string $notes
-     *
-     * @return Publication
-     */
-    public function setNotes($notes) {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Get notes
-     *
-     * @return string
-     */
-    public function getNotes() {
-        return $this->notes;
-    }
-
-    /**
-     * Set category
-     *
-     * @param Category $category
-     *
-     * @return Publication
-     */
-    public function setCategory(Category $category = null) {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return Category
-     */
-    public function getCategory() {
-        return $this->category;
-    }
-
-    /**
-     * Add author
-     *
-     * @param Author $author
-     *
-     * @return Publication
-     */
-    public function addAuthor(Author $author) {
-        $this->authors[] = $author;
-
-        return $this;
-    }
-
-    /**
-     * Remove author
-     *
-     * @param Author $author
-     */
-    public function removeAuthor(Author $author) {
-        $this->authors->removeElement($author);
-    }
-
-    /**
-     * Get authors
-     *
-     * @return Collection
-     */
-    public function getAuthors() {
-        return $this->authors;
-    }
-
-    /**
-     * Add genre
-     *
-     * @param \AppBundle\Entity\Genre $genre
-     *
-     * @return Publication
-     */
-    public function addGenre(\AppBundle\Entity\Genre $genre) {
-        $this->genres[] = $genre;
-
-        return $this;
-    }
-
-    /**
-     * Remove genre
-     *
-     * @param \AppBundle\Entity\Genre $genre
-     */
-    public function removeGenre(\AppBundle\Entity\Genre $genre) {
-        $this->genres->removeElement($genre);
-    }
-
-    /**
-     * Get genres
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getGenres() {
-        return $this->genres;
     }
 
     /**
@@ -256,7 +123,8 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setSortableTitle($sortableTitle) {
+    public function setSortableTitle($sortableTitle)
+    {
         $this->sortableTitle = $sortableTitle;
 
         return $this;
@@ -267,20 +135,10 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getSortableTitle() {
+    public function getSortableTitle()
+    {
         return $this->sortableTitle;
     }
-
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function updateSortableTitle() {
-        if ($this->sortableTitle === null || $this->sortableTitle === '') {
-            $this->sortableTitle = $this->sortableTitle;
-        }
-    }
-
 
     /**
      * Set links
@@ -305,31 +163,87 @@ class Publication extends AbstractEntity
     {
         return $this->links;
     }
-    
-    public function addLink($link) {
-        if( ! in_array($link, $this->links)) {
-            $this->links[] = $link;
-        }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Publication
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
         return $this;
     }
-    
-    public function removeLink($link) {
-        if( in_array($link, $this->links)) {
-            $this->links = array_filter($this->links, function($v) use ($link) {
-                return $v !== $link;
-            });
-        }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set notes
+     *
+     * @param string $notes
+     *
+     * @return Publication
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
         return $this;
+    }
+
+    /**
+     * Get notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Set dateYear
+     *
+     * @param DateYear $dateYear
+     *
+     * @return Publication
+     */
+    public function setDateYear(DateYear $dateYear = null)
+    {
+        $this->dateYear = $dateYear;
+
+        return $this;
+    }
+
+    /**
+     * Get dateYear
+     *
+     * @return DateYear
+     */
+    public function getDateYear()
+    {
+        return $this->dateYear;
     }
 
     /**
      * Set location
      *
-     * @param string $location
+     * @param Place $location
      *
      * @return Publication
      */
-    public function setLocation($location)
+    public function setLocation(Place $location = null)
     {
         $this->location = $location;
 
@@ -339,7 +253,7 @@ class Publication extends AbstractEntity
     /**
      * Get location
      *
-     * @return string
+     * @return Place
      */
     public function getLocation()
     {
@@ -347,26 +261,94 @@ class Publication extends AbstractEntity
     }
 
     /**
-     * Set yearCertain
+     * Set category
      *
-     * @param boolean $yearCertain
+     * @param Category $category
      *
      * @return Publication
      */
-    public function setYearCertain($yearCertain)
+    public function setCategory(Category $category = null)
     {
-        $this->yearCertain = $yearCertain;
+        $this->category = $category;
 
         return $this;
     }
 
     /**
-     * Get yearCertain
+     * Get category
      *
-     * @return boolean
+     * @return Category
      */
-    public function getYearCertain()
+    public function getCategory()
     {
-        return $this->yearCertain;
+        return $this->category;
+    }
+
+    /**
+     * Add genre
+     *
+     * @param Genre $genre
+     *
+     * @return Publication
+     */
+    public function addGenre(Genre $genre)
+    {
+        $this->genres[] = $genre;
+
+        return $this;
+    }
+
+    /**
+     * Remove genre
+     *
+     * @param Genre $genre
+     */
+    public function removeGenre(Genre $genre)
+    {
+        $this->genres->removeElement($genre);
+    }
+
+    /**
+     * Get genres
+     *
+     * @return Collection
+     */
+    public function getGenres()
+    {
+        return $this->genres;
+    }
+
+    /**
+     * Add contribution
+     *
+     * @param Contribution $contribution
+     *
+     * @return Publication
+     */
+    public function addContribution(Contribution $contribution)
+    {
+        $this->contributions[] = $contribution;
+
+        return $this;
+    }
+
+    /**
+     * Remove contribution
+     *
+     * @param Contribution $contribution
+     */
+    public function removeContribution(Contribution $contribution)
+    {
+        $this->contributions->removeElement($contribution);
+    }
+
+    /**
+     * Get contributions
+     *
+     * @return Collection
+     */
+    public function getContributions()
+    {
+        return $this->contributions;
     }
 }

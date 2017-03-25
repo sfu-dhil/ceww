@@ -13,126 +13,112 @@ use AppBundle\Form\PlaceType;
 /**
  * Place controller.
  *
- * @Route("/admin/place")
+ * @Route("/place")
  */
 class PlaceController extends Controller
 {
-
     /**
      * Lists all Place entities.
      *
      * @Route("/", name="place_index")
      * @Method("GET")
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
-        $dql = 'SELECT e FROM AppBundle:Place e ORDER BY e.name';
+        $dql = 'SELECT e FROM AppBundle:Place e ORDER BY e.id';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
-        $places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+        $places = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
         return array(
             'places' => $places,
         );
     }
-
     /**
      * Search for Place entities.
-     *
-     * To make this work, add a method like this one to the
-     * AppBundle:Place repository. Replace the fieldName with
-     * something appropriate, and adjust the generated search.html.twig
-     * template.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Place repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated search.html.twig
+	 * template.
+	 * 
+     //    public function searchQuery($q) {
+     //        $qb = $this->createQueryBuilder('e');
+     //        $qb->where("e.fieldName like '%$q%'");
+     //        return $qb->getQuery();
+     //    }
+	 *
      *
      * @Route("/search", name="place_search")
      * @Method("GET")
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Place');
-        $q = $request->query->get('q');
-        if ($q) {
-            $query = $repo->searchQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-        } else {
-            $places = array();
-        }
+		$repo = $em->getRepository('AppBundle:Place');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->searchQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+		} else {
+			$places = array();
+		}
 
         return array(
             'places' => $places,
-            'q' => $q,
+			'q' => $q,
         );
     }
-
     /**
-     * Search for Place entities.
-     *
-     * To make this work, add a method like this one to the
-     * AppBundle:Place repository. Replace the fieldName with
-     * something appropriate, and adjust the generated search.html.twig
-     * template.
+     * Full text search for Place entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Place repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated fulltext.html.twig
+	 * template.
+	 * 
+	//    public function fulltextQuery($q) {
+	//        $qb = $this->createQueryBuilder('e');
+	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
+	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
+	//        $qb->orderBy('score', 'desc');
+	//        $qb->setParameter('q', $q);
+	//        return $qb->getQuery();
+	//    }	 
+	 * 
+	 * Requires a MatchAgainst function be added to doctrine, and appropriate
+	 * fulltext indexes on your Place entity.
+	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+	 *
      *
      * @Route("/fulltext", name="place_fulltext")
      * @Method("GET")
      * @Template()
-     * @param Request $request
+	 * @param Request $request
+	 * @return array
      */
-    public function fulltextAction(Request $request) {
+    public function fulltextAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Place');
-        $q = $request->query->get('q');
-        if ($q) {
-            $query = $repo->fulltextQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-        } else {
-            $places = array();
-        }
+		$repo = $em->getRepository('AppBundle:Place');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->fulltextQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+		} else {
+			$places = array();
+		}
 
         return array(
             'places' => $places,
-            'q' => $q,
-        );
-    }
-
-    /**
-     * Finds and displays a Place entity.
-     *
-     * @Route("/merge/{id}", name="place_merge")
-     * @Method({"GET","POST"})
-     * @Template()
-     * @param Place $place
-     */
-    public function mergeAction(Request $request, Place $place) {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Place');
-
-        if ($request->getMethod() === 'POST') {
-            $places = $repo->findBy(array('id' => $request->request->get('places')));
-            $count = count($places);
-            $merger = $this->container->get('ceww.merger');
-            $merger->places($place, $places);
-            $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
-            return $this->redirect($this->generateUrl('place_show', ['id' => $place->getId()]));
-        }
-
-        $q = $request->query->get('q');
-        if ($q) {
-            $query = $repo->searchQuery($q);
-            $places = $query->execute();
-        } else {
-            $places = array();
-        }
-
-        return array(
-            'place' => $place,
-            'places' => $places,
-            'q' => $q,
+			'q' => $q,
         );
     }
 
@@ -142,9 +128,10 @@ class PlaceController extends Controller
      * @Route("/new", name="place_new")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $place = new Place();
         $form = $this->createForm('AppBundle\Form\PlaceType', $place);
         $form->handleRequest($request);
@@ -170,9 +157,10 @@ class PlaceController extends Controller
      * @Route("/{id}", name="place_show")
      * @Method("GET")
      * @Template()
-     * @param Place $place
+	 * @param Place $place
      */
-    public function showAction(Place $place) {
+    public function showAction(Place $place)
+    {
 
         return array(
             'place' => $place,
@@ -185,16 +173,16 @@ class PlaceController extends Controller
      * @Route("/{id}/edit", name="place_edit")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request $request
-     * @param Place   $place
+	 * @param Request $request
+	 * @param Place $place
      */
-    public function editAction(Request $request, Place $place) {
+    public function editAction(Request $request, Place $place)
+    {
         $editForm = $this->createForm('AppBundle\Form\PlaceType', $place);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($place);
             $em->flush();
             $this->addFlash('success', 'The place has been updated.');
             return $this->redirectToRoute('place_show', array('id' => $place->getId()));
@@ -211,10 +199,11 @@ class PlaceController extends Controller
      *
      * @Route("/{id}/delete", name="place_delete")
      * @Method("GET")
-     * @param Request $request
-     * @param Place   $place
+	 * @param Request $request
+	 * @param Place $place
      */
-    public function deleteAction(Request $request, Place $place) {
+    public function deleteAction(Request $request, Place $place)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($place);
         $em->flush();
@@ -222,5 +211,4 @@ class PlaceController extends Controller
 
         return $this->redirectToRoute('place_index');
     }
-
 }

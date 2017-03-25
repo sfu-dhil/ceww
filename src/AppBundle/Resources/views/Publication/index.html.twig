@@ -17,9 +17,6 @@
             <a href="{{ path('publication_search') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Search
             </a>
-            <a href="{{ path('publication_fulltext') }}" class="btn btn-default">
-                <span class="glyphicon glyphicon-search"></span> Fulltext
-            </a>
         </div>
     </div>
 
@@ -27,11 +24,12 @@
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Type</th>
-                <th>Authors</th>
-                <th>Year</th>
-                <th>Location</th>
-            </tr>
+                <th>Sortabletitle</th>
+                <th>Links</th>
+                <th>Description</th>
+                <th>Notes</th>
+                <th>Created</th>
+                <th>Updated</th>            </tr>
         </thead>
         <tbody>
             {% for publication in publications %}
@@ -41,10 +39,12 @@
                             {{ publication.title }}
                         </a>
                     </td>
-                    <td>{{ publication.category }}</th>
-                    <td>{{ publication.authors|length }}</td>
-                    <td>{{ publication.formattedYear }}</td>
-                <td>{{ publication.location }}</td>
+                    <td>{{ publication.sortableTitle }}</td>
+                    <td>{% if publication.links %}{{ publication.links|join(', ') }}{% endif %}</td>
+                    <td>{{ publication.description }}</td>
+                    <td>{{ publication.notes }}</td>
+                    <td>{% if publication.created %}{{ publication.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if publication.updated %}{{ publication.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>

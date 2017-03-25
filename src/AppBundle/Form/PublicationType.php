@@ -15,16 +15,15 @@ class PublicationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
-        $builder->add('title');  // string     
-        $builder->add('sortableTitle');  // string     
-        $builder->add('year');  // integer     
-        $builder->add('yearCertain');
-        $builder->add('location');  // string     
-        $builder->add('links');  // array     
-        $builder->add('notes');  // text     
+        $builder->add('title');     
+        $builder->add('sortableTitle');     
+        $builder->add('links');     
+        $builder->add('description');     
+        $builder->add('notes');     
+        $builder->add('dateYear');     
+        $builder->add('location');     
         $builder->add('category');     
-        $builder->add('genres');     
-        $builder->add('authors');         
+        $builder->add('genres');         
     }
     
     /**

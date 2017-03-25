@@ -4,22 +4,6 @@
     <h1>Alias</h1>
 {% endblock %} 
 
-{% macro pubList(title, list, pathname) %}
-    {% if list|length %}
-        <h2>{{ title }}</h2>
-        <ul class='columnated'>
-            {% for p in list %}
-                <li>
-                    <a href='{{ path(pathname, {'id': p.id }) }}'>
-                        {{ p }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endmacro %}
-{% import _self as self %}
-
 {% block body %}
 
     <div class="btn-toolbar">
@@ -50,6 +34,10 @@
                 <td>{{ alias.description }}</td>
             </tr>
             <tr>
+                <th>Notes</th>
+                <td>{{ alias.notes }}</td>
+            </tr>
+            <tr>
                 <th>Created</th>
                 <td>{% if alias.created %}{{ alias.created|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
@@ -60,8 +48,4 @@
         </tbody>
     </table>
 
-    {{ self.pubList('Authors', alias.authors, 'author_show') }}
-
-    {% include 'FeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': alias } %}				
-    
 {% endblock %}

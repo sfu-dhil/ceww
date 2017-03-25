@@ -13,28 +13,112 @@ use AppBundle\Form\CategoryType;
 /**
  * Category controller.
  *
- * @Route("/admin/category")
+ * @Route("/category")
  */
 class CategoryController extends Controller
 {
-
     /**
      * Lists all Category entities.
      *
      * @Route("/", name="category_index")
      * @Method("GET")
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
-        $dql = 'SELECT e FROM AppBundle:Category e ORDER BY e.label';
+        $dql = 'SELECT e FROM AppBundle:Category e ORDER BY e.id';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $categories = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
         return array(
             'categories' => $categories,
+        );
+    }
+    /**
+     * Search for Category entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Category repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated search.html.twig
+	 * template.
+	 * 
+     //    public function searchQuery($q) {
+     //        $qb = $this->createQueryBuilder('e');
+     //        $qb->where("e.fieldName like '%$q%'");
+     //        return $qb->getQuery();
+     //    }
+	 *
+     *
+     * @Route("/search", name="category_search")
+     * @Method("GET")
+     * @Template()
+	 * @param Request $request
+     */
+    public function searchAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Category');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->searchQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$categories = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+		} else {
+			$categories = array();
+		}
+
+        return array(
+            'categories' => $categories,
+			'q' => $q,
+        );
+    }
+    /**
+     * Full text search for Category entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Category repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated fulltext.html.twig
+	 * template.
+	 * 
+	//    public function fulltextQuery($q) {
+	//        $qb = $this->createQueryBuilder('e');
+	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
+	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
+	//        $qb->orderBy('score', 'desc');
+	//        $qb->setParameter('q', $q);
+	//        return $qb->getQuery();
+	//    }	 
+	 * 
+	 * Requires a MatchAgainst function be added to doctrine, and appropriate
+	 * fulltext indexes on your Category entity.
+	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+	 *
+     *
+     * @Route("/fulltext", name="category_fulltext")
+     * @Method("GET")
+     * @Template()
+	 * @param Request $request
+	 * @return array
+     */
+    public function fulltextAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Category');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->fulltextQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$categories = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+		} else {
+			$categories = array();
+		}
+
+        return array(
+            'categories' => $categories,
+			'q' => $q,
         );
     }
 
@@ -44,9 +128,10 @@ class CategoryController extends Controller
      * @Route("/new", name="category_new")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request $request
+	 * @param Request $request
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $category = new Category();
         $form = $this->createForm('AppBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
@@ -72,9 +157,10 @@ class CategoryController extends Controller
      * @Route("/{id}", name="category_show")
      * @Method("GET")
      * @Template()
-     * @param Category $category
+	 * @param Category $category
      */
-    public function showAction(Category $category) {
+    public function showAction(Category $category)
+    {
 
         return array(
             'category' => $category,
@@ -87,10 +173,11 @@ class CategoryController extends Controller
      * @Route("/{id}/edit", name="category_edit")
      * @Method({"GET", "POST"})
      * @Template()
-     * @param Request  $request
-     * @param Category $category
+	 * @param Request $request
+	 * @param Category $category
      */
-    public function editAction(Request $request, Category $category) {
+    public function editAction(Request $request, Category $category)
+    {
         $editForm = $this->createForm('AppBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 
@@ -112,10 +199,11 @@ class CategoryController extends Controller
      *
      * @Route("/{id}/delete", name="category_delete")
      * @Method("GET")
-     * @param Request  $request
-     * @param Category $category
+	 * @param Request $request
+	 * @param Category $category
      */
-    public function deleteAction(Request $request, Category $category) {
+    public function deleteAction(Request $request, Category $category)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($category);
         $em->flush();
@@ -123,5 +211,4 @@ class CategoryController extends Controller
 
         return $this->redirectToRoute('category_index');
     }
-
 }

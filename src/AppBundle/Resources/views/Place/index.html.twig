@@ -17,9 +17,6 @@
             <a href="{{ path('place_search') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Search
             </a>
-            <a href="{{ path('place_fulltext') }}" class="btn btn-default">
-                <span class="glyphicon glyphicon-search"></span> Fulltext
-            </a>
         </div>
     </div>
 
@@ -30,8 +27,12 @@
                 <th>Alternatenames</th>
                 <th>Countryname</th>
                 <th>Adminnames</th>
-                <th>B/D/R</th>
-            </tr>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Description</th>
+                <th>Notes</th>
+                <th>Created</th>
+                <th>Updated</th>            </tr>
         </thead>
         <tbody>
             {% for place in places %}
@@ -44,7 +45,12 @@
                     <td>{% if place.alternateNames %}{{ place.alternateNames|join(', ') }}{% endif %}</td>
                     <td>{{ place.countryName }}</td>
                     <td>{% if place.adminNames %}{{ place.adminNames|join(', ') }}{% endif %}</td>
-                    <td>{{ place.authorsBorn|length }}\{{ place.authorsDied|length }}\{{ place.residents|length }}</td>
+                    <td>{{ place.latitude }}</td>
+                    <td>{{ place.longitude }}</td>
+                    <td>{{ place.description }}</td>
+                    <td>{{ place.notes }}</td>
+                    <td>{% if place.created %}{{ place.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if place.updated %}{{ place.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>
