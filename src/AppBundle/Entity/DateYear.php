@@ -22,6 +22,12 @@ define('RANGE_RE', '/^(?:' . CIRCA_RE . ')?-(?:' . CIRCA_RE . ')?$/');
 class DateYear extends AbstractEntity {
 
     /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private $value;
+    
+    /**
      * @var integer
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -72,7 +78,8 @@ class DateYear extends AbstractEntity {
     }
 
     public function setValue($value) {
-        $value = strtolower(preg_replace('/\s*/', '', (string)$value));
+        $this->value = $value;
+        $value = strtolower(preg_replace('/\s*/', '', (string)$value));        
         $matches = array();
         if (strpos($value, '-') === false) {
             // not a range
@@ -131,29 +138,6 @@ class DateYear extends AbstractEntity {
     public function getEnd() {
         return ($this->endCirca ? 'c' : '') . $this->end;
     }
-
-    /**
-     * Set dateCategory
-     *
-     * @param DateCategory $dateCategory
-     *
-     * @return DateYear
-     */
-    public function setDateCategory(DateCategory $dateCategory) {
-        $this->dateCategory = $dateCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get dateCategory
-     *
-     * @return DateCategory
-     */
-    public function getDateCategory() {
-        return $this->dateCategory;
-    }
-
 
     /**
      * Set start

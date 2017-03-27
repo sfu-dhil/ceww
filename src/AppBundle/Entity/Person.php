@@ -34,14 +34,14 @@ class Person extends AbstractEntity
     /**
      * public research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     
     /**
      * private research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
     
@@ -95,7 +95,10 @@ class Person extends AbstractEntity
     }
     
     public function __toString() {
-        return $this->id;
+        if($this->fullName) {
+            return $this->fullName;
+        }
+        return '(unknown)';
     }
 
     /**

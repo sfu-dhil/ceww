@@ -29,7 +29,7 @@ class Place extends AbstractEntity
     private $alternateNames;
     
     /**
-     * @ORM\Column(type="string", length=250)
+     * @ORM\Column(type="string", length=250, nullable=true)
      */
     private $countryName;
     
@@ -40,26 +40,26 @@ class Place extends AbstractEntity
     private $adminNames;
     
     /**
-     * @ORM\Column(type="decimal", precision=9, scale=6)
+     * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
      */
     private $latitude;
     
     /**
-     * @ORM\Column(type="decimal", precision=9, scale=6)
+     * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
      */
     private $longitude;
     
     /**
      * public research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     
     /**
      * private research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
     
@@ -89,8 +89,8 @@ class Place extends AbstractEntity
     
     public function __construct() {
         parent::__construct();
-        $this->alternateNames = new ArrayCollection();
-        $this->adminNames = new ArrayCollection();
+        $this->alternateNames = array();
+        $this->adminNames = array();
         $this->peopleBorn = new ArrayCollection();
         $this->peopleDied = new ArrayCollection();
         $this->residents = new ArrayCollection();
@@ -98,7 +98,7 @@ class Place extends AbstractEntity
     }
     
     public function __toString() {
-        return $this->id;
+        return $this->name;
     }
 
     /**
@@ -300,7 +300,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addPeopleBorn(Person $peopleBorn)
+    public function addPersonBorn(Person $peopleBorn)
     {
         $this->peopleBorn[] = $peopleBorn;
 
@@ -312,7 +312,7 @@ class Place extends AbstractEntity
      *
      * @param Person $peopleBorn
      */
-    public function removePeopleBorn(Person $peopleBorn)
+    public function removePersonBorn(Person $peopleBorn)
     {
         $this->peopleBorn->removeElement($peopleBorn);
     }
@@ -334,7 +334,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addPeopleDied(Person $peopleDied)
+    public function addPersonDied(Person $peopleDied)
     {
         $this->peopleDied[] = $peopleDied;
 
@@ -346,7 +346,7 @@ class Place extends AbstractEntity
      *
      * @param Person $peopleDied
      */
-    public function removePeopleDied(Person $peopleDied)
+    public function removePersonDied(Person $peopleDied)
     {
         $this->peopleDied->removeElement($peopleDied);
     }

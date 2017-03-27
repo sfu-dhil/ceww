@@ -20,13 +20,13 @@ class Publication extends AbstractEntity
 {
     /**
      * @var string
-     * @ORM\Column(type="string", length=200, nullable=false)
+     * @ORM\Column(type="string", length=400, nullable=false)
      */
     private $title;
     
     /**
      * @var string
-     * @ORM\Column(type="string", length=200, nullable=false)
+     * @ORM\Column(type="string", length=400, nullable=false)
      */
     private $sortableTitle;
         
@@ -39,14 +39,14 @@ class Publication extends AbstractEntity
     /**
      * public research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     
     /**
      * private research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
     
@@ -89,7 +89,7 @@ class Publication extends AbstractEntity
     }
     
     public function __toString() {
-        return $this->id;
+        return $this->title;
     }
 
     /**

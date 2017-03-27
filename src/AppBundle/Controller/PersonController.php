@@ -28,7 +28,7 @@ class PersonController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $dql = 'SELECT e FROM AppBundle:Person e ORDER BY e.id';
+        $dql = 'SELECT e FROM AppBundle:Person e ORDER BY e.sortableName';
         $query = $em->createQuery($dql);
         $paginator = $this->get('knp_paginator');
         $people = $paginator->paginate($query, $request->query->getint('page', 1), 25);

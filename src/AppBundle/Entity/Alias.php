@@ -32,14 +32,14 @@ class Alias extends AbstractEntity
     /**
      * public research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
     
     /**
      * private research notes.
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
     
@@ -55,7 +55,7 @@ class Alias extends AbstractEntity
     }
     
     public function __toString() {
-        return $this->id;
+        return $this->name;
     }
 
     /**

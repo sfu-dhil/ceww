@@ -43,7 +43,7 @@ class Importer {
      * @var TitleCaser
      */
     private $titleCaser;
-
+    
     public function setTitleCaser(TitleCaser $titleCaser) {
         $this->titleCaser = $titleCaser;
     }
