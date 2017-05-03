@@ -21,4 +21,5 @@ data
 /nbproject/private/
 nbproject/
 phpunit.xml
-/web/bower/
+/web/bower
+/web/docs
