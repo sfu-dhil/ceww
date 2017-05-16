@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Category;
+use AppBundle\Entity\Publication;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Category;
-use AppBundle\Form\CategoryType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Category controller.
@@ -78,12 +78,21 @@ class CategoryController extends Controller
      * @Method("GET")
      * @Template()
 	 * @param Category $category
+     * @param Request $request
      */
-    public function showAction(Category $category)
+    public function showAction(Request $request, Category $category)
     {
 
+        $em = $this->getDoctrine()->getManager();
+        $publications = $em->getRepository(Publication::class)->findBy(array(
+            'category' => $category,
+        ));
+        $paginator = $this->get('knp_paginator');
+        $page = $paginator->paginate($publications, $request->query->getint('page', 1), 25);
+        
         return array(
             'category' => $category,
+            'page' => $page,
         );
     }
 

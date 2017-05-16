@@ -51,10 +51,12 @@
                 <th>Description</th>
                 <td>{{ place.description }}</td>
             </tr>
-            <tr>
-                <th>Notes</th>
-                <td>{{ place.notes }}</td>
-            </tr>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}            
+                <tr>
+                    <th>Notes</th>
+                    <td>{{ place.notes }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Created</th>
                 <td>{% if place.created %}{{ place.created|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -66,4 +68,64 @@
         </tbody>
     </table>
 
+    {% set people = place.peopleBorn %}
+    {% if people|length > 0 %}
+        <h2>Births</h2>
+        <ul>
+            {% for person in people %}
+                <li>
+                    {{ person.birthDate }} 
+                    <a href="{{ path('person_show', {'id': person.id}) }}">
+                        {{ person }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% set people = place.peopleDied %}
+    {% if people|length > 0 %}
+        <h2>Deaths</h2>
+        <ul>
+            {% for person in people %}
+                <li>
+                    {{ person.deathDate }} 
+                    <a href="{{ path('person_show', {'id': person.id}) }}">
+                        {{ person }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% set people = place.residents %}
+    {% if people|length > 0 %}
+        <h2>Residents</h2>
+        <ul>
+            {% for person in people %}
+                <li>
+                    <a href="{{ path('person_show', {'id': person.id}) }}">
+                        {{ person }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% set publications = place.publications %}
+    {% if publications|length > 0 %}
+        <h2>Publications</h2>
+        <ul>
+            {% for publication in publications %}
+                <li>
+                    <a href="{{ path('publication_show', {'id': publication.id}) }}">
+                        {{ publication }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': place } %}				
+    
 {% endblock %}

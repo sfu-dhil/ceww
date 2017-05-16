@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block pageheader %} 
-    <h1>Alias List</h1>
+    <h1>Alternate Name List</h1>
     <p class="count">
         Displaying {{ aliases|length }} aliases of {{ aliases.getTotalItemCount }} total.
     </p>
@@ -27,10 +27,9 @@
             <tr>
                 <th>Name</th>
                 <th>Maiden</th>
-                <th>Description</th>
-                <th>Notes</th>
                 <th>Created</th>
-                <th>Updated</th>            </tr>
+                <th>Updated</th>
+            </tr>
         </thead>
         <tbody>
             {% for alias in aliases %}
@@ -41,8 +40,6 @@
                         </a>
                     </td>
                     <td>{% if alias.maiden %}Yes{% else %}No{% endif %}</td>
-                    <td>{{ alias.description }}</td>
-                    <td>{{ alias.notes }}</td>
                     <td>{% if alias.created %}{{ alias.created|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>{% if alias.updated %}{{ alias.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
                 </tr>

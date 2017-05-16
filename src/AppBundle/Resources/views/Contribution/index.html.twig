@@ -15,8 +15,6 @@
                 <th>Person</th>
                 <th>Role</th>
                 <th>Publication</th>
-                <th>Created</th>
-                <th>Updated</th>           
             </tr>
         </thead>
         <tbody>
@@ -36,12 +34,6 @@
                         <a href="{{ path('publication_show', {'id': contribution.publication.id}) }}">
                             {{ contribution.publication }}
                         </a>
-                    </td>
-                    <td>
-                        {{ contribution.created }}
-                    </td>
-                    <td>
-                        {{ contribution.updated }}
                     </td>
                 </tr>
             {% endfor %}

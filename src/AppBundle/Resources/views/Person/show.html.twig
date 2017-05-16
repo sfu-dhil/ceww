@@ -28,16 +28,53 @@
                 <td>{{ person.fullName }}</td>
             </tr>
             <tr>
-                <th>Sortablename</th>
-                <td>{{ person.sortableName }}</td>
+                <th>Also known as</th>
+                <td>
+                    {% set aliases = person.aliases %}
+                    {% if aliases|length > 0 %}
+                        <ul>
+                            {% for alias in aliases %}
+                                <li>
+                                    <a href="{{ path('alias_show', {'id': alias.id}) }}">
+                                        {{ alias }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
             </tr>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}            
+                <tr>
+                    <th>Sortablename</th>
+                    <td>{{ person.sortableName }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Description</th>
                 <td>{{ person.description }}</td>
             </tr>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+                <tr>
+                    <th>Notes</th>
+                    <td>{{ person.notes }}</td>
+                </tr>
+            {% endif %}
             <tr>
-                <th>Notes</th>
-                <td>{{ person.notes }}</td>
+                <th>Birth</th>
+                <td>{{ person.birthDate }} 
+                    <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
+                        {{ person.birthPlace }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Death</th>
+                <td>{{ person.deathDate }} 
+                    <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
+                        {{ person.deathPlace }}
+                    </a>
+                </td>
             </tr>
             <tr>
                 <th>Created</th>
@@ -49,5 +86,36 @@
             </tr>
         </tbody>
     </table>
+
+    {% set contributions = person.contributions %}
+    {% if contributions|length > 0 %}
+        <h2>Publications</h2>
+        <ul>
+            {% for contribution in contributions %}
+                <li>
+                    <a href="{{ path('publication_show', {'id': contribution.publication.id}) }}">
+                        {{ contribution.publication}}
+                    </a>
+                    ({{ contribution.role }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% set residences = person.residences %}
+    {% if residences|length > 0 %}
+        <h2>Residences</h2>
+        <ul>
+            {% for residence in residences %}
+                <li>
+                    <a href="{{ path('place_show', {'id': residence.id }) }}">
+                        {{ residence }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': person } %}				
 
 {% endblock %}

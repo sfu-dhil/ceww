@@ -46,4 +46,25 @@
         </tbody>
     </table>
 
+    <h2>Publications</h2>
+    <p class="count">
+        Displaying {{ page|length }} publications of {{ page.getTotalItemCount }} total.
+    </p>
+
+    <ul>
+        {% for publication in page %}
+            <li>
+                <a href="{{ path('publication_show', { 'id': publication.id }) }}">
+                    {{ publication.title }}
+                </a>
+                {{ publication.dateYear }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="navigation">
+        {{ knp_pagination_render(page) }}
+    </div>
+
+
 {% endblock %}

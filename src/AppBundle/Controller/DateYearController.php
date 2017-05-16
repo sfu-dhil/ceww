@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\DateYear;
+use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\DateYear;
-use AppBundle\Form\DateYearType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * DateYear controller.
@@ -48,9 +48,16 @@ class DateYearController extends Controller
      */
     public function showAction(DateYear $dateYear)
     {
-
+        $repo = $this->getDoctrine()->getManager()->getRepository(DateYear::class);
+        $entity = $repo->getEntity($dateYear);
+        $reflection = new ReflectionClass($entity);
+        $class = $reflection->getShortName();
+        $routeName = strtolower($class) . '_show';
         return array(
             'dateYear' => $dateYear,
+            'entity' => $entity,
+            'class' => $class,
+            'routeName' => $routeName,
         );
     }
 

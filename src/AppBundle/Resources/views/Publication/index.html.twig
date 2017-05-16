@@ -26,12 +26,11 @@
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Sortabletitle</th>
-                <th>Links</th>
-                <th>Description</th>
-                <th>Notes</th>
+                <th>Date</th>
+                <th>Location</th>
                 <th>Created</th>
-                <th>Updated</th>            </tr>
+                <th>Updated</th>
+            </tr>
         </thead>
         <tbody>
             {% for publication in publications %}
@@ -41,12 +40,16 @@
                             {{ publication.title }}
                         </a>
                     </td>
-                    <td>{{ publication.sortableTitle }}</td>
-                    <td>{% if publication.links %}{{ publication.links|join(', ') }}{% endif %}</td>
-                    <td>{{ publication.description }}</td>
-                    <td>{{ publication.notes }}</td>
-                    <td>{% if publication.created %}{{ publication.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{% if publication.updated %}{{ publication.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ publication.dateYear }}</td>
+                    <td>
+                        {% if publication.location %}
+                            <a href="{{ path('place_show', {'id': publication.location.id}) }}">
+                                {{ publication.location }}
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>{% if publication.created %}{{ publication.created|date }}{% endif %}</td>
+                    <td>{% if publication.updated %}{{ publication.updated|date }}{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>

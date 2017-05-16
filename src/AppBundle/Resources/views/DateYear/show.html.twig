@@ -20,6 +20,13 @@
                 <td>{{ dateYear.start }}</td>
             </tr>
             <tr>
+                <th>{{ class }}</th>
+                <td>
+                    <a href="{{ path(routeName, {'id': entity.id}) }}">
+                        {{ entity }}
+                    </a>
+                </td>
+            <tr>
                 <th>Startcirca</th>
                 <td>{% if dateYear.startCirca %}Yes{% else %}No{% endif %}</td>
             </tr>

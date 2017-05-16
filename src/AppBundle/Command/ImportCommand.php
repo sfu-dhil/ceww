@@ -264,11 +264,8 @@ class ImportCommand extends ContainerAwareCommand {
             $publication = $this->getPublication($categoryName, $title, $dateValue, $placeValue);
             $contribution = new Contribution();
             $contribution->setPerson($person);
-//            $person->addContribution($contribution);
             $contribution->setRole($role);
-//            $role->addContribution($contribution);
             $contribution->setPublication($publication);
-//            $publication->addContribution($contribution);
             $this->persist($contribution);
         }
     }
@@ -284,9 +281,13 @@ class ImportCommand extends ContainerAwareCommand {
         $this->addPublications($person, $row[7], 'book');
         $this->addPublications($person, $row[8], 'anthology');
         $this->addPublications($person, $row[9], 'periodical');
-
+        if(isset($row[10])) {
+            $person->setDescription($row[10]);
+        }
+        $notes = implode("\n\n", array_slice($row, 11));
+        $person->setNotes($notes);
+        
         return $person;
-        $this->flush();
     }
 
     protected function import($path, OutputInterface $output) {

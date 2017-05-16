@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block pageheader %} 
-    <h1>Alias</h1>
+    <h1>Alternate Name</h1>
 {% endblock %} 
 
 {% block body %}
@@ -35,10 +35,12 @@
                 <th>Description</th>
                 <td>{{ alias.description }}</td>
             </tr>
-            <tr>
-                <th>Notes</th>
-                <td>{{ alias.notes }}</td>
-            </tr>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}            
+                <tr>
+                    <th>Notes</th>
+                    <td>{{ alias.notes }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Created</th>
                 <td>{% if alias.created %}{{ alias.created|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -50,4 +52,20 @@
         </tbody>
     </table>
 
+    {% set people = alias.people %}
+    {% if people|length > 0 %}
+        <h2>People</h2>
+        <ul>
+            {% for person in people %}
+                <li>
+                    <a href="{{ path('person_show', {'id': person.id }) }}">
+                        {{ person }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': alias } %}				
+    
 {% endblock %}

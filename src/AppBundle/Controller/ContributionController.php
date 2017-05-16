@@ -38,19 +38,4 @@ class ContributionController extends Controller
         );
     }
 
-    /**
-     * Finds and displays a Contribution entity.
-     *
-     * @Route("/{id}", name="contribution_show")
-     * @Method("GET")
-     * @Template()
-	 * @param Contribution $contribution
-     */
-    public function showAction(Contribution $contribution)
-    {
-
-        return array(
-            'contribution' => $contribution,
-        );
-    }
 }

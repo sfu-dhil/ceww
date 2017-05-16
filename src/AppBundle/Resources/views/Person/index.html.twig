@@ -26,11 +26,9 @@
         <thead>
             <tr>
                 <th>Fullname</th>
-                <th>Sortablename</th>
-                <th>Description</th>
-                <th>Notes</th>
-                <th>Created</th>
-                <th>Updated</th>            </tr>
+                <td>Born</td>
+                <td>Died</td>
+            </tr>
         </thead>
         <tbody>
             {% for person in people %}
@@ -40,11 +38,16 @@
                             {{ person.fullName }}
                         </a>
                     </td>
-                    <td>{{ person.sortableName }}</td>
-                    <td>{{ person.description }}</td>
-                    <td>{{ person.notes }}</td>
-                    <td>{% if person.created %}{{ person.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{% if person.updated %}{{ person.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ person.birthDate }} 
+                        <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
+                            {{ person.birthPlace }}
+                        </a>
+                    </td>
+                    <td>{{ person.birthDate }} 
+                        <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
+                            {{ person.deathPlace }}
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
