@@ -37,90 +37,6 @@ class CategoryController extends Controller
             'categories' => $categories,
         );
     }
-    /**
-     * Search for Category entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Category repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated search.html.twig
-	 * template.
-	 * 
-     //    public function searchQuery($q) {
-     //        $qb = $this->createQueryBuilder('e');
-     //        $qb->where("e.fieldName like '%$q%'");
-     //        return $qb->getQuery();
-     //    }
-	 *
-     *
-     * @Route("/search", name="category_search")
-     * @Method("GET")
-     * @Template()
-	 * @param Request $request
-     */
-    public function searchAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Category');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->searchQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$categories = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-		} else {
-			$categories = array();
-		}
-
-        return array(
-            'categories' => $categories,
-			'q' => $q,
-        );
-    }
-    /**
-     * Full text search for Category entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Category repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated fulltext.html.twig
-	 * template.
-	 * 
-	//    public function fulltextQuery($q) {
-	//        $qb = $this->createQueryBuilder('e');
-	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
-	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
-	//        $qb->orderBy('score', 'desc');
-	//        $qb->setParameter('q', $q);
-	//        return $qb->getQuery();
-	//    }	 
-	 * 
-	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Category entity.
-	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
-	 *
-     *
-     * @Route("/fulltext", name="category_fulltext")
-     * @Method("GET")
-     * @Template()
-	 * @param Request $request
-	 * @return array
-     */
-    public function fulltextAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Category');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$categories = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-		} else {
-			$categories = array();
-		}
-
-        return array(
-            'categories' => $categories,
-			'q' => $q,
-        );
-    }
 
     /**
      * Creates a new Category entity.
@@ -132,6 +48,10 @@ class CategoryController extends Controller
      */
     public function newAction(Request $request)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $category = new Category();
         $form = $this->createForm('AppBundle\Form\CategoryType', $category);
         $form->handleRequest($request);
@@ -178,6 +98,10 @@ class CategoryController extends Controller
      */
     public function editAction(Request $request, Category $category)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $editForm = $this->createForm('AppBundle\Form\CategoryType', $category);
         $editForm->handleRequest($request);
 
@@ -204,6 +128,10 @@ class CategoryController extends Controller
      */
     public function deleteAction(Request $request, Category $category)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($category);
         $em->flush();

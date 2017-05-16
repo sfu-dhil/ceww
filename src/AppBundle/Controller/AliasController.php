@@ -75,52 +75,6 @@ class AliasController extends Controller
 			'q' => $q,
         );
     }
-    /**
-     * Full text search for Alias entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Alias repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated fulltext.html.twig
-	 * template.
-	 * 
-	//    public function fulltextQuery($q) {
-	//        $qb = $this->createQueryBuilder('e');
-	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
-	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
-	//        $qb->orderBy('score', 'desc');
-	//        $qb->setParameter('q', $q);
-	//        return $qb->getQuery();
-	//    }	 
-	 * 
-	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Alias entity.
-	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
-	 *
-     *
-     * @Route("/fulltext", name="alias_fulltext")
-     * @Method("GET")
-     * @Template()
-	 * @param Request $request
-	 * @return array
-     */
-    public function fulltextAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Alias');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$aliases = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-		} else {
-			$aliases = array();
-		}
-
-        return array(
-            'aliases' => $aliases,
-			'q' => $q,
-        );
-    }
 
     /**
      * Creates a new Alias entity.
@@ -132,6 +86,10 @@ class AliasController extends Controller
      */
     public function newAction(Request $request)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $alias = new Alias();
         $form = $this->createForm('AppBundle\Form\AliasType', $alias);
         $form->handleRequest($request);
@@ -178,6 +136,10 @@ class AliasController extends Controller
      */
     public function editAction(Request $request, Alias $alias)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $editForm = $this->createForm('AppBundle\Form\AliasType', $alias);
         $editForm->handleRequest($request);
 
@@ -204,6 +166,10 @@ class AliasController extends Controller
      */
     public function deleteAction(Request $request, Alias $alias)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($alias);
         $em->flush();

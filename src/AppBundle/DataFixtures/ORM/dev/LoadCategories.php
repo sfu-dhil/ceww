@@ -20,7 +20,8 @@ class LoadCategories extends AbstractDataFixture implements OrderedFixtureInterf
     protected function doLoad(ObjectManager $manager) {
         foreach (self::$CATEGORIES as $label) {
             $category = new Category();
-            $category->setLabel($label);
+            $category->setLabel($label);            
+            $category->setName(strtolower($label));
             $manager->persist($category);
             $lc = strtolower($label);
             $this->setReference("category.{$lc}", $category);

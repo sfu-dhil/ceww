@@ -37,12 +37,6 @@ class Builder implements ContainerAwareInterface {
         $menu->addChild('Categories', array(
             'route' => 'category_index',
         ));
-        $menu->addChild('Contributions', array(
-            'route' => 'contribution_index',
-        ));
-        $menu->addChild('Dates', array(
-            'route' => 'date_year_index',
-        ));
         $menu->addChild('Genres', array(
             'route' => 'genre_index',
         ));
@@ -58,6 +52,22 @@ class Builder implements ContainerAwareInterface {
         $menu->addChild('Roles', array(
             'route' => 'role_index',
         ));
+
+        if ($this->container->get('security.token_storage')->getToken() && $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
+            $menu->addChild('divider', array(
+                'label' => '',
+            ));
+            $menu['divider']->setAttributes(array(
+                'role' => 'separator',
+                'class' => 'divider',
+            ));
+            $menu->addChild('Contributions', array(
+                'route' => 'contribution_index',
+            ));
+            $menu->addChild('Dates', array(
+                'route' => 'date_year_index',
+            ));
+        }
 
         return $menu;
     }

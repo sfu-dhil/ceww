@@ -132,6 +132,10 @@ class PlaceController extends Controller
      */
     public function newAction(Request $request)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $place = new Place();
         $form = $this->createForm('AppBundle\Form\PlaceType', $place);
         $form->handleRequest($request);
@@ -178,6 +182,10 @@ class PlaceController extends Controller
      */
     public function editAction(Request $request, Place $place)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $editForm = $this->createForm('AppBundle\Form\PlaceType', $place);
         $editForm->handleRequest($request);
 
@@ -204,6 +212,10 @@ class PlaceController extends Controller
      */
     public function deleteAction(Request $request, Place $place)
     {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($place);
         $em->flush();
