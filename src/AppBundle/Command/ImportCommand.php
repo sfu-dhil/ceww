@@ -87,10 +87,11 @@ class ImportCommand extends ContainerAwareCommand {
 //        printf("%-17s %s\n", $reflection->getShortName(), $entity);
         if ($this->commit) {
             $this->em->persist($entity);
+            $this->flush($entity);
         }
     }
 
-    private function flush($entity = null, $clear = true) {
+    private function flush($entity = null, $clear = false) {
         if ($this->commit) {
 //            print "flushing\n";
             $this->em->flush($entity);
@@ -118,7 +119,7 @@ class ImportCommand extends ContainerAwareCommand {
             $person->setFullName($this->namer->lastFirstToFull($name));
             $person->setSortableName($this->namer->sortableName($name));
         } else {
-            $person->setFullname('(unknown)');
+            $person->setFullname('');
             $person->setSortableName('');
         }
         $this->persist($person);
@@ -182,6 +183,12 @@ class ImportCommand extends ContainerAwareCommand {
             }
             $person->addAlias($alias);
         }
+        if($person->getFullName() === '') {
+            $alias = $person->getAliases()->first();
+            if($alias) {
+                $person->setSortableName($this->namer->sortableName($this->namer->fullToLastFirst($alias->getName())));            
+            }
+        }
     }
 
     protected function addResidences(Person $person, $value) {
@@ -228,8 +235,8 @@ class ImportCommand extends ContainerAwareCommand {
             if ($date) {
                 $dateYear = new DateYear();
                 $dateYear->setValue($date);
-                $publication->setDateYear($dateYear);
                 $this->persist($dateYear);
+                $publication->setDateYear($dateYear);
             }
 
             if ($placeName) {
@@ -294,8 +301,13 @@ class ImportCommand extends ContainerAwareCommand {
         $fh = fopen($path, 'r');
         fgetcsv($fh); // headers.
         fgetcsv($fh); // col numbers.
-        $n = 3;
+        $n = 2;
         while (($row = fgetcsv($fh))) {
+            $n++;
+            if( ! array_filter($row)) {
+                $output->writeln("{$path}:{$n}:Empty row.");
+                continue;
+            }
             $row = array_map(function($item) {
                 $item = preg_replace("/\x{00a0}/siu", " ", $item);
                 $item = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $item);
@@ -307,8 +319,7 @@ class ImportCommand extends ContainerAwareCommand {
             } catch (\Exception $e) {
                 $output->writeln("{$path}:{$n}:{$e->getMessage()}");
             }
-            $this->flush();
-            $n++;
+            $this->flush(null, true);
         }
     }
 

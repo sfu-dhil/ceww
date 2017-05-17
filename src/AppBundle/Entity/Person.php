@@ -16,53 +16,52 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PersonRepository")
  */
-class Person extends AbstractEntity
-{
-    
+class Person extends AbstractEntity {
+
     /**
      * @var string
      * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $fullName;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $sortableName;
-    
+
     /**
      * public research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * private research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
-    
+
     /**
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear")
      */
     private $birthDate;
-    
+
     /**
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleBorn")
      */
     private $birthPlace;
-    
+
     /**
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear")
      */
     private $deathDate;
-    
+
     /**
      * @var Place;
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleDied")
@@ -74,7 +73,7 @@ class Person extends AbstractEntity
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
      */
     private $residences;
-    
+
     /**
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Alias", inversedBy="people")
@@ -86,16 +85,16 @@ class Person extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Contribution", mappedBy="person")
      */
     private $contributions;
-    
+
     public function __construct() {
         parent::__construct();
         $this->residences = new ArrayCollection();
         $this->aliases = new ArrayCollection();
         $this->contributions = new ArrayCollection();
     }
-    
+
     public function __toString() {
-        if($this->fullName) {
+        if ($this->fullName) {
             return $this->fullName;
         }
         return '(unknown)';
@@ -108,8 +107,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setFullName($fullName)
-    {
+    public function setFullName($fullName) {
         $this->fullName = $fullName;
 
         return $this;
@@ -120,9 +118,12 @@ class Person extends AbstractEntity
      *
      * @return string
      */
-    public function getFullName()
-    {
-        return $this->fullName;
+    public function getFullName() {
+        if($this->fullName) {
+            return $this->fullName;
+        } else {
+            return '(unknown)';
+        }
     }
 
     /**
@@ -132,8 +133,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setSortableName($sortableName)
-    {
+    public function setSortableName($sortableName) {
         $this->sortableName = $sortableName;
 
         return $this;
@@ -144,8 +144,7 @@ class Person extends AbstractEntity
      *
      * @return string
      */
-    public function getSortableName()
-    {
+    public function getSortableName() {
         return $this->sortableName;
     }
 
@@ -156,8 +155,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -168,8 +166,7 @@ class Person extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -180,8 +177,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setNotes($notes)
-    {
+    public function setNotes($notes) {
         $this->notes = $notes;
 
         return $this;
@@ -192,8 +188,7 @@ class Person extends AbstractEntity
      *
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->notes;
     }
 
@@ -204,8 +199,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setBirthDate(DateYear $birthDate = null)
-    {
+    public function setBirthDate(DateYear $birthDate = null) {
         $this->birthDate = $birthDate;
 
         return $this;
@@ -216,8 +210,7 @@ class Person extends AbstractEntity
      *
      * @return DateYear
      */
-    public function getBirthDate()
-    {
+    public function getBirthDate() {
         return $this->birthDate;
     }
 
@@ -228,8 +221,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setBirthPlace(Place $birthPlace = null)
-    {
+    public function setBirthPlace(Place $birthPlace = null) {
         $this->birthPlace = $birthPlace;
 
         return $this;
@@ -240,8 +232,7 @@ class Person extends AbstractEntity
      *
      * @return Place
      */
-    public function getBirthPlace()
-    {
+    public function getBirthPlace() {
         return $this->birthPlace;
     }
 
@@ -252,8 +243,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setDeathDate(DateYear $deathDate = null)
-    {
+    public function setDeathDate(DateYear $deathDate = null) {
         $this->deathDate = $deathDate;
 
         return $this;
@@ -264,8 +254,7 @@ class Person extends AbstractEntity
      *
      * @return DateYear
      */
-    public function getDeathDate()
-    {
+    public function getDeathDate() {
         return $this->deathDate;
     }
 
@@ -276,8 +265,7 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function setDeathPlace(Place $deathPlace = null)
-    {
+    public function setDeathPlace(Place $deathPlace = null) {
         $this->deathPlace = $deathPlace;
 
         return $this;
@@ -288,8 +276,7 @@ class Person extends AbstractEntity
      *
      * @return Place
      */
-    public function getDeathPlace()
-    {
+    public function getDeathPlace() {
         return $this->deathPlace;
     }
 
@@ -300,9 +287,10 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function addResidence(Place $residence)
-    {
-        $this->residences[] = $residence;
+    public function addResidence(Place $residence) {
+        if (!$this->residences->contains($residence)) {
+            $this->residences[] = $residence;
+        }
 
         return $this;
     }
@@ -312,8 +300,7 @@ class Person extends AbstractEntity
      *
      * @param Place $residence
      */
-    public function removeResidence(Place $residence)
-    {
+    public function removeResidence(Place $residence) {
         $this->residences->removeElement($residence);
     }
 
@@ -322,8 +309,7 @@ class Person extends AbstractEntity
      *
      * @return Collection
      */
-    public function getResidences()
-    {
+    public function getResidences() {
         return $this->residences;
     }
 
@@ -334,9 +320,10 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function addAlias(Alias $alias)
-    {
-        $this->aliases[] = $alias;
+    public function addAlias(Alias $alias) {
+        if (!$this->aliases->contains($alias)) {
+            $this->aliases[] = $alias;
+        }
 
         return $this;
     }
@@ -346,8 +333,7 @@ class Person extends AbstractEntity
      *
      * @param Alias $alias
      */
-    public function removeAlias(Alias $alias)
-    {
+    public function removeAlias(Alias $alias) {
         $this->aliases->removeElement($alias);
     }
 
@@ -356,8 +342,7 @@ class Person extends AbstractEntity
      *
      * @return Collection
      */
-    public function getAliases()
-    {
+    public function getAliases() {
         return $this->aliases;
     }
 
@@ -368,9 +353,10 @@ class Person extends AbstractEntity
      *
      * @return Person
      */
-    public function addContribution(Contribution $contribution)
-    {
-        $this->contributions[] = $contribution;
+    public function addContribution(Contribution $contribution) {
+        if (!$this->contributions->contains($contribution)) {
+            $this->contributions[] = $contribution;
+        }
 
         return $this;
     }
@@ -380,8 +366,7 @@ class Person extends AbstractEntity
      *
      * @param Contribution $contribution
      */
-    public function removeContribution(Contribution $contribution)
-    {
+    public function removeContribution(Contribution $contribution) {
         $this->contributions->removeElement($contribution);
     }
 
@@ -390,8 +375,8 @@ class Person extends AbstractEntity
      *
      * @return Collection
      */
-    public function getContributions()
-    {
+    public function getContributions() {
         return $this->contributions;
     }
+
 }

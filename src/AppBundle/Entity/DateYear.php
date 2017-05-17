@@ -54,9 +54,9 @@ class DateYear extends AbstractEntity {
     public function __construct() {
         parent::__construct();
         $this->start = null;
-        $this->startCirca = null;
+        $this->startCirca = false;
         $this->end = null;
-        $this->endCirca = null;
+        $this->endCirca = false;
     }
     
     /**

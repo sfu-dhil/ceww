@@ -26,12 +26,19 @@ class PublicationRepository extends EntityRepository {
             $qb->innerJoin('p.dateYear', 'd');
             $qb->andWhere('d.value = :value');
             $qb->setParameter('value', $date);
+        } else {
+            $qb->andWhere('p.dateYear is null');
         }
+        
         if ($placeName) {
             $qb->innerJoin('p.location', 'l');
             $qb->andWhere('l.name = :place');
             $qb->setParameter('place', $placeName);
-        } try {
+        } else {
+            $qb->andWhere('p.location is null');
+        }
+        
+        try {
             return $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
             throw new Exception("Duplicate publication detected - " . implode(':', [$category, $title, $date, $placeName]));

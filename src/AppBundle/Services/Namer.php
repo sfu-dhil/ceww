@@ -12,6 +12,14 @@ class Namer {
         return "{$given} {$family}";
     }
     
+    public function fullToLastFirst($string) {
+        $matches = array();
+        if( ! preg_match("/(.+)\s+(.+)$/", $string, $matches)) {
+            return $string;
+        }
+        return implode(" ", [$matches[2], $matches[1]]);
+    }
+    
     public function sortableName($string) {
         return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
     }

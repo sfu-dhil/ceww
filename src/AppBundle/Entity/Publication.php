@@ -12,7 +12,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *
  * @ORM\Table(name="publication", indexes={
  *  @ORM\Index(columns={"title"}, flags={"fulltext"}),
- *  @ORM\Index(columns={"sortable_title"})
+ *  @ORM\Index(columns={"sortable_title"}, flags={"fulltext"}),
  * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
  */
@@ -20,13 +20,13 @@ class Publication extends AbstractEntity
 {
     /**
      * @var string
-     * @ORM\Column(type="string", length=400, nullable=false)
+     * @ORM\Column(type="text", nullable=false)
      */
     private $title;
     
     /**
      * @var string
-     * @ORM\Column(type="string", length=400, nullable=false)
+     * @ORM\Column(type="text", nullable=false)
      */
     private $sortableTitle;
         
