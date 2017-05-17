@@ -131,11 +131,14 @@ nines_feedback:
     public_status: published
     commenting:
         author:
-            class: AppBundle\Entity\Author
-            route: author_show
+            class: AppBundle\Entity\Person
+            route: person_show
         publication:
             class: AppBundle\Entity\Publication
             route: publication_show
+        place:
+            class: AppBundle\Entity\Place
+            route: place_show
         blog_post:
             class: Nines\BlogBundle\Post
             route: post_show
