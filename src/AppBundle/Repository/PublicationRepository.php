@@ -4,6 +4,8 @@ namespace AppBundle\Repository;
 
 use AppBundle\Entity\Category;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 
 /**
  * PublicationRepository
@@ -25,11 +27,15 @@ class PublicationRepository extends EntityRepository {
             $qb->andWhere('d.value = :value');
             $qb->setParameter('value', $date);
         }
-        if($placeName) {
+        if ($placeName) {
             $qb->innerJoin('p.location', 'l');
             $qb->andWhere('l.name = :place');
             $qb->setParameter('place', $placeName);
+        } try {
+            return $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new Exception("Duplicate publication detected - " . implode(':', [$category, $title, $date, $placeName]));
         }
-        return $qb->getQuery()->getOneOrNullResult();
     }
+
 }

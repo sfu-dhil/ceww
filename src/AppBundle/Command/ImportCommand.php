@@ -13,6 +13,7 @@ use AppBundle\Entity\Role;
 use AppBundle\Services\Namer;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -83,7 +84,7 @@ class ImportCommand extends ContainerAwareCommand {
 
     private function persist($entity) {
         $reflection = new ReflectionClass($entity);
-        printf("%-17s %s\n", $reflection->getShortName(), $entity);
+//        printf("%-17s %s\n", $reflection->getShortName(), $entity);
         if ($this->commit) {
             $this->em->persist($entity);
         }
@@ -91,7 +92,7 @@ class ImportCommand extends ContainerAwareCommand {
 
     private function flush($entity = null, $clear = true) {
         if ($this->commit) {
-            print "flushing\n";
+//            print "flushing\n";
             $this->em->flush($entity);
             if ($clear) {
                 $this->em->clear();
@@ -221,8 +222,6 @@ class ImportCommand extends ContainerAwareCommand {
         $publication = $repo->findPublication($category, $title, $date, $placeName);
         if (!$publication) {
             $publication = new Publication();
-            $publication->setCategory($category);
-            $category->addPublication($publication);
             $publication->setTitle($this->titleCaser->titlecase($title));
             $publication->setSortableTitle($this->titleCaser->sortableTitle($title));
 
@@ -238,8 +237,9 @@ class ImportCommand extends ContainerAwareCommand {
                 $publication->setLocation($place);
                 $place->addPublication($publication);
             }
+            $publication->setCategory($category);
+            $category->addPublication($publication);
             $this->persist($publication);
-            $this->persist($publication, false);
         }
         return $publication;
     }
@@ -281,28 +281,34 @@ class ImportCommand extends ContainerAwareCommand {
         $this->addPublications($person, $row[7], 'book');
         $this->addPublications($person, $row[8], 'anthology');
         $this->addPublications($person, $row[9], 'periodical');
-        if(isset($row[10])) {
+        if (isset($row[10])) {
             $person->setDescription($row[10]);
         }
         $notes = implode("\n\n", array_slice($row, 11));
         $person->setNotes($notes);
-        
+
         return $person;
     }
 
     protected function import($path, OutputInterface $output) {
         $fh = fopen($path, 'r');
         fgetcsv($fh); // headers.
-        fgetcsv($fh); // row numbers.
+        fgetcsv($fh); // col numbers.
+        $n = 3;
         while (($row = fgetcsv($fh))) {
             $row = array_map(function($item) {
                 $item = preg_replace("/\x{00a0}/siu", " ", $item);
                 $item = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $item);
                 return $item;
             }, $row);
-            print "\n\n";
-            $this->importRow($row);
+//            print "\n\n";
+            try {
+                $this->importRow($row);
+            } catch (\Exception $e) {
+                $output->writeln("{$path}:{$n}:{$e->getMessage()}");
+            }
             $this->flush();
+            $n++;
         }
     }
 
