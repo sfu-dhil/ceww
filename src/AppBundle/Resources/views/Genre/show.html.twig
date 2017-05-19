@@ -25,25 +25,22 @@
         <tbody>
             <tr>
             <tr>
-                <th>Name</th>
-                <td>{{ genre.name }}</td>
-            </tr>
-            <tr>
                 <th>Label</th>
                 <td>{{ genre.label}}</td>
             </tr>
             <tr>
                 <th>Description</th>
                 <td>{{ genre.description }}</td>
-            </tr>            
-        <th>Created</th>
-        <td>{% if genre.created %}{{ genre.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-    </tr>
-    <tr>
-        <th>Updated</th>
-        <td>{% if genre.updated %}{{ genre.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-    </tr>
-</tbody>
-</table>
+            </tr>   
+            <tr>
+                <th>Created</th>
+                <td>{% if genre.created %}{{ genre.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updated</th>
+                <td>{% if genre.updated %}{{ genre.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
 
 {% endblock %}

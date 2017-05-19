@@ -9,6 +9,22 @@
 
 {% block body %}
 
+    <div class='btn-toolbar pull-left'>
+        <div class='btn-group'>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Filter by <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                {% for category in categories %}
+                    <li>
+                        <a href="?category={{ category.name }}">
+                            {% if filterCategory is not null and filterCategory.id == category.id %}<span class="glyphicon glyphicon-check"></span> {% endif %} {{ category.label }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
     <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
             {% if is_granted('ROLE_CONTENT_ADMIN') %}

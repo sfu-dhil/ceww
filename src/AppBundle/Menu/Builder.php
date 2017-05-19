@@ -49,9 +49,6 @@ class Builder implements ContainerAwareInterface {
         $menu->addChild('Publications', array(
             'route' => 'publication_index',
         ));
-        $menu->addChild('Roles', array(
-            'route' => 'role_index',
-        ));
 
         if ($this->container->get('security.token_storage')->getToken() && $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
             $menu->addChild('divider', array(
@@ -60,6 +57,9 @@ class Builder implements ContainerAwareInterface {
             $menu['divider']->setAttributes(array(
                 'role' => 'separator',
                 'class' => 'divider',
+            ));
+            $menu->addChild('Roles', array(
+                'route' => 'role_index',
             ));
             $menu->addChild('Contributions', array(
                 'route' => 'contribution_index',

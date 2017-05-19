@@ -177,8 +177,12 @@ class ImportCommand extends ContainerAwareCommand {
             $alias = $repo->findOneBy(array('name' => $name));
             if (!$alias) {
                 $alias = new Alias();
-                $alias->setName($name);
                 $alias->setMaiden(preg_match('/^n(é|e)e/u', $name));
+                if($alias->getMaiden()) {
+                    $alias->setName(substr($name, 4));
+                } else {
+                    $alias->setName($name);
+                }
                 $this->persist($alias);
             }
             $person->addAlias($alias);
@@ -286,7 +290,7 @@ class ImportCommand extends ContainerAwareCommand {
         $this->addAliases($person, $row[5]);
         $this->addResidences($person, $row[6]);
         $this->addPublications($person, $row[7], 'book');
-        $this->addPublications($person, $row[8], 'anthology');
+        $this->addPublications($person, $row[8], 'collection');
         $this->addPublications($person, $row[9], 'periodical');
         if (isset($row[10])) {
             $person->setDescription($row[10]);

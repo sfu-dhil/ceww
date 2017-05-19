@@ -15,6 +15,25 @@ use Exception;
  */
 class PublicationRepository extends EntityRepository {
 
+    public function browseQuery(Category $category = null) {
+        $qb = $this->createQueryBuilder('e');
+        if($category) {
+            $qb->andWhere('e.category = :category');
+            $qb->setParameter('category', $category);
+        }
+        $qb->orderBy('e.sortableTitle', 'ASC');
+        return $qb->getQuery();
+    }
+    
+    public function searchQuery($q) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->addSelect("MATCH_AGAINST (e.title, :q 'IN BOOLEAN MODE') as HIDDEN score");
+        $qb->add('where', "MATCH_AGAINST (e.title, :q 'IN BOOLEAN MODE') > 0.5");
+        $qb->orderBy('score', 'desc');
+        $qb->setParameter('q', $q);
+        return $qb->getQuery();
+    }
+
     public function findPublication(Category $category, $title, $date = null, $placeName = null) {
         $qb = $this->createQueryBuilder('p');
         $qb->andWhere('p.title = :title');
@@ -29,7 +48,7 @@ class PublicationRepository extends EntityRepository {
         } else {
             $qb->andWhere('p.dateYear is null');
         }
-        
+
         if ($placeName) {
             $qb->innerJoin('p.location', 'l');
             $qb->andWhere('l.name = :place');
@@ -37,7 +56,7 @@ class PublicationRepository extends EntityRepository {
         } else {
             $qb->andWhere('p.location is null');
         }
-        
+
         try {
             return $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {

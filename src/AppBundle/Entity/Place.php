@@ -97,8 +97,8 @@ class Place extends AbstractEntity
         $this->publications = new ArrayCollection();
     }
     
-    public function __toString() {
-        return $this->name;
+    public function __toString() {        
+        return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
     /**
@@ -122,7 +122,7 @@ class Place extends AbstractEntity
      */
     public function getName()
     {
-        return $this->name;
+        return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
     /**
@@ -324,7 +324,11 @@ class Place extends AbstractEntity
      */
     public function getPeopleBorn()
     {
-        return $this->peopleBorn;
+        $births = $this->peopleBorn->toArray();
+        usort($births, function($a, $b){
+            return $a->getBirthDate()->getStart() - $b->getBirthDate()->getStart();
+        });
+        return $births;
     }
 
     /**
@@ -358,7 +362,11 @@ class Place extends AbstractEntity
      */
     public function getPeopleDied()
     {
-        return $this->peopleDied;
+        $deaths = $this->peopleBorn->toArray();
+        usort($deaths, function($a, $b){
+            return $a->getDeathDate()->getEnd() - $b->getDeathDate()->getEnd();
+        });
+        return $deaths;
     }
 
     /**
@@ -392,7 +400,11 @@ class Place extends AbstractEntity
      */
     public function getResidents()
     {
-        return $this->residents;
+        $residents = $this->residents->toArray();
+        usort($residents, function($a, $b) {
+            return strcmp($a->getSortableName(), $b->getSortableName());
+        });
+        return $residents;
     }
 
     /**

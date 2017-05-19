@@ -1,0 +1,30 @@
+{% extends '!layout.html' %}
+
+{% block sidebartoc %}
+
+<h3><a href="https://dhil.lib.sfu.ca/btd">Database of Canadian Early Women Writers</a></h3>
+<ul>
+  <li><a href="https://dhil.lib.sfu.ca/doceww">Main Site</a></li>
+  <li><a href="https://ceww.wordpress.com/">Wordpress Website</a></li>
+  <li><a href="http://www.cwrc.ca/projects/infrastructure-projects/seed-projects/canadas-early-women-writers/">CEWW at The Canadian Writing Research Collaboratory</a></li>
+  <li><a href="http://dhil.lib.sfu.ca">Digital Humanities Innovation Lab</a></li>
+</ul>
+
+{{ super() }}
+
+{% endblock %}
+
+{% block footer %}
+
+<div class="footer" role="contentinfo">
+
+  © Copyright 2017, Michael Joyce.
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8. <br/>
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+    <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" />
+  </a> This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+  
+</div>
+
+{% endblock %}
