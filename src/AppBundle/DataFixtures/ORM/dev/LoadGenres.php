@@ -26,7 +26,7 @@ class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface 
             'description' => 'This category includes all prose writing that is understood to be the invention of the author, regardless of length (for example, novel, short story, short story collection).'
         ], [
             'label' => 'Non-fiction',
-            'description' => '',
+            'description' => 'This category includes all writing assumed to be based on facts (for example, guidebooks, cookbooks, textbooks, scientific articles, political journalism, and instruction manuals).',
         ], [
             'label' => 'Poetry',
             'description' => 'This category includes all items in poetic form, regardless of length.',

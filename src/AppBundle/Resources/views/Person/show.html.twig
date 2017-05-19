@@ -94,7 +94,10 @@
             {% for contribution in contributions %}
                 <li>
                     <a href="{{ path('publication_show', {'id': contribution.publication.id}) }}">
-                        {{ contribution.publication}}
+                        {{ contribution.id }}
+                    </a>
+                    <a href="{{ path('publication_show', {'id': contribution.publication.id}) }}">
+                        {{ contribution.publication }}
                     </a>
                     ({{ contribution.role }})
                 </li>

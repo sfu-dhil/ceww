@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadCategories extends AbstractDataFixture implements OrderedFixtureInterface
 {
 
-    private static $CATEGORIES = array('Book', 'Periodical', 'Anthology');
+    private static $CATEGORIES = array('Book', 'Periodical', 'Collection');
 
     protected function doLoad(ObjectManager $manager) {
         foreach (self::$CATEGORIES as $label) {

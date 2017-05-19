@@ -9,14 +9,20 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\Alias;
-use AppBundle\Entity\Author;
 use AppBundle\Entity\Category;
+use AppBundle\Entity\Contribution;
+use AppBundle\Entity\DateYear;
+use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
+use AppBundle\Entity\Role;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
+use Exception;
 use Monolog\Logger;
 use Nines\UtilBundle\Services\TitleCaser;
+use ReflectionClass;
+
+
 
 /**
  * Description of Importer
@@ -24,301 +30,272 @@ use Nines\UtilBundle\Services\TitleCaser;
  * @author mjoyce
  */
 class Importer {
-
+    
     /**
-     * ORM entity manager.
-     *
-     * @var EntityManager
+     * @var ObjectManager
      */
     private $em;
-
-    /**
-     * Service logger.
-     *
-     * @var Logger
-     */
-    private $logger;
-
+    
     /**
      * @var TitleCaser
      */
     private $titleCaser;
     
+    /**
+     * @var Namer
+     */
+    private $namer;
+    
+    /**
+     * @var Logger
+     */
+    private $logger;
+    
+    /**
+     * @var boolean
+     */
+    private $commit;
+    
+    public function __construct() {
+        $this->namer = new Namer();
+        $this->commit = false;
+    }
+    
+    public function setDoctrine(Registry $doctrine) {
+        $this->em = $doctrine->getManager();
+    }
+    
     public function setTitleCaser(TitleCaser $titleCaser) {
         $this->titleCaser = $titleCaser;
     }
-
-    /**
-     * Set the service logger.
-     *
-     * @param Logger $logger
-     */
+    
     public function setLogger(Logger $logger) {
         $this->logger = $logger;
     }
-
-    /**
-     * Set the ORM.
-     *
-     * @param Registry $registry
-     */
-    public function setDoctrine(Registry $registry) {
-        $this->em = $registry->getManager();
+    
+    public function setCommit($commit) {
+        $this->commit = $commit;
     }
 
-    public function split($s, $delim = ';') {        
-        if(substr_count($s, ';') < substr_count($s, ',')) {
-            $delim = ',';
+    public function persist($entity) {
+        $reflection = new ReflectionClass($entity);
+        $this->logger->notice($reflection->getShortName());
+        $this->logger->info($entity);
+        if ($this->commit) {
+            $this->em->persist($entity);
+            $this->flush($entity);
         }
+    }
+
+    public function flush($entity = null, $clear = false) {
+        if ($this->commit) {
+            $this->em->flush($entity);
+            if ($clear) {
+                $this->em->clear();
+                gc_collect_cycles();
+            }
+        }
+    }
+
+    public function trim($s) {
+        return preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $s);
+    }
+
+    public function split($s, $delim = ';') {
         $result = mb_split($delim, $s);
         return array_filter(array_map(function($value) {
-            return preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $value);
-        }, $result));
+                    return $this->trim($value);
+                }, $result));
     }
 
-    public function processName($string) {
-        if( ! preg_match('/,\s*/u', $string)) {
-            return $string;
+    public function createPerson($name) {
+        $person = new Person();
+        if ($name) {
+            $person->setFullName($this->namer->lastFirstToFull($name));
+            $person->setSortableName($this->namer->sortableName($name));
+        } else {
+            $person->setFullname('');
+            $person->setSortableName('');
         }
-        list($family, $given) = preg_split('/,\s*/u', $string);
-        return "{$given} {$family}";
+        $this->persist($person);
+        return $person;
     }
 
-    public function sortableName($string) {
-        return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
-    }
-
-    public function processDate($string) {
-        $matches = array();
-        if (preg_match('/^(c?\d{4})$/ui', $string, $matches)) {
-            // exactly a year.
-            return $matches[1];
-        }
-
-        if (preg_match('/^(c?\d{4})-(c?\d{4})$/ui', $string, $matches)) {
-            // exactly a range of years.
-            return array($matches[1], $matches[2]);
-        }
-
-        if (preg_match('/(c?\d{4})/ui', $string, $matches)) {
-            // a year, anywhere.
-            return $matches[1];
-        }
-
-        if (preg_match('/(\d{2})/', $string, $matches)) {
-            // two digit year? Can't be a circa.
-            return $matches[1] + 1900;
-        }
-        return null;
-    }
-
-    public function processPlace($string) {
-        $s = preg_replace('/\bnear\s+/ui', '', $string);
-        $matches = array();
-        if (!preg_match('/^(.+)\((.*)\)/u', $s, $matches)) {
-            return array($s, null);
-        }
-        $placeName = $matches[1];
-        $note = $matches[2];
-        if (preg_match('/[^0-9, c-]+/ui', $note)) {
-            return array($placeName, $note);
-        }
-        return array($placeName, null);
-    }
-
-    public function getPlace($placeName, $notes = '') {
-        $repo = $this->em->getRepository('AppBundle:Place');
-        $place = $repo->findOneBy(array(
-            'name' => $placeName,
-        ));
+    public function getPlace($value) {
+        $name = $this->trim(preg_replace('/\([^)]*\)/u', '', $value));
+        $repo = $this->em->getRepository(Place::class);
+        $place = $repo->findOneBy(array('name' => $name));
         if (!$place) {
             $place = new Place();
-            $place->setName($placeName);
-            $this->em->persist($place);
-            $this->em->flush($place);
-            $this->em->clear('AppBundle:Place');
-        }
-        if ($notes && strpos($place->getDescription(), $notes) === false) {
-            $place->setDescription($place->getDescription() . "\n" . $notes);
-            $this->em->flush($place);
+            $place->setName($name);
+            $this->persist($place);
+            $this->flush($place, false);
         }
         return $place;
     }
-    
-    public function getAlias($name) {
-        $repo = $this->em->getRepository('AppBundle:Alias');
-        $alias = $repo->findOneBy(array(
-            'name' => $name,
-        ));
-        if( ! $alias) {
-            $alias = new Alias();
-            $alias->setName($name);
-            $alias->setMaiden(preg_match('/\bn(?:é|e)e\b/u', $name));
-            $this->em->persist($alias);
-            $this->em->flush($alias);
-            $this->em->clear('AppBundle:Alias');
+
+    public function setBirthDate(Person $person, $value) {
+        if (!$value) {
+            return;
         }
-        return $alias;
+        $birthDate = new DateYear();
+        $birthDate->setValue($value);
+        $this->persist($birthDate);
+        $person->setBirthDate($birthDate);
     }
 
-    /**
-        'linked_title' => '',
-        'url' => '',
-        'title' => 'Wanted, a Wife',
-        'loc' => '',
-        'year' => '',
-        'genre' => ''
-     * 
-     * @param string $string
-     * @return array
-     */
-    public function processTitle($string) {
+    public function setBirthPlace(Person $person, $value) {
+        $birthPlace = $this->getPlace($value);
+        $person->setBirthPlace($birthPlace);
+        $birthPlace->addPersonBorn($person);
+    }
+
+    public function setDeathDate(Person $person, $value) {
+        if (!$value) {
+            return;
+        }
+        $deathDate = new DateYear();
+        $deathDate->setValue($value);
+        $this->persist($deathDate);
+        $person->setDeathDate($deathDate);
+    }
+
+    public function setDeathPlace(Person $person, $value) {
+        $deathPlace = $this->getPlace($value);
+        $person->setDeathPlace($deathPlace);
+        $deathPlace->addPersonBorn($person);
+    }
+
+    public function addAliases(Person $person, $value) {
+        $names = $this->split($value);
+        $repo = $this->em->getRepository(Alias::class);
+        foreach ($names as $name) {
+            $alias = $repo->findOneBy(array('name' => $name));
+            if (!$alias) {
+                $alias = new Alias();
+                $alias->setMaiden(preg_match('/^n(é|e)e/u', $name));
+                if ($alias->getMaiden()) {
+                    $alias->setName(substr($name, 4));
+                } else {
+                    $alias->setName($name);
+                }
+                $this->persist($alias);
+            }
+            $person->addAlias($alias);
+        }
+        if ($person->getFullName() === '') {
+            $alias = $person->getAliases()->first();
+            if ($alias) {
+                $person->setSortableName($this->namer->sortableName($this->namer->fullToLastFirst($alias->getName())));
+            }
+        }
+    }
+
+    public function addResidences(Person $person, $value) {
+        $names = $this->split($value);
+        foreach ($names as $name) {
+            $place = $this->getPlace($name);
+            $person->addResidence($place);
+            $place->addResident($person);
+        }
+    }
+
+    public function titleDate($title) {
         $matches = array();
-        $genre_re = '(?:\{(?P<genre>\w+)\})';
-        $year_re = '(?P<year>c?(?:\d{4})|(?:n\.d\.)?)';
-        $loc_re = '(?:(?P<loc>.*), )?';
-        $pub_re = '(?:\(' . $loc_re . $year_re . '\))';
-        
-        $unlinked_re = '(?P<title>.*?)';
-        $linked_re = "\<(?P<linked_title>.*?)\p{Z}(?P<url>https?:\/\/.*?)\s*\>";
-        $title = "(?:(?:$linked_re)|(?:$unlinked_re))";
-        $re = "$title\p{Z}*$pub_re?\p{Z}*$genre_re?";
-        preg_match("/^$re$/iu", $string, $matches);
-        
-        return $matches;
+        if (preg_match('/^(.*?)\(n\.d\.\)\s*$/', $title, $matches)) {
+            return array($matches[1], null);
+        }
+        if (preg_match('/^(.*?)\[(c?\d{4}(?:,\s*c?\d{4})*)\]\s*$/', $title, $matches)) {
+            return array($matches[1], $matches[2]);
+        }
+        if (preg_match('/^(.*?)\((c?\d{4}(?:,\s*c?\d{4})*)\)\s*$/', $title, $matches)) {
+            return array($matches[1], $matches[2]);
+        }
+        if (preg_match('/^(.*?)\(\[(c?\d{4}(?:,\s*c?\d{4})*)\]\)\s*$/', $title, $matches)) {
+            return array($matches[1], $matches[2]);
+        }
+        return array($title, null);
     }
 
-    public function sortableTitle($string) {
-        $filters = array(
-            '/^(the|an?)\b\s*(.*)/ius' => '$2, $1',
-            // move The, A, An to end.
-            '/^[^[:word:][:space:]]+/us' => '',
-            // remove non-word chars at start.
-        );
-        $title = mb_convert_case($string, MB_CASE_LOWER);
-        foreach($filters as $pattern => $replacement) {
-            $title = preg_replace($pattern, $replacement, $title);
-        }
-        return $title;
-    }
-
-    public function getPublication($string, Category $category) {
-        $pubData = $this->processTitle($string);
-        $url = null;
-        $title = $pubData['title'];
-        $year = null;
-        $yearCertain = true;
-        if(array_key_exists('year', $pubData) && strtolower($pubData['year']) !== 'n.d.') {
-            $year = $pubData['year'];
-        }
-        if($year && strtolower($year[0]) === 'c') {
-            $year = substr($year, 1);
-            $yearCertain = false;
-        }
-        if($pubData['linked_title'] && $pubData['url']) {
-            $title = $pubData['linked_title'];
-            $url = $pubData['url'];
-        }
-        
-        $repo = $this->em->getRepository('AppBundle:Publication');
-        $publication = $repo->findOneBy(array(
-            'title' => $title,
-            'year' => $year,
+    public function getPublication($categoryName, $title, $date, $placeName) {
+        $categoryRepo = $this->em->getRepository(Category::class);
+        $category = $categoryRepo->findOneBy(array(
+            'name' => $categoryName
         ));
-        if( ! $publication) {
+        if (!$category) {
+            throw new Exception("Unknown category {$categoryName}");
+        }
+        $repo = $this->em->getRepository(Publication::class);
+        $publication = $repo->findPublication($category, $title, $date, $placeName);
+        if (!$publication) {
             $publication = new Publication();
             $publication->setTitle($this->titleCaser->titlecase($title));
-            $publication->setSortableTitle($this->sortableTitle($title));
-            $publication->setYear($year);
-            $publication->setYearCertain($yearCertain);
-            if(array_key_exists('loc', $pubData) && $pubData['loc']) {
-                $publication->setLocation($pubData['loc']);
+            $publication->setSortableTitle($this->titleCaser->sortableTitle($title));
+
+            if ($date) {
+                $dateYear = new DateYear();
+                $dateYear->setValue($date);
+                $this->persist($dateYear);
+                $publication->setDateYear($dateYear);
+            }
+
+            if ($placeName) {
+                $place = $this->getPlace($placeName);
+                $publication->setLocation($place);
+                $place->addPublication($publication);
             }
             $publication->setCategory($category);
-            $this->em->persist($publication);
+            $category->addPublication($publication);
+            $this->persist($publication);
         }
-        
-        if($url) {
-            $publication->addLink($url);
-        }
-        $this->em->flush($publication);
         return $publication;
     }
 
-    public function import(array $row) {
-        $author = new Author();
-        $author->setFullName($this->processName($row[0]));
-        $author->setSortableName($this->sortableName($row[0]));
-                
-        $birthDate = $this->processDate($row[1]);
-        if (is_array($birthDate)) {
-            $author->setBirthDate($birthDate[0]);
-            $author->setDeathDate($birthDate[1]);
-        } else {
-            $author->setBirthDate($birthDate);
-            $author->setDeathDate($this->processDate($row[3]));
+    public function titlePlace($title) {
+        $matches = array();
+        if (preg_match('/^(.*?)\(([^)]*)\)\s*$/', $title, $matches)) {
+            return array($matches[1], $matches[2]);
         }
-        if ($author->getBirthDate() && $author->getDeathDate() &&
-            $author->getDeathDate() < $author->getBirthDate()) {
-            $this->logger->warning("$row[0]: Died before Birth");
-        }
+        return array($title, null);
+    }
 
-        list($birthPlaceName, $birthPlaceNotes) = $this->processPlace($row[2]);
-        $birthPlace = $this->getPlace($birthPlaceName, $birthPlaceNotes);
-        $author->setBirthPlace($birthPlace);
+    public function addPublications(Person $person, $value, $categoryName) {
+        $titles = $this->split($value);
+        $roleRepo = $this->em->getRepository(Role::class);
+        $role = $roleRepo->findOneBy(array('name' => 'author'));
+        foreach ($titles as $title) {
+            list($title, $dateValue) = $this->titleDate($title);
+            list($title, $placeValue) = $this->titlePlace($title);
+            $title = $this->trim($title);
 
-        list($deathPlaceName, $deathPlaceNotes) = $this->processPlace($row[4]);
-        $deathPlace = $this->getPlace($deathPlaceName, $deathPlaceNotes);
-        $author->setDeathPlace($deathPlace);
-        
-        $aliases = $this->split($row[5]);
-        foreach($aliases as $name) {
-            $alias = $this->getAlias($name);
-            $author->addAlias($alias);
+            $publication = $this->getPublication($categoryName, $title, $dateValue, $placeValue);
+            $contribution = new Contribution();
+            $contribution->setPerson($person);
+            $contribution->setRole($role);
+            $contribution->setPublication($publication);
+            $this->persist($contribution);
         }
+    }
 
-        $residenceNames = $this->split($row[6]);
-        foreach ($residenceNames as $name) {
-            list($placeName, $desc) = $this->processPlace($name);
-            $place = $this->getPlace($placeName, $desc);
-            $author->addResidence($place);
+    public function importRow($row) {
+        $person = $this->createPerson($row[0]);
+        $this->setBirthDate($person, $row[1]);
+        $this->setBirthPlace($person, $row[2]);
+        $this->setDeathDate($person, $row[3]);
+        $this->setDeathPlace($person, $row[4]);
+        $this->addAliases($person, $row[5]);
+        $this->addResidences($person, $row[6]);
+        $this->addPublications($person, $row[7], 'book');
+        $this->addPublications($person, $row[8], 'collection');
+        $this->addPublications($person, $row[9], 'periodical');
+        if (isset($row[10])) {
+            $person->setDescription($row[10]);
         }
-        $books = $this->split($row[7]);
-        $bookCategory = $this->em->getRepository('AppBundle:Category')->findOneBy(array(
-            'label' => 'Book',
-        ));
-        foreach($books as $book) {
-            $publication = $this->getPublication($book, $bookCategory);
-            $author->addPublication($publication);
-        }
+        $notes = implode("\n\n", array_slice($row, 11));
+        $person->setNotes($notes);
+        $this->flush(null, true);
         
-        $anthologies = $this->split($row[8]);
-        $anthologyCategory = $this->em->getRepository('AppBundle:Category')->findOneBy(array(
-            'label' => 'Anthology',
-        ));
-        foreach($anthologies as $anthology) {
-            $publication = $this->getPublication($anthology, $anthologyCategory);
-            $author->addPublication($publication);
-        }
-        
-        $periodicals = $this->split($row[9]);
-        $periodicalCategory = $this->em->getRepository('AppBundle:Category')->findOneBy(array(
-            'label' => 'Periodical',
-        ));
-        foreach($periodicals as $periodical) {
-            $publication = $this->getPublication($periodical, $periodicalCategory);
-            $author->addPublication($publication);
-        }
-        
-        $notes = array_slice($row, 10);
-        $author->setNotes(implode("\n\n", $notes));
-        
-        $status = $this->em->getRepository('AppBundle:Status')->findOneBy(array(
-            'label' => 'Draft',
-        ));
-        $author->setStatus($status);
-        $this->em->persist($author);
-        // dump($author);
+        return $person;
     }
 
 }
