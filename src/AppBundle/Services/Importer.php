@@ -123,7 +123,10 @@ class Importer {
 
     public function getPlace($value) {
         $name = $this->trim(preg_replace('/\([^)]*\)/u', '', $value));
-        $repo = $this->em->getRepository(Place::class);
+        if( ! $name) {
+            return null;
+        }
+        $repo = $this->em->getRepository(Place::class);        
         $place = $repo->findOneBy(array('name' => $name));
         if (!$place) {
             $place = new Place();
@@ -135,6 +138,7 @@ class Importer {
     }
 
     public function setBirthDate(Person $person, $value) {
+        $value = $this->trim($value);
         if (!$value) {
             return;
         }
@@ -146,11 +150,15 @@ class Importer {
 
     public function setBirthPlace(Person $person, $value) {
         $birthPlace = $this->getPlace($value);
+        if( ! $birthPlace) {
+            return;
+        }
         $person->setBirthPlace($birthPlace);
         $birthPlace->addPersonBorn($person);
     }
 
     public function setDeathDate(Person $person, $value) {
+        $value = $this->trim($value);
         if (!$value) {
             return;
         }
@@ -162,28 +170,37 @@ class Importer {
 
     public function setDeathPlace(Person $person, $value) {
         $deathPlace = $this->getPlace($value);
+        if( ! $deathPlace) {
+            return;
+        }
         $person->setDeathPlace($deathPlace);
         $deathPlace->addPersonBorn($person);
+    }
+    
+    public function getAlias($name) {
+        $repo = $this->em->getRepository(Alias::class);
+        $alias = $repo->findOneBy(array('name' => $name));
+        if (!$alias) {
+            $alias = new Alias();
+            $alias->setMaiden(preg_match('/^n(é|e)e\s+/u', $name));
+            if ($alias->getMaiden()) {
+                $alias->setName($this->trim(substr($name, 4)));
+            } else {
+                $alias->setName($name);
+            }
+            $this->persist($alias);
+        }
+        return $alias;
+        
     }
 
     public function addAliases(Person $person, $value) {
         $names = $this->split($value);
-        $repo = $this->em->getRepository(Alias::class);
         foreach ($names as $name) {
-            $alias = $repo->findOneBy(array('name' => $name));
-            if (!$alias) {
-                $alias = new Alias();
-                $alias->setMaiden(preg_match('/^n(é|e)e/u', $name));
-                if ($alias->getMaiden()) {
-                    $alias->setName(substr($name, 4));
-                } else {
-                    $alias->setName($name);
-                }
-                $this->persist($alias);
-            }
+            $alias = $this->getAlias($name);
             $person->addAlias($alias);
         }
-        if ($person->getFullName() === '') {
+        if ($person->getFullName() === '(unknown)') {
             $alias = $person->getAliases()->first();
             if ($alias) {
                 $person->setSortableName($this->namer->sortableName($this->namer->fullToLastFirst($alias->getName())));
@@ -202,17 +219,25 @@ class Importer {
 
     public function titleDate($title) {
         $matches = array();
-        if (preg_match('/^(.*?)\(n\.d\.\)\s*$/', $title, $matches)) {
-            return array($matches[1], null);
+        if (preg_match('/^(.*?)\(n\.d\.\)\s*$/u', $title, $matches)) {
+            return array($this->trim($matches[1]), null);
         }
-        if (preg_match('/^(.*?)\[(c?\d{4}(?:,\s*c?\d{4})*)\]\s*$/', $title, $matches)) {
-            return array($matches[1], $matches[2]);
+        if (preg_match('/^(.*?)\[(c?\d{4}(?:,\s*c?\d{4})*)\]\s*$/u', $title, $matches)) {
+            return array($this->trim($matches[1]), $matches[2]);
         }
-        if (preg_match('/^(.*?)\((c?\d{4}(?:,\s*c?\d{4})*)\)\s*$/', $title, $matches)) {
-            return array($matches[1], $matches[2]);
+        if (preg_match('/^(.*?)\((c?\d{4}(?:,\s*c?\d{4})*)\)\s*$/u', $title, $matches)) {
+            return array($this->trim($matches[1]), $matches[2]);
         }
-        if (preg_match('/^(.*?)\(\[(c?\d{4}(?:,\s*c?\d{4})*)\]\)\s*$/', $title, $matches)) {
-            return array($matches[1], $matches[2]);
+        if (preg_match('/^(.*?)\(\[(c?\d{4}(?:,\s*c?\d{4})*)\]\)\s*$/u', $title, $matches)) {
+            return array($this->trim($matches[1]), $matches[2]);
+        }
+        return array($title, null);
+    }
+    
+    public function titlePlace($title) {
+        $matches = array();
+        if (preg_match('/^(.*?)\(([^)]*)\)\s*$/u', $title, $matches)) {
+            return array($this->trim($matches[1]), $matches[2]);
         }
         return array($title, null);
     }
@@ -251,14 +276,6 @@ class Importer {
         return $publication;
     }
 
-    public function titlePlace($title) {
-        $matches = array();
-        if (preg_match('/^(.*?)\(([^)]*)\)\s*$/', $title, $matches)) {
-            return array($matches[1], $matches[2]);
-        }
-        return array($title, null);
-    }
-
     public function addPublications(Person $person, $value, $categoryName) {
         $titles = $this->split($value);
         $roleRepo = $this->em->getRepository(Role::class);
@@ -273,10 +290,14 @@ class Importer {
             $contribution->setPerson($person);
             $contribution->setRole($role);
             $contribution->setPublication($publication);
+            $person->addContribution($contribution);
             $this->persist($contribution);
         }
     }
 
+    /**
+     * @return Person
+     */
     public function importRow($row) {
         $person = $this->createPerson($row[0]);
         $this->setBirthDate($person, $row[1]);

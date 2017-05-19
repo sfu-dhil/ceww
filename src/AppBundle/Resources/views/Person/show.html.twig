@@ -63,17 +63,21 @@
             <tr>
                 <th>Birth</th>
                 <td>{{ person.birthDate }} 
-                    <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
-                        {{ person.birthPlace }}
-                    </a>
+                        {% if person.birthPlace %}
+                        <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
+                            {{ person.birthPlace }}
+                        </a>
+                        {% endif %}
                 </td>
             </tr>
             <tr>
                 <th>Death</th>
                 <td>{{ person.deathDate }} 
-                    <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
-                        {{ person.deathPlace }}
-                    </a>
+                        {% if person.deathPlace %}
+                        <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
+                            {{ person.deathPlace }}
+                        </a>
+                        {% endif %}
                 </td>
             </tr>
             <tr>

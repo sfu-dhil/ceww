@@ -375,8 +375,19 @@ class Person extends AbstractEntity {
      *
      * @return Collection
      */
-    public function getContributions() {
-        return $this->contributions;
+    public function getContributions($category = null) {
+        if( ! $category) {
+            return $this->contributions;
+        }
+        
+        return array_filter($this->contributions->toArray(), function(Contribution $contribution) use ($category) {
+            if(is_string($category)) {
+                return $contribution->getPublication()->getCategory()->getName() === $category;
+            } else {
+                return $contribution->getPublication()->getCategory() === $category;
+            }
+        });
+        
     }
 
 }

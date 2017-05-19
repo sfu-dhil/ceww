@@ -39,14 +39,18 @@
                         </a>
                     </td>
                     <td>{{ person.birthDate }} 
+                        {% if person.birthPlace %}
                         <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
                             {{ person.birthPlace }}
                         </a>
+                        {% endif %}
                     </td>
-                    <td>{{ person.birthDate }} 
+                    <td>{{ person.deathDate }} 
+                        {% if person.deathPlace %}
                         <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
                             {{ person.deathPlace }}
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
