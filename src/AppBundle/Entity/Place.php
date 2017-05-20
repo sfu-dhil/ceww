@@ -15,78 +15,78 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PlaceRepository")
  */
-class Place extends AbstractEntity
-{
+class Place extends AbstractEntity {
+
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
      */
     private $name;
-    
+
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
      */
     private $alternateNames;
-    
+
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
      */
     private $countryName;
-    
+
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
      */
     private $adminNames;
-    
+
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
      */
     private $latitude;
-    
+
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
      */
     private $longitude;
-    
+
     /**
      * public research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * private research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
-    
+
     /**
      * @var Collection|Person[]
      * @ORM\OneToMany(targetEntity="Person", mappedBy="birthPlace")
      */
     private $peopleBorn;
-    
+
     /**
      * @var Collection|Person[]
      * @ORM\OneToMany(targetEntity="Person", mappedBy="deathPlace")
      */
     private $peopleDied;
-    
+
     /**
      * @var Collection|Person[]
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="residences")
      */
     private $residents;
-    
+
     /**
      * @var Collection|Publication[]
      * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
      */
     private $publications;
-    
+
     public function __construct() {
         parent::__construct();
         $this->alternateNames = array();
@@ -96,8 +96,8 @@ class Place extends AbstractEntity
         $this->residents = new ArrayCollection();
         $this->publications = new ArrayCollection();
     }
-    
-    public function __toString() {        
+
+    public function __toString() {
         return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
@@ -108,8 +108,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -120,8 +119,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
@@ -132,8 +130,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setAlternateNames($alternateNames)
-    {
+    public function setAlternateNames($alternateNames) {
         $this->alternateNames = $alternateNames;
 
         return $this;
@@ -144,8 +141,7 @@ class Place extends AbstractEntity
      *
      * @return array
      */
-    public function getAlternateNames()
-    {
+    public function getAlternateNames() {
         return $this->alternateNames;
     }
 
@@ -156,8 +152,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setCountryName($countryName)
-    {
+    public function setCountryName($countryName) {
         $this->countryName = $countryName;
 
         return $this;
@@ -168,8 +163,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getCountryName()
-    {
+    public function getCountryName() {
         return $this->countryName;
     }
 
@@ -180,8 +174,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setAdminNames($adminNames)
-    {
+    public function setAdminNames($adminNames) {
         $this->adminNames = $adminNames;
 
         return $this;
@@ -192,8 +185,7 @@ class Place extends AbstractEntity
      *
      * @return array
      */
-    public function getAdminNames()
-    {
+    public function getAdminNames() {
         return $this->adminNames;
     }
 
@@ -204,8 +196,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setLatitude($latitude)
-    {
+    public function setLatitude($latitude) {
         $this->latitude = $latitude;
 
         return $this;
@@ -216,8 +207,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getLatitude()
-    {
+    public function getLatitude() {
         return $this->latitude;
     }
 
@@ -228,8 +218,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setLongitude($longitude)
-    {
+    public function setLongitude($longitude) {
         $this->longitude = $longitude;
 
         return $this;
@@ -240,8 +229,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getLongitude()
-    {
+    public function getLongitude() {
         return $this->longitude;
     }
 
@@ -252,8 +240,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -264,8 +251,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -276,8 +262,7 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function setNotes($notes)
-    {
+    public function setNotes($notes) {
         $this->notes = $notes;
 
         return $this;
@@ -288,8 +273,7 @@ class Place extends AbstractEntity
      *
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->notes;
     }
 
@@ -300,9 +284,10 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addPersonBorn(Person $peopleBorn)
-    {
-        $this->peopleBorn[] = $peopleBorn;
+    public function addPersonBorn(Person $peopleBorn) {
+        if (!$this->peopleBorn->contains($peopleBorn)) {
+            $this->peopleBorn[] = $peopleBorn;
+        }
 
         return $this;
     }
@@ -312,8 +297,7 @@ class Place extends AbstractEntity
      *
      * @param Person $peopleBorn
      */
-    public function removePersonBorn(Person $peopleBorn)
-    {
+    public function removePersonBorn(Person $peopleBorn) {
         $this->peopleBorn->removeElement($peopleBorn);
     }
 
@@ -322,11 +306,21 @@ class Place extends AbstractEntity
      *
      * @return Collection
      */
-    public function getPeopleBorn()
-    {
+    public function getPeopleBorn() {
         $births = $this->peopleBorn->toArray();
-        usort($births, function($a, $b){
-            return $a->getBirthDate()->getStart() - $b->getBirthDate()->getStart();
+        usort($births, function($a, $b) {
+            $aDate = $a->getBirthDate();
+            $bDate = $b->getBirthDate();
+            if( (! $aDate) && (!$bDate)) {
+                return 0;
+            }
+            if( (! $aDate) && $bDate) {
+                return -1;
+            }
+            if( $aDate && (! $bDate)) {
+                return 1;
+            }
+            return $aDate->getStart() - $bDate->getStart();
         });
         return $births;
     }
@@ -338,9 +332,10 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addPersonDied(Person $peopleDied)
-    {
-        $this->peopleDied[] = $peopleDied;
+    public function addPersonDied(Person $peopleDied) {
+        if (!$this->peopleDied->contains($peopleDied)) {
+            $this->peopleDied[] = $peopleDied;
+        }
 
         return $this;
     }
@@ -350,8 +345,7 @@ class Place extends AbstractEntity
      *
      * @param Person $peopleDied
      */
-    public function removePersonDied(Person $peopleDied)
-    {
+    public function removePersonDied(Person $peopleDied) {
         $this->peopleDied->removeElement($peopleDied);
     }
 
@@ -360,11 +354,21 @@ class Place extends AbstractEntity
      *
      * @return Collection
      */
-    public function getPeopleDied()
-    {
-        $deaths = $this->peopleBorn->toArray();
-        usort($deaths, function($a, $b){
-            return $a->getDeathDate()->getEnd() - $b->getDeathDate()->getEnd();
+    public function getPeopleDied() {
+        $deaths = $this->peopleDied->toArray();
+        usort($deaths, function($a, $b) {
+            $aDate = $a->getBirthDate();
+            $bDate = $b->getBirthDate();
+            if( (! $aDate) && (!$bDate)) {
+                return 0;
+            }
+            if( (! $aDate) && $bDate) {
+                return -1;
+            }
+            if( $aDate && (! $bDate)) {
+                return 1;
+            }
+            return $aDate->getStart() - $bDate->getStart();
         });
         return $deaths;
     }
@@ -376,9 +380,10 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addResident(Person $resident)
-    {
-        $this->residents[] = $resident;
+    public function addResident(Person $resident) {
+        if( ! $this->residents->contains($resident)) {
+            $this->residents[] = $resident;
+        }
 
         return $this;
     }
@@ -388,8 +393,7 @@ class Place extends AbstractEntity
      *
      * @param Person $resident
      */
-    public function removeResident(Person $resident)
-    {
+    public function removeResident(Person $resident) {
         $this->residents->removeElement($resident);
     }
 
@@ -398,8 +402,7 @@ class Place extends AbstractEntity
      *
      * @return Collection
      */
-    public function getResidents()
-    {
+    public function getResidents() {
         $residents = $this->residents->toArray();
         usort($residents, function($a, $b) {
             return strcmp($a->getSortableName(), $b->getSortableName());
@@ -414,9 +417,10 @@ class Place extends AbstractEntity
      *
      * @return Place
      */
-    public function addPublication(Publication $publication)
-    {
-        $this->publications[] = $publication;
+    public function addPublication(Publication $publication) {
+        if( ! $this->publications->contains($publication)) {
+            $this->publications[] = $publication;
+        }
 
         return $this;
     }
@@ -426,8 +430,7 @@ class Place extends AbstractEntity
      *
      * @param Publication $publication
      */
-    public function removePublication(Publication $publication)
-    {
+    public function removePublication(Publication $publication) {
         $this->publications->removeElement($publication);
     }
 
@@ -436,8 +439,12 @@ class Place extends AbstractEntity
      *
      * @return Collection
      */
-    public function getPublications()
-    {
-        return $this->publications;
+    public function getPublications() {
+        $publications = $this->publications->toArray();
+        usort($publications, function($a, $b) {
+            return strcmp($a->getSortableTitle(), $b->getSortableTitle());
+        });
+        return $publications;
     }
+
 }

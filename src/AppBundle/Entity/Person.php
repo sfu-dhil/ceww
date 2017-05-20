@@ -199,8 +199,16 @@ class Person extends AbstractEntity {
      *
      * @return Person
      */
-    public function setBirthDate(DateYear $birthDate = null) {
-        $this->birthDate = $birthDate;
+    public function setBirthDate($birthDate = null) {
+        if($birthDate === null) {
+            $this->birthDate = null;
+        }
+        if(! $birthDate instanceof DateYear) {
+            $this->birthDate = new DateYear();
+            $this->birthDate->setValue($birthDate);
+        } else {
+            $this->birthDate = $birthDate;
+        }
 
         return $this;
     }

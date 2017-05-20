@@ -35,7 +35,9 @@ class Role extends AbstractTerm
      */
     public function addContribution(Contribution $contribution)
     {
-        $this->contributions[] = $contribution;
+        if( ! $this->contributions->contains($contribution)) {
+            $this->contributions[] = $contribution;
+        }
 
         return $this;
     }

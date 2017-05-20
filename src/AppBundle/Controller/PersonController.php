@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Category;
+use AppBundle\Entity\Person;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Person;
-use AppBundle\Form\PersonType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Person controller.
@@ -165,9 +165,12 @@ class PersonController extends Controller
      */
     public function showAction(Person $person)
     {
-
+        $em = $this->getDoctrine()->getManager();
+        $categories = $em->getRepository(Category::class)->findBy([], ['label' => 'asc']);
+        
         return array(
             'person' => $person,
+            'categories' => $categories,
         );
     }
 

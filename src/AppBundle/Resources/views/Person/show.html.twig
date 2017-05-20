@@ -63,21 +63,21 @@
             <tr>
                 <th>Birth</th>
                 <td>{{ person.birthDate }} 
-                        {% if person.birthPlace %}
+                    {% if person.birthPlace %}
                         <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
                             {{ person.birthPlace }}
                         </a>
-                        {% endif %}
+                    {% endif %}
                 </td>
             </tr>
             <tr>
                 <th>Death</th>
                 <td>{{ person.deathDate }} 
-                        {% if person.deathPlace %}
+                    {% if person.deathPlace %}
                         <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
                             {{ person.deathPlace }}
                         </a>
-                        {% endif %}
+                    {% endif %}
                 </td>
             </tr>
             <tr>
@@ -93,17 +93,22 @@
 
     {% set contributions = person.contributions %}
     {% if contributions|length > 0 %}
-        <h2>Publications</h2>
-        <ul>
-            {% for contribution in contributions %}
-                <li>
-                    <a href="{{ path('publication_show', {'id': contribution.publication.id}) }}">
-                        {{ contribution.publication }}
-                    </a>
-                    ({{ contribution.role }})
-                </li>
-            {% endfor %}
-        </ul>
+        {% for category in categories %}
+            {% set contributions = person.getContributions(category) %}
+            {% if contributions|length %}
+                <h2>{{ category.label }}</h2>
+                <ul>
+                    {% for contribution in contributions %}
+                        <li>
+                            <a href="{{ path('publication_show', {'id': contribution.publication.id}) }}">
+                                {{ contribution.publication }}
+                            </a>
+                            ({{ contribution.role }})
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}            
     {% endif %}
 
     {% set residences = person.residences %}
@@ -119,7 +124,7 @@
             {% endfor %}
         </ul>
     {% endif %}
-    
+
     {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': person } %}				
 
 {% endblock %}

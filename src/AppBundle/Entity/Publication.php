@@ -16,78 +16,78 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
  */
-class Publication extends AbstractEntity
-{
+class Publication extends AbstractEntity {
+
     /**
      * @var string
      * @ORM\Column(type="text", nullable=false)
      */
     private $title;
-    
+
     /**
      * @var string
      * @ORM\Column(type="text", nullable=false)
      */
     private $sortableTitle;
-        
+
     /**
      * @var Collection|string[]
      * @ORM\Column(type="array")
      */
     private $links;
-    
+
     /**
      * public research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * private research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
-    
+
     /**
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear")
      */
     private $dateYear;
-    
+
     /**
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="publications")
      */
     private $location;
-    
+
     /**
      * @var Category
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
      */
     private $category;
-    
+
     /**
      * @var Collection|Genre[]
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publications_genres")
      */
     private $genres;
-    
+
     /**
      * @var Collection|Contribution[]
      * @ORM\OneToMany(targetEntity="Contribution", mappedBy="publication", cascade={"persist"}, orphanRemoval=true)
      */
     private $contributions;
-    
+
     public function __construct() {
         parent::__construct();
         $this->links = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->contributions = new ArrayCollection();
     }
-    
+
     public function __toString() {
         return $this->title;
     }
@@ -99,8 +99,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setTitle($title)
-    {
+    public function setTitle($title) {
         $this->title = $title;
 
         return $this;
@@ -111,8 +110,7 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         return $this->title;
     }
 
@@ -123,8 +121,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setSortableTitle($sortableTitle)
-    {
+    public function setSortableTitle($sortableTitle) {
         $this->sortableTitle = $sortableTitle;
 
         return $this;
@@ -135,8 +132,7 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getSortableTitle()
-    {
+    public function getSortableTitle() {
         return $this->sortableTitle;
     }
 
@@ -147,8 +143,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setLinks($links)
-    {
+    public function setLinks($links) {
         $this->links = $links;
 
         return $this;
@@ -159,8 +154,7 @@ class Publication extends AbstractEntity
      *
      * @return array
      */
-    public function getLinks()
-    {
+    public function getLinks() {
         return $this->links;
     }
 
@@ -171,8 +165,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -183,8 +176,7 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -195,8 +187,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setNotes($notes)
-    {
+    public function setNotes($notes) {
         $this->notes = $notes;
 
         return $this;
@@ -207,8 +198,7 @@ class Publication extends AbstractEntity
      *
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->notes;
     }
 
@@ -219,8 +209,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setDateYear(DateYear $dateYear = null)
-    {
+    public function setDateYear(DateYear $dateYear = null) {
         $this->dateYear = $dateYear;
 
         return $this;
@@ -231,8 +220,7 @@ class Publication extends AbstractEntity
      *
      * @return DateYear
      */
-    public function getDateYear()
-    {
+    public function getDateYear() {
         return $this->dateYear;
     }
 
@@ -243,8 +231,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setLocation(Place $location = null)
-    {
+    public function setLocation(Place $location = null) {
         $this->location = $location;
 
         return $this;
@@ -255,8 +242,7 @@ class Publication extends AbstractEntity
      *
      * @return Place
      */
-    public function getLocation()
-    {
+    public function getLocation() {
         return $this->location;
     }
 
@@ -267,8 +253,7 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function setCategory(Category $category = null)
-    {
+    public function setCategory(Category $category = null) {
         $this->category = $category;
 
         return $this;
@@ -279,8 +264,7 @@ class Publication extends AbstractEntity
      *
      * @return Category
      */
-    public function getCategory()
-    {
+    public function getCategory() {
         return $this->category;
     }
 
@@ -291,9 +275,10 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function addGenre(Genre $genre)
-    {
-        $this->genres[] = $genre;
+    public function addGenre(Genre $genre) {
+        if (!$this->genres->contains($genre)) {
+            $this->genres[] = $genre;
+        }
 
         return $this;
     }
@@ -303,8 +288,7 @@ class Publication extends AbstractEntity
      *
      * @param Genre $genre
      */
-    public function removeGenre(Genre $genre)
-    {
+    public function removeGenre(Genre $genre) {
         $this->genres->removeElement($genre);
     }
 
@@ -313,8 +297,7 @@ class Publication extends AbstractEntity
      *
      * @return Collection
      */
-    public function getGenres()
-    {
+    public function getGenres() {
         return $this->genres;
     }
 
@@ -325,9 +308,10 @@ class Publication extends AbstractEntity
      *
      * @return Publication
      */
-    public function addContribution(Contribution $contribution)
-    {
-        $this->contributions[] = $contribution;
+    public function addContribution(Contribution $contribution) {
+        if (!$this->contributions->contains($contribution)) {
+            $this->contributions[] = $contribution;
+        }
 
         return $this;
     }
@@ -337,8 +321,7 @@ class Publication extends AbstractEntity
      *
      * @param Contribution $contribution
      */
-    public function removeContribution(Contribution $contribution)
-    {
+    public function removeContribution(Contribution $contribution) {
         $this->contributions->removeElement($contribution);
     }
 
@@ -347,8 +330,8 @@ class Publication extends AbstractEntity
      *
      * @return Collection
      */
-    public function getContributions()
-    {
+    public function getContributions() {
         return $this->contributions;
     }
+
 }

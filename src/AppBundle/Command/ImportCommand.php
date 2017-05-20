@@ -17,15 +17,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ImportCommand extends ContainerAwareCommand {
 
+    /**
+     * If true, the import will be committed to the database.
+     * 
+     * @var boolean
+     */
     private $commit;
-    
+
+    /**
+     * @var Logger
+     */
     private $logger;
 
+    /**
+     * Construct the command and set the commit bit to default false.
+     * 
+     * @param string $name
+     */
     public function __construct($name = null) {
         parent::__construct($name);
         $this->commit = false;
     }
 
+    /**
+     * Configure the command.
+     */
     protected function configure() {
         $this->setName('ceww:import');
         $this->setDescription('Import one or more CSV files.');
@@ -33,12 +49,22 @@ class ImportCommand extends ContainerAwareCommand {
         $this->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import.');
     }
 
+    /**
+     * Inject the container.
+     * 
+     * @param ContainerInterface $container
+     */
     public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
         $this->importer = $container->get('ceww.importer');
         $this->logger = $container->get('logger');
     }
 
+    /**
+     * Import a CSV file.
+     * 
+     * @param string $path
+     */
     protected function import($path) {
         $fh = fopen($path, 'r');
         fgetcsv($fh); // headers.
@@ -63,6 +89,12 @@ class ImportCommand extends ContainerAwareCommand {
         }
     }
 
+    /**
+     * Execute the command.
+     * 
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $files = $input->getArgument('files');
         $this->importer->setCommit($input->getOption('commit'));
