@@ -25,21 +25,6 @@ a[href ^= 'mailto:']::after {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a[href ^= 'http://']::after,
-a[href ^= 'https://']::after {
-  content: "\e164";
-  position: relative;
-  top: 1px;
-  display: inline-block;
-  padding-left: 0.5ex;
-  font-family: 'Glyphicons Halflings';
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 span.twitter-typeahead {
   display: block;
   width: 100%;
@@ -118,4 +103,13 @@ ul.columnated li:before {
     -webkit-column-count: 4;
     column-count: 4;
   }
+}
+
+div.homepage {
+    margin: 0 auto;
+    max-width: 80ex;
+}
+
+div.homepage img {
+    max-width: 100%;
 }
