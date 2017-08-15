@@ -45,6 +45,7 @@ class ImportCommand extends ContainerAwareCommand {
     protected function configure() {
         $this->setName('ceww:import');
         $this->setDescription('Import one or more CSV files.');
+        $this->addOption('skip', null, InputOption::VALUE_REQUIRED, 'Skip this many rows at the top of the CSV files.');
         $this->addOption('commit', null, InputOption::VALUE_NONE, 'Commit the results to the database.');
         $this->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import.');
     }
@@ -76,13 +77,13 @@ class ImportCommand extends ContainerAwareCommand {
                 $this->logger->warning("{$path}:{$n}:Empty row.");
                 continue;
             }
-            $row = array_map(function($item) {
+            $cleaned = array_map(function($item) {
                 $item = preg_replace("/\x{00a0}/siu", " ", $item);
                 $item = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $item);
                 return $item;
             }, $row);
             try {
-                $this->importer->importRow($row);
+                $this->importer->importRow($cleaned);
             } catch (Exception $e) {
                 $this->logger->error("{$path}:{$n}:{$e->getMessage()}");
             }
