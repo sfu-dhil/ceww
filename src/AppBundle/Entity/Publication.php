@@ -10,13 +10,20 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 /**
  * Publication
  *
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
  * @ORM\Table(name="publication", indexes={
  *  @ORM\Index(columns={"title"}, flags={"fulltext"}),
  *  @ORM\Index(columns={"sortable_title"}, flags={"fulltext"}),
  * })
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="category", type="string")
+ * @ORM\DiscriminatorMap({
+ *  "book" = "Book",
+ *  "compilation" = "Compilation",
+ *  "periodical" = "Periodical"
+ * })
  */
-class Publication extends AbstractEntity {
+abstract class Publication extends AbstractEntity {
 
     /**
      * @var string
