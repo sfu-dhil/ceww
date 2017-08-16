@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="homepage">
+        <img src="{{ asset('images/homepage/header.jpg') }}" alt="Database of Canada's Early Women Writers">
+        <p>The Database of Canada’s Early Women Writers (DoCEWW) at Simon Fraser
+            University is associated with the larger Canada’s Early Women Writers
+            (CEWW) project, which is part of the <a href="http://www.cwrc.ca/en/">Canadian 
+                Writing Research Collaboratory (CWRC)</a>. Both projects include
+            women authors who either lived for an extensive period of time in Canada
+            or self-identified as Canadian, and who published some form of writing
+            in English—in any genre and in any forum—up to and including 1950.</p>
+
+        <p>Whereas CEWW offers extensive bio-bibliographic entries on a selection
+            of early Canadian women writers for whom sufficient information can be
+            found, the DoCEWW is a simpler, easily navigable database of all
+            Canadian women writers who have been identified by our project.</p>
+
+        <p>Whenever the information is available, the DoCEWW records each author’s
+            name, alternative names, dates and places of birth and death,
+            residences, titles written, and collections and periodicals contributed
+            to. While the DoCEWW already contains some 4500 authors, the list is not
+            yet not comprehensive, and we invite the public to contribute new names,
+            or additional information about the women we already have listed.</p>
+
+        <p>To contact us, please leave a comment in the comment form for the
+            individual author or title, or leave a comment on the 
+            <a href="https://ceww.wordpress.com">CEWW project blog</a>.</p>
+
+        <h2>Acknowledgements</h2>
+
+        <p>Directed by Dr. Carole Gerson, this project has been supported by the
+            <a href="http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx">Social 
+                Sciences and Humanities Research Council of Canada (SSHRC)</a>, 
+            <a href="http://www.sfu.ca/fass.html">the Simon Fraser 
+                University Faculty of Arts and Social Sciences</a>, the 
+            <a href="http://www.sfu.ca/english.html">Department of English</a>, and the 
+            <a href="https://dhil.lib.sfu.ca">Digital Humanities Innovation Lab</a>
+            at SFU. Substantial research has been done by Karyn Huenemann, Lindsey
+            Bannister, Rebecca Baum, Nicholas Beauchesne, Rob Bittner, Deborah
+            Blacklock, Leah de Roy, Brenna Duperron, Katie Gillespie, Alison
+            McDonald, Linnea McNally, Daryn Wright, and Andrew Zuliani. We are
+            grateful for the assistance of staff in SFU Inter-Library Loans: Nancy
+            Blake, Sonny Wong, Elaine Shu, and Vera Yuen. </p>
+
+        <img src="{{ asset('images/homepage/sshrc.png') }}" alt='Social Sciences and Humanities Research Council of Canada'>
+        <img src="{{ asset('images/homepage/sfu-tri.jpg') }}" alt='Simon Fraser University faculty of Arts and Social Sciences, Department of English, and SFU Library'>
+        <img src="{{ asset('images/homepage/dhil-logo.png') }}" alt='SFU Digital Humanities Innovation Lab'>
+
+    </div>
+{% endblock %}
