@@ -7,20 +7,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Role;
-use AppBundle\Form\RoleType;
+use AppBundle\Entity\Compilation;
+use AppBundle\Form\CompilationType;
 
 /**
- * Role controller.
+ * Compilation controller.
  *
- * @Route("/role")
+ * @Route("/compilation")
  */
-class RoleController extends Controller
+class CompilationController extends Controller
 {
     /**
-     * Lists all Role entities.
+     * Lists all Compilation entities.
      *
-     * @Route("/", name="role_index")
+     * @Route("/", name="compilation_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -29,20 +29,20 @@ class RoleController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Role::class, 'e')->orderBy('e.id', 'ASC');
+        $qb->select('e')->from(Compilation::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $roles = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $compilations = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
         return array(
-            'roles' => $roles,
+            'compilations' => $compilations,
         );
     }
     /**
-     * Search for Role entities.
+     * Search for Compilation entities.
 	 *
 	 * To make this work, add a method like this one to the 
-	 * AppBundle:Role repository. Replace the fieldName with
+	 * AppBundle:Compilation repository. Replace the fieldName with
 	 * something appropriate, and adjust the generated search.html.twig
 	 * template.
 	 * 
@@ -53,7 +53,7 @@ class RoleController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="role_search")
+     * @Route("/search", name="compilation_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -61,26 +61,26 @@ class RoleController extends Controller
     public function searchAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Role');
+		$repo = $em->getRepository('AppBundle:Compilation');
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->searchQuery($q);
 			$paginator = $this->get('knp_paginator');
-			$roles = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+			$compilations = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {
-			$roles = array();
+			$compilations = array();
 		}
 
         return array(
-            'roles' => $roles,
+            'compilations' => $compilations,
 			'q' => $q,
         );
     }
     /**
-     * Full text search for Role entities.
+     * Full text search for Compilation entities.
 	 *
 	 * To make this work, add a method like this one to the 
-	 * AppBundle:Role repository. Replace the fieldName with
+	 * AppBundle:Compilation repository. Replace the fieldName with
 	 * something appropriate, and adjust the generated fulltext.html.twig
 	 * template.
 	 * 
@@ -94,11 +94,11 @@ class RoleController extends Controller
 	//    }	 
 	 * 
 	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Role entity.
+	 * fulltext indexes on your Compilation entity.
 	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
 	 *
      *
-     * @Route("/fulltext", name="role_fulltext")
+     * @Route("/fulltext", name="compilation_fulltext")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -107,26 +107,26 @@ class RoleController extends Controller
     public function fulltextAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Role');
+		$repo = $em->getRepository('AppBundle:Compilation');
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->fulltextQuery($q);
 			$paginator = $this->get('knp_paginator');
-			$roles = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+			$compilations = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {
-			$roles = array();
+			$compilations = array();
 		}
 
         return array(
-            'roles' => $roles,
+            'compilations' => $compilations,
 			'q' => $q,
         );
     }
 
     /**
-     * Creates a new Role entity.
+     * Creates a new Compilation entity.
      *
-     * @Route("/new", name="role_new")
+     * @Route("/new", name="compilation_new")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
@@ -137,91 +137,91 @@ class RoleController extends Controller
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $role = new Role();
-        $form = $this->createForm(RoleType::class, $role);
+        $compilation = new Compilation();
+        $form = $this->createForm(CompilationType::class, $compilation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($role);
+            $em->persist($compilation);
             $em->flush();
 
-            $this->addFlash('success', 'The new role was created.');
-            return $this->redirectToRoute('role_show', array('id' => $role->getId()));
+            $this->addFlash('success', 'The new compilation was created.');
+            return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
         }
 
         return array(
-            'role' => $role,
+            'compilation' => $compilation,
             'form' => $form->createView(),
         );
     }
 
     /**
-     * Finds and displays a Role entity.
+     * Finds and displays a Compilation entity.
      *
-     * @Route("/{id}", name="role_show")
+     * @Route("/{id}", name="compilation_show")
      * @Method("GET")
      * @Template()
-	 * @param Role $role
+	 * @param Compilation $compilation
      */
-    public function showAction(Role $role)
+    public function showAction(Compilation $compilation)
     {
 
         return array(
-            'role' => $role,
+            'compilation' => $compilation,
         );
     }
 
     /**
-     * Displays a form to edit an existing Role entity.
+     * Displays a form to edit an existing Compilation entity.
      *
-     * @Route("/{id}/edit", name="role_edit")
+     * @Route("/{id}/edit", name="compilation_edit")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
-	 * @param Role $role
+	 * @param Compilation $compilation
      */
-    public function editAction(Request $request, Role $role)
+    public function editAction(Request $request, Compilation $compilation)
     {
         if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $editForm = $this->createForm(RoleType::class, $role);
+        $editForm = $this->createForm(CompilationType::class, $compilation);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
-            $this->addFlash('success', 'The role has been updated.');
-            return $this->redirectToRoute('role_show', array('id' => $role->getId()));
+            $this->addFlash('success', 'The compilation has been updated.');
+            return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
         }
 
         return array(
-            'role' => $role,
+            'compilation' => $compilation,
             'edit_form' => $editForm->createView(),
         );
     }
 
     /**
-     * Deletes a Role entity.
+     * Deletes a Compilation entity.
      *
-     * @Route("/{id}/delete", name="role_delete")
+     * @Route("/{id}/delete", name="compilation_delete")
      * @Method("GET")
 	 * @param Request $request
-	 * @param Role $role
+	 * @param Compilation $compilation
      */
-    public function deleteAction(Request $request, Role $role)
+    public function deleteAction(Request $request, Compilation $compilation)
     {
         if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $em = $this->getDoctrine()->getManager();
-        $em->remove($role);
+        $em->remove($compilation);
         $em->flush();
-        $this->addFlash('success', 'The role was deleted.');
+        $this->addFlash('success', 'The compilation was deleted.');
 
-        return $this->redirectToRoute('role_index');
+        return $this->redirectToRoute('compilation_index');
     }
 }

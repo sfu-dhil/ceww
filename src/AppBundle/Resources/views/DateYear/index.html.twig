@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}dateYears{% endblock %}
+
+{% block pageheader %}
+    <h1>DateYear List</h1>
+    <p class="count">
+        Displaying {{ dateYears|length }} dateYears of {{ dateYears.getTotalItemCount }} total.
+    </p>
+ {% endblock %} 
+
+{% block body %}
+
+        <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+            <a href="{{ path('date-year_new') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span> New
+            </a>
+            {% endif %}
+            <a href="{{ path('date-year_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+    </div>
+        
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr><th>Value</th><th>Start</th><th>Start Circa</th><th>End</th><th>End Circa</th><th>Created</th><th>Updated</th>            </tr>
+        </thead>
+        <tbody>
+        {% for dateYear in dateYears %}
+            <tr>
+                <td>
+                    <a href="{{ path('date-year_show', { 'id': dateYear.id }) }}">
+                        {{ dateYear.value }}
+                    </a>
+                </td>
+                <td>{{ dateYear.start }}</td>
+                <td>{% if dateYear.startCirca %}Yes{% else %}No{% endif %}</td>
+                <td>{{ dateYear.end }}</td>
+                <td>{% if dateYear.endCirca %}Yes{% else %}No{% endif %}</td>
+                <td>{% if dateYear.created %}{{ dateYear.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if dateYear.updated %}{{ dateYear.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        
+    <div class="navigation">
+        {{ knp_pagination_render(dateYears) }}
+    </div>
+
+{% endblock %}

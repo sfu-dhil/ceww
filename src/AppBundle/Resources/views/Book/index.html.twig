@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}books{% endblock %}
+
+{% block pageheader %}
+    <h1>Book List</h1>
+    <p class="count">
+        Displaying {{ books|length }} books of {{ books.getTotalItemCount }} total.
+    </p>
+ {% endblock %} 
+
+{% block body %}
+
+        <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+            <a href="{{ path('book_new') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span> New
+            </a>
+            {% endif %}
+            <a href="{{ path('book_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+    </div>
+        
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr><th>Created</th><th>Updated</th>            </tr>
+        </thead>
+        <tbody>
+        {% for book in books %}
+            <tr>
+                <td>
+                    <a href="{{ path('book_show', { 'id': book.id }) }}">
+                        {{ book.created }}
+                    </a>
+                </td>
+                <td>{% if book.updated %}{{ book.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        
+    <div class="navigation">
+        {{ knp_pagination_render(books) }}
+    </div>
+
+{% endblock %}

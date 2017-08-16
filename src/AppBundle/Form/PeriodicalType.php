@@ -8,47 +8,34 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PersonType extends AbstractType
+class PeriodicalType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {        $builder->add('fullName', null, array(
-            'label' => 'Full Name',
+    {        $builder->add('runDates', null, array(
+            'label' => 'Run Dates',
             'required' => true,
             'attr' => array(
                 'help_block' => '',
             ),
         ));
-                $builder->add('sortableName', null, array(
-            'label' => 'Sortable Name',
+                $builder->add('continuedFrom', null, array(
+            'label' => 'Continued From',
             'required' => true,
             'attr' => array(
                 'help_block' => '',
             ),
         ));
-                $builder->add('description', null, array(
-            'label' => 'Description',
-            'required' => false,
+                $builder->add('continuedBy', null, array(
+            'label' => 'Continued By',
+            'required' => true,
             'attr' => array(
                 'help_block' => '',
             ),
         ));
-                $builder->add('notes', null, array(
-            'label' => 'Notes',
-            'required' => false,
-            'attr' => array(
-                'help_block' => '',
-            ),
-        ));
-                        $builder->add('birthDate');
-                        $builder->add('birthPlace');
-                        $builder->add('deathDate');
-                        $builder->add('deathPlace');
-                        $builder->add('residences');
-                        $builder->add('aliases');
                 
     }
     
@@ -58,7 +45,7 @@ class PersonType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Person'
+            'data_class' => 'AppBundle\Entity\Periodical'
         ));
     }
 }
