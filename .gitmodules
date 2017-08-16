@@ -6,3 +6,7 @@
 	path = docs
 	url = git@github.com:sfu-dhil/ceww-docs.git
 	branch = master
+[submodule "app/Resources/SensioGeneratorBundle/skeleton"]
+	path = app/Resources/SensioGeneratorBundle/skeleton
+	url = git@github.com:sfu-dhil/generator-skeleton.git
+	branch = master
