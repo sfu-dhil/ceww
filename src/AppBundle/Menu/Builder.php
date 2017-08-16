@@ -34,9 +34,6 @@ class Builder implements ContainerAwareInterface {
         $menu->addChild('Alternate Names', array(
             'route' => 'alias_index',
         ));
-        $menu->addChild('Categories', array(
-            'route' => 'category_index',
-        ));
         $menu->addChild('Genres', array(
             'route' => 'genre_index',
         ));
@@ -45,9 +42,6 @@ class Builder implements ContainerAwareInterface {
         ));
         $menu->addChild('Places', array(
             'route' => 'place_index',
-        ));
-        $menu->addChild('Publications', array(
-            'route' => 'publication_index',
         ));
 
         if ($this->container->get('security.token_storage')->getToken() && $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
