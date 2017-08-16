@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}compilations{% endblock %}
+
+{% block pageheader %}
+    <h1>Compilation List</h1>
+    <p class="count">
+        Displaying {{ compilations|length }} compilations of {{ compilations.getTotalItemCount }} total.
+    </p>
+ {% endblock %} 
+
+{% block body %}
+
+        <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+            <a href="{{ path('compilation_new') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span> New
+            </a>
+            {% endif %}
+            <a href="{{ path('compilation_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+    </div>
+        
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr><th>Created</th><th>Updated</th>            </tr>
+        </thead>
+        <tbody>
+        {% for compilation in compilations %}
+            <tr>
+                <td>
+                    <a href="{{ path('compilation_show', { 'id': compilation.id }) }}">
+                        {{ compilation.created }}
+                    </a>
+                </td>
+                <td>{% if compilation.updated %}{{ compilation.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        
+    <div class="navigation">
+        {{ knp_pagination_render(compilations) }}
+    </div>
+
+{% endblock %}

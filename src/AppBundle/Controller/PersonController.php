@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Category;
-use AppBundle\Entity\Person;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity\Person;
+use AppBundle\Form\PersonType;
 
 /**
  * Person controller.
@@ -28,8 +28,9 @@ class PersonController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $dql = 'SELECT e FROM AppBundle:Person e ORDER BY e.sortableName';
-        $query = $em->createQuery($dql);
+        $qb = $em->createQueryBuilder();
+        $qb->select('e')->from(Person::class, 'e')->orderBy('e.id', 'ASC');
+        $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
         $people = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
@@ -39,6 +40,18 @@ class PersonController extends Controller
     }
     /**
      * Search for Person entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Person repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated search.html.twig
+	 * template.
+	 * 
+     //    public function searchQuery($q) {
+     //        $qb = $this->createQueryBuilder('e');
+     //        $qb->where("e.fieldName like '%$q%'");
+     //        return $qb->getQuery();
+     //    }
+	 *
      *
      * @Route("/search", name="person_search")
      * @Method("GET")
@@ -52,6 +65,52 @@ class PersonController extends Controller
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->searchQuery($q);
+			$paginator = $this->get('knp_paginator');
+			$people = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+		} else {
+			$people = array();
+		}
+
+        return array(
+            'people' => $people,
+			'q' => $q,
+        );
+    }
+    /**
+     * Full text search for Person entities.
+	 *
+	 * To make this work, add a method like this one to the 
+	 * AppBundle:Person repository. Replace the fieldName with
+	 * something appropriate, and adjust the generated fulltext.html.twig
+	 * template.
+	 * 
+	//    public function fulltextQuery($q) {
+	//        $qb = $this->createQueryBuilder('e');
+	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
+	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
+	//        $qb->orderBy('score', 'desc');
+	//        $qb->setParameter('q', $q);
+	//        return $qb->getQuery();
+	//    }	 
+	 * 
+	 * Requires a MatchAgainst function be added to doctrine, and appropriate
+	 * fulltext indexes on your Person entity.
+	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+	 *
+     *
+     * @Route("/fulltext", name="person_fulltext")
+     * @Method("GET")
+     * @Template()
+	 * @param Request $request
+	 * @return array
+     */
+    public function fulltextAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Person');
+		$q = $request->query->get('q');
+		if($q) {
+	        $query = $repo->fulltextQuery($q);
 			$paginator = $this->get('knp_paginator');
 			$people = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {
@@ -79,7 +138,7 @@ class PersonController extends Controller
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $person = new Person();
-        $form = $this->createForm('AppBundle\Form\PersonType', $person);
+        $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -107,12 +166,9 @@ class PersonController extends Controller
      */
     public function showAction(Person $person)
     {
-        $em = $this->getDoctrine()->getManager();
-        $categories = $em->getRepository(Category::class)->findBy([], ['label' => 'asc']);
-        
+
         return array(
             'person' => $person,
-            'categories' => $categories,
         );
     }
 
@@ -131,7 +187,7 @@ class PersonController extends Controller
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $editForm = $this->createForm('AppBundle\Form\PersonType', $person);
+        $editForm = $this->createForm(PersonType::class, $person);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

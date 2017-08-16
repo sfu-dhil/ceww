@@ -7,20 +7,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Role;
-use AppBundle\Form\RoleType;
+use AppBundle\Entity\Book;
+use AppBundle\Form\BookType;
 
 /**
- * Role controller.
+ * Book controller.
  *
- * @Route("/role")
+ * @Route("/book")
  */
-class RoleController extends Controller
+class BookController extends Controller
 {
     /**
-     * Lists all Role entities.
+     * Lists all Book entities.
      *
-     * @Route("/", name="role_index")
+     * @Route("/", name="book_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -29,20 +29,20 @@ class RoleController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Role::class, 'e')->orderBy('e.id', 'ASC');
+        $qb->select('e')->from(Book::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $roles = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $books = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
         return array(
-            'roles' => $roles,
+            'books' => $books,
         );
     }
     /**
-     * Search for Role entities.
+     * Search for Book entities.
 	 *
 	 * To make this work, add a method like this one to the 
-	 * AppBundle:Role repository. Replace the fieldName with
+	 * AppBundle:Book repository. Replace the fieldName with
 	 * something appropriate, and adjust the generated search.html.twig
 	 * template.
 	 * 
@@ -53,7 +53,7 @@ class RoleController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="role_search")
+     * @Route("/search", name="book_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -61,26 +61,26 @@ class RoleController extends Controller
     public function searchAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Role');
+		$repo = $em->getRepository('AppBundle:Book');
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->searchQuery($q);
 			$paginator = $this->get('knp_paginator');
-			$roles = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+			$books = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {
-			$roles = array();
+			$books = array();
 		}
 
         return array(
-            'roles' => $roles,
+            'books' => $books,
 			'q' => $q,
         );
     }
     /**
-     * Full text search for Role entities.
+     * Full text search for Book entities.
 	 *
 	 * To make this work, add a method like this one to the 
-	 * AppBundle:Role repository. Replace the fieldName with
+	 * AppBundle:Book repository. Replace the fieldName with
 	 * something appropriate, and adjust the generated fulltext.html.twig
 	 * template.
 	 * 
@@ -94,11 +94,11 @@ class RoleController extends Controller
 	//    }	 
 	 * 
 	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Role entity.
+	 * fulltext indexes on your Book entity.
 	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
 	 *
      *
-     * @Route("/fulltext", name="role_fulltext")
+     * @Route("/fulltext", name="book_fulltext")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -107,26 +107,26 @@ class RoleController extends Controller
     public function fulltextAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Role');
+		$repo = $em->getRepository('AppBundle:Book');
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->fulltextQuery($q);
 			$paginator = $this->get('knp_paginator');
-			$roles = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+			$books = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {
-			$roles = array();
+			$books = array();
 		}
 
         return array(
-            'roles' => $roles,
+            'books' => $books,
 			'q' => $q,
         );
     }
 
     /**
-     * Creates a new Role entity.
+     * Creates a new Book entity.
      *
-     * @Route("/new", name="role_new")
+     * @Route("/new", name="book_new")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
@@ -137,91 +137,91 @@ class RoleController extends Controller
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $role = new Role();
-        $form = $this->createForm(RoleType::class, $role);
+        $book = new Book();
+        $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($role);
+            $em->persist($book);
             $em->flush();
 
-            $this->addFlash('success', 'The new role was created.');
-            return $this->redirectToRoute('role_show', array('id' => $role->getId()));
+            $this->addFlash('success', 'The new book was created.');
+            return $this->redirectToRoute('book_show', array('id' => $book->getId()));
         }
 
         return array(
-            'role' => $role,
+            'book' => $book,
             'form' => $form->createView(),
         );
     }
 
     /**
-     * Finds and displays a Role entity.
+     * Finds and displays a Book entity.
      *
-     * @Route("/{id}", name="role_show")
+     * @Route("/{id}", name="book_show")
      * @Method("GET")
      * @Template()
-	 * @param Role $role
+	 * @param Book $book
      */
-    public function showAction(Role $role)
+    public function showAction(Book $book)
     {
 
         return array(
-            'role' => $role,
+            'book' => $book,
         );
     }
 
     /**
-     * Displays a form to edit an existing Role entity.
+     * Displays a form to edit an existing Book entity.
      *
-     * @Route("/{id}/edit", name="role_edit")
+     * @Route("/{id}/edit", name="book_edit")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
-	 * @param Role $role
+	 * @param Book $book
      */
-    public function editAction(Request $request, Role $role)
+    public function editAction(Request $request, Book $book)
     {
         if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $editForm = $this->createForm(RoleType::class, $role);
+        $editForm = $this->createForm(BookType::class, $book);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
-            $this->addFlash('success', 'The role has been updated.');
-            return $this->redirectToRoute('role_show', array('id' => $role->getId()));
+            $this->addFlash('success', 'The book has been updated.');
+            return $this->redirectToRoute('book_show', array('id' => $book->getId()));
         }
 
         return array(
-            'role' => $role,
+            'book' => $book,
             'edit_form' => $editForm->createView(),
         );
     }
 
     /**
-     * Deletes a Role entity.
+     * Deletes a Book entity.
      *
-     * @Route("/{id}/delete", name="role_delete")
+     * @Route("/{id}/delete", name="book_delete")
      * @Method("GET")
 	 * @param Request $request
-	 * @param Role $role
+	 * @param Book $book
      */
-    public function deleteAction(Request $request, Role $role)
+    public function deleteAction(Request $request, Book $book)
     {
         if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $em = $this->getDoctrine()->getManager();
-        $em->remove($role);
+        $em->remove($book);
         $em->flush();
-        $this->addFlash('success', 'The role was deleted.');
+        $this->addFlash('success', 'The book was deleted.');
 
-        return $this->redirectToRoute('role_index');
+        return $this->redirectToRoute('book_index');
     }
 }
