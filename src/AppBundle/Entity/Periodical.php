@@ -13,12 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Periodical extends Publication
 {
     /**
-     * @var Place
-     * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleBorn")
-     */
-    private $location;
-
-    /**
      * @var String
      * @ORM\Column(type="string", length=24)
      */

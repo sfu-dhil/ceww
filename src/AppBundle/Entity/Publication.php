@@ -70,12 +70,6 @@ abstract class Publication extends AbstractEntity {
     private $location;
 
     /**
-     * @var Category
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
-     */
-    private $category;
-
-    /**
      * @var Collection|Genre[]
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publications_genres")
@@ -251,28 +245,6 @@ abstract class Publication extends AbstractEntity {
      */
     public function getLocation() {
         return $this->location;
-    }
-
-    /**
-     * Set category
-     *
-     * @param Category $category
-     *
-     * @return Publication
-     */
-    public function setCategory(Category $category = null) {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return Category
-     */
-    public function getCategory() {
-        return $this->category;
     }
 
     /**
