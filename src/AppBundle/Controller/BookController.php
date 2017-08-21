@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Book;
+use AppBundle\Form\BookType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Book;
-use AppBundle\Form\BookType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Book controller.
@@ -29,7 +29,7 @@ class BookController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Book::class, 'e')->orderBy('e.id', 'ASC');
+        $qb->select('e')->from(Book::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
         $books = $paginator->paginate($query, $request->query->getint('page', 1), 25);

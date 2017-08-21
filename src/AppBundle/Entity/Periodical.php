@@ -14,19 +14,19 @@ class Periodical extends Publication
 {
     /**
      * @var String
-     * @ORM\Column(type="string", length=24)
+     * @ORM\Column(type="string", length=48, nullable=true)
      */
     private $runDates;
     
     /**
      * @var String
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $continuedFrom;
     
     /**
      * @var String
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $continuedBy;
     

@@ -31,6 +31,22 @@ class Builder implements ContainerAwareInterface {
         ));
         $menu->setAttribute('dropdown', true);
 
+        $menu->addChild('Books', array(
+            'route' => 'book_index',
+        ));
+        $menu->addChild('Compilations', array(
+            'route' => 'compilation_index',
+        ));
+        $menu->addChild('Periodicals', array(
+            'route' => 'periodical_index',
+        ));
+        $menu->addChild('divider1', array(
+            'label' => '',
+        ));
+        $menu['divider1']->setAttributes(array(
+            'role' => 'separator',
+            'class' => 'divider',
+        ));
         $menu->addChild('Alternate Names', array(
             'route' => 'alias_index',
         ));
@@ -45,10 +61,10 @@ class Builder implements ContainerAwareInterface {
         ));
 
         if ($this->container->get('security.token_storage')->getToken() && $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
-            $menu->addChild('divider', array(
+            $menu->addChild('divider2', array(
                 'label' => '',
             ));
-            $menu['divider']->setAttributes(array(
+            $menu['divider2']->setAttributes(array(
                 'role' => 'separator',
                 'class' => 'divider',
             ));

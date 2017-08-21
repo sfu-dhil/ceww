@@ -10,4 +10,31 @@ namespace AppBundle\Repository;
  */
 class BookRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findBook($title, $date = null, $placeName = null) {
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere('p.title = :title');
+        $qb->setParameter('title', $title);
+
+        if ($date) {
+            $qb->innerJoin('p.dateYear', 'd');
+            $qb->andWhere('d.value = :value');
+            $qb->setParameter('value', $date);
+        } else {
+            $qb->andWhere('p.dateYear is null');
+        }
+
+        if ($placeName) {
+            $qb->innerJoin('p.location', 'l');
+            $qb->andWhere('l.name = :place');
+            $qb->setParameter('place', $placeName);
+        } else {
+            $qb->andWhere('p.location is null');
+        }
+
+        try {
+            return $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new Exception("Duplicate publication detected - " . implode(':', [$category, $title, $date, $placeName]));
+        }
+    }
 }

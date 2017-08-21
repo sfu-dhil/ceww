@@ -7,20 +7,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Compilation;
-use AppBundle\Form\CompilationType;
+use AppBundle\Entity\Publication;
+use AppBundle\Form\PublicationType;
 
 /**
- * Compilation controller.
+ * Publication controller.
  *
- * @Route("/compilation")
+ * @Route("/publication")
  */
-class CompilationController extends Controller
+class PublicationController extends Controller
 {
     /**
-     * Lists all Compilation entities.
+     * Lists all Publication entities.
      *
-     * @Route("/", name="compilation_index")
+     * @Route("/", name="publication_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -29,20 +29,20 @@ class CompilationController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Compilation::class, 'e')->orderBy('e.sortableTitle', 'ASC');
+        $qb->select('e')->from(Publication::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $compilations = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $publications = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
         return array(
-            'compilations' => $compilations,
+            'publications' => $publications,
         );
     }
     /**
-     * Search for Compilation entities.
+     * Search for Publication entities.
 	 *
 	 * To make this work, add a method like this one to the 
-	 * AppBundle:Compilation repository. Replace the fieldName with
+	 * AppBundle:Publication repository. Replace the fieldName with
 	 * something appropriate, and adjust the generated search.html.twig
 	 * template.
 	 * 
@@ -53,7 +53,7 @@ class CompilationController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="compilation_search")
+     * @Route("/search", name="publication_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -61,26 +61,26 @@ class CompilationController extends Controller
     public function searchAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Compilation');
+		$repo = $em->getRepository('AppBundle:Publication');
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->searchQuery($q);
 			$paginator = $this->get('knp_paginator');
-			$compilations = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+			$publications = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {
-			$compilations = array();
+			$publications = array();
 		}
 
         return array(
-            'compilations' => $compilations,
+            'publications' => $publications,
 			'q' => $q,
         );
     }
     /**
-     * Full text search for Compilation entities.
+     * Full text search for Publication entities.
 	 *
 	 * To make this work, add a method like this one to the 
-	 * AppBundle:Compilation repository. Replace the fieldName with
+	 * AppBundle:Publication repository. Replace the fieldName with
 	 * something appropriate, and adjust the generated fulltext.html.twig
 	 * template.
 	 * 
@@ -94,11 +94,11 @@ class CompilationController extends Controller
 	//    }	 
 	 * 
 	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Compilation entity.
+	 * fulltext indexes on your Publication entity.
 	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
 	 *
      *
-     * @Route("/fulltext", name="compilation_fulltext")
+     * @Route("/fulltext", name="publication_fulltext")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -107,26 +107,26 @@ class CompilationController extends Controller
     public function fulltextAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Compilation');
+		$repo = $em->getRepository('AppBundle:Publication');
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->fulltextQuery($q);
 			$paginator = $this->get('knp_paginator');
-			$compilations = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+			$publications = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {
-			$compilations = array();
+			$publications = array();
 		}
 
         return array(
-            'compilations' => $compilations,
+            'publications' => $publications,
 			'q' => $q,
         );
     }
 
     /**
-     * Creates a new Compilation entity.
+     * Creates a new Publication entity.
      *
-     * @Route("/new", name="compilation_new")
+     * @Route("/new", name="publication_new")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
@@ -137,91 +137,91 @@ class CompilationController extends Controller
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $compilation = new Compilation();
-        $form = $this->createForm(CompilationType::class, $compilation);
+        $publication = new Publication();
+        $form = $this->createForm(PublicationType::class, $publication);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($compilation);
+            $em->persist($publication);
             $em->flush();
 
-            $this->addFlash('success', 'The new compilation was created.');
-            return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
+            $this->addFlash('success', 'The new publication was created.');
+            return $this->redirectToRoute('publication_show', array('id' => $publication->getId()));
         }
 
         return array(
-            'compilation' => $compilation,
+            'publication' => $publication,
             'form' => $form->createView(),
         );
     }
 
     /**
-     * Finds and displays a Compilation entity.
+     * Finds and displays a Publication entity.
      *
-     * @Route("/{id}", name="compilation_show")
+     * @Route("/{id}", name="publication_show")
      * @Method("GET")
      * @Template()
-	 * @param Compilation $compilation
+	 * @param Publication $publication
      */
-    public function showAction(Compilation $compilation)
+    public function showAction(Publication $publication)
     {
 
         return array(
-            'compilation' => $compilation,
+            'publication' => $publication,
         );
     }
 
     /**
-     * Displays a form to edit an existing Compilation entity.
+     * Displays a form to edit an existing Publication entity.
      *
-     * @Route("/{id}/edit", name="compilation_edit")
+     * @Route("/{id}/edit", name="publication_edit")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
-	 * @param Compilation $compilation
+	 * @param Publication $publication
      */
-    public function editAction(Request $request, Compilation $compilation)
+    public function editAction(Request $request, Publication $publication)
     {
         if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $editForm = $this->createForm(CompilationType::class, $compilation);
+        $editForm = $this->createForm(PublicationType::class, $publication);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
-            $this->addFlash('success', 'The compilation has been updated.');
-            return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
+            $this->addFlash('success', 'The publication has been updated.');
+            return $this->redirectToRoute('publication_show', array('id' => $publication->getId()));
         }
 
         return array(
-            'compilation' => $compilation,
+            'publication' => $publication,
             'edit_form' => $editForm->createView(),
         );
     }
 
     /**
-     * Deletes a Compilation entity.
+     * Deletes a Publication entity.
      *
-     * @Route("/{id}/delete", name="compilation_delete")
+     * @Route("/{id}/delete", name="publication_delete")
      * @Method("GET")
 	 * @param Request $request
-	 * @param Compilation $compilation
+	 * @param Publication $publication
      */
-    public function deleteAction(Request $request, Compilation $compilation)
+    public function deleteAction(Request $request, Publication $publication)
     {
         if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $em = $this->getDoctrine()->getManager();
-        $em->remove($compilation);
+        $em->remove($publication);
         $em->flush();
-        $this->addFlash('success', 'The compilation was deleted.');
+        $this->addFlash('success', 'The publication was deleted.');
 
-        return $this->redirectToRoute('compilation_index');
+        return $this->redirectToRoute('publication_index');
     }
 }

@@ -2,7 +2,9 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Services\AuthorImporter;
 use Exception;
+use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Usage: `./bin/console ceww:import path/to/files`.
  */
-class ImportCommand extends ContainerAwareCommand {
+class ImportAuthorsCommand extends ContainerAwareCommand {
 
     /**
      * If true, the import will be committed to the database.
@@ -28,6 +30,12 @@ class ImportCommand extends ContainerAwareCommand {
      * @var Logger
      */
     private $logger;
+    
+    /**
+     *
+     * @var AuthorImporter
+     */
+    private $importer;
 
     /**
      * Construct the command and set the commit bit to default false.
@@ -43,9 +51,9 @@ class ImportCommand extends ContainerAwareCommand {
      * Configure the command.
      */
     protected function configure() {
-        $this->setName('ceww:import');
+        $this->setName('ceww:import:authors');
         $this->setDescription('Import one or more CSV files.');
-        $this->addOption('skip', null, InputOption::VALUE_REQUIRED, 'Skip this many rows at the top of the CSV files.');
+        $this->addOption('skip', null, InputOption::VALUE_REQUIRED, 'Skip this many rows at the top of the CSV files.', 0);
         $this->addOption('commit', null, InputOption::VALUE_NONE, 'Commit the results to the database.');
         $this->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import.');
     }
@@ -57,7 +65,7 @@ class ImportCommand extends ContainerAwareCommand {
      */
     public function setContainer(ContainerInterface $container = null) {
         parent::setContainer($container);
-        $this->importer = $container->get('ceww.importer');
+        $this->importer = $container->get('ceww.importer.author');
         $this->logger = $container->get('logger');
     }
 
@@ -66,11 +74,11 @@ class ImportCommand extends ContainerAwareCommand {
      * 
      * @param string $path
      */
-    protected function import($path) {
+    protected function import($path, $skip = 0) {
         $fh = fopen($path, 'r');
-        fgetcsv($fh); // headers.
-        fgetcsv($fh); // col numbers.
-        $n = 2;
+        for($n = 0; $n < $skip; $n++) {
+            fgetcsv($fh); // skip some rows.
+        }
         while (($row = fgetcsv($fh))) {
             $n++;
             if( ! array_filter($row)) {
@@ -86,6 +94,8 @@ class ImportCommand extends ContainerAwareCommand {
                 $this->importer->importRow($cleaned);
             } catch (Exception $e) {
                 $this->logger->error("{$path}:{$n}:{$e->getMessage()}");
+                $this->logger->error($e->getTraceAsString());
+                exit;
             }
         }
     }
@@ -101,7 +111,7 @@ class ImportCommand extends ContainerAwareCommand {
         $this->importer->setCommit($input->getOption('commit'));
         foreach ($files as $file) {            
             $this->logger->info("Importing {$file}");
-            $this->import($file);
+            $this->import($file, $input->getOption('skip'));
         }
     }
 

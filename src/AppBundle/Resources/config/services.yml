@@ -1,6 +1,13 @@
 services:
-    ceww.importer:
-        class: AppBundle\Services\Importer
+    ceww.importer.author:
+        class: AppBundle\Services\AuthorImporter
+        calls:
+            - [ setDoctrine, ["@doctrine"]]
+            - [ setTitleCaser, ["@nines.util.title_caser"]]
+            - [ setLogger, ["@monolog.logger"]]
+            
+    ceww.importer.periodical:
+        class: AppBundle\Services\PeriodicalImporter
         calls:
             - [ setDoctrine, ["@doctrine"]]
             - [ setTitleCaser, ["@nines.util.title_caser"]]
