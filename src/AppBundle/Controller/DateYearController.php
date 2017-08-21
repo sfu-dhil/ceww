@@ -13,14 +13,14 @@ use AppBundle\Form\DateYearType;
 /**
  * DateYear controller.
  *
- * @Route("/date-year")
+ * @Route("/date_year")
  */
 class DateYearController extends Controller
 {
     /**
      * Lists all DateYear entities.
      *
-     * @Route("/", name="date-year_index")
+     * @Route("/", name="date_year_index")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -53,7 +53,7 @@ class DateYearController extends Controller
      //    }
 	 *
      *
-     * @Route("/search", name="date-year_search")
+     * @Route("/search", name="date_year_search")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -98,7 +98,7 @@ class DateYearController extends Controller
 	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
 	 *
      *
-     * @Route("/fulltext", name="date-year_fulltext")
+     * @Route("/fulltext", name="date_year_fulltext")
      * @Method("GET")
      * @Template()
 	 * @param Request $request
@@ -126,7 +126,7 @@ class DateYearController extends Controller
     /**
      * Creates a new DateYear entity.
      *
-     * @Route("/new", name="date-year_new")
+     * @Route("/new", name="date_year_new")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
@@ -147,7 +147,7 @@ class DateYearController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new dateYear was created.');
-            return $this->redirectToRoute('date-year_show', array('id' => $dateYear->getId()));
+            return $this->redirectToRoute('date_year_show', array('id' => $dateYear->getId()));
         }
 
         return array(
@@ -159,7 +159,7 @@ class DateYearController extends Controller
     /**
      * Finds and displays a DateYear entity.
      *
-     * @Route("/{id}", name="date-year_show")
+     * @Route("/{id}", name="date_year_show")
      * @Method("GET")
      * @Template()
 	 * @param DateYear $dateYear
@@ -175,7 +175,7 @@ class DateYearController extends Controller
     /**
      * Displays a form to edit an existing DateYear entity.
      *
-     * @Route("/{id}/edit", name="date-year_edit")
+     * @Route("/{id}/edit", name="date_year_edit")
      * @Method({"GET", "POST"})
      * @Template()
 	 * @param Request $request
@@ -194,7 +194,7 @@ class DateYearController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The dateYear has been updated.');
-            return $this->redirectToRoute('date-year_show', array('id' => $dateYear->getId()));
+            return $this->redirectToRoute('date_year_show', array('id' => $dateYear->getId()));
         }
 
         return array(
@@ -206,7 +206,7 @@ class DateYearController extends Controller
     /**
      * Deletes a DateYear entity.
      *
-     * @Route("/{id}/delete", name="date-year_delete")
+     * @Route("/{id}/delete", name="date_year_delete")
      * @Method("GET")
 	 * @param Request $request
 	 * @param DateYear $dateYear
@@ -222,6 +222,6 @@ class DateYearController extends Controller
         $em->flush();
         $this->addFlash('success', 'The dateYear was deleted.');
 
-        return $this->redirectToRoute('date-year_index');
+        return $this->redirectToRoute('date_year_index');
     }
 }

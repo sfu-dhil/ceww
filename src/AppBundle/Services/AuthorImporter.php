@@ -9,15 +9,16 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\Alias;
-use AppBundle\Entity\Category;
+use AppBundle\Entity\Book;
+use AppBundle\Entity\Compilation;
 use AppBundle\Entity\Contribution;
 use AppBundle\Entity\DateYear;
+use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use AppBundle\Entity\Publication;
 use AppBundle\Entity\Role;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Exception;
+use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
 use Nines\UtilBundle\Services\TitleCaser;
 use ReflectionClass;
@@ -29,7 +30,7 @@ use ReflectionClass;
  *
  * @author mjoyce
  */
-class Importer {
+class AuthorImporter {
     
     /**
      * @var ObjectManager
@@ -242,41 +243,82 @@ class Importer {
         return array($title, null);
     }
 
-    public function getPublication($categoryName, $title, $date, $placeName) {
-        $categoryRepo = $this->em->getRepository(Category::class);
-        $category = $categoryRepo->findOneBy(array(
-            'name' => $categoryName
-        ));
-        if (!$category) {
-            throw new Exception("Unknown category {$categoryName}");
-        }
-        $repo = $this->em->getRepository(Publication::class);
-        $publication = $repo->findPublication($category, $title, $date, $placeName);
-        if (!$publication) {
-            $publication = new Publication();
-            $publication->setTitle($this->titleCaser->titlecase($title));
-            $publication->setSortableTitle($this->titleCaser->sortableTitle($title));
+    public function getBook($title, $date, $placeName) {
+        $repo = $this->em->getRepository(Book::class);
+        $book = $repo->findBook($title, $date, $placeName);
+        if (!$book) {
+            $book = new Book();
+            $book->setTitle($this->titleCaser->titlecase($title));
+            $book->setSortableTitle($this->titleCaser->sortableTitle($title));
 
             if ($date) {
                 $dateYear = new DateYear();
                 $dateYear->setValue($date);
                 $this->persist($dateYear);
-                $publication->setDateYear($dateYear);
+                $book->setDateYear($dateYear);
             }
 
             if ($placeName) {
                 $place = $this->getPlace($placeName);
-                $publication->setLocation($place);
-                $place->addPublication($publication);
+                $book->setLocation($place);
+                $place->addPublication($book);
             }
-            $publication->setCategory($category);
-            $category->addPublication($publication);
-            $this->persist($publication);
+            $this->persist($book);
         }
-        return $publication;
+        return $book;
     }
 
-    public function addPublications(Person $person, $value, $categoryName) {
+    public function getCompilation($title, $date, $placeName) {
+        $repo = $this->em->getRepository(Compilation::class);
+        $compilation = $repo->findCompilation($title, $date, $placeName);
+        if (!$compilation) {
+            $compilation = new Compilation();
+            $compilation->setTitle($this->titleCaser->titlecase($title));
+            $compilation->setSortableTitle($this->titleCaser->sortableTitle($title));
+
+            if ($date) {
+                $dateYear = new DateYear();
+                $dateYear->setValue($date);
+                $this->persist($dateYear);
+                $compilation->setDateYear($dateYear);
+            }
+
+            if ($placeName) {
+                $place = $this->getPlace($placeName);
+                $compilation->setLocation($place);
+                $place->addPublication($compilation);
+            }
+            $this->persist($compilation);
+        }
+        return $compilation;
+    }
+
+    public function getPeriodical($title, $date, $placeName) {
+        $repo = $this->em->getRepository(Periodical::class);
+        $periodical = $repo->findPeriodical($title, $date, $placeName);
+        if (!$periodical) {
+            $periodical = new Periodical();
+            $periodical->setTitle($this->titleCaser->titlecase($title));
+            $periodical->setSortableTitle($this->titleCaser->sortableTitle($title));
+
+            if ($date) {
+                $dateYear = new DateYear();
+                $dateYear->setValue($date);
+                $this->persist($dateYear);
+                $periodical->setDateYear($dateYear);
+            }
+
+            if ($placeName) {
+                $place = $this->getPlace($placeName);
+                $periodical->setLocation($place);
+                $place->addPublication($periodical);
+            }
+            $this->persist($periodical);
+        }
+        return $periodical;
+    }
+
+    public function addPeriodicals(Person $person, $value) {
         $titles = $this->split($value);
         $roleRepo = $this->em->getRepository(Role::class);
         $role = $roleRepo->findOneBy(array('name' => 'author'));
@@ -285,7 +327,45 @@ class Importer {
             list($title, $placeValue) = $this->titlePlace($title);
             $title = $this->trim($title);
 
-            $publication = $this->getPublication($categoryName, $title, $dateValue, $placeValue);
+            $publication = $this->getPeriodical($title, $dateValue, $placeValue);
+            $contribution = new Contribution();
+            $contribution->setPerson($person);
+            $contribution->setRole($role);
+            $contribution->setPublication($publication);
+            $person->addContribution($contribution);
+            $this->persist($contribution);
+        }
+    }
+
+    public function addCompilations(Person $person, $value) {
+        $titles = $this->split($value);
+        $roleRepo = $this->em->getRepository(Role::class);
+        $role = $roleRepo->findOneBy(array('name' => 'author'));
+        foreach ($titles as $title) {
+            list($title, $dateValue) = $this->titleDate($title);
+            list($title, $placeValue) = $this->titlePlace($title);
+            $title = $this->trim($title);
+
+            $publication = $this->getCompilation($title, $dateValue, $placeValue);
+            $contribution = new Contribution();
+            $contribution->setPerson($person);
+            $contribution->setRole($role);
+            $contribution->setPublication($publication);
+            $person->addContribution($contribution);
+            $this->persist($contribution);
+        }
+    }
+
+    public function addBooks(Person $person, $value) {
+        $titles = $this->split($value);
+        $roleRepo = $this->em->getRepository(Role::class);
+        $role = $roleRepo->findOneBy(array('name' => 'author'));
+        foreach ($titles as $title) {
+            list($title, $dateValue) = $this->titleDate($title);
+            list($title, $placeValue) = $this->titlePlace($title);
+            $title = $this->trim($title);
+
+            $publication = $this->getBook($title, $dateValue, $placeValue);
             $contribution = new Contribution();
             $contribution->setPerson($person);
             $contribution->setRole($role);
@@ -306,9 +386,9 @@ class Importer {
         $this->setDeathPlace($person, $row[4]);
         $this->addAliases($person, $row[5]);
         $this->addResidences($person, $row[6]);
-        $this->addPublications($person, $row[7], 'book');
-        $this->addPublications($person, $row[8], 'collection');
-        $this->addPublications($person, $row[9], 'periodical');
+        $this->addBooks($person, $row[7]);
+        $this->addCompilations($person, $row[8]);
+        $this->addPeriodicals($person, $row[9]);
         if (isset($row[10])) {
             $person->setDescription($row[10]);
         }

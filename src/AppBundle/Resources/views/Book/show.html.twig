@@ -24,6 +24,21 @@
 </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody><tr>
+                <th>Title</th>
+                <td>{{ book.title }}</td>
+            </tr><tr>
+                <th>Sortable Title</th>
+                <td>{{ book.sortableTitle }}</td>
+            </tr><tr>
+                <th>Links</th>
+                <td>{% if book.links %}{{ book.links|join(', ') }}{% endif %}</td>
+            </tr><tr>
+                <th>Description</th>
+                <td>{{ book.description }}</td>
+            </tr><tr>
+                <th>Notes</th>
+                <td>{{ book.notes }}</td>
+            </tr><tr>
                 <th>Created</th>
                 <td>{% if book.created %}{{ book.created|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr><tr>

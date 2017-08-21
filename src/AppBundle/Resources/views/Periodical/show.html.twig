@@ -24,6 +24,21 @@
 </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody><tr>
+                <th>Title</th>
+                <td>{{ periodical.title }}</td>
+            </tr><tr>
+                <th>Sortable Title</th>
+                <td>{{ periodical.sortableTitle }}</td>
+            </tr><tr>
+                <th>Links</th>
+                <td>{% if periodical.links %}{{ periodical.links|join(', ') }}{% endif %}</td>
+            </tr><tr>
+                <th>Description</th>
+                <td>{{ periodical.description }}</td>
+            </tr><tr>
+                <th>Notes</th>
+                <td>{{ periodical.notes }}</td>
+            </tr><tr>
                 <th>Run Dates</th>
                 <td>{{ periodical.runDates }}</td>
             </tr><tr>

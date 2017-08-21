@@ -24,6 +24,21 @@
 </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody><tr>
+                <th>Title</th>
+                <td>{{ compilation.title }}</td>
+            </tr><tr>
+                <th>Sortable Title</th>
+                <td>{{ compilation.sortableTitle }}</td>
+            </tr><tr>
+                <th>Links</th>
+                <td>{% if compilation.links %}{{ compilation.links|join(', ') }}{% endif %}</td>
+            </tr><tr>
+                <th>Description</th>
+                <td>{{ compilation.description }}</td>
+            </tr><tr>
+                <th>Notes</th>
+                <td>{{ compilation.notes }}</td>
+            </tr><tr>
                 <th>Created</th>
                 <td>{% if compilation.created %}{{ compilation.created|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr><tr>
