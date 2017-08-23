@@ -94,8 +94,6 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
                 $this->importer->importRow($cleaned);
             } catch (Exception $e) {
                 $this->logger->error("{$path}:{$n}:{$e->getMessage()}");
-                $this->logger->error($e->getTraceAsString());
-                exit;
             }
         }
     }

@@ -71,6 +71,7 @@ class ImportPeriodicalsCommand extends ContainerAwareCommand {
             fgetcsv($fh); // skip some rows.
         }
         while (($row = fgetcsv($fh))) {
+            $n++;
             $cleaned = array_map(function($item) {
                 $item = preg_replace("/\x{00a0}/siu", " ", $item);
                 $item = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $item);
@@ -79,7 +80,7 @@ class ImportPeriodicalsCommand extends ContainerAwareCommand {
             try {
                 $this->importer->importRow($cleaned);
             } catch (Exception $e) {
-                $this->logger->error($e->getMessage());
+                $this->logger->error("Error:{$path}:{$n}:{$e->getMessage()}");
                 exit;
             }
         }
