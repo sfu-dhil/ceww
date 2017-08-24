@@ -5,12 +5,18 @@ services:
             - [ setDoctrine, ["@doctrine"]]
             - [ setTitleCaser, ["@nines.util.title_caser"]]
             - [ setLogger, ["@monolog.logger"]]
+            - [ setSplitter, ["@ceww.splitter"]]
             
     ceww.importer.periodical:
         class: AppBundle\Services\PeriodicalImporter
         calls:
             - [ setDoctrine, ["@doctrine"]]
             - [ setTitleCaser, ["@nines.util.title_caser"]]
+            - [ setLogger, ["@monolog.logger"]]
+            
+    ceww.splitter:
+        class: AppBundle\Services\Splitter
+        calls:
             - [ setLogger, ["@monolog.logger"]]
             
     ceww.merger:

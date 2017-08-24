@@ -7,24 +7,23 @@ use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
-use AppBundle\Services\Importer;
+use AppBundle\Services\AuthorImporter;
 use AppBundle\Tests\Utilities\AbstractTestCase;
 
-class ImporterTest extends AbstractTestCase {
+class ImportAuthorsTest extends AbstractTestCase {
 
     /**
-     * @var Importer
+     * @var AuthorImporter
      */
     protected $importer;
 
     public function setUp() {
         parent::setUp();
-        $this->importer = $this->getContainer()->get('ceww.importer');
+        $this->importer = $this->getContainer()->get('ceww.importer.author');
     }
 
     public function fixtures() {
         return array(
-            'AppBundle\Tests\Fixtures\LoadCategories',
             'AppBundle\Tests\Fixtures\LoadRoles',
         );
     }
@@ -327,7 +326,7 @@ class ImporterTest extends AbstractTestCase {
             [['foo', '1901,1902'], 'foo  (1901,1902)'],
             [['foo', '1901'], 'foo [1901]'],
             [['foo', '1901,1903'], 'foo [1901,1903]'],
-            [['Hæmochromatosis', '1900'], 'Hæmochromatosis (1900)']
+            [['Hæmochromatosis', '1900'], 'Hæmochromatosis (1900)'],
         );
     } 
 
@@ -352,12 +351,11 @@ class ImporterTest extends AbstractTestCase {
     /**
      * @dataProvider getPublicationData
      */
-    public function testGetPublication($expected, $categoryName, $title, $date, $placeName) {
-        $publication = $this->importer->getPublication($categoryName, $title, $date, $placeName);
+    public function testGetPublication($expected, $title, $date, $placeName) {
+        $publication = $this->importer->getPublication($title, $date, $placeName);
         $this->assertInstanceOf(Publication::class, $publication);
         $this->assertEquals($expected[0], $publication->getTitle());
         $this->assertEquals($expected[1], $publication->getSortableTitle());
-        $this->assertEquals($categoryName, $publication->getCategory()->getName());
         if ($date) { 
             $this->assertEquals($date, (string) $publication->getDateYear());
         } else {
@@ -370,12 +368,11 @@ class ImporterTest extends AbstractTestCase {
 
     public function getPublicationData() {
         return array(
-            [['The Title', 'title, the', null, null], 'test', 'The Title', null, null],
-            [['Title Stuffs', 'title stuffs', null, null], 'test', 'Title Stuffs', null, null],
-            [['The Title', 'title, the', '1901', null], 'test', 'The Title', '1901', null],
-            [['The Title', 'title, the', null, 'vancouver'], 'test', 'The Title', null, 'vancouver'],
-            
-            [['Hæmochromatosis', 'hæmochromatosis', null, null], 'test', 'Hæmochromatosis', null, null],
+            [['The Title', 'title, the', null, null], 'The Title', null, null],
+            [['Title Stuffs', 'title stuffs', null, null], 'Title Stuffs', null, null],
+            [['The Title', 'title, the', '1901', null], 'The Title', '1901', null],
+            [['The Title', 'title, the', null, 'vancouver'], 'The Title', null, 'vancouver'],            
+            [['Hæmochromatosis', 'hæmochromatosis', null, null],  'Hæmochromatosis', null, null],
         );
     }
 

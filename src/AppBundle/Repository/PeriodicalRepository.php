@@ -14,18 +14,10 @@ use Exception;
  */
 class PeriodicalRepository extends EntityRepository
 {
-    public function findPeriodical($title, $date = null, $placeName = null) {
+    public function findPeriodical($title, $placeName = null) {
         $qb = $this->createQueryBuilder('p');
         $qb->andWhere('p.title = :title');
         $qb->setParameter('title', $title);
-
-        if ($date) {
-            $qb->innerJoin('p.dateYear', 'd');
-            $qb->andWhere('d.value = :value');
-            $qb->setParameter('value', $date);
-        } else {
-            $qb->andWhere('p.dateYear is null');
-        }
 
         if ($placeName) {
             $qb->innerJoin('p.location', 'l');
@@ -38,7 +30,7 @@ class PeriodicalRepository extends EntityRepository
         try {
             return $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new Exception("Duplicate publication detected - " . implode(':', [$category, $title, $date, $placeName]));
+            throw new Exception("Duplicate publication detected:{$e->getMessage()} - " . implode(':', ['periodical', $title, $placeName]));
         }
     }
 }

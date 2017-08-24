@@ -24,23 +24,7 @@
         </div>
     </div>
         
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <thead>
-            <tr><th>Created</th><th>Updated</th>            </tr>
-        </thead>
-        <tbody>
-        {% for genre in genres %}
-            <tr>
-                <td>
-                    <a href="{{ path('genre_show', { 'id': genre.id }) }}">
-                        {{ genre.created }}
-                    </a>
-                </td>
-                <td>{% if genre.updated %}{{ genre.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {{ include('NinesUtilBundle:Term:partial/index.html.twig', { 'terms': genres, 'path': 'genre_show' }) }}
         
     <div class="navigation">
         {{ knp_pagination_render(genres) }}
