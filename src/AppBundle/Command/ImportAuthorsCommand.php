@@ -82,7 +82,7 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
         while (($row = fgetcsv($fh))) {
             $n++;
             if( ! array_filter($row)) {
-                $this->logger->warning("{$path}:{$n}:Empty row.");
+                $this->logger->notice("{$path}:{$n}:Empty row.");
                 continue;
             }
             $cleaned = array_map(function($item) {
@@ -93,7 +93,7 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
             try {
                 $this->importer->importRow($cleaned);
             } catch (Exception $e) {
-                $this->logger->error("{$path}:{$n}:{$e->getMessage()}");
+                $this->logger->error("{$path}:{$n}:{$row[0]}:{$e->getMessage()}");
             }
         }
     }

@@ -37,7 +37,7 @@ class CollectionRepository extends EntityRepository
         try {
             return $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new Exception("Duplicate publication detected - " . implode(':', [$category, $title, $date, $placeName]));
+            throw new Exception("Duplicate publication detected - " . implode(':', ['collection', $title, $date, $placeName]));
         }
     }
 }

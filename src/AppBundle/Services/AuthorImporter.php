@@ -16,14 +16,14 @@ use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Publication;
 use AppBundle\Entity\Role;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectManager;
+use Exception;
 use Monolog\Logger;
 use Nines\UtilBundle\Services\TitleCaser;
 use ReflectionClass;
-
-
 
 /**
  * Description of Importer
@@ -31,49 +31,58 @@ use ReflectionClass;
  * @author mjoyce
  */
 class AuthorImporter {
-    
+
     /**
      * @var ObjectManager
      */
     private $em;
-    
+
     /**
      * @var TitleCaser
      */
     private $titleCaser;
-    
+
     /**
      * @var Namer
      */
     private $namer;
-    
+
     /**
      * @var Logger
      */
     private $logger;
-    
+
     /**
      * @var boolean
      */
     private $commit;
     
+    /**
+     * @var Splitter
+     */
+    private $splitter;
+
     public function __construct() {
         $this->namer = new Namer();
         $this->commit = false;
     }
-    
+
     public function setDoctrine(Registry $doctrine) {
         $this->em = $doctrine->getManager();
     }
-    
+
     public function setTitleCaser(TitleCaser $titleCaser) {
         $this->titleCaser = $titleCaser;
     }
-    
+
     public function setLogger(Logger $logger) {
         $this->logger = $logger;
     }
     
+    public function setSplitter(Splitter $splitter) {
+        $this->splitter = $splitter;
+    }
+
     public function setCommit($commit) {
         $this->commit = $commit;
     }
@@ -124,10 +133,10 @@ class AuthorImporter {
 
     public function getPlace($value) {
         $name = $this->trim(preg_replace('/\([^)]*\)/u', '', $value));
-        if( ! $name) {
+        if (!$name) {
             return null;
         }
-        $repo = $this->em->getRepository(Place::class);        
+        $repo = $this->em->getRepository(Place::class);
         $place = $repo->findOneBy(array('name' => $name));
         if (!$place) {
             $place = new Place();
@@ -143,15 +152,13 @@ class AuthorImporter {
         if (!$value) {
             return;
         }
-        $birthDate = new DateYear();
-        $birthDate->setValue($value);
-        $this->persist($birthDate);
+        $birthDate = $this->getDateYear($value);
         $person->setBirthDate($birthDate);
     }
 
     public function setBirthPlace(Person $person, $value) {
         $birthPlace = $this->getPlace($value);
-        if( ! $birthPlace) {
+        if (!$birthPlace) {
             return;
         }
         $person->setBirthPlace($birthPlace);
@@ -162,22 +169,20 @@ class AuthorImporter {
         $value = $this->trim($value);
         if (!$value) {
             return;
-        }
-        $deathDate = new DateYear();
-        $deathDate->setValue($value);
-        $this->persist($deathDate);
+        }        
+        $deathDate = $this->getDateYear($value);
         $person->setDeathDate($deathDate);
     }
 
     public function setDeathPlace(Person $person, $value) {
         $deathPlace = $this->getPlace($value);
-        if( ! $deathPlace) {
+        if (!$deathPlace) {
             return;
         }
         $person->setDeathPlace($deathPlace);
         $deathPlace->addPersonBorn($person);
     }
-    
+
     public function getAlias($name) {
         $repo = $this->em->getRepository(Alias::class);
         $alias = $repo->findOneBy(array('name' => $name));
@@ -192,11 +197,10 @@ class AuthorImporter {
             $this->persist($alias);
         }
         return $alias;
-        
     }
 
     public function addAliases(Person $person, $value) {
-        $names = $this->split($value);
+        $names = $this->splitter->split($value);
         foreach ($names as $name) {
             $alias = $this->getAlias($name);
             $person->addAlias($alias);
@@ -210,7 +214,7 @@ class AuthorImporter {
     }
 
     public function addResidences(Person $person, $value) {
-        $names = $this->split($value);
+        $names = $this->splitter->split($value);
         foreach ($names as $name) {
             $place = $this->getPlace($name);
             $person->addResidence($place);
@@ -234,13 +238,28 @@ class AuthorImporter {
         }
         return array($title, null);
     }
-    
+
     public function titlePlace($title) {
         $matches = array();
         if (preg_match('/^(.*?)\(([^)]*)\)\s*$/u', $title, $matches)) {
             return array($this->trim($matches[1]), $matches[2]);
         }
         return array($title, null);
+    }
+
+    public function getDateYear($date) {
+        try {
+            if ($date) {
+                $dateYear = new DateYear();
+                $dateYear->setValue($date);
+                $this->persist($dateYear);
+                return $dateYear;
+            }
+        } catch (Exception $e) {
+            $trace = debug_backtrace(null, 2);
+            $caller = $trace[1];
+            throw new Exception($caller['function'] . ':' . $e->getMessage());
+        }
     }
 
     public function getBook($title, $date, $placeName) {
@@ -250,13 +269,7 @@ class AuthorImporter {
             $book = new Book();
             $book->setTitle($this->titleCaser->titlecase($title));
             $book->setSortableTitle($this->titleCaser->sortableTitle($title));
-
-            if ($date) {
-                $dateYear = new DateYear();
-                $dateYear->setValue($date);
-                $this->persist($dateYear);
-                $book->setDateYear($dateYear);
-            }
+            $book->setDateYear($this->getDateYear($date, $book));
 
             if ($placeName) {
                 $place = $this->getPlace($placeName);
@@ -275,13 +288,7 @@ class AuthorImporter {
             $compilation = new Compilation();
             $compilation->setTitle($this->titleCaser->titlecase($title));
             $compilation->setSortableTitle($this->titleCaser->sortableTitle($title));
-
-            if ($date) {
-                $dateYear = new DateYear();
-                $dateYear->setValue($date);
-                $this->persist($dateYear);
-                $compilation->setDateYear($dateYear);
-            }
+            $compilation->setDateYear($this->getDateYear($date));
 
             if ($placeName) {
                 $place = $this->getPlace($placeName);
@@ -301,13 +308,6 @@ class AuthorImporter {
             $periodical->setTitle($this->titleCaser->titlecase($title));
             $periodical->setSortableTitle($this->titleCaser->sortableTitle($title));
 
-            if ($date) {
-                $dateYear = new DateYear();
-                $dateYear->setValue($date);
-                $this->persist($dateYear);
-                $periodical->setDateYear($dateYear);
-            }
-
             if ($placeName) {
                 $place = $this->getPlace($placeName);
                 $periodical->setLocation($place);
@@ -319,7 +319,7 @@ class AuthorImporter {
     }
 
     public function addPeriodicals(Person $person, $value) {
-        $titles = $this->split($value);
+        $titles = $this->splitter->split($value);
         $roleRepo = $this->em->getRepository(Role::class);
         $role = $roleRepo->findOneBy(array('name' => 'author'));
         foreach ($titles as $title) {
@@ -338,7 +338,7 @@ class AuthorImporter {
     }
 
     public function addCompilations(Person $person, $value) {
-        $titles = $this->split($value);
+        $titles = $this->splitter->split($value);
         $roleRepo = $this->em->getRepository(Role::class);
         $role = $roleRepo->findOneBy(array('name' => 'author'));
         foreach ($titles as $title) {
@@ -357,7 +357,7 @@ class AuthorImporter {
     }
 
     public function addBooks(Person $person, $value) {
-        $titles = $this->split($value);
+        $titles = $this->splitter->split($value);
         $roleRepo = $this->em->getRepository(Role::class);
         $role = $roleRepo->findOneBy(array('name' => 'author'));
         foreach ($titles as $title) {
@@ -395,7 +395,7 @@ class AuthorImporter {
         $notes = implode("\n\n", array_slice($row, 11));
         $person->setNotes($notes);
         $this->flush(null, true);
-        
+
         return $person;
     }
 
