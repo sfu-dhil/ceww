@@ -16,7 +16,6 @@ use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use AppBundle\Entity\Publication;
 use AppBundle\Entity\Role;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectManager;

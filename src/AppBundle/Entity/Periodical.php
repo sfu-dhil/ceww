@@ -101,4 +101,9 @@ class Periodical extends Publication
     {
         return $this->continuedBy;
     }
+
+    public function getCategory() {
+        return self::PERIODICAL;
+    }
+
 }

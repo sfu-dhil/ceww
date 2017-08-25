@@ -24,6 +24,10 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  */
 abstract class Publication extends AbstractEntity {
+    
+    const BOOK = 0;
+    const COMPILATION = 1;
+    const PERIODICAL = 2;
 
     /**
      * @var string
@@ -92,6 +96,8 @@ abstract class Publication extends AbstractEntity {
     public function __toString() {
         return $this->title;
     }
+    
+    abstract public function getCategory();
 
     /**
      * Set title
