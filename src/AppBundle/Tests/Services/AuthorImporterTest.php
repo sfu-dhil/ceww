@@ -3,14 +3,16 @@
 namespace AppBundle\Tests\Services;
 
 use AppBundle\Entity\Alias;
+use AppBundle\Entity\Book;
+use AppBundle\Entity\Compilation;
 use AppBundle\Entity\DateYear;
+use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use AppBundle\Entity\Publication;
 use AppBundle\Services\AuthorImporter;
 use AppBundle\Tests\Utilities\AbstractTestCase;
 
-class ImportAuthorsTest extends AbstractTestCase {
+class AuthorImporterTest extends AbstractTestCase {
 
     /**
      * @var AuthorImporter
@@ -29,7 +31,7 @@ class ImportAuthorsTest extends AbstractTestCase {
     }
 
     public function testSetup() {
-        $this->assertInstanceOf('AppBundle\Services\Importer', $this->importer);
+        $this->assertInstanceOf(AuthorImporter::class, $this->importer);
     }
 
     /**
@@ -349,11 +351,11 @@ class ImportAuthorsTest extends AbstractTestCase {
     }
 
     /**
-     * @dataProvider getPublicationData
+     * @dataProvider getBookData
      */
-    public function testGetPublication($expected, $title, $date, $placeName) {
-        $publication = $this->importer->getPublication($title, $date, $placeName);
-        $this->assertInstanceOf(Publication::class, $publication);
+    public function testBook($expected, $title, $date, $placeName) {
+        $publication = $this->importer->getBook($title, $date, $placeName);
+        $this->assertInstanceOf(Book::class, $publication);
         $this->assertEquals($expected[0], $publication->getTitle());
         $this->assertEquals($expected[1], $publication->getSortableTitle());
         if ($date) { 
@@ -366,7 +368,7 @@ class ImportAuthorsTest extends AbstractTestCase {
         } 
     } 
 
-    public function getPublicationData() {
+    public function getBookData() {
         return array(
             [['The Title', 'title, the', null, null], 'The Title', null, null],
             [['Title Stuffs', 'title stuffs', null, null], 'Title Stuffs', null, null],
@@ -377,25 +379,54 @@ class ImportAuthorsTest extends AbstractTestCase {
     }
 
     /**
-     * @dataProvider addPublicationsData
+     * @dataProvider getCompilationData
      */
-    public function testAddPublications($expected, $value) {
-        $person = new Person();
-        $this->importer->addPublications($person, $value, 'test');
-        $contributions = $person->getContributions();
-        $this->assertEquals(count($expected), count($contributions));
-        foreach ($contributions as $key => $contribution) {
-            $this->assertEquals($expected[$key], $contribution->getPublication()->getTitle());
+    public function testGetCompilation($expected, $title, $date, $placeName) {
+        $publication = $this->importer->getCompilation($title, $date, $placeName);
+        $this->assertInstanceOf(Compilation::class, $publication);
+        $this->assertEquals($expected[0], $publication->getTitle());
+        $this->assertEquals($expected[1], $publication->getSortableTitle());
+        if ($date) { 
+            $this->assertEquals($date, (string) $publication->getDateYear());
+        } else {
+            $this->assertNull($publication->getDateYear());
         }
+        if ($placeName) {
+            $this->assertEquals($placeName, $publication->getLocation()->getName());
+        } 
+    } 
+
+    public function getCompilationData() {
+        return array(
+            [['The Title', 'title, the', null, null], 'The Title', null, null],
+            [['Title Stuffs', 'title stuffs', null, null], 'Title Stuffs', null, null],
+            [['The Title', 'title, the', '1901', null], 'The Title', '1901', null],
+            [['The Title', 'title, the', null, 'vancouver'], 'The Title', null, 'vancouver'],            
+            [['Hæmochromatosis', 'hæmochromatosis', null, null],  'Hæmochromatosis', null, null],
+        );
     }
 
-    public function addPublicationsData() {
+    /**
+     * @dataProvider getPeriodicalData
+     */
+    public function testGetPeriodical($expected, $title, $date, $placeName) {
+        $publication = $this->importer->getPeriodical($title, $date, $placeName);
+        $this->assertInstanceOf(Periodical::class, $publication);
+        $this->assertEquals($expected[0], $publication->getTitle());
+        $this->assertEquals($expected[1], $publication->getSortableTitle());
+        $this->assertNull($publication->getDateYear());
+        if ($placeName) {
+            $this->assertEquals($placeName, $publication->getLocation()->getName());
+        } 
+    } 
+
+    public function getPeriodicalData() {
         return array(
-            [['Title'], 'Title'],
-            [['Title', 'Title 2'], 'Title; Title 2'],
-            [['Title', 'Title 3', 'Title 4'], 'Title; Title 3; Title 4'],
-            [['Title'], 'Title (1901)'],
-            [['Title'], 'Title (Victoria)'],
+            [['The Title', 'title, the', null, null], 'The Title', null, null],
+            [['Title Stuffs', 'title stuffs', null, null], 'Title Stuffs', null, null],
+            [['The Title', 'title, the', '1901', null], 'The Title', '1901', null],
+            [['The Title', 'title, the', null, 'vancouver'], 'The Title', null, 'vancouver'],            
+            [['Hæmochromatosis', 'hæmochromatosis', null, null],  'Hæmochromatosis', null, null],
         );
     }
     

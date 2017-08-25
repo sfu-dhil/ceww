@@ -12,4 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Compilation extends Publication
 {
+    public function getCategory() {
+        return self::COMPILATION;
+    }
 }

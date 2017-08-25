@@ -12,5 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Book extends Publication
 {
+    public function getCategory() {
+        return self::BOOK;
+    }
+
 }
 
