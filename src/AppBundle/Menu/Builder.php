@@ -71,12 +71,6 @@ class Builder implements ContainerAwareInterface {
             $menu->addChild('Roles', array(
                 'route' => 'role_index',
             ));
-            $menu->addChild('Contributions', array(
-                'route' => 'contribution_index',
-            ));
-            $menu->addChild('Dates', array(
-                'route' => 'date_year_index',
-            ));
         }
 
         return $menu;

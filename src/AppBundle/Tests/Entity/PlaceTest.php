@@ -3,9 +3,10 @@
 
 namespace AppBundle\Tests\Entity;
 
+use AppBundle\Entity\Book;
+use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use AppBundle\Entity\Publication;
 use PHPUnit_Framework_TestCase;
 
 class PlaceTest extends PHPUnit_Framework_TestCase {
@@ -95,7 +96,7 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
     
     public function testAddPublication() {
         $place = new Place();
-        $publication = new Publication();
+        $publication = new Book();
         
         $place->addPublication($publication);
         $place->addPublication($publication);
@@ -105,7 +106,7 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
     public function testGetPublications() {
         $place = new Place();
         foreach(['b', 'd', 'a', 'c'] as $name) {
-            $publication = new Publication();
+            $publication = new Periodical();
             $publication->setTitle($name);
             $publication->setSortableTitle($name);
             $place->addPublication($publication);
