@@ -3,9 +3,10 @@
 namespace AppBundle\Tests\Services;
 
 use AppBundle\Services\Splitter;
-use AppBundle\Tests\Utilities\AbstractTestCase;
+use AppBundle\Tests\Util\BaseTestCase;
+use Exception;
 
-class ImporterTest extends AbstractTestCase {
+class ImporterTest extends BaseTestCase {
 
     /**
      * @var Splitter
