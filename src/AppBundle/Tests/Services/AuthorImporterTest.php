@@ -10,9 +10,9 @@ use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
 use AppBundle\Services\AuthorImporter;
-use AppBundle\Tests\Utilities\AbstractTestCase;
+use AppBundle\Tests\Util\BaseTestCase;
 
-class AuthorImporterTest extends AbstractTestCase {
+class AuthorImporterTest extends BaseTestCase {
 
     /**
      * @var AuthorImporter

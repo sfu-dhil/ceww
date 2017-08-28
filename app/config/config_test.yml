@@ -6,7 +6,7 @@ liip_functional_test:
     cache_sqlite_db: true
     command_verbosity: debug
     command_decoration: false
-
+        
 framework:
     test: ~
     session:
@@ -29,6 +29,8 @@ doctrine:
                 driver:   pdo_sqlite
                 path:     "%kernel.cache_dir%/test.sqlite"
                 charset:  UTF8
+                logging: false
+                profiling: false
                 
 security:
     firewalls:

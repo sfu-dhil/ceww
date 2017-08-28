@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\Utilities;
+namespace AppBundle\Tests\Util;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
