@@ -9,7 +9,9 @@ use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Publication;
 use AppBundle\Services\AuthorImporter;
+use AppBundle\Tests\DataFixtures\ORM\LoadRole;
 use AppBundle\Tests\Util\BaseTestCase;
 
 class AuthorImporterTest extends BaseTestCase {
@@ -24,9 +26,9 @@ class AuthorImporterTest extends BaseTestCase {
         $this->importer = $this->getContainer()->get('ceww.importer.author');
     }
 
-    public function fixtures() {
+    protected function getFixtures() {
         return array(
-            'AppBundle\Tests\Fixtures\LoadRoles',
+            LoadRole::class,
         );
     }
 
@@ -444,6 +446,7 @@ class AuthorImporterTest extends BaseTestCase {
      * @dataProvider importRowData
      */
     public function testImportRow($expected, $row) {
+        $this->importer->setCommit(true);
         $person = $this->importer->importRow($row);
         $this->assertEquals($expected['name'], $person->getFullName());
         $this->assertEquals($expected['sortableName'], $person->getSortableName());
@@ -458,9 +461,9 @@ class AuthorImporterTest extends BaseTestCase {
             $this->assertEquals($expected['residences'][$key], (string) $residence);
         }
 
-        $this->assertContributions($expected['books'], $person->getContributions('book'));
-        $this->assertContributions($expected['collections'], $person->getContributions('collection'));
-        $this->assertContributions($expected['periodicals'], $person->getContributions('periodical'));
+        $this->assertContributions($expected['books'], $person->getContributions(Publication::BOOK));
+        $this->assertContributions($expected['collections'], $person->getContributions(Publication::COMPILATION));
+        $this->assertContributions($expected['periodicals'], $person->getContributions(Publication::PERIODICAL));
     }
 
     public function importRowData() {
@@ -511,7 +514,7 @@ class AuthorImporterTest extends BaseTestCase {
             
 //Abbott, Maude Elizabeth Seymour 	1869	Saint Andrews East, QC	1940	Montreal, QC	née Maude Elizabeth Seymour Babin	Birmingham, West Midlands, England; 
 // A Rare Form of Pyosalpinx Complicating Uterine Myoma (1900); Pigmentation Cirrhosis of the Liver in a Case of Hæmochromatosis (1900); Museum Notes (1901); 
-
+//
             array(
                 array(
                     'name' => 'Maude Elizabeth Seymour Abbott',
@@ -543,8 +546,7 @@ class AuthorImporterTest extends BaseTestCase {
                     11 => '',
                     12 => '',
                 ),
-            ),
-            
+            ),            
         );
     }
 

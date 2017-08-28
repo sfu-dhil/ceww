@@ -384,7 +384,7 @@ class Person extends AbstractEntity {
      * @return Collection
      */
     public function getContributions($category = null) {
-        if (!$category) {
+        if ($category === null) {
             return $this->contributions;
         }
 

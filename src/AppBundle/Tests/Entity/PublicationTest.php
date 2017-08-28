@@ -2,15 +2,16 @@
 
 namespace AppBundle\Tests\Entity;
 
+use AppBundle\Entity\Book;
+use AppBundle\Entity\Compilation;
 use AppBundle\Entity\Contribution;
 use AppBundle\Entity\Genre;
-use AppBundle\Entity\Publication;
 use PHPUnit_Framework_TestCase;
 
 class PublicationTest extends PHPUnit_Framework_TestCase {
     
     public function testAddGenre() {
-        $publication = new Publication();
+        $publication = new Book();
         $genre = new Genre();
         $publication->addGenre($genre);
         $publication->addGenre($genre);
@@ -18,7 +19,7 @@ class PublicationTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testAddContribution() {
-        $publication = new Publication();
+        $publication = new Compilation();
         $genre = new Contribution();
         $publication->addContribution($genre);
         $publication->addContribution($genre);

@@ -2,9 +2,11 @@
 
 namespace AppBundle\Tests\Util;
 
-use Doctrine\Common\Cache\FilesystemCache;
+use Closure;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManager;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Monolog\Logger;
 use ReflectionObject;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -39,7 +41,7 @@ class BaseTestCase extends WebTestCase {
     protected function setUp() {
         parent::setUp();
         self::bootKernel();
-        $this->container = static::$kernel->getContainer();        
+        $this->container = static::$kernel->getContainer();    
         $this->em = $this->container->get('doctrine')->getManager();
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
         $this->references = $this->loadFixtures($this->getFixtures())->getReferenceRepository();
