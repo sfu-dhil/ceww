@@ -302,7 +302,6 @@ class AuthorImporter {
 
     public function getPeriodical($title, $date, $placeName) {
         $title = $this->titleCaser->titlecase($title);
-        $this->logger->warn("ADDING   [{$title}] in row " . ($this->rowCount+2));
         $repo = $this->em->getRepository(Periodical::class);
         $periodical = $repo->findPeriodical($title, $placeName);
         if (!$periodical) {
@@ -316,9 +315,6 @@ class AuthorImporter {
                 $place->addPublication($periodical);
             }
             $this->persist($periodical);    
-            $this->logger->warn("CREATING [{$title}] x {$periodical->getId()}");
-        } else {
-            $this->logger->warn("SKIPPING [{$title}] x {$periodical->getId()}");
         }
         return $periodical;
     }
