@@ -60,6 +60,8 @@ class AuthorImporter {
      * @var Splitter
      */
     private $splitter;
+    
+    private $rowCount = 0;
 
     public function __construct() {
         $this->namer = new Namer();
@@ -141,7 +143,6 @@ class AuthorImporter {
             $place = new Place();
             $place->setName($name);
             $this->persist($place);
-            $this->flush($place, false);
         }
         return $place;
     }
@@ -226,13 +227,13 @@ class AuthorImporter {
         if (preg_match('/^(.*?)\(n\.d\.\)\s*$/u', $title, $matches)) {
             return array($this->trim($matches[1]), null);
         }
-        if (preg_match('/^(.*?)\[(c?\d{4}(?:,\s*c?\d{4})*)\]\s*$/u', $title, $matches)) {
+        if (preg_match('/^(.*?)\[(c?\d{4}(?:[,;-]\s*c?\d{1,4})*)\]\s*$/u', $title, $matches)) {
             return array($this->trim($matches[1]), $matches[2]);
         }
-        if (preg_match('/^(.*?)\((c?\d{4}(?:,\s*c?\d{4})*)\)\s*$/u', $title, $matches)) {
+        if (preg_match('/^(.*?)\((c?\d{4}(?:[,;-]\s*c?\d{1,4})*)\)\s*$/u', $title, $matches)) {
             return array($this->trim($matches[1]), $matches[2]);
         }
-        if (preg_match('/^(.*?)\(\[(c?\d{4}(?:,\s*c?\d{4})*)\]\)\s*$/u', $title, $matches)) {
+        if (preg_match('/^(.*?)\(\[(c?\d{4}(?:[,;-]\s*c?\d{1,4})*)\]\)\s*$/u', $title, $matches)) {
             return array($this->trim($matches[1]), $matches[2]);
         }
         return array($title, null);
@@ -300,19 +301,24 @@ class AuthorImporter {
     }
 
     public function getPeriodical($title, $date, $placeName) {
+        $title = $this->titleCaser->titlecase($title);
+        $this->logger->warn("ADDING   [{$title}] in row " . ($this->rowCount+2));
         $repo = $this->em->getRepository(Periodical::class);
-        $periodical = $repo->findPeriodical($title, $date, $placeName);
+        $periodical = $repo->findPeriodical($title, $placeName);
         if (!$periodical) {
             $periodical = new Periodical();
-            $periodical->setTitle($this->titleCaser->titlecase($title));
+            $periodical->setTitle($title);
             $periodical->setSortableTitle($this->titleCaser->sortableTitle($title));
-
+            $periodical->setNotes("From row {$this->rowCount}+2");
             if ($placeName) {
                 $place = $this->getPlace($placeName);
                 $periodical->setLocation($place);
                 $place->addPublication($periodical);
             }
-            $this->persist($periodical);
+            $this->persist($periodical);    
+            $this->logger->warn("CREATING [{$title}] x {$periodical->getId()}");
+        } else {
+            $this->logger->warn("SKIPPING [{$title}] x {$periodical->getId()}");
         }
         return $periodical;
     }
@@ -333,6 +339,7 @@ class AuthorImporter {
             $contribution->setPublication($publication);
             $person->addContribution($contribution);
             $this->persist($contribution);
+            // $this->em->clear(Periodical::class);
         }
     }
 
@@ -378,6 +385,7 @@ class AuthorImporter {
      * @return Person
      */
     public function importRow($row) {
+        $this->rowCount++;
         $person = $this->createPerson($row[0]);
         $this->setBirthDate($person, $row[1]);
         $this->setBirthPlace($person, $row[2]);
