@@ -88,6 +88,7 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
             $cleaned = array_map(function($item) {
                 $item = preg_replace("/\x{00a0}/siu", " ", $item);
                 $item = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $item);
+                $item = normalizer_normalize($item);
                 return $item;
             }, $row);
             try {

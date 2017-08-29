@@ -330,6 +330,9 @@ class AuthorImporterTest extends BaseTestCase {
             [['foo', '1901,1902'], 'foo  (1901,1902)'],
             [['foo', '1901'], 'foo [1901]'],
             [['foo', '1901,1903'], 'foo [1901,1903]'],
+            [['foo', '1901-1903'], 'foo [1901-1903]'],
+            [['foo', '1901;1903'], 'foo [1901;1903]'],
+            [['foo', '1901-2'], 'foo [1901-2]'],
             [['Hæmochromatosis', '1900'], 'Hæmochromatosis (1900)'],
         );
     } 
