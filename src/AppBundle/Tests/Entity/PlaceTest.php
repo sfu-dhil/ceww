@@ -4,6 +4,7 @@
 namespace AppBundle\Tests\Entity;
 
 use AppBundle\Entity\Book;
+use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
@@ -35,7 +36,9 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
             $person = new Person();
             $person->setFullName($name);
             if($year !== null) {
-                $person->setBirthDate($year);
+                $birthDate = new DateYear();
+                $birthDate->setValue($year);
+                $person->setBirthDate($birthDate);
             }
             $place->addPersonBorn($person);
         }
@@ -55,7 +58,9 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
             $person = new Person();
             $person->setFullName($name);
             if($year !== null) {
-                $person->setBirthDate($year);
+                $deathDate = new DateYear();
+                $deathDate->setValue($year);
+                $person->setBirthDate($deathDate);
             }
             $place->addPersonDied($person);
         }
