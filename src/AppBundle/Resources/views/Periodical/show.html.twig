@@ -36,6 +36,9 @@
                 <th>Description</th>
                 <td>{{ periodical.description }}</td>
             </tr><tr>
+                <th>Location</th>
+                <td><a href="{{ path('place_show', {'id': periodical.location.id}) }}">{{ periodical.location }}</a></td>
+            </tr><tr>
                 <th>Notes</th>
                 <td>{{ periodical.notes }}</td>
             </tr><tr>

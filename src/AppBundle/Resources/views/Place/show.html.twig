@@ -59,10 +59,10 @@
                 <td>
                     {% if place.residents | length > 0 %}
                     <ul>
-                        {% for residents in place.residents %}
+                        {% for person in place.residents %}
                         <li>
-                            <a href="{{ path("residents_show", {"id":residents.id}) }}">
-                                {{ residents }}
+                            <a href="{{ path("person_show", {"id":person.id}) }}">
+                                {{ person }}
                             </a>
                         </li>
                         {% endfor %} 
@@ -75,10 +75,10 @@
     {% if place.peopleBorn | length > 0 %}    
     <h2>Peopleborn</h2>
     <ul>
-        {% for peopleBorn in place.peopleBorn %}
+        {% for person in place.peopleBorn %}
         <li>
-            <a href="{{ path("peopleBorn_show", {"id":peopleBorn.id}) }}">
-                {{ peopleBorn }}
+            <a href="{{ path("person_show", {"id":person.id}) }}">
+                {{ person }}
             </a>
         </li>
         {% endfor %} 
@@ -87,10 +87,10 @@
     {% if place.peopleDied | length > 0 %}    
     <h2>Peopledied</h2>
     <ul>
-        {% for peopleDied in place.peopleDied %}
+        {% for person in place.peopleDied %}
         <li>
-            <a href="{{ path("peopleDied_show", {"id":peopleDied.id}) }}">
-                {{ peopleDied }}
+            <a href="{{ path("person_show", {"id":person.id}) }}">
+                {{ person }}
             </a>
         </li>
         {% endfor %} 
@@ -99,11 +99,9 @@
     {% if place.publications | length > 0 %}    
     <h2>Publications</h2>
     <ul>
-        {% for publications in place.publications %}
+        {% for publication in place.publications %}
         <li>
-            <a href="{{ path("publications_show", {"id":publications.id}) }}">
-                {{ publications }}
-            </a>
+            {% include 'AppBundle:Publication:partial/link.html.twig' with { 'publication': publication, 'render': '{{ publication }}' } %}
         </li>
         {% endfor %} 
     </ul>
