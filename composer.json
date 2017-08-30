@@ -1,6 +1,6 @@
 {
     "name": "michael/ceww",
-    "license": "proprietary",
+    "license": "gpl3",
     "type": "project",
     "autoload": {
         "psr-4": {
