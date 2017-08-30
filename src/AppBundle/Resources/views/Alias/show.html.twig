@@ -47,10 +47,10 @@
                 <td>
                     {% if alias.people | length > 0 %}
                     <ul>
-                        {% for people in alias.people %}
+                        {% for person in alias.people %}
                         <li>
-                            <a href="{{ path("people_show", {"id":people.id}) }}">
-                                {{ people }}
+                            <a href="{{ path("person_show", {"id":person.id}) }}">
+                                {{ person }}
                             </a>
                         </li>
                         {% endfor %} 

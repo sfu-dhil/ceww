@@ -45,17 +45,21 @@
             <tr>
                 <th>Birthplace</th>
                 <td>
+                    {% if person.birthPlace %}
                     <a href="{{ path('place_show', { 'id': person.birthPlace.id}) }}">
                         {{ person.birthPlace }}
                     </a>
+                    {% endif %}
                 </td>
             </tr>        
             <tr>
                 <th>Deathplace</th>
                 <td>
+                    {% if person.deathPlace %}
                     <a href="{{ path('place_show', { 'id': person.deathPlace.id}) }}">
                         {{ person.deathPlace }}
                     </a>
+                    {% endif %}
                 </td>
             </tr>        
             <tr>
@@ -95,11 +99,9 @@
     {% if person.contributions | length > 0 %}    
     <h2>Contributions</h2>
     <ul>
-        {% for contributions in person.contributions %}
+        {% for contribution in person.contributions %}
         <li>
-            <a href="{{ path("contribution_show", {"id":contributions.id}) }}">
-                {{ contributions }}
-            </a>
+            {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}' } %}
         </li>
         {% endfor %} 
     </ul>
