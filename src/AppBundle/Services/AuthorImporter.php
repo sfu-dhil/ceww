@@ -147,6 +147,22 @@ class AuthorImporter {
         return $place;
     }
 
+    public function getDateYear($date) {
+        try {
+            if ($date) {
+                $dateYear = new DateYear();
+                $dateYear->setValue($date);
+                $this->persist($dateYear);
+                return $dateYear;
+            }
+        } catch (Exception $e) {
+            $trace = debug_backtrace(null, 2);
+            $caller = $trace[1];
+            $this->logger->error($caller['function'] . ':' . $e->getMessage());
+        }
+        return null;
+    }
+
     public function setBirthDate(Person $person, $value) {
         $value = $this->trim($value);
         if (!$value) {
@@ -245,21 +261,6 @@ class AuthorImporter {
             return array($this->trim($matches[1]), $matches[2]);
         }
         return array($title, null);
-    }
-
-    public function getDateYear($date) {
-        try {
-            if ($date) {
-                $dateYear = new DateYear();
-                $dateYear->setValue($date);
-                $this->persist($dateYear);
-                return $dateYear;
-            }
-        } catch (Exception $e) {
-            $trace = debug_backtrace(null, 2);
-            $caller = $trace[1];
-            throw new Exception($caller['function'] . ':' . $e->getMessage());
-        }
     }
 
     public function getBook($title, $date, $placeName) {

@@ -106,11 +106,13 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        $this->getContainer()->get('doctrine.orm.entity_manager')->getConnection()->getConfiguration()->setSQLLogger(null);
         $files = $input->getArgument('files');
         $this->importer->setCommit($input->getOption('commit'));
         foreach ($files as $file) {            
             $this->logger->info("Importing {$file}");
             $this->import($file, $input->getOption('skip'));
+            gc_collect_cycles();
         }
     }
 
