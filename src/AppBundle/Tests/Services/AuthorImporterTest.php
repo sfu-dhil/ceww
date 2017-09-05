@@ -441,24 +441,21 @@ class AuthorImporterTest extends BaseTestCase {
     /**
      * @dataProvider getPeriodicalData
      */
-    public function testGetPeriodical($expected, $title, $date, $placeName) {
-        $publication = $this->importer->getPeriodical($title, $date, $placeName);
+    public function testGetPeriodical($expected, $title, $date) {
+        $publication = $this->importer->getPeriodical($title, $date);
         $this->assertInstanceOf(Periodical::class, $publication);
         $this->assertEquals($expected[0], $publication->getTitle());
         $this->assertEquals($expected[1], $publication->getSortableTitle());
         $this->assertNull($publication->getDateYear());
-        if ($placeName) {
-            $this->assertEquals($placeName, $publication->getLocation()->getName());
-        } 
     } 
 
     public function getPeriodicalData() {
         return array(
-            [['The Title', 'title, the', null, null], 'The Title', null, null],
-            [['Title Stuffs', 'title stuffs', null, null], 'Title Stuffs', null, null],
-            [['The Title', 'title, the', '1901', null], 'The Title', '1901', null],
-            [['The Title', 'title, the', null, 'vancouver'], 'The Title', null, 'vancouver'],            
-            [['Hæmochromatosis', 'hæmochromatosis', null, null],  'Hæmochromatosis', null, null],
+            [['The Title', 'title, the'], 'The Title'],
+            [['Title Stuffs', 'title stuffs'], 'Title Stuffs'],
+            [['The Title', 'title, the'], 'The Title'],
+            [['The Title', 'title, the'], 'The Title'],            
+            [['Hæmochromatosis', 'hæmochromatosis'],  'Hæmochromatosis'],
         );
     }
     
