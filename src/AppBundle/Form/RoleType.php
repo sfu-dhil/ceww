@@ -13,7 +13,8 @@ class RoleType extends TermType
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {        
+    {    
+        parent::buildForm($builder, $options);
     }
     
     /**

@@ -15,44 +15,7 @@ class PeriodicalType extends AbstractType {
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('title', null, array(
-            'label' => 'Title',
-            'required' => true,
-            'attr' => array(
-                'help_block' => '',
-            ),
-        ));
-        $builder->add('sortableTitle', null, array(
-            'label' => 'Sortable Title',
-            'required' => true,
-            'attr' => array(
-                'help_block' => '',
-            ),
-        ));
-        $builder->add('links', null, array(
-            'label' => 'Links',
-            'required' => true,
-            'attr' => array(
-                'help_block' => '',
-            ),
-        ));
-        $builder->add('description', null, array(
-            'label' => 'Description',
-            'required' => false,
-            'attr' => array(
-                'help_block' => '',
-            ),
-        ));
-        $builder->add('notes', null, array(
-            'label' => 'Notes',
-            'required' => false,
-            'attr' => array(
-                'help_block' => '',
-            ),
-        ));
-        $builder->add('dateYear');
-        $builder->add('location');
-        $builder->add('genres');
+        parent::buildForm($builder, $options);
         $builder->add('runDates', null, array(
             'label' => 'Run Dates',
             'required' => true,
