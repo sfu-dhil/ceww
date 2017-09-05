@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Compilation Search{% endblock %}
+
+{% block pageheader %}
+    <h1>Compilation Search</h1>
+    {% include 'AppBundle:misc:search-header.html.twig' with {'results': compilations} %}
+{% endblock %} 
+
+{% block body %}
+
+    {% include 'AppBundle:misc:search-form.html.twig' with {'search_path': 'compilation_search'} %}
+
+    {% if q %}
+        {% include 'AppBundle:Compilation:partial/table.html.twig' %}
+    {% endif %}
+
+    {% include 'AppBundle:misc:search-footer.html.twig' with {'results': compilations} %}
+
+{% endblock %}

@@ -15,18 +15,17 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Route("/book")
  */
-class BookController extends Controller
-{
+class BookController extends Controller {
+
     /**
      * Lists all Book entities.
      *
      * @Route("/", name="book_index")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
+     * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Book::class, 'e')->orderBy('e.sortableTitle', 'ASC');
@@ -38,88 +37,76 @@ class BookController extends Controller
             'books' => $books,
         );
     }
+
     /**
      * Search for Book entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Book repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated search.html.twig
-	 * template.
-	 * 
-     //    public function searchQuery($q) {
-     //        $qb = $this->createQueryBuilder('e');
-     //        $qb->where("e.fieldName like '%$q%'");
-     //        return $qb->getQuery();
-     //    }
-	 *
      *
      * @Route("/search", name="book_search")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
+     * @param Request $request
      */
-    public function searchAction(Request $request)
-    {
+    public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Book');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->searchQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$books = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-		} else {
-			$books = array();
-		}
+        $repo = $em->getRepository('AppBundle:Book');
+        $q = $request->query->get('q');
+        if ($q) {
+            $query = $repo->searchQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $books = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+        } else {
+            $books = array();
+        }
 
         return array(
             'books' => $books,
-			'q' => $q,
+            'q' => $q,
         );
     }
+
     /**
      * Full text search for Book entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Book repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated fulltext.html.twig
-	 * template.
-	 * 
-	//    public function fulltextQuery($q) {
-	//        $qb = $this->createQueryBuilder('e');
-	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
-	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
-	//        $qb->orderBy('score', 'desc');
-	//        $qb->setParameter('q', $q);
-	//        return $qb->getQuery();
-	//    }	 
-	 * 
-	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Book entity.
-	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
-	 *
+     *
+     * To make this work, add a method like this one to the 
+     * AppBundle:Book repository. Replace the fieldName with
+     * something appropriate, and adjust the generated fulltext.html.twig
+     * template.
+     * 
+      //    public function fulltextQuery($q) {
+      //        $qb = $this->createQueryBuilder('e');
+      //        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
+      //        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
+      //        $qb->orderBy('score', 'desc');
+      //        $qb->setParameter('q', $q);
+      //        return $qb->getQuery();
+      //    }
+     * 
+     * Requires a MatchAgainst function be added to doctrine, and appropriate
+     * fulltext indexes on your Book entity.
+     *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
+     *
      *
      * @Route("/fulltext", name="book_fulltext")
      * @Method("GET")
      * @Template()
-	 * @param Request $request
-	 * @return array
+     * @param Request $request
+     * @return array
      */
-    public function fulltextAction(Request $request)
-    {
+    public function fulltextAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Book');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$books = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-		} else {
-			$books = array();
-		}
+        $repo = $em->getRepository('AppBundle:Book');
+        $q = $request->query->get('q');
+        if ($q) {
+            $query = $repo->fulltextQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $books = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+        } else {
+            $books = array();
+        }
 
         return array(
             'books' => $books,
-			'q' => $q,
+            'q' => $q,
         );
     }
 
@@ -129,11 +116,10 @@ class BookController extends Controller
      * @Route("/new", name="book_new")
      * @Method({"GET", "POST"})
      * @Template()
-	 * @param Request $request
+     * @param Request $request
      */
-    public function newAction(Request $request)
-    {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+    public function newAction(Request $request) {
+        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
@@ -162,10 +148,9 @@ class BookController extends Controller
      * @Route("/{id}", name="book_show")
      * @Method("GET")
      * @Template()
-	 * @param Book $book
+     * @param Book $book
      */
-    public function showAction(Book $book)
-    {
+    public function showAction(Book $book) {
 
         return array(
             'book' => $book,
@@ -178,12 +163,11 @@ class BookController extends Controller
      * @Route("/{id}/edit", name="book_edit")
      * @Method({"GET", "POST"})
      * @Template()
-	 * @param Request $request
-	 * @param Book $book
+     * @param Request $request
+     * @param Book $book
      */
-    public function editAction(Request $request, Book $book)
-    {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+    public function editAction(Request $request, Book $book) {
+        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
@@ -208,12 +192,11 @@ class BookController extends Controller
      *
      * @Route("/{id}/delete", name="book_delete")
      * @Method("GET")
-	 * @param Request $request
-	 * @param Book $book
+     * @param Request $request
+     * @param Book $book
      */
-    public function deleteAction(Request $request, Book $book)
-    {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+    public function deleteAction(Request $request, Book $book) {
+        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
@@ -224,4 +207,5 @@ class BookController extends Controller
 
         return $this->redirectToRoute('book_index');
     }
+
 }

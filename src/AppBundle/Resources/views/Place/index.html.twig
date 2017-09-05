@@ -23,31 +23,8 @@
             </a>
         </div>
     </div>
-        
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Alternate Names</th>
-                <th>Country Name</th>
-                <th>Admin Names</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for place in places %}
-            <tr>
-                <td>
-                    <a href="{{ path('place_show', { 'id': place.id }) }}">
-                        {{ place.name }}
-                    </a>
-                </td>
-                <td>{% if place.alternateNames %}{{ place.alternateNames|join(', ') }}{% endif %}</td>
-                <td>{{ place.countryName }}</td>
-                <td>{% if place.adminNames %}{{ place.adminNames|join(', ') }}{% endif %}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
+    {% include 'AppBundle:Place:partial/table.html.twig' %}
         
     <div class="navigation">
         {{ knp_pagination_render(places) }}

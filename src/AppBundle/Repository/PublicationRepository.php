@@ -12,16 +12,6 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class PublicationRepository extends EntityRepository {
-
-    public function browseQuery(Category $category = null) {
-        $qb = $this->createQueryBuilder('e');
-        if($category) {
-            $qb->andWhere('e.category = :category');
-            $qb->setParameter('category', $category);
-        }
-        $qb->orderBy('e.sortableTitle', 'ASC');
-        return $qb->getQuery();
-    }
     
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
