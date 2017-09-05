@@ -110,4 +110,7 @@
             {% endfor %} 
         </ul>
     {% endif %}
+
+    {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': person } %}				
+
 {% endblock %}

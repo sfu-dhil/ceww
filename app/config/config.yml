@@ -132,12 +132,21 @@ nines_feedback:
     default_status: submitted
     public_status: published
     commenting:
+        alias:
+            class: AppBundle\Entity\Alias
+            route: alias_show
         author:
             class: AppBundle\Entity\Person
             route: person_show
-        publication:
-            class: AppBundle\Entity\Publication
-            route: publication_show
+        book:
+            class: AppBundle\Entity\Book
+            route: book_show
+        compilation:
+            class: AppBundle\Entity\Compilation
+            route: compilation_show
+        periodical:
+            class: AppBundle\Entity\Periodical
+            route: periodical_show
         place:
             class: AppBundle\Entity\Place
             route: place_show
