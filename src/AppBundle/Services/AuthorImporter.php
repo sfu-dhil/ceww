@@ -150,7 +150,6 @@ class AuthorImporter {
             $place->setName($name);
             $this->persist($place);
         }
-        $place->appendNote("{$this->source}:{$this->rowCount}");
         return $place;
     }
 
@@ -211,7 +210,6 @@ class AuthorImporter {
         $alias = $repo->findOneBy(array('name' => $name));
         if (!$alias) {
             $alias = new Alias();
-            $alias->appendNote("{$this->source}:{$this->rowCount}");
             $alias->setMaiden(preg_match('/^n(é|e)e\s+/u', $name));
             if ($alias->getMaiden()) {
                 $alias->setName($this->trim(substr($name, 4)));
@@ -335,7 +333,6 @@ class AuthorImporter {
             $title = $this->trim($title);
 
             $publication = $this->getPeriodical($title, $dateValue, $placeValue);
-            $publication->appendNote("{$this->source}:{$this->rowCount}");
             $contribution = new Contribution();
             $contribution->setPerson($person);
             $contribution->setRole($role);
@@ -356,7 +353,6 @@ class AuthorImporter {
             $title = $this->trim($title);
 
             $publication = $this->getCompilation($title, $dateValue, $placeValue);
-            $publication->appendNote("{$this->source}:{$this->rowCount}");
             $contribution = new Contribution();
             $contribution->setPerson($person);
             $contribution->setRole($role);
@@ -376,7 +372,6 @@ class AuthorImporter {
             $title = $this->trim($title);
 
             $publication = $this->getBook($title, $dateValue, $placeValue);
-            $publication->appendNote("{$this->source}:{$this->rowCount}");
             $contribution = new Contribution();
             $contribution->setPerson($person);
             $contribution->setRole($role);
@@ -405,7 +400,7 @@ class AuthorImporter {
             $person->setDescription($row[10]);
         }
         $notes = $this->trim(implode("\n\n", array_filter(array_slice($row, 11))));
-        $person->setNotes($notes . "\n\n{$this->source}:{$this->rowCount}");
+        $person->setNotes($notes);
         $this->flush(null, true);
 
         return $person;
