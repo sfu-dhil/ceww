@@ -26,7 +26,10 @@
         
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
-            <tr><th>Title</th><th>Sortable Title</th><th>Links</th><th>Description</th><th>Notes</th><th>Created</th><th>Updated</th>            </tr>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+            </tr>
         </thead>
         <tbody>
         {% for compilation in compilations %}
@@ -36,12 +39,7 @@
                         {{ compilation.title }}
                     </a>
                 </td>
-                <td>{{ compilation.sortableTitle }}</td>
-                <td>{% if compilation.links %}{{ compilation.links|join(', ') }}{% endif %}</td>
                 <td>{{ compilation.description }}</td>
-                <td>{{ compilation.notes }}</td>
-                <td>{% if compilation.created %}{{ compilation.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if compilation.updated %}{{ compilation.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

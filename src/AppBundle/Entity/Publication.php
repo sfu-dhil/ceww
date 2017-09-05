@@ -24,7 +24,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  */
 abstract class Publication extends AbstractEntity {
-    
+
     const BOOK = 0;
     const COMPILATION = 1;
     const PERIODICAL = 2;
@@ -96,7 +96,7 @@ abstract class Publication extends AbstractEntity {
     public function __toString() {
         return $this->title;
     }
-    
+
     abstract public function getCategory();
 
     /**
@@ -197,6 +197,15 @@ abstract class Publication extends AbstractEntity {
     public function setNotes($notes) {
         $this->notes = $notes;
 
+        return $this;
+    }
+
+    public function appendNote($note) {
+        if (!$this->notes) {
+            $this->notes = $note;
+        } else {
+            $this->notes .= "\n\n" . $note;
+        }
         return $this;
     }
 
