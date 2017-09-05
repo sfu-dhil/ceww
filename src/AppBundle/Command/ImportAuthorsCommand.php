@@ -75,6 +75,7 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
      * @param string $path
      */
     protected function import($path, $skip = 0) {
+        $this->importer->setSource($path);
         $fh = fopen($path, 'r');
         for($n = 0; $n < $skip; $n++) {
             fgetcsv($fh); // skip some rows.

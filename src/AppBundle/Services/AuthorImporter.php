@@ -62,10 +62,16 @@ class AuthorImporter {
     private $splitter;
     
     private $rowCount = 0;
+    
+    private $source;
 
     public function __construct() {
         $this->namer = new Namer();
         $this->commit = false;
+    }
+    
+    public function setSource($source) {
+        $this->source = $source;
     }
 
     public function setDoctrine(Registry $doctrine) {
@@ -144,6 +150,7 @@ class AuthorImporter {
             $place->setName($name);
             $this->persist($place);
         }
+        $place->appendNote("{$this->source}:{$this->rowCount}");
         return $place;
     }
 
@@ -204,6 +211,7 @@ class AuthorImporter {
         $alias = $repo->findOneBy(array('name' => $name));
         if (!$alias) {
             $alias = new Alias();
+            $alias->appendNote("{$this->source}:{$this->rowCount}");
             $alias->setMaiden(preg_match('/^n(é|e)e\s+/u', $name));
             if ($alias->getMaiden()) {
                 $alias->setName($this->trim(substr($name, 4)));
@@ -233,6 +241,9 @@ class AuthorImporter {
         $names = $this->splitter->split($value);
         foreach ($names as $name) {
             $place = $this->getPlace($name);
+            if( ! $place) {
+                continue;
+            }
             $person->addResidence($place);
             $place->addResident($person);
         }
@@ -301,20 +312,14 @@ class AuthorImporter {
         return $compilation;
     }
 
-    public function getPeriodical($title, $date, $placeName) {
+    public function getPeriodical($title) {
         $title = $this->titleCaser->titlecase($title);
         $repo = $this->em->getRepository(Periodical::class);
-        $periodical = $repo->findPeriodical($title, $placeName);
+        $periodical = $repo->findPeriodical($title);
         if (!$periodical) {
             $periodical = new Periodical();
             $periodical->setTitle($title);
             $periodical->setSortableTitle($this->titleCaser->sortableTitle($title));
-            $periodical->setNotes("From row {$this->rowCount}+2");
-            if ($placeName) {
-                $place = $this->getPlace($placeName);
-                $periodical->setLocation($place);
-                $place->addPublication($periodical);
-            }
             $this->persist($periodical);    
         }
         return $periodical;
@@ -330,6 +335,7 @@ class AuthorImporter {
             $title = $this->trim($title);
 
             $publication = $this->getPeriodical($title, $dateValue, $placeValue);
+            $publication->appendNote("{$this->source}:{$this->rowCount}");
             $contribution = new Contribution();
             $contribution->setPerson($person);
             $contribution->setRole($role);
@@ -350,6 +356,7 @@ class AuthorImporter {
             $title = $this->trim($title);
 
             $publication = $this->getCompilation($title, $dateValue, $placeValue);
+            $publication->appendNote("{$this->source}:{$this->rowCount}");
             $contribution = new Contribution();
             $contribution->setPerson($person);
             $contribution->setRole($role);
@@ -369,6 +376,7 @@ class AuthorImporter {
             $title = $this->trim($title);
 
             $publication = $this->getBook($title, $dateValue, $placeValue);
+            $publication->appendNote("{$this->source}:{$this->rowCount}");
             $contribution = new Contribution();
             $contribution->setPerson($person);
             $contribution->setRole($role);
@@ -396,8 +404,8 @@ class AuthorImporter {
         if (isset($row[10])) {
             $person->setDescription($row[10]);
         }
-        $notes = implode("\n\n", array_slice($row, 11));
-        $person->setNotes($notes);
+        $notes = $this->trim(implode("\n\n", array_filter(array_slice($row, 11))));
+        $person->setNotes($notes . "\n\n{$this->source}:{$this->rowCount}");
         $this->flush(null, true);
 
         return $person;

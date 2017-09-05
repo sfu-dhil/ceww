@@ -44,10 +44,14 @@
             </tr><tr>
                 <th>Description</th>
                 <td>{{ place.description }}</td>
-            </tr><tr>
-                <th>Notes</th>
-                <td>{{ place.notes }}</td>
-            </tr><tr>
+            </tr>
+            {% if is_granted('ROLE_CONTENT_EDITOR') %}
+                <tr>
+                    <th>Notes</th>
+                    <td>{{ place.notes | nl2br }}</td>
+                </tr>
+            {% endif %}
+            <tr>
                 <th>Created</th>
                 <td>{% if place.created %}{{ place.created|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr><tr>

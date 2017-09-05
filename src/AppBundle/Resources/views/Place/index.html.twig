@@ -26,7 +26,12 @@
         
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
-            <tr><th>Name</th><th>Alternate Names</th><th>Country Name</th><th>Admin Names</th><th>Latitude</th><th>Longitude</th><th>Description</th><th>Notes</th><th>Created</th><th>Updated</th>            </tr>
+            <tr>
+                <th>Name</th>
+                <th>Alternate Names</th>
+                <th>Country Name</th>
+                <th>Admin Names</th>
+            </tr>
         </thead>
         <tbody>
         {% for place in places %}
@@ -39,12 +44,6 @@
                 <td>{% if place.alternateNames %}{{ place.alternateNames|join(', ') }}{% endif %}</td>
                 <td>{{ place.countryName }}</td>
                 <td>{% if place.adminNames %}{{ place.adminNames|join(', ') }}{% endif %}</td>
-                <td>{{ place.latitude }}</td>
-                <td>{{ place.longitude }}</td>
-                <td>{{ place.description }}</td>
-                <td>{{ place.notes }}</td>
-                <td>{% if place.created %}{{ place.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if place.updated %}{{ place.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

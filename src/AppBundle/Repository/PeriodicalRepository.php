@@ -23,10 +23,8 @@ class PeriodicalRepository extends EntityRepository
             $qb->innerJoin('p.location', 'l');
             $qb->andWhere('l.name = :place');
             $qb->setParameter('place', $placeName);
-        } else {
-            $qb->andWhere('p.location is null');
-        }
-
+        } 
+        
         try {
             return $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
