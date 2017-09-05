@@ -10,13 +10,24 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 /**
  * Publication
  *
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
  * @ORM\Table(name="publication", indexes={
  *  @ORM\Index(columns={"title"}, flags={"fulltext"}),
  *  @ORM\Index(columns={"sortable_title"}, flags={"fulltext"}),
  * })
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PublicationRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="category", type="string")
+ * @ORM\DiscriminatorMap({
+ *  "book" = "Book",
+ *  "compilation" = "Compilation",
+ *  "periodical" = "Periodical"
+ * })
  */
-class Publication extends AbstractEntity {
+abstract class Publication extends AbstractEntity {
+
+    const BOOK = 0;
+    const COMPILATION = 1;
+    const PERIODICAL = 2;
 
     /**
      * @var string
@@ -63,12 +74,6 @@ class Publication extends AbstractEntity {
     private $location;
 
     /**
-     * @var Category
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="publications")
-     */
-    private $category;
-
-    /**
      * @var Collection|Genre[]
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publications_genres")
@@ -91,6 +96,8 @@ class Publication extends AbstractEntity {
     public function __toString() {
         return $this->title;
     }
+
+    abstract public function getCategory();
 
     /**
      * Set title
@@ -193,6 +200,15 @@ class Publication extends AbstractEntity {
         return $this;
     }
 
+    public function appendNote($note) {
+        if (!$this->notes) {
+            $this->notes = $note;
+        } else {
+            $this->notes .= "\n\n" . $note;
+        }
+        return $this;
+    }
+
     /**
      * Get notes
      *
@@ -244,28 +260,6 @@ class Publication extends AbstractEntity {
      */
     public function getLocation() {
         return $this->location;
-    }
-
-    /**
-     * Set category
-     *
-     * @param Category $category
-     *
-     * @return Publication
-     */
-    public function setCategory(Category $category = null) {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return Category
-     */
-    public function getCategory() {
-        return $this->category;
     }
 
     /**

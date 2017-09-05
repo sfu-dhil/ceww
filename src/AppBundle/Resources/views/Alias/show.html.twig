@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Alias{% endblock %}
+
 {% block pageheader %} 
-    <h1>Alternate Name</h1>
+    <h1>Alias</h1>
 {% endblock %} 
 
 {% block body %}
-
     <div class="btn-toolbar">
         <div class="btn-group pull-right">
             <a href="{{ path('alias_index') }}" class="btn btn-default">
@@ -35,37 +36,35 @@
                 <th>Description</th>
                 <td>{{ alias.description }}</td>
             </tr>
-            {% if is_granted('ROLE_CONTENT_ADMIN') %}            
+            {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Notes</th>
-                    <td>{{ alias.notes }}</td>
+                    <td>{{ alias.notes | nl2br }}</td>
                 </tr>
             {% endif %}
             <tr>
                 <th>Created</th>
                 <td>{% if alias.created %}{{ alias.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
+            </tr><tr>
                 <th>Updated</th>
                 <td>{% if alias.updated %}{{ alias.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
+            </tr>        
+            <tr>
+                <th>People</th>         
+                <td>
+                    {% if alias.people | length > 0 %}
+                        <ul>
+                            {% for person in alias.people %}
+                                <li>
+                                    <a href="{{ path("person_show", {"id":person.id}) }}">
+                                        {{ person }}
+                                    </a>
+                                </li>
+                            {% endfor %} 
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>        
         </tbody>
     </table>
-
-    {% set people = alias.people %}
-    {% if people|length > 0 %}
-        <h2>People</h2>
-        <ul>
-            {% for person in people %}
-                <li>
-                    <a href="{{ path('person_show', {'id': person.id }) }}">
-                        {{ person }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    
-    {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': alias } %}				
-    
 {% endblock %}

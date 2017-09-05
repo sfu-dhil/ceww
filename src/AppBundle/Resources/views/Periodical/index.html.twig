@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}periodicals{% endblock %}
+
+{% block pageheader %}
+    <h1>Periodical List</h1>
+    <p class="count">
+        Displaying {{ periodicals|length }} periodicals of {{ periodicals.getTotalItemCount }} total.
+    </p>
+ {% endblock %} 
+
+{% block body %}
+
+        <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+            <a href="{{ path('periodical_new') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span> New
+            </a>
+            {% endif %}
+            <a href="{{ path('periodical_search') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+    </div>
+        
+    <table class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Run Dates</th>
+                <th>Continued From</th>
+                <th>Continued By</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for periodical in periodicals %}
+            <tr>
+                <td>
+                    <a href="{{ path('periodical_show', { 'id': periodical.id }) }}">
+                        {{ periodical.title }}
+                    </a>
+                </td>
+                <td>{{ periodical.runDates }}</td>
+                <td>{{ periodical.continuedFrom }}</td>
+                <td>{{ periodical.continuedBy }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        
+    <div class="navigation">
+        {{ knp_pagination_render(periodicals) }}
+    </div>
+
+{% endblock %}

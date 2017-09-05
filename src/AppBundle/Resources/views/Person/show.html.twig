@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Person{% endblock %}
+
 {% block pageheader %} 
     <h1>Person</h1>
 {% endblock %} 
 
 {% block body %}
-
     <div class="btn-toolbar">
         <div class="btn-group pull-right">
             <a href="{{ path('person_index') }}" class="btn btn-default">
@@ -22,109 +23,91 @@
         </div>
     </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
-        <tbody>
-            <tr>
-                <th>Fullname</th>
+        <tbody><tr>
+                <th>Full Name</th>
                 <td>{{ person.fullName }}</td>
-            </tr>
-            <tr>
-                <th>Also known as</th>
-                <td>
-                    {% set aliases = person.aliases %}
-                    {% if aliases|length > 0 %}
-                        <ul>
-                            {% for alias in aliases %}
-                                <li>
-                                    <a href="{{ path('alias_show', {'id': alias.id}) }}">
-                                        {{ alias }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </td>
-            </tr>
-            {% if is_granted('ROLE_CONTENT_ADMIN') %}            
-                <tr>
-                    <th>Sortablename</th>
-                    <td>{{ person.sortableName }}</td>
-                </tr>
-            {% endif %}
-            <tr>
+            </tr><tr>
+                <th>Sortable Name</th>
+                <td>{{ person.sortableName }}</td>
+            </tr><tr>
                 <th>Description</th>
                 <td>{{ person.description }}</td>
             </tr>
-            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+            {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Notes</th>
-                    <td>{{ person.notes }}</td>
+                    <td>{{ perosn.notes | nl2br }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th>Birth</th>
-                <td>{{ person.birthDate }} 
+                <th>Created</th>
+                <td>{% if person.created %}{{ person.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr><tr>
+                <th>Updated</th>
+                <td>{% if person.updated %}{{ person.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>        
+            <tr>
+                <th>Birthplace</th>
+                <td>
                     {% if person.birthPlace %}
-                        <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
+                        <a href="{{ path('place_show', { 'id': person.birthPlace.id}) }}">
                             {{ person.birthPlace }}
                         </a>
                     {% endif %}
                 </td>
-            </tr>
+            </tr>        
             <tr>
-                <th>Death</th>
-                <td>{{ person.deathDate }} 
+                <th>Deathplace</th>
+                <td>
                     {% if person.deathPlace %}
-                        <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
+                        <a href="{{ path('place_show', { 'id': person.deathPlace.id}) }}">
                             {{ person.deathPlace }}
                         </a>
                     {% endif %}
                 </td>
-            </tr>
+            </tr>        
             <tr>
-                <th>Created</th>
-                <td>{% if person.created %}{{ person.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
+                <th>Residences</th>         
+                <td>
+                    {% if person.residences | length > 0 %}
+                        <ul>
+                            {% for residences in person.residences %}
+                                <li>
+                                    <a href="{{ path("place_show", {"id":residences.id}) }}">
+                                        {{ residences }}
+                                    </a>
+                                </li>
+                            {% endfor %} 
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>        
             <tr>
-                <th>Updated</th>
-                <td>{% if person.updated %}{{ person.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
+                <th>Aliases</th>         
+                <td>
+                    {% if person.aliases | length > 0 %}
+                        <ul>
+                            {% for aliases in person.aliases %}
+                                <li>
+                                    <a href="{{ path("alias_show", {"id":aliases.id}) }}">
+                                        {{ aliases }}
+                                    </a>
+                                </li>
+                            {% endfor %} 
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>        
         </tbody>
     </table>
-
-    {% set contributions = person.contributions %}
-    {% if contributions|length > 0 %}
-        {% for category in categories %}
-            {% set contributions = person.getContributions(category) %}
-            {% if contributions|length %}
-                <h2>{{ category.label }}</h2>
-                <ul>
-                    {% for contribution in contributions %}
-                        <li>
-                            <a href="{{ path('publication_show', {'id': contribution.publication.id}) }}">
-                                {{ contribution.publication }}
-                            </a>
-                            ({{ contribution.role }})
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endfor %}            
-    {% endif %}
-
-    {% set residences = person.residences %}
-    {% if residences|length > 0 %}
-        <h2>Residences</h2>
+    {% if person.contributions | length > 0 %}    
+        <h2>Contributions</h2>
         <ul>
-            {% for residence in residences %}
+            {% for contribution in person.contributions %}
                 <li>
-                    <a href="{{ path('place_show', {'id': residence.id }) }}">
-                        {{ residence }}
-                    </a>
+                    {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}' } %}
                 </li>
-            {% endfor %}
+            {% endfor %} 
         </ul>
     {% endif %}
-
-    {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': person } %}				
-
 {% endblock %}

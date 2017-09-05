@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Genre{% endblock %}
+
 {% block pageheader %} 
     <h1>Genre</h1>
 {% endblock %} 
 
 {% block body %}
-
     <div class="btn-toolbar">
         <div class="btn-group pull-right">
             <a href="{{ path('genre_index') }}" class="btn btn-default">
@@ -21,26 +22,20 @@
             {% endif %}
         </div>
     </div>
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <tbody>
-            <tr>
-            <tr>
-                <th>Label</th>
-                <td>{{ genre.label}}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ genre.description }}</td>
-            </tr>   
-            <tr>
-                <th>Created</th>
-                <td>{% if genre.created %}{{ genre.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Updated</th>
-                <td>{% if genre.updated %}{{ genre.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        </tbody>
-    </table>
+
+    {{ include('NinesUtilBundle:Term:partial/show.html.twig', { 'term': genre }) }}
+
+    {% if genre.publications | length > 0 %}
+        <h3>Publications</h3>         
+        <ul>
+            {% for publications in genre.publications %}
+                <li>
+                    <a href="{{ path("publications_show", {"id":publications.id}) }}">
+                        {{ publications }}
+                    </a>
+                </li>
+            {% endfor %} 
+        </ul>
+    {% endif %}
 
 {% endblock %}

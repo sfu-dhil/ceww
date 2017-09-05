@@ -1,6 +1,6 @@
 {
     "name": "michael/ceww",
-    "license": "proprietary",
+    "license": "gpl3",
     "type": "project",
     "autoload": {
         "psr-4": {
@@ -18,7 +18,7 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "3.2.*",
+        "symfony/symfony": "3.3.*",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",

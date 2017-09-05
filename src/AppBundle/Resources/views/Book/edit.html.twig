@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Book Edit{% endblock %}
+
+{% block body %}
+    <h1>Book edit</h1>
+
+    {{ form_start(edit_form) }}
+        {{ form_widget(edit_form) }}
+	<div class="form-group">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-10">
+			<input type="submit" value="Update" class="btn btn-primary" />
+			<a href="{{ path('book_show', { 'id': book.id }) }}" class="btn btn-warning">Cancel</a>
+		</div>
+	</div>
+    {{ form_end(edit_form) }}
+
+{% endblock %}

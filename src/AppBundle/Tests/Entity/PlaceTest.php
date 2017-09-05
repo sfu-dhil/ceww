@@ -3,9 +3,11 @@
 
 namespace AppBundle\Tests\Entity;
 
+use AppBundle\Entity\Book;
+use AppBundle\Entity\DateYear;
+use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use AppBundle\Entity\Publication;
 use PHPUnit_Framework_TestCase;
 
 class PlaceTest extends PHPUnit_Framework_TestCase {
@@ -34,7 +36,9 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
             $person = new Person();
             $person->setFullName($name);
             if($year !== null) {
-                $person->setBirthDate($year);
+                $birthDate = new DateYear();
+                $birthDate->setValue($year);
+                $person->setBirthDate($birthDate);
             }
             $place->addPersonBorn($person);
         }
@@ -54,7 +58,9 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
             $person = new Person();
             $person->setFullName($name);
             if($year !== null) {
-                $person->setBirthDate($year);
+                $deathDate = new DateYear();
+                $deathDate->setValue($year);
+                $person->setBirthDate($deathDate);
             }
             $place->addPersonDied($person);
         }
@@ -95,7 +101,7 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
     
     public function testAddPublication() {
         $place = new Place();
-        $publication = new Publication();
+        $publication = new Book();
         
         $place->addPublication($publication);
         $place->addPublication($publication);
@@ -105,7 +111,7 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
     public function testGetPublications() {
         $place = new Place();
         foreach(['b', 'd', 'a', 'c'] as $name) {
-            $publication = new Publication();
+            $publication = new Periodical();
             $publication->setTitle($name);
             $publication->setSortableTitle($name);
             $place->addPublication($publication);

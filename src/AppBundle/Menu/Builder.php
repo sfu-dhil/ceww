@@ -31,11 +31,24 @@ class Builder implements ContainerAwareInterface {
         ));
         $menu->setAttribute('dropdown', true);
 
+        $menu->addChild('Books', array(
+            'route' => 'book_index',
+        ));
+        $menu->addChild('Compilations', array(
+            'route' => 'compilation_index',
+        ));
+        $menu->addChild('Periodicals', array(
+            'route' => 'periodical_index',
+        ));
+        $menu->addChild('divider1', array(
+            'label' => '',
+        ));
+        $menu['divider1']->setAttributes(array(
+            'role' => 'separator',
+            'class' => 'divider',
+        ));
         $menu->addChild('Alternate Names', array(
             'route' => 'alias_index',
-        ));
-        $menu->addChild('Categories', array(
-            'route' => 'category_index',
         ));
         $menu->addChild('Genres', array(
             'route' => 'genre_index',
@@ -46,26 +59,17 @@ class Builder implements ContainerAwareInterface {
         $menu->addChild('Places', array(
             'route' => 'place_index',
         ));
-        $menu->addChild('Publications', array(
-            'route' => 'publication_index',
-        ));
 
         if ($this->container->get('security.token_storage')->getToken() && $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
-            $menu->addChild('divider', array(
+            $menu->addChild('divider2', array(
                 'label' => '',
             ));
-            $menu['divider']->setAttributes(array(
+            $menu['divider2']->setAttributes(array(
                 'role' => 'separator',
                 'class' => 'divider',
             ));
             $menu->addChild('Roles', array(
                 'route' => 'role_index',
-            ));
-            $menu->addChild('Contributions', array(
-                'route' => 'contribution_index',
-            ));
-            $menu->addChild('Dates', array(
-                'route' => 'date_year_index',
             ));
         }
 

@@ -2,22 +2,18 @@
 
 namespace AppBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use Nines\UtilBundle\Form\TermType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RoleType extends AbstractType
-{
+class RoleType extends TermType
+{    
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {        
-        $builder->add('name');
-        $builder->add('label');
-        $builder->add('description');
     }
     
     /**

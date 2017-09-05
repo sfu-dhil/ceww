@@ -119,7 +119,7 @@ class Person extends AbstractEntity {
      * @return string
      */
     public function getFullName() {
-        if($this->fullName) {
+        if ($this->fullName) {
             return $this->fullName;
         } else {
             return '(unknown)';
@@ -200,16 +200,7 @@ class Person extends AbstractEntity {
      * @return Person
      */
     public function setBirthDate($birthDate = null) {
-        if($birthDate === null) {
-            $this->birthDate = null;
-        }
-        if(! $birthDate instanceof DateYear) {
-            $this->birthDate = new DateYear();
-            $this->birthDate->setValue($birthDate);
-        } else {
-            $this->birthDate = $birthDate;
-        }
-
+        $this->birthDate = $birthDate;
         return $this;
     }
 
@@ -384,18 +375,13 @@ class Person extends AbstractEntity {
      * @return Collection
      */
     public function getContributions($category = null) {
-        if( ! $category) {
+        if ($category === null) {
             return $this->contributions;
         }
-        
+
         return array_filter($this->contributions->toArray(), function(Contribution $contribution) use ($category) {
-            if(is_string($category)) {
-                return $contribution->getPublication()->getCategory()->getName() === $category;
-            } else {
-                return $contribution->getPublication()->getCategory() === $category;
-            }
+            return $contribution->getPublication()->getCategory() === $category;
         });
-        
     }
 
 }

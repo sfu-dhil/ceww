@@ -1,62 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block pageheader %} 
+{% block title %}people{% endblock %}
+
+{% block pageheader %}
     <h1>Person List</h1>
     <p class="count">
         Displaying {{ people|length }} people of {{ people.getTotalItemCount }} total.
     </p>
-{% endblock %} 
+ {% endblock %} 
 
 {% block body %}
 
-    <div class='btn-toolbar pull-right'>
+        <div class='btn-toolbar pull-right'>
         <div class='btn-group'>
             {% if is_granted('ROLE_CONTENT_ADMIN') %}
-                <a href="{{ path('person_new') }}" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus"></span> New
-                </a>
+            <a href="{{ path('person_new') }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span> New
+            </a>
             {% endif %}
             <a href="{{ path('person_search') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-search"></span> Search
             </a>
         </div>
     </div>
-
+        
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
             <tr>
-                <th>Fullname</th>
-                <td>Born</td>
-                <td>Died</td>
+                <th>Full Name</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
-            {% for person in people %}
-                <tr>
-                    <td>
-                        <a href="{{ path('person_show', { 'id': person.id }) }}">
-                            {{ person.fullName }}
-                        </a>
-                    </td>
-                    <td>{{ person.birthDate }} 
-                        {% if person.birthPlace %}
-                        <a href="{{ path('place_show', {'id': person.birthPlace.id}) }}">
-                            {{ person.birthPlace }}
-                        </a>
-                        {% endif %}
-                    </td>
-                    <td>{{ person.deathDate }} 
-                        {% if person.deathPlace %}
-                        <a href="{{ path('place_show', {'id': person.deathPlace.id}) }}">
-                            {{ person.deathPlace }}
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
+        {% for person in people %}
+            <tr>
+                <td>
+                    <a href="{{ path('person_show', { 'id': person.id }) }}">
+                        {{ person.fullName }}
+                    </a>
+                </td>
+                <td>{{ person.description }}</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
-
+        
     <div class="navigation">
         {{ knp_pagination_render(people) }}
     </div>

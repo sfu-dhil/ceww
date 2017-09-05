@@ -52,6 +52,7 @@ class Alias extends AbstractEntity
     public function __construct() {
         parent::__construct();
         $this->people = new ArrayCollection();
+        $this->notes = '';
     }
     
     public function __toString() {
@@ -141,6 +142,15 @@ class Alias extends AbstractEntity
     {
         $this->notes = $notes;
 
+        return $this;
+    }    
+
+    public function appendNote($note) {
+        if (!$this->notes) {
+            $this->notes = $note;
+        } else {
+            $this->notes .= "\n\n" . $note;
+        }
         return $this;
     }
 

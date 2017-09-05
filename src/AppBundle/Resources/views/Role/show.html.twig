@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Role{% endblock %}
+
 {% block pageheader %} 
     <h1>Role</h1>
 {% endblock %} 
 
 {% block body %}
-
     <div class="btn-toolbar">
         <div class="btn-group pull-right">
             <a href="{{ path('role_index') }}" class="btn btn-default">
@@ -21,29 +22,19 @@
             {% endif %}
         </div>
     </div>
-    <table class="table table-bordered table-condensed table-hover table-striped">
-        <tbody>
-            <tr>
-                <th>Name</th>
-                <td>{{ role.name }}</td>
-            </tr>
-            <tr>
-                <th>Label</th>
-                <td>{{ role.label}}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ role.description }}</td>
-            </tr>            
-            <tr>
-                <th>Created</th>
-                <td>{% if role.created %}{{ role.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Updated</th>
-                <td>{% if role.updated %}{{ role.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        </tbody>
-    </table>
 
+    {{ include('NinesUtilBundle:Term:partial/show.html.twig', { 'term': role }) }}
+
+    {% if role.contributions | length > 0 %}    
+        <h2>Contributions</h2>
+        <ul>
+            {% for contributions in role.contributions %}
+                <li>
+                    <a href="{{ path("contributions_show", {"id":contributions.id}) }}">
+                        {{ contributions }}
+                    </a>
+                </li>
+            {% endfor %} 
+        </ul>
+    {% endif %}
 {% endblock %}
