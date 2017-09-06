@@ -21,8 +21,5 @@
 {% block javascripts %}
     <script src="{{ asset('bower/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
     <script src="{{ asset('bower/handlebars/handlebars.min.js') }}"></script>
-    <script>
-        window.person_typeahead_uri = '{{ path('place_typeahead') }}';
-    </script>        
-    <script src="{{ asset('bundles/app/js/person.js') }}"></script>
+    <script src="{{ asset('bundles/app/js/typeahead.js') }}"></script>
 {% endblock %}

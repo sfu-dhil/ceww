@@ -3,9 +3,9 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PersonType extends AbstractType {
@@ -36,6 +36,44 @@ class PersonType extends AbstractType {
                 'help_block' => '',
             ),
         ));
+        $builder->add('birthDate');
+
+        $builder->add('birthPlace_id', HiddenType::class, array(
+            'mapped' => false,
+            'required' => false,
+        ));
+
+        // birthPlace is a typeahead thing.
+        $builder->add('birthPlace', TextType::class, array(
+            'mapped' => false,
+            'required' => false,
+            'attr' => array(
+                'class' => 'typeahead',
+                'data-target' => 'birthPlace_id',
+                'data-template' => "<div class='typeahead-result'><strong>{{name}}</strong></div>",
+                'data-url' => $options['router']->generate('place_typeahead'),
+            ),
+        ));
+        
+        $builder->add('deathDate');
+        
+        $builder->add('deathPlace_id', HiddenType::class, array(
+            'mapped' => false,
+            'required' => false,
+        ));
+
+        // deathPlace is a typeahead thing.
+        $builder->add('deathPlace', TextType::class, array(
+            'mapped' => false,
+            'required' => false,
+            'attr' => array(
+                'class' => 'typeahead',
+                'data-target' => 'deathPlace_id',
+                'data-template' => "<div class='typeahead-result'><strong>{{name}}</strong></div>",
+                'data-url' => $options['router']->generate('place_typeahead'),
+            ),
+        ));
+        
         $builder->add('notes', null, array(
             'label' => 'Notes',
             'required' => false,
@@ -43,25 +81,16 @@ class PersonType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('birthDate');
         
-        // birthPlace is a typeahead thing.
-        $builder->add('birthPlace', TextType::class, array(
-            'mapped' => false,
-            'required' => false,
-        ));
-        $builder->add('birthPlace_id', TextType::class, array(
-            'mapped' => false,
-            'required' => false
-        ));
-        
-        $builder->add('deathDate');
     }
 
     /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver) {
+        $resolver->setRequired(array(
+            'Symfony\Bundle\FrameworkBundle\Routing\Router' => 'router'
+        ));
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Person'
         ));

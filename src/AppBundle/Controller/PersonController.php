@@ -125,16 +125,26 @@ class PersonController extends Controller {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $editForm = $this->createForm(PersonType::class, $person);
+        $editForm = $this->createForm(PersonType::class, $person, array(
+            'router' => $this->container->get('router')
+        ));
+
+        // typeahead fields
         $editForm['birthPlace']->setData($person->getBirthPlace()->getName());
         $editForm['birthPlace_id']->setData($person->getBirthPlace()->getId());
+        $editForm['deathPlace']->setData($person->getDeathPlace()->getName());
+        $editForm['deathPlace_id']->setData($person->getDeathPlace()->getId());
+        
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             
+            // typeahead fields
             $birthPlaceId = $editForm['birthPlace_id']->getData();
             $person->setBirthPlace($em->find('AppBundle:Place', $birthPlaceId));
+            $deathPlaceId = $editForm['deathPlace_id']->getData();
+            $person->setDeathPlace($em->find('AppBundle:Place', $deathPlaceId));
             
             $em->flush();
             $this->addFlash('success', 'The person has been updated.');
