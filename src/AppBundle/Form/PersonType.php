@@ -36,7 +36,14 @@ class PersonType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('birthDate');
+        $builder->add('birthYear', TextType::class, array(
+            'label' => 'Birth Year',
+            'mapped' => false,
+            'required' => false,
+            'attr' => array(
+                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here.'
+            )
+        ));
 
         $builder->add('birthPlace_id', HiddenType::class, array(
             'mapped' => false,
@@ -55,7 +62,14 @@ class PersonType extends AbstractType {
             ),
         ));
         
-        $builder->add('deathDate');
+        $builder->add('deathYear', TextType::class, array(
+            'label' => 'Death Year',
+            'mapped' => false,
+            'required' => false,
+            'attr' => array(
+                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here.'
+            )
+        ));
         
         $builder->add('deathPlace_id', HiddenType::class, array(
             'mapped' => false,

@@ -2,13 +2,14 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\DateYear;
+use AppBundle\Entity\Person;
+use AppBundle\Form\PersonType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Person;
-use AppBundle\Form\PersonType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Person controller.
@@ -129,23 +130,56 @@ class PersonController extends Controller {
             'router' => $this->container->get('router')
         ));
 
-        // typeahead fields
-        $editForm['birthPlace']->setData($person->getBirthPlace()->getName());
-        $editForm['birthPlace_id']->setData($person->getBirthPlace()->getId());
-        $editForm['deathPlace']->setData($person->getDeathPlace()->getName());
-        $editForm['deathPlace_id']->setData($person->getDeathPlace()->getId());
+        // DateYear objects.
+        if (($birthYear = $person->getBirthDate())) {
+            $editForm['birthYear']->setData($birthYear->getValue());
+        }
+        if (($deathYear = $person->getDeathDate())) {
+            $editForm['deathYear']->setData($deathYear->getValue());
+        }
         
+        // typeahead fields
+        if (($birthPlace = $person->getBirthPlace())) {
+            $editForm['birthPlace']->setData($birthPlace->getName());
+            $editForm['birthPlace_id']->setData($birthPlace->getId());
+        }
+        if (($deathPlace = $person->getDeathPlace())) {
+            $editForm['deathPlace']->setData($deathPlace->getName());
+            $editForm['deathPlace_id']->setData($deathPlace->getId());
+        }
+
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            // DateYear objects
+            if(!$editForm['birthYear']->getData()) {
+                $person->setBirthDate(null);
+            } elseif(!$person->getBirthDate() || ($editForm['birthYear']->getData() !== $person->getBirthDate()->getValue())) {
+                $dateYear = new DateYear();
+                $em->persist($dateYear);
+                $dateYear->setValue($editForm['birthYear']->getData());
+                $person->setBirthDate($dateYear);
+            }
+            
+            if(!$editForm['deathYear']->getData()) {
+                $person->setDeathDate(null);
+            } elseif(!$person->getDeathDate() || ($editForm['deathYear']->getData() !== $person->getDeathDate()->getValue())) {
+                $dateYear = new DateYear();
+                $em->persist($dateYear);
+                $dateYear->setValue($editForm['deathYear']->getData());
+                $person->setDeathDate($dateYear);
+            }
             
             // typeahead fields
-            $birthPlaceId = $editForm['birthPlace_id']->getData();
-            $person->setBirthPlace($em->find('AppBundle:Place', $birthPlaceId));
-            $deathPlaceId = $editForm['deathPlace_id']->getData();
-            $person->setDeathPlace($em->find('AppBundle:Place', $deathPlaceId));
-            
+            if(($birthPlaceId = $editForm['birthPlace_id']->getData())) {
+                $person->setBirthPlace($em->find('AppBundle:Place', $birthPlaceId));
+            }
+            if(($deathPlaceId = $editForm['deathPlace_id']->getData())) {
+                $person->setDeathPlace($em->find('AppBundle:Place', $deathPlaceId));
+            }
+
             $em->flush();
             $this->addFlash('success', 'The person has been updated.');
             return $this->redirectToRoute('person_show', array('id' => $person->getId()));
