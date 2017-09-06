@@ -122,6 +122,21 @@ class PlaceController extends Controller
         );
     }
 
+
+    /**
+     * Creates a new Place entity.
+     *
+     * @Route("/new_popup", name="place_new_popup")
+     * @Method({"GET", "POST"})
+     * @Template()
+	 * @param Request $request
+     */
+    public function newPopupAction(Request $request)
+    {
+        return $this->newAction($request);
+    }
+    
+    
     /**
      * Finds and displays a Place entity.
      *
