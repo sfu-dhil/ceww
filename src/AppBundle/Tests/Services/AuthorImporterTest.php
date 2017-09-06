@@ -441,8 +441,8 @@ class AuthorImporterTest extends BaseTestCase {
     /**
      * @dataProvider getPeriodicalData
      */
-    public function testGetPeriodical($expected, $title, $date) {
-        $publication = $this->importer->getPeriodical($title, $date);
+    public function testGetPeriodical($expected, $title) {
+        $publication = $this->importer->getPeriodical($title);
         $this->assertInstanceOf(Periodical::class, $publication);
         $this->assertEquals($expected[0], $publication->getTitle());
         $this->assertEquals($expected[1], $publication->getSortableTitle());

@@ -1,0 +1,20 @@
+<table class="table table-bordered table-condensed table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for compilation in compilations %}
+            <tr>
+                <td>
+                    <a href="{{ path('compilation_show', { 'id': compilation.id }) }}">
+                        {{ compilation.title }}
+                    </a>
+                </td>
+                <td>{{ compilation.description }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -8,26 +8,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContributionType extends AbstractType
-{
+class ContributionType extends AbstractType {
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {                $builder->add('role');
-                        $builder->add('person');
-                        $builder->add('publication');
-                
+    public function buildForm(FormBuilderInterface $builder, array $options) {
+        $builder->add('role');
+        $builder->add('person');
+        $builder->add('publication');
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
-    {
+    public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Contribution'
         ));
     }
+
 }

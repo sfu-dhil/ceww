@@ -2,13 +2,14 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Place;
+use AppBundle\Form\PlaceType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Place;
-use AppBundle\Form\PlaceType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Place controller.
@@ -38,20 +39,31 @@ class PlaceController extends Controller
             'places' => $places,
         );
     }
+    
     /**
-     * Search for Place entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Place repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated search.html.twig
-	 * template.
-	 * 
-     //    public function searchQuery($q) {
-     //        $qb = $this->createQueryBuilder('e');
-     //        $qb->where("e.fieldName like '%$q%'");
-     //        return $qb->getQuery();
-     //    }
-	 *
+     * @param Request $request
+     * @Route("/typeahead", name="place_typeahead")
+     * @Method("GET")
+     */
+    public function typeahead(Request $request) {
+        $q = $request->query->get('q');
+        if( ! $q) {
+            return new JsonResponse([]);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Place');
+        $data = [];
+        foreach($repo->typeaheadQuery($q) as $result) {
+            $data[] = [
+                'id' => $result->getId(),
+                'name' => $result->getName(),
+            ];
+        }
+        
+        return new JsonResponse($data);
+    }
+    
+    /**
      *
      * @Route("/search", name="place_search")
      * @Method("GET")
@@ -65,52 +77,6 @@ class PlaceController extends Controller
 		$q = $request->query->get('q');
 		if($q) {
 	        $query = $repo->searchQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-		} else {
-			$places = array();
-		}
-
-        return array(
-            'places' => $places,
-			'q' => $q,
-        );
-    }
-    /**
-     * Full text search for Place entities.
-	 *
-	 * To make this work, add a method like this one to the 
-	 * AppBundle:Place repository. Replace the fieldName with
-	 * something appropriate, and adjust the generated fulltext.html.twig
-	 * template.
-	 * 
-	//    public function fulltextQuery($q) {
-	//        $qb = $this->createQueryBuilder('e');
-	//        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
-	//        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
-	//        $qb->orderBy('score', 'desc');
-	//        $qb->setParameter('q', $q);
-	//        return $qb->getQuery();
-	//    }	 
-	 * 
-	 * Requires a MatchAgainst function be added to doctrine, and appropriate
-	 * fulltext indexes on your Place entity.
-	 *     ORM\Index(name="alias_name_idx",columns="name", flags={"fulltext"})
-	 *
-     *
-     * @Route("/fulltext", name="place_fulltext")
-     * @Method("GET")
-     * @Template()
-	 * @param Request $request
-	 * @return array
-     */
-    public function fulltextAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Place');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->fulltextQuery($q);
 			$paginator = $this->get('knp_paginator');
 			$places = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
 		} else {

@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CompilationType extends AbstractType
+class CompilationType extends PublicationType
 {
     /**
      * @param FormBuilderInterface $builder

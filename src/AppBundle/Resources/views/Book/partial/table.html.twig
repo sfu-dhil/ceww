@@ -1,0 +1,17 @@
+<table class="table table-bordered table-condensed table-hover table-striped">
+    <thead>
+        <tr><th>Title</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <td>
+                    <a href="{{ path('book_show', { 'id': book.id }) }}">
+                        {{ book.title }}
+                    </a>
+                </td>
+                <td>{{ book.description }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
