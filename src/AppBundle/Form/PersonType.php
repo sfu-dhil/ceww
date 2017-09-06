@@ -44,11 +44,18 @@ class PersonType extends AbstractType {
             ),
         ));
         $builder->add('birthDate');
-        $builder->add('birthPlace');
+        
+        // birthPlace is a typeahead thing.
+        $builder->add('birthPlace', TextType::class, array(
+            'mapped' => false,
+            'required' => false,
+        ));
+        $builder->add('birthPlace_id', TextType::class, array(
+            'mapped' => false,
+            'required' => false
+        ));
+        
         $builder->add('deathDate');
-        $builder->add('deathPlace');
-        $builder->add('residences');
-        $builder->add('aliases');
     }
 
     /**
