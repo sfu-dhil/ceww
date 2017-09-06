@@ -126,10 +126,16 @@ class PersonController extends Controller {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $editForm = $this->createForm(PersonType::class, $person);
+        $editForm['birthPlace']->setData($person->getBirthPlace()->getName());
+        $editForm['birthPlace_id']->setData($person->getBirthPlace()->getId());
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            
+            $birthPlaceId = $editForm['birthPlace_id']->getData();
+            $person->setBirthPlace($em->find('AppBundle:Place', $birthPlaceId));
+            
             $em->flush();
             $this->addFlash('success', 'The person has been updated.');
             return $this->redirectToRoute('person_show', array('id' => $person->getId()));

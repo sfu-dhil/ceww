@@ -4,7 +4,7 @@
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: search_api + '?q=%QUERY',
+                url: person_typeahead_uri + '?q=%QUERY',
                 wildcard: '%QUERY'
             }
         });
@@ -12,8 +12,10 @@
         $input.typeahead(null, {
             display: 'name',
             source: bloodhound,
+            limit: 10,
             templates: {
-                empty: "<div class='typeahead-result'>No results</div>",
+                pending: "<div class='typeahead-result'>Searching</div>",
+                notFound: "<div class='typeahead-result'>No results</div>",
                 suggestion: Handlebars.compile('<div class="typeahead-result"><strong>{{name}}</strong></div>'),
             }
         });
@@ -24,7 +26,7 @@
     }
 
     $(document).ready(function () {
-        setupTypeahead($('#author_birthplace'), $('#author_birthplace_id'));
+        setupTypeahead($('#person_birthPlace'), $('#person_birthPlace_id'));
     });
 
 })(jQuery);

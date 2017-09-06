@@ -10,6 +10,14 @@ namespace AppBundle\Repository;
  */
 class PlaceRepository extends \Doctrine\ORM\EntityRepository {
 
+    public function typeaheadQuery($q) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->andWhere("e.name LIKE :q");
+        $qb->orderBy('e.name');
+        $qb->setParameter('q', "{$q}%");
+        return $qb->getQuery()->execute();
+    }
+    
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH_AGAINST (e.name, e.countryName, :q 'IN BOOLEAN MODE') as HIDDEN score");

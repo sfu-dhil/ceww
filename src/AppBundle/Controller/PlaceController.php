@@ -2,13 +2,14 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Place;
+use AppBundle\Form\PlaceType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Place;
-use AppBundle\Form\PlaceType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Place controller.
@@ -38,6 +39,30 @@ class PlaceController extends Controller
             'places' => $places,
         );
     }
+    
+    /**
+     * @param Request $request
+     * @Route("/typeahead", name="place_typeahead")
+     * @Method("GET")
+     */
+    public function typeahead(Request $request) {
+        $q = $request->query->get('q');
+        if( ! $q) {
+            return new JsonResponse([]);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Place');
+        $data = [];
+        foreach($repo->typeaheadQuery($q) as $result) {
+            $data[] = [
+                'id' => $result->getId(),
+                'name' => $result->getName(),
+            ];
+        }
+        
+        return new JsonResponse($data);
+    }
+    
     /**
      *
      * @Route("/search", name="place_search")
