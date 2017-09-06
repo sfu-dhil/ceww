@@ -108,16 +108,56 @@
             </tr>        
         </tbody>
     </table>
-    {% if person.contributions | length > 0 %}    
+
+
+    <div>
         <h2>Contributions</h2>
-        <ul>
-            {% for contribution in person.contributions %}
-                <li>
-                    {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}' } %}
-                </li>
-            {% endfor %} 
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#books" aria-controls="home" role="tab" data-toggle="tab">Books</a></li>
+            <li role="presentation"><a href="#collections" aria-controls="profile" role="tab" data-toggle="tab">Collections</a></li>
+            <li role="presentation"><a href="#periodicals" aria-controls="messages" role="tab" data-toggle="tab">Periodicals</a></li>
         </ul>
-    {% endif %}
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="books">                
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::BOOK')) %}
+                {% if contributions | length > 0 %}
+                    <ul>
+                        {% for contribution in contributions %}
+                            <li>
+                                {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}' } %}
+                            </li>
+                        {% endfor %} 
+                    </ul>
+                {% endif %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="collections">
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
+                {% if contributions | length > 0 %}
+                    <ul>
+                        {% for contribution in contributions %}                            
+                            <li>
+                                {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}' } %}
+                            </li>
+                        {% endfor %} 
+                    </ul>
+                {% endif %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="periodicals">
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
+                {% if contributions | length > 0 %}
+                    <ul>
+                        {% for contribution in contributions %}
+                            <li>
+                                {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}' } %}
+                            </li>
+                        {% endfor %} 
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
     {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': person } %}				
 
