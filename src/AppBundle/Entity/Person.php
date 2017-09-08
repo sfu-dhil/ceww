@@ -85,7 +85,7 @@ class Person extends AbstractEntity {
      * @ORM\OneToMany(targetEntity="Contribution", mappedBy="person")
      */
     private $contributions;
-
+    
     public function __construct() {
         parent::__construct();
         $this->residences = new ArrayCollection();

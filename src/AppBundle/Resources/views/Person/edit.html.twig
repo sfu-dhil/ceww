@@ -9,9 +9,12 @@
     {{ form_widget(edit_form) }}
     <div class="form-group">
         <div class="col-sm-2"></div>
-        <div class="col-sm-10">
+        <div class="col-sm-8">
             <input type="submit" value="Update" class="btn btn-primary" />
             <a href="{{ path('person_show', { 'id': person.id }) }}" class="btn btn-warning">Cancel</a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('place_new_popup') }}" class="btn btn-primary" id="newPlace">New Place</a>
         </div>
     </div>
     {{ form_end(edit_form) }}
@@ -22,4 +25,11 @@
     <script src="{{ asset('bower/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
     <script src="{{ asset('bower/handlebars/handlebars.min.js') }}"></script>
     <script src="{{ asset('bundles/app/js/typeahead.js') }}"></script>
+    <script>
+        $("#newPlace").click(function(e){
+            e.preventDefault();
+            var url = $(this).prop('href');            
+            window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600")
+        });
+    </script>
 {% endblock %}
