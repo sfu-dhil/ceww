@@ -21,10 +21,14 @@
 
 {% endblock %}
 
+{% block styles %}
+    <link href="{{ asset('bower/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('bower/select2-bootstrap-css/select2-bootstrap.min.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block javascripts %}
-    <script src="{{ asset('bower/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
-    <script src="{{ asset('bower/handlebars/handlebars.min.js') }}"></script>
-    <script src="{{ asset('bundles/app/js/typeahead.js') }}"></script>
+    <script src="{{ asset('bower/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>
     <script>
         $("#newPlace").click(function(e){
             e.preventDefault();

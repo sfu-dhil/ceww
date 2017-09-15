@@ -2,11 +2,14 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Place;
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class PersonType extends AbstractType {
 
@@ -45,21 +48,17 @@ class PersonType extends AbstractType {
             )
         ));
 
-        $builder->add('birthPlace_id', HiddenType::class, array(
-            'mapped' => false,
-            'required' => false,
-        ));
-
         // birthPlace is a typeahead thing.
-        $builder->add('birthPlace', TextType::class, array(
-            'mapped' => false,
-            'required' => false,
-            'attr' => array(
-                'class' => 'typeahead',
-                'data-target' => 'birthPlace_id',
-                'data-template' => "<div class='typeahead-result'><strong>{{name}}</strong></div>",
-                'data-url' => $options['router']->generate('place_typeahead'),
-            ),
+        $builder->add('birthPlace', Select2EntityType::class, array(
+            'multiple' => false,
+            'remote_route' => 'place_typeahead',
+            'class' => Place::class,
+            'primary_key' => 'id',
+            'text_property' => 'name',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
         ));
         
         $builder->add('deathYear', TextType::class, array(
@@ -88,7 +87,7 @@ class PersonType extends AbstractType {
             ),
         ));
         
-        $builder->add('notes', \Ivory\CKEditorBundle\Form\Type\CKEditorType::class, array(
+        $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(
