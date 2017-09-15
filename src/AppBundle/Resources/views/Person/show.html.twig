@@ -12,7 +12,7 @@
             <a href="{{ path('person_index') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-arrow-left"></span> Back
             </a>
-            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+            {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <a href="{{ path('person_edit', { 'id': person.id }) }}" class="btn btn-default">
                     <span class='glyphicon glyphicon-edit'></span> Edit
                 </a>
@@ -23,13 +23,18 @@
         </div>
     </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
-        <tbody><tr>
+        <tbody>
+            <tr>
                 <th>Full Name</th>
                 <td>{{ person.fullName }}</td>
-            </tr><tr>
+            </tr>
+            {% if is_granted('ROLE_CONTENT_EDITOR') %}
+            <tr>
                 <th>Sortable Name</th>
                 <td>{{ person.sortableName }}</td>
-            </tr><tr>
+            </tr>
+            {% endif %}
+            <tr>
                 <th>Description</th>
                 <td>{{ person.description }}</td>
             </tr>

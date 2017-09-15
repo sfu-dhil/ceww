@@ -88,7 +88,7 @@ class PersonType extends AbstractType {
             ),
         ));
         
-        $builder->add('notes', null, array(
+        $builder->add('notes', \Ivory\CKEditorBundle\Form\Type\CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(

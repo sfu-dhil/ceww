@@ -3,9 +3,9 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlaceType extends AbstractType {
@@ -22,11 +22,20 @@ class PlaceType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('alternateNames', null, array(
+        $builder->add('alternateNames', CollectionType::class, array(
             'label' => 'Alternate Names',
-            'required' => true,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'delete_empty' => true,
+            'entry_type' => TextType::class,
+            'entry_options' => array(
+                'required' => false,
+                'attr' => array(
+                    'help_block' => '',
+                ),
+            ),
             'attr' => array(
-                'help_block' => '',
+                'group_class' => 'collection'
             ),
         ));
         $builder->add('countryName', null, array(
@@ -38,9 +47,18 @@ class PlaceType extends AbstractType {
         ));
         $builder->add('adminNames', null, array(
             'label' => 'Admin Names',
-            'required' => true,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'delete_empty' => true,
+            'entry_type' => TextType::class,
+            'entry_options' => array(
+                'required' => false,
+                'attr' => array(
+                    'help_block' => '',
+                ),
+            ),
             'attr' => array(
-                'help_block' => '',
+                'group_class' => 'collection'
             ),
         ));
         $builder->add('latitude', null, array(

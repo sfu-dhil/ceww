@@ -29,4 +29,33 @@
         });
     });
 
+    function addCollectionItem($container) {
+        var prototype = $container.data('prototype');
+        console.log(prototype);
+        var index = $container.data('count');
+        var $form = $(prototype.replace(/__name__/g, index).replace(/label__/g, ''));
+        $container.append($form);
+        $form.children('label').replaceWith('<br/><div class="col-sm-2"><a class="btn btn-primary remove"><span class="glyphicon glyphicon-minus"></span> Remove</a></div>');
+        $form.find("a.remove").click(function(e){
+            e.preventDefault();
+            $form.remove();
+        });
+        $container.data('count', index + 1);
+    }
+
+    $(document).ready(function(){
+        console.log('hi hi.');
+        $('form div.collection').each(function(idx, element){
+            var $e = $(element);
+            $e.children("label").append('<br/><a href="#" class="btn btn-primary add"><span class="glyphicon glyphicon-plus"></span> Add</a>');
+            var $a = $e.find("a");
+            var $container = $e.find('div[data-prototype]');
+            $container.data('count', $container.find('div.form-group').length);
+            $a.click(function(e){
+                e.preventDefault();
+                addCollectionItem($container);
+            });
+        });
+    });
+
 })(jQuery, window);
