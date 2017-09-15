@@ -57,7 +57,7 @@ class PlaceController extends Controller
         foreach($repo->typeaheadQuery($q) as $result) {
             $data[] = [
                 'id' => $result->getId(),
-                'name' => $result->getName(),
+                'text' => $result->getName(),
             ];
         }
         
