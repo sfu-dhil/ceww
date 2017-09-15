@@ -25,16 +25,10 @@
 
     {{ include('NinesUtilBundle:Term:partial/show.html.twig', { 'term': role }) }}
 
-    {% if role.contributions | length > 0 %}    
-        <h2>Contributions</h2>
-        <ul>
-            {% for contributions in role.contributions %}
-                <li>
-                    <a href="{{ path("contributions_show", {"id":contributions.id}) }}">
-                        {{ contributions }}
-                    </a>
-                </li>
-            {% endfor %} 
-        </ul>
-    {% endif %}
+    <h2>{{ role.label }} List</h2>
+    {{ include('AppBundle:Person:partial/table.html.twig') }}
+    <div class="navigation">
+        {{ knp_pagination_render(people) }}
+    </div>
+        
 {% endblock %}

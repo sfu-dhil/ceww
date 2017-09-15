@@ -44,6 +44,7 @@ class PlaceController extends Controller
      * @param Request $request
      * @Route("/typeahead", name="place_typeahead")
      * @Method("GET")
+     * @return JsonResponse
      */
     public function typeahead(Request $request) {
         $q = $request->query->get('q');
