@@ -102,9 +102,7 @@ class PersonType extends AbstractType {
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setRequired(array(
-            'Symfony\Bundle\FrameworkBundle\Routing\Router' => 'router'
-        ));
+        $resolver->setRequired(array('router'));
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Person'
         ));
