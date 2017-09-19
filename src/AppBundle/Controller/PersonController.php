@@ -2,14 +2,15 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Person;
 use AppBundle\Form\PersonType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Person controller.
@@ -126,10 +127,7 @@ class PersonController extends Controller {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $editForm = $this->createForm(PersonType::class, $person, array(
-            'router' => $this->container->get('router')
-        ));
-
+        $editForm = $this->createForm(PersonType::class, $person);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

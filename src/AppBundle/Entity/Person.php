@@ -46,7 +46,7 @@ class Person extends AbstractEntity {
 
     /**
      * @var DateYear
-     * @ORM\OneToOne(targetEntity="DateYear")
+     * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $birthDate;
 
@@ -58,7 +58,7 @@ class Person extends AbstractEntity {
 
     /**
      * @var DateYear
-     * @ORM\OneToOne(targetEntity="DateYear")
+     * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $deathDate;
 
@@ -195,12 +195,18 @@ class Person extends AbstractEntity {
     /**
      * Set birthDate
      *
-     * @param DateYear $birthDate
+     * @param string|DateYear $birthDate
      *
      * @return Person
      */
     public function setBirthDate($birthDate = null) {
-        $this->birthDate = $birthDate;
+        if(is_string($birthDate)) {
+            $dateYear = new DateYear();
+            $dateYear->setValue($birthDate);
+            $this->birthDate = $dateYear;
+        } else {
+            $this->birthDate = $birthDate;
+        }
         return $this;
     }
 
@@ -238,14 +244,18 @@ class Person extends AbstractEntity {
     /**
      * Set deathDate
      *
-     * @param DateYear $deathDate
+     * @param string|DateYear $deathDate
      *
      * @return Person
      */
-    public function setDeathDate(DateYear $deathDate = null) {
-        $this->deathDate = $deathDate;
-
-        return $this;
+    public function setDeathDate($deathDate = null) {
+        if(is_string($deathDate)) {
+            $dateYear = new DateYear();
+            $dateYear->setValue($deathDate);
+            $this->deathDate = $dateYear;
+        } else {
+            $this->deathDate = $deathDate;
+        }
     }
 
     /**

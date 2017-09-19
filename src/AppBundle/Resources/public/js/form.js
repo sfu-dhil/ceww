@@ -44,7 +44,6 @@
     }
 
     $(document).ready(function(){
-        console.log('hi hi.');
         $('form div.collection').each(function(idx, element){
             var $e = $(element);
             $e.children("label").append('<br/><a href="#" class="btn btn-primary add"><span class="glyphicon glyphicon-plus"></span> Add</a>');
