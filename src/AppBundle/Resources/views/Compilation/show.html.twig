@@ -29,12 +29,51 @@
                 <td>{{ compilation.title }}</td>
             </tr>
             <tr>
-                <th>Links</th>
-                <td>{% if compilation.links %}{{ compilation.links|join(', ') }}{% endif %}</td>
+                <th>Date</th>
+                <td>{{ compilation.dateYear }}</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td>{{ compilation.location }}</td>
+            </tr>
+            <tr>
+                <th>Sortable Title</th>
+                <td>{{ compilation.sortableTitle }}</td>
             </tr><tr>
+                <th>Links</th>
+                <td>
+                    {% if compilation.links | length > 0 %}
+                        <ul>
+                            {% for link in compilation.links %}                        
+                                <li>
+                                    <a href="{{ link }}">{{ link }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>Description</th>
                 <td>{{ compilation.description }}</td>
+            </tr> 
+            <tr>
+                <th>Genres</th>
+                <td>
+                    {% if compilation.genres | length > 0 %}
+                        <ul>
+                            {% for genre in compilation.genres %}
+                                <li>
+                                    <a href="{{ path('genre_show', {'id': genre.id}) }}">
+                                        {{ genre }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
             </tr>
+
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Notes</th>
@@ -50,7 +89,7 @@
             </tr>        
         </tbody>
     </table>
-                
+
     {% if compilation.contributions | length > 0 %}    
         <h2>Contributions</h2>
         <ul>
@@ -64,7 +103,7 @@
             {% endfor %} 
         </ul>
     {% endif %}
-    
+
     {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': compilation } %}				
-                
+
 {% endblock %}

@@ -103,11 +103,6 @@
             {% endfor %} 
         </ul>
     {% endif %}
-    {% if is_granted('ROLE_CONTENT_EDITOR') %}
-        <p class="text-right">
-            <a href="{{ path('book_contributions', {'id': book.id}) }}">Edit Contributions</a>
-        </p>
-    {% endif %}
 
     {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': book } %}				
 

@@ -35,6 +35,7 @@ class PublicationType extends AbstractType {
         ));
         $builder->add('links', CollectionType::class, array(
             'label' => 'Links',
+            'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'delete_empty' => true,
@@ -58,7 +59,9 @@ class PublicationType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('dateYear', TextType::class);
+        $builder->add('dateYear', TextType::class, array(
+            'required' => false,            
+        ));
         
         $builder->add('location',Select2EntityType::class, array(
             'multiple' => false,
@@ -82,6 +85,17 @@ class PublicationType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+        ));
+        $builder->add('contributions', CollectionType::class, array(
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'delete_empty' => true,
+            'entry_type' => ContributionType::class,
+            'entry_options' => array(),
+            'attr' => array(
+                'group_class' => 'collection'
+            ),
         ));
     }
 

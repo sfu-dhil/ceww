@@ -129,6 +129,9 @@ class BookController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach($book->getContributions() as $contribution) {
+                $contribution->setPublication($book);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($book);
             $em->flush();
@@ -176,43 +179,13 @@ class BookController extends Controller {
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
-            $this->addFlash('success', 'The book has been updated.');
-            //return $this->redirectToRoute('book_show', array('id' => $book->getId()));
-        }
-
-        return array(
-            'book' => $book,
-            'edit_form' => $editForm->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing Book entity.
-     *
-     * @Route("/{id}/contributions", name="book_contributions")
-     * @Method({"GET", "POST"})
-     * @Template()
-     * @param Request $request
-     * @param Book $book
-     */
-    public function contributionsAction(Request $request, Book $book) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-        $editForm = $this->createForm(ContributionCollectionType::class, $book);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach($book->getContributions() as $contribution) {
                 $contribution->setPublication($book);
             }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The book has been updated.');
-            //return $this->redirectToRoute('book_show', array('id' => $book->getId()));
+            return $this->redirectToRoute('book_show', array('id' => $book->getId()));
         }
 
         return array(

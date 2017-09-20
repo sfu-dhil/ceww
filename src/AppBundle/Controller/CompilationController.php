@@ -84,6 +84,9 @@ class CompilationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach($compilation->getContributions() as $contribution) {
+                $contribution->setPublication($compilation);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($compilation);
             $em->flush();
@@ -133,6 +136,9 @@ class CompilationController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            foreach($compilation->getContributions() as $contribution) {
+                $contribution->setPublication($compilation);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The compilation has been updated.');
