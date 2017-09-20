@@ -31,7 +31,6 @@
 
     function addCollectionItem($container) {
         var prototype = $container.data('prototype');
-        console.log(prototype);
         var index = $container.data('count');
         var $form = $(prototype.replace(/__name__/g, index).replace(/label__/g, ''));
         $container.append($form);
@@ -40,6 +39,7 @@
             e.preventDefault();
             $form.remove();
         });
+        $form.find('.select2entity[data-autostart="true"]').select2entity();
         $container.data('count', index + 1);
     }
 
@@ -55,6 +55,14 @@
                 addCollectionItem($container);
             });
         });
+    });
+    
+    $(document).ready(function(){
+        $("a.popup-form").click(function(e){
+            e.preventDefault();
+            var url = $(this).prop('href');            
+            window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600");
+        });        
     });
 
 })(jQuery, window);

@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Book;
 use AppBundle\Form\BookType;
+use AppBundle\Form\ContributionCollectionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -175,6 +176,39 @@ class BookController extends Controller {
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            $this->addFlash('success', 'The book has been updated.');
+            //return $this->redirectToRoute('book_show', array('id' => $book->getId()));
+        }
+
+        return array(
+            'book' => $book,
+            'edit_form' => $editForm->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to edit an existing Book entity.
+     *
+     * @Route("/{id}/contributions", name="book_contributions")
+     * @Method({"GET", "POST"})
+     * @Template()
+     * @param Request $request
+     * @param Book $book
+     */
+    public function contributionsAction(Request $request, Book $book) {
+        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $editForm = $this->createForm(ContributionCollectionType::class, $book);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            foreach($book->getContributions() as $contribution) {
+                $contribution->setPublication($book);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The book has been updated.');

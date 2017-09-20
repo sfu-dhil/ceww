@@ -3,20 +3,18 @@
 {% block title %}Book Edit{% endblock %}
 
 {% block body %}
-    <h1>Book edit</h1>
+    <h1>Edit contributions</h1>
 
+    <p>Use the form below to edit contributions for <i>{{ book }}</i>.</p>
     {{ form_start(edit_form) }}
-    {{ form_widget(edit_form) }}
-    <div class="form-group">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <input type="submit" value="Update" class="btn btn-primary" />
-            <a href="{{ path('book_show', { 'id': book.id }) }}" class="btn btn-warning">Cancel</a>
-        </div>
-        <div class="col-sm-2">
-            <a href="{{ path('place_new_popup') }}" class="btn btn-primary" id="newPlace">New Place</a>
-        </div>
-    </div>
+        {{ form_widget(edit_form) }}
+	<div class="form-group">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-10">
+			<input type="submit" value="Update" class="btn btn-primary" />
+			<a href="{{ path('book_show', { 'id': book.id }) }}" class="btn btn-warning">Cancel</a>
+		</div>
+	</div>
     {{ form_end(edit_form) }}
 
 {% endblock %}
@@ -30,9 +28,9 @@
     <script src="{{ asset('bower/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>
     <script>
-        $("#newPlace").click(function (e) {
+        $("#newPlace").click(function(e){
             e.preventDefault();
-            var url = $(this).prop('href');
+            var url = $(this).prop('href');            
             window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600")
         });
     </script>
