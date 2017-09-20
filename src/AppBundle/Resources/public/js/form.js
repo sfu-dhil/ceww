@@ -56,6 +56,11 @@
             e.preventDefault();
             addCollectionItem($container);
         });
+        $e.find('div[data-prototype]').children('div').children('label').replaceWith('<br/><div class="col-sm-2"><a class="btn btn-primary remove"><span class="glyphicon glyphicon-minus"></span> Remove</a></div>');
+        $e.find("a.remove").click(function (e) {
+            e.preventDefault();
+            $(this).closest('div.form-group').remove();
+        });
     }
 
     $(document).ready(function () {
