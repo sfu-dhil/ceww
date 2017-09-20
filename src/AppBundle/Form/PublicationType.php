@@ -2,11 +2,14 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Place;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class PublicationType extends AbstractType {
 
@@ -29,11 +32,14 @@ class PublicationType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('links', null, array(
+        $builder->add('links', CollectionType::class, array(
             'label' => 'Links',
-            'required' => true,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'delete_empty' => true,
+            'entry_type' => UrlType::class,
             'attr' => array(
-                'help_block' => '',
+                'group_class' => 'collection'
             ),
         ));
         $builder->add('description', null, array(
@@ -50,8 +56,20 @@ class PublicationType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('dateYear');
-        $builder->add('location');
+        $builder->add('dateYear', TextType::class);
+        
+        $builder->add('location',Select2EntityType::class, array(
+            'multiple' => false,
+            'remote_route' => 'place_typeahead',
+            'class' => Place::class,
+            'primary_key' => 'id',
+            'text_property' => 'name',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
+        ));
+        
         $builder->add('genres');
     }
 

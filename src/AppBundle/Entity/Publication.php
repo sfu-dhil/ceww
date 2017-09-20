@@ -155,7 +155,7 @@ abstract class Publication extends AbstractEntity {
 
         return $this;
     }
-
+    
     /**
      * Get links
      *
