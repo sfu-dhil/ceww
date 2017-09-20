@@ -1,16 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-namespace AppBundle\DataFixtures\ORM\dev;
+namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Genre;
-use AppBundle\Tests\Utilities\AbstractDataFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
@@ -18,7 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface {
+class LoadGenres extends AbstractFixture {
 
     private static $GENRES = [
         [
@@ -49,7 +42,7 @@ class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface 
         
     ];
 
-    protected function doLoad(ObjectManager $manager) {
+    public function load(ObjectManager $manager) {
         foreach (self::$GENRES as $g) {
             $genre = new Genre();
             $genre->setName(strtolower($g['label']));
@@ -62,13 +55,4 @@ class LoadGenres extends AbstractDataFixture implements OrderedFixtureInterface 
         $manager->flush();
     }
 
-    public function getOrder() {
-        return 1;
-    }
-
-    protected function getEnvironments() {
-        return ['dev'];
-    }
-
-// put your code here
 }

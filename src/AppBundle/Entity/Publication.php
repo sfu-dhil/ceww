@@ -63,7 +63,7 @@ abstract class Publication extends AbstractEntity {
 
     /**
      * @var DateYear
-     * @ORM\OneToOne(targetEntity="DateYear")
+     * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $dateYear;
 
@@ -221,12 +221,18 @@ abstract class Publication extends AbstractEntity {
     /**
      * Set dateYear
      *
-     * @param DateYear $dateYear
+     * @param string|DateYear $dateYear
      *
      * @return Publication
      */
-    public function setDateYear(DateYear $dateYear = null) {
-        $this->dateYear = $dateYear;
+    public function setDateYear($dateYear = null) {
+        if(is_string($dateYear)) {
+            $obj = new DateYear();
+            $obj->setValue($dateYear);
+            $this->dateYear = $obj;
+        } else {
+            $this->dateYear = $dateYear;
+        }
 
         return $this;
     }
@@ -260,6 +266,15 @@ abstract class Publication extends AbstractEntity {
      */
     public function getLocation() {
         return $this->location;
+    }
+    
+    /**
+     * Set genres
+     * 
+     * @param Collection|Genre[] $genres
+     */
+    public function setGenres(Collection $genres) {
+        $this->genres = $genres;
     }
 
     /**

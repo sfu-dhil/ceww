@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Genre;
 use AppBundle\Entity\Place;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -38,6 +39,7 @@ class PublicationType extends AbstractType {
             'allow_delete' => true,
             'delete_empty' => true,
             'entry_type' => UrlType::class,
+            'by_reference' => false,
             'attr' => array(
                 'group_class' => 'collection'
             ),
@@ -70,7 +72,17 @@ class PublicationType extends AbstractType {
             'language' => 'en',
         ));
         
-        $builder->add('genres');
+        $builder->add('genres',Select2EntityType::class, array(
+            'multiple' => true,
+            'remote_route' => 'genre_typeahead',
+            'class' => Genre::class,
+            'primary_key' => 'id',
+            'text_property' => 'label',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
+        ));
     }
 
     /**

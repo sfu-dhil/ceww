@@ -178,7 +178,7 @@ class BookController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The book has been updated.');
-            return $this->redirectToRoute('book_show', array('id' => $book->getId()));
+            //return $this->redirectToRoute('book_show', array('id' => $book->getId()));
         }
 
         return array(
