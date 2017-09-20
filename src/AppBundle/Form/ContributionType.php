@@ -2,11 +2,11 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Person;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class ContributionType extends AbstractType {
 
@@ -16,8 +16,17 @@ class ContributionType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('role');
-        $builder->add('person');
-        $builder->add('publication');
+        $builder->add('person', Select2EntityType::class, array(
+            'multiple' => false,
+            'remote_route' => 'person_typeahead',
+            'class' => Person::class,
+            'primary_key' => 'id',
+            'text_property' => 'fullname',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
+        ));
     }
 
     /**

@@ -6,14 +6,27 @@
     <h1>Book edit</h1>
 
     {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-	<div class="form-group">
-		<div class="col-sm-2"></div>
-		<div class="col-sm-10">
-			<input type="submit" value="Update" class="btn btn-primary" />
-			<a href="{{ path('book_show', { 'id': book.id }) }}" class="btn btn-warning">Cancel</a>
-		</div>
-	</div>
+    {{ form_widget(edit_form) }}
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <input type="submit" value="Update" class="btn btn-primary" />
+            <a href="{{ path('book_show', { 'id': book.id }) }}" class="btn btn-warning">Cancel</a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('place_new_popup') }}" class="btn btn-primary popup-form" id="newPlace">New Place</a>
+        </div>
+    </div>
     {{ form_end(edit_form) }}
 
+{% endblock %}
+
+{% block styles %}
+    <link href="{{ asset('bower/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('bower/select2-bootstrap-css/select2-bootstrap.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bower/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>
 {% endblock %}

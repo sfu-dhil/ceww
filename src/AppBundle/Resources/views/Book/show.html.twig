@@ -23,19 +23,57 @@
         </div>
     </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
-        <tbody><tr>
+        <tbody>
+            <tr>
                 <th>Title</th>
                 <td>{{ book.title }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ book.dateYear }}</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td>{{ book.location }}</td>
+            </tr>
+            <tr>
                 <th>Sortable Title</th>
                 <td>{{ book.sortableTitle }}</td>
             </tr><tr>
                 <th>Links</th>
-                <td>{% if book.links %}{{ book.links|join(', ') }}{% endif %}</td>
-            </tr><tr>
+                <td>
+                    {% if book.links | length > 0 %}
+                        <ul>
+                            {% for link in book.links %}                        
+                                <li>
+                                    <a href="{{ link }}">{{ link }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>Description</th>
                 <td>{{ book.description }}</td>
             </tr> 
+            <tr>
+                <th>Genres</th>
+                <td>
+                    {% if book.genres | length > 0 %}
+                        <ul>
+                            {% for genre in book.genres %}
+                                <li>
+                                    <a href="{{ path('genre_show', {'id': genre.id}) }}">
+                                        {{ genre }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
+
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Notes</th>
@@ -51,7 +89,7 @@
             </tr>        
         </tbody>
     </table>
-                
+
     {% if book.contributions | length > 0 %}    
         <h2>Contributions</h2>
         <ul>
@@ -65,7 +103,7 @@
             {% endfor %} 
         </ul>
     {% endif %}
-    
+
     {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': book } %}				
-                
+
 {% endblock %}

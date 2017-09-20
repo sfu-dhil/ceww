@@ -16,6 +16,7 @@ class CompilationType extends PublicationType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {        
+        parent::buildForm($builder, $options);
     }
     
     /**
