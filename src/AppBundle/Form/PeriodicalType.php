@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PeriodicalType extends AbstractType {
+class PeriodicalType extends PublicationType {
 
     /**
      * @param FormBuilderInterface $builder
@@ -18,21 +18,21 @@ class PeriodicalType extends AbstractType {
         parent::buildForm($builder, $options);
         $builder->add('runDates', null, array(
             'label' => 'Run Dates',
-            'required' => true,
+            'required' => false,
             'attr' => array(
                 'help_block' => '',
             ),
         ));
         $builder->add('continuedFrom', null, array(
             'label' => 'Continued From',
-            'required' => true,
+            'required' => false,
             'attr' => array(
                 'help_block' => '',
             ),
         ));
         $builder->add('continuedBy', null, array(
             'label' => 'Continued By',
-            'required' => true,
+            'required' => false,
             'attr' => array(
                 'help_block' => '',
             ),

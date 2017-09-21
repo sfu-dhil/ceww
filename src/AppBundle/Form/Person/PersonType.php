@@ -1,11 +1,10 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Person;
 
 use AppBundle\Entity\Place;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,27 +24,41 @@ class PersonType extends AbstractType {
                 'help_block' => '',
             ),
         ));
+        
         $builder->add('sortableName', null, array(
             'label' => 'Sortable Name',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Sortable name will not be displayed to the public.',
             ),
         ));
-        $builder->add('description', null, array(
+
+        $builder->add('aliases', Select2EntityType::class, array(
+            'multiple' => true,
+            'remote_route' => 'alias_typeahead',
+            'class' => Place::class,
+            'primary_key' => 'id',
+            'text_property' => 'name',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
+        ));
+
+        $builder->add('description', CKEditorType::class, array(
             'label' => 'Description',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'This description is public.',
             ),
         ));
-        $builder->add('birthYear', TextType::class, array(
+        
+        $builder->add('birthDate', TextType::class, array(
             'label' => 'Birth Year',
-            'mapped' => false,
             'required' => false,
             'attr' => array(
                 'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here.'
-            )
+            ),
         ));
 
         // birthPlace is a typeahead thing.
@@ -60,48 +73,53 @@ class PersonType extends AbstractType {
             'delay' => 250,
             'language' => 'en',
         ));
-        
-        $builder->add('deathYear', TextType::class, array(
+
+        $builder->add('deathDate', TextType::class, array(
             'label' => 'Death Year',
-            'mapped' => false,
             'required' => false,
             'attr' => array(
                 'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here.'
             )
         ));
-        
-        $builder->add('deathPlace_id', HiddenType::class, array(
-            'mapped' => false,
-            'required' => false,
-        ));
 
         // deathPlace is a typeahead thing.
-        $builder->add('deathPlace', TextType::class, array(
-            'mapped' => false,
-            'required' => false,
-            'attr' => array(
-                'class' => 'typeahead',
-                'data-target' => 'deathPlace_id',
-                'data-template' => "<div class='typeahead-result'><strong>{{name}}</strong></div>",
-                'data-url' => $options['router']->generate('place_typeahead'),
-            ),
+        $builder->add('deathPlace', Select2EntityType::class, array(
+            'multiple' => false,
+            'remote_route' => 'place_typeahead',
+            'class' => Place::class,
+            'primary_key' => 'id',
+            'text_property' => 'name',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
         ));
-        
+
+        $builder->add('residences', Select2EntityType::class, array(
+            'multiple' => true,
+            'remote_route' => 'place_typeahead',
+            'class' => Place::class,
+            'primary_key' => 'id',
+            'text_property' => 'name',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
+        ));
+
         $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Notes are only available to logged-in users.',
             ),
         ));
-        
     }
 
     /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setRequired(array('router'));
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Person'
         ));

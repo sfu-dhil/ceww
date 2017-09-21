@@ -2,13 +2,14 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Alias;
+use AppBundle\Form\AliasType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Alias;
-use AppBundle\Form\AliasType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Alias controller.
@@ -65,6 +66,30 @@ class AliasController extends Controller {
     }
 
     /**
+     * @param Request $request
+     * @Route("/typeahead", name="alias_typeahead")
+     * @Method("GET")
+     * @return JsonResponse
+     */
+    public function typeahead(Request $request) {
+        $q = $request->query->get('q');
+        if( ! $q) {
+            return new JsonResponse([]);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Alias');
+        $data = [];
+        foreach($repo->typeaheadQuery($q) as $result) {
+            $data[] = [
+                'id' => $result->getId(),
+                'text' => $result->getName(),
+            ];
+        }
+        
+        return new JsonResponse($data);
+    }
+    
+    /**
      * Creates a new Alias entity.
      *
      * @Route("/new", name="alias_new")
@@ -94,6 +119,18 @@ class AliasController extends Controller {
             'alias' => $alias,
             'form' => $form->createView(),
         );
+    }
+    
+    /**
+     * Creates a new Alias entity.
+     *
+     * @Route("/new", name="alias_new_popup")
+     * @Method({"GET", "POST"})
+     * @Template()
+     * @param Request $request
+     */
+    public function newPopupAction(Request $request) {
+        return $this->newAction($request);
     }
 
     /**

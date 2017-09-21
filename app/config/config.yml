@@ -17,7 +17,7 @@ framework:
         strict_requirements: ~
     form:            ~
     csrf_protection: ~
-    validation:      { enable_annotations: true }
+    validation:      { enabled: true, enable_annotations: true }
     #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
@@ -68,8 +68,8 @@ doctrine:
         default_table_options:
             charset: utf8mb4
             collate: utf8mb4_unicode_ci
-        logging: false
-        profiling: false
+#        logging: false
+#        profiling: false
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -114,7 +114,10 @@ fos_user:
     change_password:
         form:
             type: Nines\UserBundle\Form\PasswordType
-            
+    from_email:
+        address: noreply@dhil.lib.sfu.ca
+        sender_name: DoCEWW User Manager            
+        
 ivory_ck_editor:
     input_sync: true
     default_config: ceww_config

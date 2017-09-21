@@ -26,17 +26,53 @@
         <tbody><tr>
                 <th>Title</th>
                 <td>{{ periodical.title }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ periodical.dateYear }}</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td>{{ periodical.location }}</td>
+            </tr>
+            <tr>
+                <th>Sortable Title</th>
+                <td>{{ periodical.sortableTitle }}</td>
             </tr><tr>
                 <th>Links</th>
                 <td>
-                    {% if periodical.links %}
-                        {{ periodical.links|join(', ') }}
+                    {% if periodical.links | length > 0 %}
+                        <ul>
+                            {% for link in periodical.links %}                        
+                                <li>
+                                    <a href="{{ link }}">{{ link }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
                     {% endif %}
                 </td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th>Description</th>
                 <td>{{ periodical.description }}</td>
-            </tr><tr>
+            </tr> 
+            <tr>
+                <th>Genres</th>
+                <td>
+                    {% if periodical.genres | length > 0 %}
+                        <ul>
+                            {% for genre in periodical.genres %}
+                                <li>
+                                    <a href="{{ path('genre_show', {'id': genre.id}) }}">
+                                        {{ genre }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
                 <th>Location</th>
                 <td>
                     {% if periodical.location %}
@@ -68,7 +104,7 @@
             </tr>        
         </tbody>
     </table>
-                
+
     {% if periodical.contributions | length > 0 %}    
         <h2>Contributions</h2>
         <ul>
@@ -84,5 +120,5 @@
     {% endif %}
 
     {% include 'NinesFeedbackBundle:Comment:comment-interface.html.twig' with { 'entity': periodical } %}				
-                
+
 {% endblock %}

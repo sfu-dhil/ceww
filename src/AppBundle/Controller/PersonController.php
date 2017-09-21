@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Person;
-use AppBundle\Form\PersonType;
+use AppBundle\Form\Person\PersonType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -37,6 +37,34 @@ class PersonController extends Controller {
         return array(
             'people' => $people,
         );
+    }
+    
+    /**
+     * @param Request $request
+     * @Route("/typeahead", name="person_typeahead")
+     * @Method("GET")
+     * @return JsonResponse
+     */
+    public function typeaheadAction(Request $request) {
+        $q = $request->query->get('q');
+        if( ! $q) {
+            return new JsonResponse([]);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Person');
+        $data = [];
+        foreach($repo->typeaheadQuery($q) as $result) {
+            $name = $result->getFullname();
+            if(count($result->getAliases())) {
+                $name .= ' aka ' . $result->getAliases()->first();
+            }
+            $data[] = [
+                'id' => $result->getId(),
+                'text' => $name,
+            ];
+        }
+        
+        return new JsonResponse($data);
     }
 
     /**
@@ -126,10 +154,7 @@ class PersonController extends Controller {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $editForm = $this->createForm(PersonType::class, $person, array(
-            'router' => $this->container->get('router')
-        ));
-
+        $editForm = $this->createForm(PersonType::class, $person);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
