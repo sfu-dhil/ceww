@@ -226,7 +226,7 @@ abstract class Publication extends AbstractEntity {
      * @return Publication
      */
     public function setDateYear($dateYear = null) {
-        if(is_string($dateYear)) {
+        if(is_string($dateYear) || is_numeric($dateYear)) {
             $obj = new DateYear();
             $obj->setValue($dateYear);
             $this->dateYear = $obj;

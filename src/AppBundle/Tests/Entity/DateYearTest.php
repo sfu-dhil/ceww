@@ -225,7 +225,7 @@ class DateYearTest extends PHPUnit_Framework_TestCase {
     public function testGetEnd($expected, $value) {
         $date = new DateYear();
         $date->setValue($value);
-        //$this->assertEquals($expected, $date->getEnd());
+        $this->assertEquals($expected, $date->getEnd());
     }
     
     public function getEndData() {
@@ -234,24 +234,24 @@ class DateYearTest extends PHPUnit_Framework_TestCase {
             ["1800", "1800"],
             ['c1800', "c1800"],            
             ['c1799', "C1799"],
+           
+            ["1800", -1800],
+            ["1800", "-1800"],
+            ["c1800", "-c1800"],
+            ["c1800", "-C1800"],
             
-            [null, -1800],
-            [null, "-1800"],
-            [null, "-c1800"],
-            [null, "-C1800"],
+            ["", "1800-"],
+            ["", "c1800-"],
+            ["", "C1800-"],
             
-            ["1800", "1800-"],
-            ["c1800", "c1800-"],
-            ["c1800", "C1800-"],
-            
-            ["1800", "1800-1805"],
-            ["c1800", "c1800-1805"],
-            ["1800", "1800-c1805"],
-            ["c1800", "c1800-c1805"],
-            ["1800", "1800-1805"],
-            ["c1800", "C1800-1805"],
-            ["1800", "1800-C1805"],
-            ["c1800", "C1800-C1805"],
+            ["1805", "1800-1805"],
+            ["1805", "c1800-1805"],
+            ["c1805", "1800-c1805"],
+            ["c1805", "c1800-c1805"],
+            ["1805", "1800-1805"],
+            ["1805", "C1800-1805"],
+            ["c1805", "1800-C1805"],
+            ["c1805", "C1800-C1805"],
         );
     }
     

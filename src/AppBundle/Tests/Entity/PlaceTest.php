@@ -12,6 +12,41 @@ use PHPUnit_Framework_TestCase;
 
 class PlaceTest extends PHPUnit_Framework_TestCase {
     
+    /**
+     * @dataProvider GetNameData
+     */ 
+    public function testGetName($testPlace) {
+        
+        $place = new Place();
+        $place->setName($testPlace);
+        $this->assertEquals($testPlace, $place->getName());
+    }
+    
+    public function getNameData(){
+        
+        return array(
+            array("Vancouver//"),
+            array("[Vancouver]"),
+            array("Va?ncouver"),
+            array("**Vancouver"),
+            array("^Vancouver")
+            
+        );
+        
+    }
+    
+     public function testAppendNote(){
+        
+        $testNote = "This is a note to append.";
+        
+        $place = new Place();
+        
+        $place->appendNote($testNote);
+        
+        $this->assertEquals($testNote, $place->getNotes());
+    }
+            
+       
     public function testAddPeopleBorn() {
         $place = new Place();
         $person = new Person();

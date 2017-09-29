@@ -36,12 +36,12 @@
         "twig/extensions": "^1.4",
         "beberlei/DoctrineExtensions": "^1.0",
         "knplabs/knp-menu-bundle": "^2.0",
-        "tetranz/select2entity-bundle": "^2.9"
+        "tetranz/select2entity-bundle": "^2.9",
+        "symfony/web-server-bundle": "^3.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
-        "symfony/web-server-bundle": "^3.3",
         
         "liip/functional-test-bundle": "^1.6",
         "phpunit/phpunit": "^4.8",
