@@ -4,9 +4,17 @@ namespace AppBundle\Tests\Entity;
 
 use AppBundle\Entity\Alias;
 use AppBundle\Entity\Person;
-use PHPUnit_Framework_TestCase;
+use AppBundle\Tests\Util\BaseTestCase;
+use AppBundle\Tests\DataFixtures\ORM\LoadAlias;
 
-class AliasTest extends PHPUnit_Framework_TestCase {
+
+class AliasTest extends BaseTestCase {
+    
+    protected function getFixtures() {
+        return array(
+            LoadAlias::class,
+        );
+    }
     
     public function testAppendNote(){
         
@@ -20,12 +28,12 @@ class AliasTest extends PHPUnit_Framework_TestCase {
     public function testAddPerson() {
         
         $testPerson = new Person();
-        $alias = new Alias();
+        
+        $alias = $this->references->getReference('alias.1');
         
         $alias->addPerson($testPerson);
         $this->assertCount(1, $alias->getPeople());
-        
-        //$this->assertContains($testPerson, $alias->getPeople());
+       
   
         $alias->removePerson($testPerson);
         $this->assertEmpty($alias->getPeople());

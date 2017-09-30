@@ -25,11 +25,15 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
     public function getNameData(){
         
         return array(
-            array("Vancouver//"),
-            array("[Vancouver]"),
+            array("/Vancouver"),
+            array("[Vancouver"),
+            array("]Vancouver"),
             array("Va?ncouver"),
             array("**Vancouver"),
-            array("^Vancouver")
+            array("^Vancouver"),
+            //array("?Vancouver"),
+            //array(",Vancouver"),
+            //array(" Vancouver"),
             
         );
         
