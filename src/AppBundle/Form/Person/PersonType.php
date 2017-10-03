@@ -34,6 +34,7 @@ class PersonType extends AbstractType {
         ));
 
         $builder->add('aliases', Select2EntityType::class, array(
+            'label' => 'Alternate Names',
             'multiple' => true,
             'remote_route' => 'alias_typeahead',
             'class' => Place::class,
