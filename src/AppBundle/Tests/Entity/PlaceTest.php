@@ -15,25 +15,25 @@ class PlaceTest extends PHPUnit_Framework_TestCase {
     /**
      * @dataProvider GetNameData
      */ 
-    public function testGetName($testPlace) {
+    public function testGetName($testPlace, $expectedName) {
         
         $place = new Place();
         $place->setName($testPlace);
-        $this->assertEquals($testPlace, $place->getName());
+        $this->assertEquals($expectedName, $place->getName());
     }
     
     public function getNameData(){
         
         return array(
-            array("/Vancouver"),
-            array("[Vancouver"),
-            array("]Vancouver"),
-            array("Va?ncouver"),
-            array("**Vancouver"),
-            array("^Vancouver"),
-            //array("?Vancouver"),
-            //array(",Vancouver"),
-            //array(" Vancouver"),
+             array("/Vancouver", "/Vancouver"),
+             array("[Vancouver", "[Vancouver"),
+             array("]Vancouver", "]Vancouver"),
+             array("Va?ncouver", "Va?ncouver"),
+             array("**Vancouver", "**Vancouver"),
+             array("^Vancouver", "^Vancouver"),
+             array("?Vancouver", "Vancouver"),
+             array(",Vancouver", "Vancouver"),
+             array(" Vancouver", "Vancouver"), 
             
         );
         
