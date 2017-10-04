@@ -200,7 +200,7 @@ class Person extends AbstractEntity {
      * @return Person
      */
     public function setBirthDate($birthDate = null) {
-        if(is_string($birthDate)) {
+        if(is_string($birthDate) || is_numeric($birthDate)) {
             $dateYear = new DateYear();
             $dateYear->setValue($birthDate);
             $this->birthDate = $dateYear;
@@ -249,7 +249,7 @@ class Person extends AbstractEntity {
      * @return Person
      */
     public function setDeathDate($deathDate = null) {
-        if(is_string($deathDate)) {
+        if(is_string($deathDate) || is_numeric($deathDate)) {
             $dateYear = new DateYear();
             $dateYear->setValue($deathDate);
             $this->deathDate = $dateYear;

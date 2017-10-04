@@ -23,3 +23,4 @@ nbproject/
 phpunit.xml
 /web/bower
 /web/docs
+/coverage
