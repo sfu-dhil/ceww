@@ -29,16 +29,16 @@
                 <td>{{ alias.name }}</td>
             </tr>
             <tr>
-                <th>Maiden</th>
+                <th>Birth Name</th>
                 <td>{% if alias.maiden %}Yes{% else %}No{% endif %}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Notes</th>
                 <td>{{ alias.description }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th>Notes</th>
+                    <th>Research Notes</th>
                     <td>{{ alias.notes | nl2br }}</td>
                 </tr>
             {% endif %}

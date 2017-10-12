@@ -87,6 +87,7 @@ class PublicationType extends AbstractType {
             'language' => 'en',
         ));
         $builder->add('contributions', CollectionType::class, array(
+            'label' => 'Contributors',
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,

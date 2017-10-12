@@ -42,12 +42,12 @@
                 <th>Longitude</th>
                 <td>{{ place.longitude }}</td>
             </tr><tr>
-                <th>Description</th>
+                <th>Notes</th>
                 <td>{{ place.description }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th>Notes</th>
+                    <th>Research Notes</th>
                     <td>{{ place.notes | nl2br }}</td>
                 </tr>
             {% endif %}
