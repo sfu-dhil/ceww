@@ -54,7 +54,7 @@
                 </td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Notes</th>
                 <td>{{ book.description }}</td>
             </tr> 
             <tr>
@@ -76,7 +76,7 @@
 
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th>Notes</th>
+                    <th>Research Notes</th>
                     <td>{{ book.notes | nl2br }}</td>
                 </tr>
             {% endif %}
@@ -91,7 +91,7 @@
     </table>
 
     {% if book.contributions | length > 0 %}    
-        <h2>Contributions</h2>
+        <h2>Contributors</h2>
         <ul>
             {% for contribution in book.contributions %}
                 <li>

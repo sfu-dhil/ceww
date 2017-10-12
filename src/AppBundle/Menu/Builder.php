@@ -34,7 +34,7 @@ class Builder implements ContainerAwareInterface {
         $menu->addChild('Books', array(
             'route' => 'book_index',
         ));
-        $menu->addChild('Compilations', array(
+        $menu->addChild('Collections', array(
             'route' => 'compilation_index',
         ));
         $menu->addChild('Periodicals', array(

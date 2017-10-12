@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Compilation{% endblock %}
+{% block title %}Collection{% endblock %}
 
 {% block pageheader %} 
-    <h1>Compilation</h1>
+    <h1>Collection</h1>
 {% endblock %} 
 
 {% block body %}
@@ -16,7 +16,7 @@
                 <a href="{{ path('compilation_edit', { 'id': compilation.id }) }}" class="btn btn-default">
                     <span class='glyphicon glyphicon-edit'></span> Edit
                 </a>
-                <a href="{{ path('compilation_delete', { 'id': compilation.id }) }}" class="btn btn-default" data-confirm="Are you sure you want to delete this Compilation?">
+                <a href="{{ path('compilation_delete', { 'id': compilation.id }) }}" class="btn btn-default" data-confirm="Are you sure you want to delete this Collection?">
                     <span class='glyphicon glyphicon-remove'></span> Delete
                 </a>
             {% endif %}
@@ -54,7 +54,7 @@
                 </td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Notes</th>
                 <td>{{ compilation.description }}</td>
             </tr> 
             <tr>
@@ -76,7 +76,7 @@
 
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th>Notes</th>
+                    <th>Research Notes</th>
                     <td>{{ compilation.notes | nl2br }}</td>
                 </tr>
             {% endif %}
@@ -91,7 +91,7 @@
     </table>
 
     {% if compilation.contributions | length > 0 %}    
-        <h2>Contributions</h2>
+        <h2>Contributors</h2>
         <ul>
             {% for contribution in compilation.contributions %}
                 <li>
