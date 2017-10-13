@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Genre;
 use AppBundle\Entity\Place;
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -45,14 +46,14 @@ class PublicationType extends AbstractType {
                 'group_class' => 'collection'
             ),
         ));
-        $builder->add('description', null, array(
+        $builder->add('description', CKEditorType::class, array(
             'label' => 'Description',
             'required' => false,
             'attr' => array(
                 'help_block' => '',
             ),
         ));
-        $builder->add('notes', null, array(
+        $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(

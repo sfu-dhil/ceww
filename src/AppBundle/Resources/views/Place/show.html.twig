@@ -45,12 +45,12 @@
                 <td>{{ place.longitude }}</td>
             </tr><tr>
                 <th>Notes</th>
-                <td>{{ place.description }}</td>
+                <td>{{ place.description|raw }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Research Notes</th>
-                    <td>{{ place.notes | nl2br }}</td>
+                    <td>{{ place.notes|raw }}</td>
                 </tr>
             {% endif %}
             <tr>

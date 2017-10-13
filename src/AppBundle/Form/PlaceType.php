@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -75,14 +76,14 @@ class PlaceType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('description', null, array(
+        $builder->add('description', CKEditorType::class, array(
             'label' => 'Description',
             'required' => false,
             'attr' => array(
                 'help_block' => '',
             ),
         ));
-        $builder->add('notes', null, array(
+        $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(

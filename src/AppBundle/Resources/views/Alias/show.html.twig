@@ -36,12 +36,12 @@
             </tr>
             <tr>
                 <th>Notes</th>
-                <td>{{ alias.description }}</td>
+                <td>{{ alias.description|raw }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Research Notes</th>
-                    <td>{{ alias.notes | nl2br }}</td>
+                    <td>{{ alias.notes|raw }}</td>
                 </tr>
             {% endif %}
             <tr>

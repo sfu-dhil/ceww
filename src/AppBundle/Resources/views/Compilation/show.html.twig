@@ -57,7 +57,7 @@
             </tr>
             <tr>
                 <th>Notes</th>
-                <td>{{ compilation.description }}</td>
+                <td>{{ compilation.description|raw }}</td>
             </tr> 
             <tr>
                 <th>Genres</th>
@@ -79,7 +79,7 @@
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Research Notes</th>
-                    <td>{{ compilation.notes | nl2br }}</td>
+                    <td>{{ compilation.notes|raw }}</td>
                 </tr>
             {% endif %}
             <tr>
@@ -97,7 +97,9 @@
         <ul>
             {% for contribution in compilation.contributions %}
                 <li>
-                    <i>{{ contribution.role }}</i>, 
+                    {% if contribution.role.name != 'author' %}
+                        <i>{{ contribution.role }}</i>, 
+                    {% endif %}
                     <a href='{{ path('person_show', {'id': contribution.person.id}) }}'>
                         {{ contribution.person }}
                     </a>

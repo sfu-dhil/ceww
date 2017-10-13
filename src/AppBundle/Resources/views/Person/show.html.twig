@@ -38,12 +38,12 @@
             {% endif %}
             <tr>
                 <th>Notes</th>
-                <td>{{ person.description }}</td>
+                <td>{{ person.description|raw }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th>Research Notes</th>
-                    <td>{{ person.notes | nl2br }}</td>
+                    <td>{{ person.notes|raw }}</td>
                 </tr>
             {% endif %}
             <tr>
