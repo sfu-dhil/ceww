@@ -124,6 +124,18 @@ class PersonController extends Controller {
             'form' => $form->createView(),
         );
     }
+    
+    /**
+     * Creates a new Person entity in a popup.
+     *
+     * @Route("/new_popup", name="person_new_popup")
+     * @Method({"GET", "POST"})
+     * @Template()
+     * @param Request $request
+     */
+    public function newPopupAction(Request $request) {
+        return $this->newAction($request);
+    }    
 
     /**
      * Finds and displays a Person entity.
