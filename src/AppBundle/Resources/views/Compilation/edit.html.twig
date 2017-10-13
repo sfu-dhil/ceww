@@ -6,14 +6,20 @@
     <h1>Collection edit</h1>
 
     {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-	<div class="form-group">
-		<div class="col-sm-2"></div>
-		<div class="col-sm-10">
-			<input type="submit" value="Update" class="btn btn-primary" />
-			<a href="{{ path('compilation_show', { 'id': compilation.id }) }}" class="btn btn-warning">Cancel</a>
-		</div>
-	</div>
+    {{ form_widget(edit_form) }}
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-6">
+            <input type="submit" value="Update" class="btn btn-primary" />
+            <a href="{{ path('compilation_show', { 'id': compilation.id }) }}" class="btn btn-warning">Cancel</a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('alias_new_popup') }}" class="btn btn-primary popup" id="newPlace">New Alternate Name</a>
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('place_new_popup') }}" class="btn btn-primary popup" id="newPlace">New Place</a>
+        </div>
+    </div>
     {{ form_end(edit_form) }}
 
 {% endblock %}
