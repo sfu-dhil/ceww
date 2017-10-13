@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Person;
+namespace AppBundle\Form;
 
 use AppBundle\Entity\Place;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
