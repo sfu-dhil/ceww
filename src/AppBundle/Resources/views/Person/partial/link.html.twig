@@ -1,0 +1,7 @@
+{% spaceless %}
+    <a href="{{ path('person_show', {'id': person.id}) }}">
+        {% block callback %}
+            {{ person -}}
+        {% endblock -%}
+    </a>
+{% endspaceless %}

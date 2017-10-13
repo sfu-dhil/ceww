@@ -36,48 +36,18 @@
         
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane" id="book">
-                <ul>
-                    {% for publication in genre.publications(constant('AppBundle\\Entity\\Publication::BOOK')) %}
-                        <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
-                                {% endblock %}
-                            {% endembed %}
-                        </li>
-                    {% endfor %} 
-                </ul>
+                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) } %}
+                {% endembed %}
             </div>            
 
             <div role="tabpanel" class="tab-pane" id="compilation">
-                <ul>
-                    {% for publication in genre.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
-                        <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
-                                {% endblock %}
-                            {% endembed %}
-                        </li>
-                    {% endfor %} 
-                </ul>
+                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) } %}
+                {% endembed %}
             </div>            
 
             <div role="tabpanel" class="tab-pane" id="periodical">
-                <ul>
-                    {% for publication in genre.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
-                        <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
-                                {% endblock %}
-                            {% endembed %}
-                        </li>
-                    {% endfor %} 
-                </ul>
+                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) } %}
+                {% endembed %}
             </div>            
         </div>
     </div>

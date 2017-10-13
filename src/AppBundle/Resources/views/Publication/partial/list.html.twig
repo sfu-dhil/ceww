@@ -1,0 +1,19 @@
+<ul>
+    {% for publication in publications %}
+        {% set author = publication.firstAuthor() %}
+        <li>
+            {% if author is not null %}
+                {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': author} %}
+                {% endembed %},
+            {% endif %}
+            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                {% block callback %}
+                    <i>{{ publication.title }}</i>
+                {% endblock %}
+            {% endembed %}
+            {%- if publication.dateYear -%}
+                , {{ publication.dateYear }}
+            {% endif %}
+        </li>
+    {% endfor %} 
+</ul>

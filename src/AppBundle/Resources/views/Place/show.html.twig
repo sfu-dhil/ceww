@@ -79,10 +79,9 @@
                         {% for person in place.peopleBorn %}
                             <li>
                                 <a href="{{ path("person_show", {"id":person.id}) }}">
-                                    {{ person }}
+                                    {{ person -}}
                                 </a>
-                                {% if person.birthDate %}
-                                    {{ person.birthDate }}
+                                {%- if person.birthDate %}, {{ person.birthDate }}
                                 {% endif %}
                             </li>
                         {% endfor %} 
@@ -95,11 +94,9 @@
                         {% for person in place.peopleDied %}
                             <li>
                                 <a href="{{ path("person_show", {"id":person.id}) }}">
-                                    {{ person }}
+                                    {{ person -}}
                                 </a>
-                                {% if person.deathDate %}
-                                    {{ person.deathDate }}
-                                {% endif %}
+                                {%- if person.deathDate %}, {{ person.deathDate }}{% endif %}
                             </li>
                         {% endfor %} 
                     </ul>
@@ -120,48 +117,18 @@
             </div>    
 
             <div role="tabpanel" class="tab-pane" id="book">
-                <ul>
-                    {% for publication in place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) %}
-                        <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
-                                {% endblock %}
-                            {% endembed %}
-                        </li>
-                    {% endfor %} 
-                </ul>
+                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) } %}
+                {% endembed %}
             </div>            
 
             <div role="tabpanel" class="tab-pane" id="compilation">
-                <ul>
-                    {% for publication in place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
-                        <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
-                                {% endblock %}
-                            {% endembed %}
-                        </li>
-                    {% endfor %} 
-                </ul>
+                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) } %}
+                {% endembed %}
             </div>            
 
             <div role="tabpanel" class="tab-pane" id="periodical">
-                <ul>
-                    {% for publication in place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
-                        <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
-                                {% endblock %}
-                            {% endembed %}
-                        </li>
-                    {% endfor %} 
-                </ul>
+                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) } %}
+                {% endembed %}
             </div>            
         </div>
     </div>

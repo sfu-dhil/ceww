@@ -9,9 +9,11 @@
 {% endif %}
 
 {% if path_name is defined %}
-    <a href="{{ path(path_name, { 'id': publication.id}) }}">
-        {% block callback %}
-            {{ publication }}
-        {% endblock %}
-    </a>
-{% endif %}
+    {% spaceless %}
+        <a href="{{ path(path_name, { 'id': publication.id}) }}">
+            {% block callback -%}
+                {{ publication -}}
+            {% endblock -%}
+        </a>
+    {% endspaceless %}
+{% endif -%}

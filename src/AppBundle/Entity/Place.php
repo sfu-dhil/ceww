@@ -17,6 +17,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  */
 class Place extends AbstractEntity {
 
+    use HasPublications;
+    
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
      */
@@ -81,12 +83,6 @@ class Place extends AbstractEntity {
      */
     private $residents;
 
-    /**
-     * @var Collection|Publication[]
-     * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
-     */
-    private $publications;
-
     public function __construct() {
         parent::__construct();
         $this->alternateNames = array();
@@ -94,7 +90,6 @@ class Place extends AbstractEntity {
         $this->peopleBorn = new ArrayCollection();
         $this->peopleDied = new ArrayCollection();
         $this->residents = new ArrayCollection();
-        $this->publications = new ArrayCollection();
         $this->notes = '';
     }
 
@@ -418,48 +413,6 @@ class Place extends AbstractEntity {
             return strcmp($a->getSortableName(), $b->getSortableName());
         });
         return $residents;
-    }
-
-    /**
-     * Add publication
-     *
-     * @param Publication $publication
-     *
-     * @return Place
-     */
-    public function addPublication(Publication $publication) {
-        if( ! $this->publications->contains($publication)) {
-            $this->publications[] = $publication;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove publication
-     *
-     * @param Publication $publication
-     */
-    public function removePublication(Publication $publication) {
-        $this->publications->removeElement($publication);
-    }
-
-    /**
-     * Get publications
-     *
-     * @return Collection
-     */
-    public function getPublications($category = null) {
-        $publications = $this->publications->toArray();
-        if($category !== null) {
-            $publications = array_filter($publications, function(Publication $publication) use ($category) {
-                return $publication->getCategory() === $category;
-            });
-        }
-        usort($publications, function($a, $b) {
-            return strcmp($a->getSortableTitle(), $b->getSortableTitle());
-        });
-        return $publications;
     }
 
 }

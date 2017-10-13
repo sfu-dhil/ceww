@@ -342,5 +342,29 @@ abstract class Publication extends AbstractEntity {
     public function getContributions() {
         return $this->contributions;
     }
+    
+    /**
+     * Get the first author contributor for a publication or null if there
+     * are no author contributors.
+     * 
+     * @return Person|null
+     */
+    public function getFirstAuthor() {
+        foreach($this->contributions as $contribution) {
+            if($contribution->getRole()->getName() === 'author') {
+                return $contribution->getPerson();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the first contribution for a publication.
+     * 
+     * @return Contribution
+     */
+    public function getFirstContribution() {
+        return $this->contributions->first();
+    }
 
 }
