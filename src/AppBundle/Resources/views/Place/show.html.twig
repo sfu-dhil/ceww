@@ -68,7 +68,9 @@
             <li role="presentation" class="active"><a href="#born" aria-controls="home" role="tab" data-toggle="tab">Births</a></li>
             <li role="presentation"><a href="#died" aria-controls="profile" role="tab" data-toggle="tab">Deaths</a></li>
             <li role="presentation"><a href="#resident" aria-controls="messages" role="tab" data-toggle="tab">Residents</a></li>
-            <li role="presentation"><a href="#publication" aria-controls="messages" role="tab" data-toggle="tab">Publications</a></li>
+            <li role="presentation"><a href="#book" aria-controls="messages" role="tab" data-toggle="tab">Books</a></li>
+            <li role="presentation"><a href="#compilation" aria-controls="messages" role="tab" data-toggle="tab">Collection</a></li>
+            <li role="presentation"><a href="#periodical" aria-controls="messages" role="tab" data-toggle="tab">Periodicals</a></li>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="born">
@@ -115,17 +117,51 @@
                         {% endfor %} 
                     </ul>
                 {% endif %}
+            </div>    
+
+            <div role="tabpanel" class="tab-pane" id="book">
+                <ul>
+                    {% for publication in place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) %}
+                        <li>
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
+                        </li>
+                    {% endfor %} 
+                </ul>
             </div>            
-            <div role="tabpanel" class="tab-pane" id="publication">
-                {% if place.publications | length > 0 %}    
-                    <ul>
-                        {% for publication in place.publications %}
-                            <li>
-                                {% include 'AppBundle:Publication:partial/link.html.twig' with { 'publication': publication, 'render': '{{ publication }}' } %}
-                            </li>
-                        {% endfor %} 
-                    </ul>
-                {% endif %}
+
+            <div role="tabpanel" class="tab-pane" id="compilation">
+                <ul>
+                    {% for publication in place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
+                        <li>
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
+                        </li>
+                    {% endfor %} 
+                </ul>
+            </div>            
+
+            <div role="tabpanel" class="tab-pane" id="periodical">
+                <ul>
+                    {% for publication in place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
+                        <li>
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
+                        </li>
+                    {% endfor %} 
+                </ul>
             </div>            
         </div>
     </div>

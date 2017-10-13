@@ -55,8 +55,16 @@ class Genre extends AbstractTerm
      *
      * @return Collection
      */
-    public function getPublications()
-    {
-        return $this->publications;
+    public function getPublications($category = null) {
+        $publications = $this->publications->toArray();
+        if($category !== null) {
+            $publications = array_filter($publications, function(Publication $publication) use ($category) {
+                return $publication->getCategory() === $category;
+            });
+        }
+        usort($publications, function($a, $b) {
+            return strcmp($a->getSortableTitle(), $b->getSortableTitle());
+        });
+        return $publications;
     }
 }

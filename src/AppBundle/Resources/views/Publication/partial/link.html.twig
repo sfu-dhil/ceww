@@ -7,12 +7,11 @@
 {% else %}
     <p>Cannot generate link for entity type {{ publication.category }}.</p>
 {% endif %}
+
 {% if path_name is defined %}
     <a href="{{ path(path_name, { 'id': publication.id}) }}">
-        {% if render is defined %}
-            {{ include(template_from_string(render)) }}
-        {% else %}
+        {% block callback %}
             {{ publication }}
-        {% endif %}
+        {% endblock %}
     </a>
 {% endif %}

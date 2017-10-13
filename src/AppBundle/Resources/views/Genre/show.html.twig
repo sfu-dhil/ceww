@@ -27,15 +27,59 @@
 
     {{ include('NinesUtilBundle:Term:partial/show.html.twig', { 'term': genre }) }}
 
-    {% if genre.publications | length > 0 %}
-        <h3>Publications</h3>         
-        <ul>
-            {% for publication in genre.publications %}
-                <li>
-                    {% include 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication, 'render': '<i>{{ publication.title }}</i>, {{ publication.dateYear }}' } %}
-                </li>
-            {% endfor %} 
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#book" aria-controls="messages" role="tab" data-toggle="tab">Books</a></li>
+            <li role="presentation"><a href="#compilation" aria-controls="messages" role="tab" data-toggle="tab">Collection</a></li>
+            <li role="presentation"><a href="#periodical" aria-controls="messages" role="tab" data-toggle="tab">Periodicals</a></li>
         </ul>
-    {% endif %}
+        
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane" id="book">
+                <ul>
+                    {% for publication in genre.publications(constant('AppBundle\\Entity\\Publication::BOOK')) %}
+                        <li>
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
+                        </li>
+                    {% endfor %} 
+                </ul>
+            </div>            
+
+            <div role="tabpanel" class="tab-pane" id="compilation">
+                <ul>
+                    {% for publication in genre.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
+                        <li>
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
+                        </li>
+                    {% endfor %} 
+                </ul>
+            </div>            
+
+            <div role="tabpanel" class="tab-pane" id="periodical">
+                <ul>
+                    {% for publication in genre.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
+                        <li>
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
+                        </li>
+                    {% endfor %} 
+                </ul>
+            </div>            
+        </div>
+    </div>
 
 {% endblock %}

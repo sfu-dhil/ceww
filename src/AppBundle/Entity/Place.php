@@ -449,8 +449,13 @@ class Place extends AbstractEntity {
      *
      * @return Collection
      */
-    public function getPublications() {
+    public function getPublications($category = null) {
         $publications = $this->publications->toArray();
+        if($category !== null) {
+            $publications = array_filter($publications, function(Publication $publication) use ($category) {
+                return $publication->getCategory() === $category;
+            });
+        }
         usort($publications, function($a, $b) {
             return strcmp($a->getSortableTitle(), $b->getSortableTitle());
         });

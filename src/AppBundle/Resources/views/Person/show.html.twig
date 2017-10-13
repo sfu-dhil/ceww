@@ -132,8 +132,15 @@
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
+                            {% set publication = contribution.publication %}
                             <li>
-                                {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}, {{contribution.publication.dateYear}}' } %}
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                    {% if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
                             </li>
                         {% endfor %} 
                     </ul>
@@ -144,8 +151,15 @@
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}                            
+                            {% set publication = contribution.publication %}
                             <li>
-                                {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}, {{contribution.publication.dateYear}}' } %}
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                    {% if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
                             </li>
                         {% endfor %} 
                     </ul>
@@ -156,10 +170,17 @@
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
+                             {% set publication = contribution.publication %}
                             <li>
-                                {% include 'AppBundle:Contribution:partial/link.html.twig' with { 'contribution': contribution, 'render': '<i>{{ contribution.role }}</i>, {{ contribution.publication }}, {{contribution.publication.dateYear}}' } %}
+                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                                {% block callback %}
+                                    <i>{{ publication.title }}</i>
+                                    {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
+                                    {% if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif %}
+                                {% endblock %}
+                            {% endembed %}
                             </li>
-                        {% endfor %} 
+                       {% endfor %} 
                     </ul>
                 {% endif %}
             </div>
