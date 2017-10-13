@@ -74,7 +74,7 @@ class GenreController extends Controller
      */
     public function newAction(Request $request)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
@@ -124,7 +124,7 @@ class GenreController extends Controller
      */
     public function editAction(Request $request, Genre $genre)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }

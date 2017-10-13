@@ -120,7 +120,7 @@ class BookController extends Controller {
      * @param Request $request
      */
     public function newAction(Request $request) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
+        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
@@ -171,7 +171,7 @@ class BookController extends Controller {
      * @param Book $book
      */
     public function editAction(Request $request, Book $book) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
+        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
