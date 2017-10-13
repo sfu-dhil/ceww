@@ -47,6 +47,12 @@
                             {{ knp_menu_render('NinesBlogBundle:Builder:postNavMenu') }}
                         </li>
                         <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Comments <span class="caret"></span>
+                            </a>
+                            {{ knp_menu_render('NinesFeedbackBundle:Builder:navMenu') }}
+                        </li>
+                        <li>
                             <a href="{{ asset('docs/html/index.html') }}">Documentation</a>
                         </li>
                     </ul>
