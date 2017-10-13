@@ -28,11 +28,9 @@
     {% if genre.publications | length > 0 %}
         <h3>Publications</h3>         
         <ul>
-            {% for publications in genre.publications %}
+            {% for publication in genre.publications %}
                 <li>
-                    <a href="{{ path("publications_show", {"id":publications.id}) }}">
-                        {{ publications }}
-                    </a>
+                    {% include 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication, 'render': '<i>{{ publication.title }}</i>, {{ publication.dateYear }}' } %}
                 </li>
             {% endfor %} 
         </ul>

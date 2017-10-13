@@ -9,6 +9,10 @@
 {% endif %}
 {% if path_name is defined %}
     <a href="{{ path(path_name, { 'id': publication.id}) }}">
-        {{ include(template_from_string(render)) }}
+        {% if render is defined %}
+            {{ include(template_from_string(render)) }}
+        {% else %}
+            {{ publication }}
+        {% endif %}
     </a>
 {% endif %}
