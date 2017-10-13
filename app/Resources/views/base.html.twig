@@ -46,18 +46,20 @@
                             </a>
                             {{ knp_menu_render('NinesBlogBundle:Builder:postNavMenu') }}
                         </li>
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Comments <span class="caret"></span>
-                            </a>
-                            {{ knp_menu_render('NinesFeedbackBundle:Builder:navMenu') }}
-                        </li>
+                        {% if is_granted('ROLE_COMMENT_ADMIN') %}
+                            <li>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Comments <span class="caret"></span>
+                                </a>
+                                {{ knp_menu_render('NinesFeedbackBundle:Builder:navMenu') }}
+                            </li>
+                        {% endif %}
                         <li>
                             <a href="{{ asset('docs/html/index.html') }}">Documentation</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                            {{ knp_menu_render('NinesUserBundle:Builder:userNavMenu') }}
+                        {{ knp_menu_render('NinesUserBundle:Builder:userNavMenu') }}
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -90,16 +92,20 @@
         {% endblock %}
         <!-- Piwik -->
         <script type="text/javascript">
-          var _paq = _paq || [];
-          _paq.push(['trackPageView']);
-          _paq.push(['enableLinkTracking']);
-          (function() {
-            var u="//piwik.lib.sfu.ca/piwik/";
-            _paq.push(['setTrackerUrl', u+'piwik.php']);
-            _paq.push(['setSiteId', '37']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-          })();
+            var _paq = _paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function () {
+                var u = "//piwik.lib.sfu.ca/piwik/";
+                _paq.push(['setTrackerUrl', u + 'piwik.php']);
+                _paq.push(['setSiteId', '37']);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.type = 'text/javascript';
+                g.async = true;
+                g.defer = true;
+                g.src = u + 'piwik.js';
+                s.parentNode.insertBefore(g, s);
+            })();
         </script>
         <!-- End Piwik Code -->
     </body>
