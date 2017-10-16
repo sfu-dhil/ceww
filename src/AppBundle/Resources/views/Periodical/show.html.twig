@@ -115,9 +115,8 @@
                     {% if contribution.role.name != 'author' %}
                         <i>{{ contribution.role }}</i>, 
                     {% endif %}
-                    <a href='{{ path('person_show', {'id': contribution.person.id}) }}'>
-                        {{ contribution.person }}
-                    </a>
+                    {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': contribution.person} %}
+                    {% endembed %}
                 </li>
             {% endfor %} 
         </ul>

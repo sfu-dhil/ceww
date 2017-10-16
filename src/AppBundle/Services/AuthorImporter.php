@@ -134,6 +134,7 @@ class AuthorImporter {
             $person->setFullname('');
             $person->setSortableName('');
         }
+        $person->setGender(Person::FEMALE);
         $this->persist($person);
         return $person;
     }
@@ -148,6 +149,9 @@ class AuthorImporter {
         if (!$place) {
             $place = new Place();
             $place->setName($name);
+            $sortable = mb_convert_case($name, MB_CASE_LOWER, 'UTF-8');
+            $sortable = preg_replace('/^[^a-z]*/', '', $sortable);
+            $place->setSortableName($sortable);
             $this->persist($place);
         }
         return $place;

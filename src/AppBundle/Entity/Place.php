@@ -11,7 +11,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * Place
  *
  * @ORM\Table(name="place", indexes={
- *  @ORM\Index(columns={"name", "country_name"}, flags={"fulltext"})
+ *  @ORM\Index(columns={"name", "country_name"}, flags={"fulltext"}),
+ *  @ORM\Index(columns={"sortable_name"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PlaceRepository")
  */
@@ -23,7 +24,12 @@ class Place extends AbstractEntity {
      * @ORM\Column(type="string", length=250, nullable=false)
      */
     private $name;
-
+    
+    /**
+     * @ORM\Column(type="string", length=250, nullable=false)
+     */
+    private $sortableName;
+    
     /**
      * @ORM\Column(type="array")
      * @var Collection|array
@@ -94,7 +100,7 @@ class Place extends AbstractEntity {
     }
 
     public function __toString() {
-        return preg_replace('/^[?, ]*/', '', $this->name);
+        return $this->name;
     }
 
     /**
@@ -116,7 +122,7 @@ class Place extends AbstractEntity {
      * @return string
      */
     public function getName() {
-        return preg_replace('/^[?, ]*/', '', $this->name);
+        return $this->name;
     }
 
     /**
@@ -415,4 +421,76 @@ class Place extends AbstractEntity {
         return $residents;
     }
 
+
+    /**
+     * Set sortableName
+     *
+     * @param string $sortableName
+     *
+     * @return Place
+     */
+    public function setSortableName($sortableName)
+    {
+        $this->sortableName = $sortableName;
+
+        return $this;
+    }
+
+    /**
+     * Get sortableName
+     *
+     * @return string
+     */
+    public function getSortableName()
+    {
+        return $this->sortableName;
+    }
+
+    /**
+     * Add peopleBorn
+     *
+     * @param \AppBundle\Entity\Person $peopleBorn
+     *
+     * @return Place
+     */
+    public function addPeopleBorn(\AppBundle\Entity\Person $peopleBorn)
+    {
+        $this->peopleBorn[] = $peopleBorn;
+
+        return $this;
+    }
+
+    /**
+     * Remove peopleBorn
+     *
+     * @param \AppBundle\Entity\Person $peopleBorn
+     */
+    public function removePeopleBorn(\AppBundle\Entity\Person $peopleBorn)
+    {
+        $this->peopleBorn->removeElement($peopleBorn);
+    }
+
+    /**
+     * Add peopleDied
+     *
+     * @param \AppBundle\Entity\Person $peopleDied
+     *
+     * @return Place
+     */
+    public function addPeopleDied(\AppBundle\Entity\Person $peopleDied)
+    {
+        $this->peopleDied[] = $peopleDied;
+
+        return $this;
+    }
+
+    /**
+     * Remove peopleDied
+     *
+     * @param \AppBundle\Entity\Person $peopleDied
+     */
+    public function removePeopleDied(\AppBundle\Entity\Person $peopleDied)
+    {
+        $this->peopleDied->removeElement($peopleDied);
+    }
 }

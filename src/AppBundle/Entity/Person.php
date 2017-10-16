@@ -17,7 +17,11 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PersonRepository")
  */
 class Person extends AbstractEntity {
-
+    
+    const MALE = 'm';
+    
+    const FEMALE = 'f';
+    
     /**
      * @var string
      * @ORM\Column(type="string", length=200, nullable=false)
@@ -29,6 +33,12 @@ class Person extends AbstractEntity {
      * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $sortableName;
+    
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=1, nullable=true)
+     */
+    private $gender;
 
     /**
      * public research notes.
@@ -394,4 +404,27 @@ class Person extends AbstractEntity {
         });
     }
 
+    /**
+     * Set gender
+     *
+     * @param string $gender
+     *
+     * @return Person
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
 }

@@ -35,6 +35,10 @@
                     <th>Sortable Name</th>
                     <td>{{ person.sortableName }}</td>
                 </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>{{ include('AppBundle:Person:partial/gender.html.twig') }}</td>
+                </tr>
             {% endif %}
             <tr>
                 <th>Notes</th>

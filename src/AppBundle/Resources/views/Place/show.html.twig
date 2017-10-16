@@ -78,9 +78,8 @@
                     <ul>
                         {% for person in place.peopleBorn %}
                             <li>
-                                <a href="{{ path("person_show", {"id":person.id}) }}">
-                                    {{ person -}}
-                                </a>
+                                {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                                {% endembed %}
                                 {%- if person.birthDate %}, {{ person.birthDate }}
                                 {% endif %}
                             </li>
@@ -93,9 +92,8 @@
                     <ul>
                         {% for person in place.peopleDied %}
                             <li>
-                                <a href="{{ path("person_show", {"id":person.id}) }}">
-                                    {{ person -}}
-                                </a>
+                                {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                                {% endembed %}
                                 {%- if person.deathDate %}, {{ person.deathDate }}{% endif %}
                             </li>
                         {% endfor %} 
@@ -107,9 +105,8 @@
                     <ul>
                         {% for person in place.residents %}
                             <li>
-                                <a href="{{ path("person_show", {"id":person.id}) }}">
-                                    {{ person }}
-                                </a>
+                                {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                                {% endembed %}
                             </li>
                         {% endfor %} 
                     </ul>

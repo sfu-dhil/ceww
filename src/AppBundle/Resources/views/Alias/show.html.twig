@@ -57,11 +57,8 @@
                     {% if alias.people | length > 0 %}
                         <ul>
                             {% for person in alias.people %}
-                                <li>
-                                    <a href="{{ path("person_show", {"id":person.id}) }}">
-                                        {{ person }}
-                                    </a>
-                                </li>
+                                {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                                {% endembed %}
                             {% endfor %} 
                         </ul>
                     {% endif %}

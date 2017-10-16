@@ -2,9 +2,12 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Alias;
+use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,12 +35,22 @@ class PersonType extends AbstractType {
                 'help_block' => 'Sortable name will not be displayed to the public.',
             ),
         ));
+        
+        $builder->add('gender', ChoiceType::class, array(
+            'expanded' => true,
+            'multiple' => false,
+            'choices' => array(
+                'Female' => Person::FEMALE,
+                'Male' => Person::MALE,
+                'Unknown' => null,
+            ),            
+        ));
 
         $builder->add('aliases', Select2EntityType::class, array(
             'label' => 'Alternate Names',
             'multiple' => true,
             'remote_route' => 'alias_typeahead',
-            'class' => Place::class,
+            'class' => Alias::class,
             'primary_key' => 'id',
             'text_property' => 'name',
             'page_limit' => 10,

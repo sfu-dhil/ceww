@@ -1,7 +1,14 @@
 {% spaceless %}
-    <a href="{{ path('person_show', {'id': person.id}) }}">
+    {% if block('callback') is not defined %}
         {% block callback %}
-            {{ person -}}
-        {% endblock -%}
-    </a>
+            {{ person.fullname }}
+        {% endblock %}
+    {% endif %}
+    {% if person.gender == constant('AppBundle\\Entity\\Person::FEMALE') or is_granted('ROLE_USER') %}
+        <a href="{{ path('person_show', {'id': person.id}) }}">
+            {{ block('callback') }}
+        </a>
+    {% else %}
+        {{ block('callback') }}
+    {% endif %}
 {% endspaceless %}

@@ -9,10 +9,9 @@
         {% for person in people %}
             <tr>
                 <td>
-                    <a href="{{ path('person_show', { 'id': person.id }) }}">
-                        {{ person.fullName }}
-                    </a>
-                </td>
+                    {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                    {% endembed %}
+                </td>                
                 <td>{{ person.description }}</td>
             </tr>
         {% endfor %}

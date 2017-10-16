@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Person controller.
@@ -29,7 +30,11 @@ class PersonController extends Controller {
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Person::class, 'e')->orderBy('e.id', 'ASC');
+        $qb->select('e')->from(Person::class, 'e');
+        if( ! $this->isGranted('ROLE_USER')) {
+            $qb->where("e.gender <> 'm'");
+        }
+        $qb->orderBy('e.sortableName');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
         $people = $paginator->paginate($query, $request->query->getint('page', 1), 25);
@@ -146,7 +151,9 @@ class PersonController extends Controller {
      * @param Person $person
      */
     public function showAction(Person $person) {
-
+        if( ! $this->isGranted('ROLE_USER') && $person->getGender() != Person::FEMALE) {
+            throw new NotFoundHttpException("Cannot find that person.");
+        }
         return array(
             'person' => $person,
         );
