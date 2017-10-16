@@ -113,6 +113,9 @@ class PeriodicalImporter {
         if (!$place) {
             $place = new Place();
             $place->setName($name);
+            $sortable = mb_convert_case($name, MB_CASE_LOWER, 'UTF-8');
+            $sortable = preg_replace('/^[^a-z]*/', '', $sortable);
+            $place->setSortableName($sortable);
             $this->persist($place);
             $this->flush($place, false);
         }

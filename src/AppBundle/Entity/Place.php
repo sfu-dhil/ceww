@@ -18,7 +18,9 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  */
 class Place extends AbstractEntity {
 
-    use HasPublications;
+    use HasPublications {
+        HasPublications::__construct as private trait_constructor;
+    }
     
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
@@ -90,6 +92,7 @@ class Place extends AbstractEntity {
     private $residents;
 
     public function __construct() {
+        $this->trait_constructor();
         parent::__construct();
         $this->alternateNames = array();
         $this->adminNames = array();

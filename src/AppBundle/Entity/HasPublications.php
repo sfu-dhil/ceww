@@ -9,7 +9,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Collection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Description of PublicationTrait
@@ -23,7 +23,7 @@ trait HasPublications {
      * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
      */
     private $publications;
-    
+
     public function __construct() {
         $this->publications = new ArrayCollection();
     }
@@ -36,7 +36,13 @@ trait HasPublications {
      * @return Place
      */
     public function addPublication(Publication $publication) {
-        if( ! $this->publications->contains($publication)) {
+        if (!$this->publications) {
+            throw new \Exception(get_class($this) . " HAS NO PUBLICATIONS.\n");
+        }
+        if (!$this->publications instanceof Collection) {
+            throw new \Exception(get_class($this) . " SHOULD HAVE COLLECTION, HAS " . dump($this->publications) . "\n");
+        }
+        if (!$this->publications->contains($publication)) {
             $this->publications[] = $publication;
         }
 
@@ -59,7 +65,7 @@ trait HasPublications {
      */
     public function getPublications($category = null) {
         $publications = $this->publications->toArray();
-        if($category !== null) {
+        if ($category !== null) {
             $publications = array_filter($publications, function(Publication $publication) use ($category) {
                 return $publication->getCategory() === $category;
             });
@@ -69,5 +75,5 @@ trait HasPublications {
         });
         return $publications;
     }
-    
+
 }

@@ -13,5 +13,12 @@ use Nines\UtilBundle\Entity\AbstractTerm;
  */
 class Genre extends AbstractTerm
 {
-    use HasPublications;
+    use HasPublications {
+        HasPublications::__construct as private trait_constructor;
+    }
+    
+    public function __construct() {
+        $this->trait_constructor();
+        parent::__construct();
+    }
 }
