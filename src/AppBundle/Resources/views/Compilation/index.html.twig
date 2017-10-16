@@ -7,25 +7,22 @@
     <p class="count">
         Displaying {{ compilations|length }} collections of {{ compilations.getTotalItemCount }} total.
     </p>
- {% endblock %} 
+{% endblock %} 
 
 {% block body %}
 
+    {% if is_granted('ROLE_CONTENT_ADMIN') %}
         <div class='btn-toolbar pull-right'>
-        <div class='btn-group'>
-            {% if is_granted('ROLE_CONTENT_ADMIN') %}
-            <a href="{{ path('compilation_new') }}" class="btn btn-default">
-                <span class="glyphicon glyphicon-plus"></span> New
-            </a>
-            {% endif %}
-            <a href="{{ path('compilation_search') }}" class="btn btn-default">
-                <span class="glyphicon glyphicon-search"></span> Search
-            </a>
+            <div class='btn-group'>
+                <a href="{{ path('compilation_new') }}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> New
+                </a>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     {% include 'AppBundle:Compilation:partial/table.html.twig' %}
-        
+
     <div class="navigation">
         {{ knp_pagination_render(compilations) }}
     </div>

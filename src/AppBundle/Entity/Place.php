@@ -103,7 +103,7 @@ class Place extends AbstractEntity {
     }
 
     public function __toString() {
-        return $this->name;
+        return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
     /**
@@ -125,7 +125,7 @@ class Place extends AbstractEntity {
      * @return string
      */
     public function getName() {
-        return $this->name;
+        return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
     /**

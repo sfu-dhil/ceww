@@ -22,6 +22,8 @@ class PersonControllerTest extends BaseTestCase
         $crawler = $client->request('GET', '/person/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
+        // check that the male and unknown people are hidden in the table.
+        $this->assertEquals(2, $crawler->filter('table.table tr')->count());
     }
     
     public function testUserIndex() {
@@ -32,6 +34,7 @@ class PersonControllerTest extends BaseTestCase
         $crawler = $client->request('GET', '/person/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
+        $this->assertEquals(4, $crawler->filter('table.table tr')->count());
     }
     
     public function testAdminIndex() {
@@ -42,9 +45,10 @@ class PersonControllerTest extends BaseTestCase
         $crawler = $client->request('GET', '/person/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('New')->count());
+        $this->assertEquals(4, $crawler->filter('table.table tr')->count());
     }
     
-    public function testAnonShow() {
+    public function testAnonShowFemale() {
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/person/1');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -52,7 +56,19 @@ class PersonControllerTest extends BaseTestCase
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
     
-    public function testUserShow() {
+    public function testAnonShowMale() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/person/2');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+    
+    public function testAnonShowUnknown() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/person/3');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+    
+    public function testUserShowFemale() {
         $client = $this->makeClient([
             'username' => 'user@example.com',
             'password' => 'secret',
@@ -63,6 +79,28 @@ class PersonControllerTest extends BaseTestCase
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
     
+    public function testUserShowMale() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/person/2');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(0, $crawler->selectLink('Edit')->count());
+        $this->assertEquals(0, $crawler->selectLink('Delete')->count());
+    }
+    
+    public function testUserShowUnknown() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/person/3');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(0, $crawler->selectLink('Edit')->count());
+        $this->assertEquals(0, $crawler->selectLink('Delete')->count());
+    }
+
     public function testAdminShow() {
         $client = $this->makeClient([
             'username' => 'admin@example.com',

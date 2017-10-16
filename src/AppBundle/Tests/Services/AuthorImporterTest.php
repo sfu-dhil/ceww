@@ -552,7 +552,7 @@ class AuthorImporterTest extends BaseTestCase {
                     'residences' => [],
                     'books' => [
                         ['A Rare Form of Pyosalpinx Complicating Uterine Myoma', '1900'],
-                        ['Pigmentation Cirrhosis of the Liver IN a Case of Hæmochromatosis', '1900'],
+                        ['Pigmentation Cirrhosis of the Liver in a Case of Hæmochromatosis', '1900'],
                         ['Museum Notes', '1901'],
                     ],
                     'collections' => [],
