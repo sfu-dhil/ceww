@@ -403,7 +403,10 @@ class AuthorImporter {
         if (isset($row[10])) {
             $person->setDescription($row[10]);
         }
-        $notes = $this->trim(implode("\n\n", array_filter(array_slice($row, 11))));
+        $notes = '';
+        foreach(array_filter(array_slice($row, 11)) as $note) {
+            $notes .= "<p>{$note}</p>\n";
+        }
         $person->setNotes($notes);
         $this->flush(null, true);
 
