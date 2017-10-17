@@ -350,7 +350,7 @@ class AuthorImporter {
     public function addCompilations(Person $person, $value) {
         $titles = $this->splitter->split($value);
         $roleRepo = $this->em->getRepository(Role::class);
-        $role = $roleRepo->findOneBy(array('name' => 'author'));
+        $role = $roleRepo->findOneBy(array('name' => 'editor'));
         foreach ($titles as $title) {
             list($title, $dateValue) = $this->titleDate($title);
             list($title, $placeValue) = $this->titlePlace($title);

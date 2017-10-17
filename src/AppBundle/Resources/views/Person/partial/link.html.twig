@@ -1,14 +1,12 @@
 {% spaceless %}
     {% if block('callback') is not defined %}
         {% block callback %}
-            {{ person.fullname }}
+            {{ person.fullname -}}
         {% endblock %}
     {% endif %}
     {% if person.gender == constant('AppBundle\\Entity\\Person::FEMALE') or is_granted('ROLE_USER') %}
-        <a href="{{ path('person_show', {'id': person.id}) }}">
-            {{ block('callback') }}
-        </a>
+        <a href="{{ path('person_show', {'id': person.id}) }}">{{ block('callback') }}</a>
     {% else %}
-        {{ block('callback') }}
-    {% endif %}
+        {{ block('callback') -}}
+    {% endif -%}
 {% endspaceless %}

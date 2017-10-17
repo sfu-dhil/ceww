@@ -40,6 +40,12 @@ abstract class Publication extends AbstractEntity {
      * @ORM\Column(type="text", nullable=false)
      */
     private $sortableTitle;
+    
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $source;
 
     /**
      * @var Collection|string[]
@@ -367,4 +373,28 @@ abstract class Publication extends AbstractEntity {
         return $this->contributions->first();
     }
 
+
+    /**
+     * Set source
+     *
+     * @param boolean $source
+     *
+     * @return Publication
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * Get source
+     *
+     * @return boolean
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
 }

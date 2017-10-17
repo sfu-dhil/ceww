@@ -6,6 +6,7 @@ use AppBundle\Entity\Genre;
 use AppBundle\Entity\Place;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -33,6 +34,15 @@ class PublicationType extends AbstractType {
             'attr' => array(
                 'help_block' => '',
             ),
+        ));
+        $builder->add('source', ChoiceType::class, array(
+            'choices' => array(
+                'Yes' => true,
+                'No' => false,
+                'Unknown' => null,
+            ),
+            'expanded' => true,
+            'multiple' => false,
         ));
         $builder->add('links', CollectionType::class, array(
             'label' => 'Links',
