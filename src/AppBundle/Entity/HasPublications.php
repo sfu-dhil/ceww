@@ -36,12 +36,6 @@ trait HasPublications {
      * @return Place
      */
     public function addPublication(Publication $publication) {
-        if (!$this->publications) {
-            throw new \Exception(get_class($this) . " HAS NO PUBLICATIONS.\n");
-        }
-        if (!$this->publications instanceof Collection) {
-            throw new \Exception(get_class($this) . " SHOULD HAVE COLLECTION, HAS " . dump($this->publications) . "\n");
-        }
         if (!$this->publications->contains($publication)) {
             $this->publications[] = $publication;
         }
