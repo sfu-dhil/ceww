@@ -26,6 +26,11 @@ class LoadRole extends AbstractFixture {
         $this->setReference('role.1', $role);
         $manager->persist($role);       
         
+        $editor = new Role();
+        $editor->setName("editor");
+        $editor->setLabel("Editor");
+        $this->setReference('role.2', $editor);
+        $manager->persist($editor);       
         $manager->flush();
     }
 
