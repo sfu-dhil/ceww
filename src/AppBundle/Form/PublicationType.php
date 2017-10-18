@@ -51,9 +51,12 @@ class PublicationType extends AbstractType {
             'allow_delete' => true,
             'delete_empty' => true,
             'entry_type' => UrlType::class,
+            'entry_options' => array(
+                'label' => false,
+            ),
             'by_reference' => false,
             'attr' => array(
-                'group_class' => 'collection'
+                'class' => 'collection collection-simple'
             ),
         ));
         $builder->add('description', CKEditorType::class, array(
@@ -104,9 +107,11 @@ class PublicationType extends AbstractType {
             'allow_delete' => true,
             'delete_empty' => true,
             'entry_type' => ContributionType::class,
-            'entry_options' => array(),
+            'entry_options' => array(
+                'label' => false,
+            ),
             'attr' => array(
-                'group_class' => 'collection'
+                'class' => 'collection collection-complex'
             ),
         ));
     }

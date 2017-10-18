@@ -39,4 +39,24 @@
             window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600")
         });
     </script>
+    <script src="{{ asset('bower/symfony-collection/jquery.collection.js') }}"></script>
+    <script>
+        $('.collection-complex').collection({
+            init_with_n_elements: 1,
+            allow_up: false,
+            allow_down: false,
+            add: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></a>',
+            remove: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></a>',
+            add_at_the_end: true
+        });
+        $('.collection-simple').collection({
+            init_with_n_elements: 1,
+            allow_up: false,
+            allow_down: false,
+            add: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></a>',
+            remove: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></a>',
+            add_at_the_end: false
+        });
+    </script>        
+    </script>
 {% endblock %}
