@@ -91,7 +91,7 @@ class CompilationController extends Controller
             $em->persist($compilation);
             $em->flush();
 
-            $this->addFlash('success', 'The new compilation was created.');
+            $this->addFlash('success', 'The new collection was created.');
             return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
         }
 
@@ -141,7 +141,7 @@ class CompilationController extends Controller
             }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
-            $this->addFlash('success', 'The compilation has been updated.');
+            $this->addFlash('success', 'The collection has been updated.');
             return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
         }
 
