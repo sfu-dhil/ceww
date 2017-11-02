@@ -20,8 +20,8 @@ class PlaceRepository extends \Doctrine\ORM\EntityRepository {
     
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
-        $qb->addSelect("MATCH_AGAINST (e.name, e.countryName, :q 'IN BOOLEAN MODE') as HIDDEN score");
-        $qb->add('where', "MATCH_AGAINST (e.name, e.countryName, :q 'IN BOOLEAN MODE') > 0.5");
+        $qb->addSelect("MATCH (e.name, e.countryName) AGAINST (:q BOOLEAN) as HIDDEN score");
+        $qb->add('where', "MATCH (e.name, e.countryName) AGAINST (:q BOOLEAN) > 0.5");
         $qb->orderBy('score', 'desc');
         $qb->setParameter('q', $q);
         return $qb->getQuery();

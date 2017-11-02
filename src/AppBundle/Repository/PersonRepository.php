@@ -25,8 +25,8 @@ class PersonRepository extends EntityRepository {
     
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
-        $qb->addSelect("MATCH_AGAINST (e.fullName, :q 'IN BOOLEAN MODE') as HIDDEN score");
-        $qb->add('where', "MATCH_AGAINST (e.fullName, :q 'IN BOOLEAN MODE') > 0.5");
+        $qb->addSelect("MATCH (e.fullName) AGAINST (:q BOOLEAN) as HIDDEN score");
+        $qb->add('where', "MATCH (e.fullName) AGAINST (:q BOOLEAN) > 0.5");
         $qb->orderBy('score', 'desc');
         $qb->setParameter('q', $q);
         return $qb->getQuery();
