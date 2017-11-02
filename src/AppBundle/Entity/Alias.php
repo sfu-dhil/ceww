@@ -22,6 +22,12 @@ class Alias extends AbstractEntity
      * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $name;
+    
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=100, nullable=false)
+     */
+    private $sortableName;
 
     /**
      * @var boolean
@@ -196,5 +202,29 @@ class Alias extends AbstractEntity
     public function getPeople()
     {
         return $this->people;
+    }
+
+    /**
+     * Set sortableName
+     *
+     * @param string $sortableName
+     *
+     * @return Alias
+     */
+    public function setSortableName($sortableName)
+    {
+        $this->sortableName = $sortableName;
+
+        return $this;
+    }
+
+    /**
+     * Get sortableName
+     *
+     * @return string
+     */
+    public function getSortableName()
+    {
+        return $this->sortableName;
     }
 }

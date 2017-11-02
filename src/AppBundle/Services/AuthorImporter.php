@@ -220,6 +220,7 @@ class AuthorImporter {
             } else {
                 $alias->setName($name);
             }
+            $alias->setSortableName($this->titleCaser->sortableTitle($name));
             $this->persist($alias);
         }
         return $alias;

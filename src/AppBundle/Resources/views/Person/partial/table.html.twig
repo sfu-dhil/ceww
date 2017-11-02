@@ -2,7 +2,8 @@
     <thead>
         <tr>
             <th>Full Name</th>
-            <th>Notes</th>
+            <th>Born</th>
+            <th>Deceased</th>
         </tr>
     </thead>
     <tbody>
@@ -11,8 +12,9 @@
                 <td>
                     {% embed 'AppBundle:Person:partial/link.html.twig' %}
                     {% endembed %}
-                </td>                
-                <td>{{ person.description }}</td>
+                </td>   
+                <td>{{ person.birthDate }}</td>
+                <td>{{ person.deathDate }}</td>
             </tr>
         {% endfor %}
     </tbody>

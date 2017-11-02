@@ -29,7 +29,7 @@ class AliasController extends Controller {
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Alias::class, 'e')->orderBy('e.name', 'ASC');
+        $qb->select('e')->from(Alias::class, 'e')->orderBy('e.sortableName', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
         $aliases = $paginator->paginate($query, $request->query->getint('page', 1), 25);
