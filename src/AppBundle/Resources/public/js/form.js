@@ -3,7 +3,6 @@
     var hostname = window.location.hostname.replace('www.', '');
 
     function confirm() {
-        console.log('confirm');
         var $this = $(this);
         $this.click(function () {
             return window.confirm($this.data('confirm'));
@@ -11,7 +10,7 @@
     }
     
     function link() {
-        if(this.hostname === hostname) {
+        if(this.hostname.replace('www.', '') === hostname) {
             return;
         }
         $(this).attr('target', '_blank');
