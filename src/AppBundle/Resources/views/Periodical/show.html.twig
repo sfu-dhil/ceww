@@ -4,6 +4,8 @@
 
 {% block pageheader %} 
     <h1>{{ periodical.title }}</h1>
+    {% embed 'AppBundle:Publication:partial/browse.html.twig' %}
+    {% endembed %}
 {% endblock %} 
 
 {% block body %}

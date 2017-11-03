@@ -4,6 +4,8 @@
 
 {% block pageheader %} 
     <h1>{{ compilation.title }}</h1>
+    {% embed 'AppBundle:Publication:partial/browse.html.twig' %}
+    {% endembed %}
 {% endblock %} 
 
 {% block body %}

@@ -14,6 +14,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Table(name="publication", indexes={
  *  @ORM\Index(columns={"title"}, flags={"fulltext"}),
  *  @ORM\Index(columns={"sortable_title"}, flags={"fulltext"}),
+ *  @ORM\Index(columns={"category"}),
  * })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="category", type="string")
@@ -25,9 +26,9 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  */
 abstract class Publication extends AbstractEntity {
 
-    const BOOK = 0;
-    const COMPILATION = 1;
-    const PERIODICAL = 2;
+    const BOOK = 'book';
+    const COMPILATION = 'compilation';
+    const PERIODICAL = 'periodical';
 
     /**
      * @var string

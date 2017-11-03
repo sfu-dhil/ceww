@@ -2,7 +2,7 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\Category;
+use AppBundle\Entity\Publication;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -13,6 +13,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class PublicationRepository extends EntityRepository {
     
+
+    public function next(Publication $publication) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->andWhere('e.sortableTitle > :q');        
+        $qb->setParameter('q', $publication->getSortableTitle());
+        $qb->andWhere('e INSTANCE OF :i');
+        $qb->setParameter('i', $publication->getCategory());
+        $qb->addOrderBy('e.sortableTitle', 'ASC');
+        $qb->setMaxResults(1);
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function previous(Publication $publication) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->andWhere('e.sortableTitle < :q');
+        $qb->setParameter('q', $publication->getSortableTitle());
+        $qb->andWhere('e INSTANCE OF :i');
+        $qb->setParameter('i', $publication->getCategory());
+        $qb->addOrderBy('e.sortableTitle', 'DESC');
+        $qb->setMaxResults(1);
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH (e.title) AGAINST (:q BOOLEAN) AS HIDDEN score");

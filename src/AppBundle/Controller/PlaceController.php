@@ -148,9 +148,13 @@ class PlaceController extends Controller
      */
     public function showAction(Place $place)
     {
-
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Place::class);
+        
         return array(
             'place' => $place,
+            'next' => $repo->next($place),
+            'previous' => $repo->previous($place),
         );
     }
 

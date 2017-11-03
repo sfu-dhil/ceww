@@ -4,6 +4,18 @@
 
 {% block pageheader %} 
     <h1>{{ place.name }}</h1>
+    <div class="row">
+        <div class="col-sm-6 text-left">
+            {% if previous %}
+                Previous place: <a href="{{ path('place_show', {'id': previous.id}) }}">{{ previous }}</a>
+            {% endif %}
+        </div>
+        <div class="col-sm-6 text-right">
+            {% if next %}
+                Next place: <a href="{{ path('place_show', {'id': next.id}) }}">{{ next }}</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %} 
 
 {% block body %}

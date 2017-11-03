@@ -105,9 +105,13 @@ class PeriodicalController extends Controller {
      * @param Periodical $periodical
      */
     public function showAction(Periodical $periodical) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Periodical::class);
 
         return array(
             'periodical' => $periodical,
+            'next' => $repo->next($periodical),
+            'previous' => $repo->previous($periodical),
         );
     }
 

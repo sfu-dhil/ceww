@@ -111,9 +111,14 @@ class CompilationController extends Controller
      */
     public function showAction(Compilation $compilation)
     {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Compilation::class);
+        dump($repo->previous($compilation));
 
         return array(
             'compilation' => $compilation,
+            'next' => $repo->next($compilation),
+            'previous' => $repo->previous($compilation),
         );
     }
 
