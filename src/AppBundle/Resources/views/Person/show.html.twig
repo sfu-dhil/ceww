@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Person{% endblock %}
+{% block title %}{{ person.fullName }}{% endblock %}
 
 {% block pageheader %} 
-    <h1>Person</h1>
+    <h1>{{ person.fullName }}</h1>
 {% endblock %} 
 
 {% block body %}
