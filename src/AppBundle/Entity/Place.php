@@ -334,7 +334,7 @@ class Place extends AbstractEntity {
             if( $aDate && (! $bDate)) {
                 return 1;
             }
-            return $aDate->getStart() - $bDate->getStart();
+            return $aDate->getStart(false) - $bDate->getStart(false);
         });
         return $births;
     }
@@ -382,7 +382,7 @@ class Place extends AbstractEntity {
             if( $aDate && (! $bDate)) {
                 return 1;
             }
-            return $aDate->getStart() - $bDate->getStart();
+            return $aDate->getStart(false) - $bDate->getStart(false);
         });
         return $deaths;
     }

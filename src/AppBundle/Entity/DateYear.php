@@ -122,8 +122,11 @@ class DateYear extends AbstractEntity {
      *
      * @return integer
      */
-    public function getStart() {
-        return ($this->startCirca ? 'c' : '') . $this->start;
+    public function getStart($withCirca = true) {
+        if($withCirca && $this->startCirca) {
+            return 'c' . $this->start;
+        }
+        return $this->start;
     }
 
     public function hasEnd() {
@@ -135,8 +138,11 @@ class DateYear extends AbstractEntity {
      *
      * @return integer
      */
-    public function getEnd() {
-        return ($this->endCirca ? 'c' : '') . $this->end;
+    public function getEnd($withCirca = true) {
+        if($withCirca && $this->endCirca) {
+            return 'c' . $this->end;
+        }
+        return $this->end;
     }
 
     /**
