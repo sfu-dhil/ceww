@@ -1,5 +1,22 @@
 (function ($, window) {
+    
+    var hostname = window.location.hostname.replace('www.', '');
 
+    function confirm() {
+        console.log('confirm');
+        var $this = $(this);
+        $this.click(function () {
+            return window.confirm($this.data('confirm'));
+        });
+    }
+    
+    function link() {
+        if(this.hostname === hostname) {
+            return;
+        }
+        $(this).attr('target', '_blank');
+    }
+    
     function windowBeforeUnload(e) {
         var clean = true;
         $('form').each(function () {
@@ -15,7 +32,7 @@
         }
     }
     
-    function formDirty($form) {
+    function formDirty() {
         var $form = $(this);
         $form.data('dirty', false);
         $form.on('change', function () {
@@ -64,8 +81,12 @@
         $(window).bind('beforeunload', windowBeforeUnload);
         $('form').each(formDirty);
         $("a.popup").click(formPopup);
-        simpleCollection();
-        complexCollection();
+        $("a").each(link);
+        $("*[data-confirm]").each(confirm);
+        if (typeof $().collection === 'function') {
+            simpleCollection();
+            complexCollection();
+        }
     });
 
 })(jQuery, window);
