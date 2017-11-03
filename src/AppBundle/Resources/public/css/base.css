@@ -119,3 +119,7 @@ div.collection-complex > div:not(:last-child) {
     border: 1px solid rgba(128, 128, 128, 0.31);
 }
 
+/* Add some whitespace above the comments form. */
+div.panel-comments {
+    margin-top: 3em;
+}
