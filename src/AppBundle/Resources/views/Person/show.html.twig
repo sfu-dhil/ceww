@@ -63,13 +63,6 @@
                 </tr>
             {% endif %}
             <tr>
-                <th>Created</th>
-                <td>{% if person.created %}{{ person.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr><tr>
-                <th>Updated</th>
-                <td>{% if person.updated %}{{ person.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>      
-            <tr>
                 <th>Birth date</th>
                 <td>{% if person.birthDate %}{{ person.birthDate }}{% endif %}</td>
             </tr>                

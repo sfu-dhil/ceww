@@ -84,13 +84,6 @@
                     <td>{{ book.notes|raw }}</td>
                 </tr>
             {% endif %}
-            <tr>
-                <th>Created</th>
-                <td>{% if book.created %}{{ book.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr><tr>
-                <th>Updated</th>
-                <td>{% if book.updated %}{{ book.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>        
         </tbody>
     </table>
 

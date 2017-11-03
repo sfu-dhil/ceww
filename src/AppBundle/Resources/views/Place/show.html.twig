@@ -65,13 +65,6 @@
                     <td>{{ place.notes|raw }}</td>
                 </tr>
             {% endif %}
-            <tr>
-                <th>Created</th>
-                <td>{% if place.created %}{{ place.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr><tr>
-                <th>Updated</th>
-                <td>{% if place.updated %}{{ place.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>        
         </tbody>
     </table>
 

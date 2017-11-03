@@ -45,13 +45,6 @@
                 </tr>
             {% endif %}
             <tr>
-                <th>Created</th>
-                <td>{% if alias.created %}{{ alias.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr><tr>
-                <th>Updated</th>
-                <td>{% if alias.updated %}{{ alias.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>        
-            <tr>
                 <th>People</th>         
                 <td>
                     {% if alias.people | length > 0 %}

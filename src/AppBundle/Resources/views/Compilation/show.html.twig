@@ -84,13 +84,6 @@
                     <td>{{ compilation.notes|raw }}</td>
                 </tr>
             {% endif %}
-            <tr>
-                <th>Created</th>
-                <td>{% if compilation.created %}{{ compilation.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr><tr>
-                <th>Updated</th>
-                <td>{% if compilation.updated %}{{ compilation.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>        
         </tbody>
     </table>
 

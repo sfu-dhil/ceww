@@ -27,7 +27,8 @@
         </div>
     </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
-        <tbody><tr>
+        <tbody>
+            <tr>
                 <th>Title</th>
                 <td>{{ periodical.title }}</td>
             </tr>
@@ -42,7 +43,8 @@
             <tr>
                 <th>Sortable Title</th>
                 <td>{{ periodical.sortableTitle }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th>Links</th>
                 <td>
                     {% if periodical.links | length > 0 %}
@@ -93,19 +95,15 @@
             <tr>
                 <th>Run Dates</th>
                 <td>{{ periodical.runDates }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th>Continued From</th>
                 <td>{{ periodical.continuedFrom }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th>Continued By</th>
                 <td>{{ periodical.continuedBy }}</td>
-            </tr><tr>
-                <th>Created</th>
-                <td>{% if periodical.created %}{{ periodical.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr><tr>
-                <th>Updated</th>
-                <td>{% if periodical.updated %}{{ periodical.updated|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>        
+            </tr>
         </tbody>
     </table>
 
