@@ -113,7 +113,6 @@ class CompilationController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Compilation::class);
-        dump($repo->previous($compilation));
 
         return array(
             'compilation' => $compilation,

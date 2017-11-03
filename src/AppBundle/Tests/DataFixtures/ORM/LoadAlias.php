@@ -24,6 +24,7 @@ class LoadAlias extends AbstractFixture {
         $alias->setDescription('An alias');
         $alias->setMaiden(true);
         $alias->setName('Nee Mariston');
+        $alias->setSortableName('mariston, n');
         $this->setReference('alias.1', $alias);
         $manager->persist($alias);        
         

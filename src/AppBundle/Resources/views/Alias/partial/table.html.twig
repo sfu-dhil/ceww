@@ -12,7 +12,9 @@
                 </td>
                 <td>
                     {% set person = alias.people.first() %}
+                    {% if person %}
                     {% include 'AppBundle:Person:partial/link.html.twig' %}
+                    {% endif %}
                     {% if alias.people | length > 1 %}
                         and {{ alias.people | length }} more.
                     {% endif %}
