@@ -23,20 +23,11 @@ class PlaceType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('alternateNames', CollectionType::class, array(
-            'label' => 'Alternate Names',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'delete_empty' => true,
-            'entry_type' => TextType::class,
-            'entry_options' => array(
-                'required' => false,
-                'attr' => array(
-                    'help_block' => '',
-                ),
-            ),
+        $builder->add('regionName', null, array(
+            'label' => 'Region Name',
+            'required' => false,
             'attr' => array(
-                'group_class' => 'collection'
+                'help_block' => 'State, province, territory or other sub-national entity.',
             ),
         ));
         $builder->add('countryName', null, array(
@@ -44,22 +35,6 @@ class PlaceType extends AbstractType {
             'required' => false,
             'attr' => array(
                 'help_block' => '',
-            ),
-        ));
-        $builder->add('adminNames', null, array(
-            'label' => 'Admin Names',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'delete_empty' => true,
-            'entry_type' => TextType::class,
-            'entry_options' => array(
-                'required' => false,
-                'attr' => array(
-                    'help_block' => '',
-                ),
-            ),
-            'attr' => array(
-                'group_class' => 'collection'
             ),
         ));
         $builder->add('latitude', null, array(

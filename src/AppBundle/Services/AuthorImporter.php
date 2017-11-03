@@ -149,8 +149,15 @@ class AuthorImporter {
         if (!$place) {
             $place = new Place();
             $place->setName($name);
+            $data = preg_split('/\s*,\s*/u', $name, 3);
+            if(count($data) > 1) {
+                $place->setRegionName($data[1]);
+            }
+            if(count($data) > 2) {
+                $place->setCountryName($data[2]);
+            }
             $sortable = mb_convert_case($name, MB_CASE_LOWER, 'UTF-8');
-            $sortable = preg_replace('/^[^a-z]*/', '', $sortable);
+            $sortable = preg_replace('/^[^a-z -]*/', '', $sortable);
             $place->setSortableName($sortable);
             $this->persist($place);
         }

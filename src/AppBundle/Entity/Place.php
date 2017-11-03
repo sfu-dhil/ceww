@@ -33,21 +33,16 @@ class Place extends AbstractEntity {
     private $sortableName;
     
     /**
-     * @ORM\Column(type="array")
-     * @var Collection|array
+     * A province, state, territory or other sub-national entity.
+     * 
+     * @ORM\Column(type="string", length=250, nullable=true)
      */
-    private $alternateNames;
-
+    private $regionName;
+    
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
      */
     private $countryName;
-
-    /**
-     * @ORM\Column(type="array")
-     * @var Collection|array
-     */
-    private $adminNames;
 
     /**
      * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
@@ -94,8 +89,6 @@ class Place extends AbstractEntity {
     public function __construct() {
         $this->trait_constructor();
         parent::__construct();
-        $this->alternateNames = array();
-        $this->adminNames = array();
         $this->peopleBorn = new ArrayCollection();
         $this->peopleDied = new ArrayCollection();
         $this->residents = new ArrayCollection();
@@ -129,28 +122,6 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Set alternateNames
-     *
-     * @param array $alternateNames
-     *
-     * @return Place
-     */
-    public function setAlternateNames($alternateNames) {
-        $this->alternateNames = $alternateNames;
-
-        return $this;
-    }
-
-    /**
-     * Get alternateNames
-     *
-     * @return array
-     */
-    public function getAlternateNames() {
-        return $this->alternateNames;
-    }
-
-    /**
      * Set countryName
      *
      * @param string $countryName
@@ -170,28 +141,6 @@ class Place extends AbstractEntity {
      */
     public function getCountryName() {
         return $this->countryName;
-    }
-
-    /**
-     * Set adminNames
-     *
-     * @param array $adminNames
-     *
-     * @return Place
-     */
-    public function setAdminNames($adminNames) {
-        $this->adminNames = $adminNames;
-
-        return $this;
-    }
-
-    /**
-     * Get adminNames
-     *
-     * @return array
-     */
-    public function getAdminNames() {
-        return $this->adminNames;
     }
 
     /**
@@ -495,5 +444,29 @@ class Place extends AbstractEntity {
     public function removePeopleDied(\AppBundle\Entity\Person $peopleDied)
     {
         $this->peopleDied->removeElement($peopleDied);
+    }
+
+    /**
+     * Set regionName
+     *
+     * @param string $regionName
+     *
+     * @return Place
+     */
+    public function setRegionName($regionName)
+    {
+        $this->regionName = $regionName;
+
+        return $this;
+    }
+
+    /**
+     * Get regionName
+     *
+     * @return string
+     */
+    public function getRegionName()
+    {
+        return $this->regionName;
     }
 }

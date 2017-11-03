@@ -2,9 +2,8 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Alternate Names</th>
+            <th>Region Name</th>
             <th>Country Name</th>
-            <th>Admin Names</th>
         </tr>
     </thead>
     <tbody>
@@ -15,9 +14,8 @@
                         {{ place.name }}
                     </a>
                 </td>
-                <td>{% if place.alternateNames %}{{ place.alternateNames|join(', ') }}{% endif %}</td>
+                <td>{{ place.regionName }}</td>
                 <td>{{ place.countryName }}</td>
-                <td>{% if place.adminNames %}{{ place.adminNames|join(', ') }}{% endif %}</td>
             </tr>
         {% endfor %}
     </tbody>
