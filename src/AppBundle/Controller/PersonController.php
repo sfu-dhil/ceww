@@ -151,11 +151,15 @@ class PersonController extends Controller {
      * @param Person $person
      */
     public function showAction(Person $person) {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Person::class);
         if( ! $this->isGranted('ROLE_USER') && $person->getGender() != Person::FEMALE) {
             throw new NotFoundHttpException("Cannot find that person.");
         }
         return array(
             'person' => $person,
+            'next' => $repo->next($person),
+            'previous' => $repo->previous($person),
         );
     }
 

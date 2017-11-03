@@ -4,6 +4,18 @@
 
 {% block pageheader %} 
     <h1>{{ person.fullName }}</h1>
+    <div class="row">
+        <div class="col-sm-6 text-left">
+            {% if previous %}
+                Previous person: {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': previous} %}{% endembed %}
+            {% endif %}
+        </div>
+        <div class="col-sm-6 text-right">
+            {% if next %}
+                Next person: {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': next} %}{% endembed %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %} 
 
 {% block body %}

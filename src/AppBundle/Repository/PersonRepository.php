@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Person;
 use AppBundle\Entity\Role;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -14,6 +15,25 @@ use Doctrine\ORM\Query\Expr\Join;
  * repository methods below.
  */
 class PersonRepository extends EntityRepository {
+
+    public function next(Person $person) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->andWhere('e.sortableName > :q');
+        $qb->andWhere("e.gender = 'f'");
+        $qb->setParameter('q', $person->getSortableName());
+        $qb->addOrderBy('e.sortableName', 'ASC');
+        $qb->setMaxResults(1);
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function previous(Person $person) {
+        $qb = $this->createQueryBuilder('e');
+        $qb->andWhere('e.sortableName < :q');
+        $qb->setParameter('q', $person->getSortableName());
+        $qb->addOrderBy('e.sortableName', 'DESC');
+        $qb->setMaxResults(1);
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 
     public function typeaheadQuery($q) {
         $qb = $this->createQueryBuilder('e');
@@ -43,5 +63,6 @@ class PersonRepository extends EntityRepository {
         $qb->setParameter('role', $role);
         return $qb->getQuery();
     }
-
+    
+    
 }
