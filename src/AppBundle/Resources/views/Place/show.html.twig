@@ -41,14 +41,11 @@
                 <th>Name</th>
                 <td>{{ place.name }}</td>
             </tr><tr>
-                <th>Alternate Names</th>
-                <td>{% if place.alternateNames %}{{ place.alternateNames|join(', ') }}{% endif %}</td>
+                <th>Region Name</th>
+                <td>{{ place.regionName }}</td>
             </tr><tr>
                 <th>Country Name</th>
                 <td>{{ place.countryName }}</td>
-            </tr><tr>
-                <th>Admin Names</th>
-                <td>{% if place.adminNames %}{{ place.adminNames|join(', ') }}{% endif %}</td>
             </tr><tr>
                 <th>Latitude</th>
                 <td>{{ place.latitude }}</td>

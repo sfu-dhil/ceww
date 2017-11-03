@@ -37,7 +37,7 @@ class PersonRepository extends EntityRepository {
 
     public function typeaheadQuery($q) {
         $qb = $this->createQueryBuilder('e');
-        $qb->andWhere("e.sortableName LIKE :q");
+        $qb->andWhere("e.name LIKE :q");
         $qb->orderBy('e.sortableName');
         $qb->setParameter('q', "{$q}%");
         return $qb->getQuery()->execute();
