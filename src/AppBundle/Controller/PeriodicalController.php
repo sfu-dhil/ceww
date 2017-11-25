@@ -39,32 +39,6 @@ class PeriodicalController extends Controller {
     }
 
     /**
-     * Search for Periodical entities.
-     *
-     * @Route("/search", name="periodical_search")
-     * @Method("GET")
-     * @Template()
-     * @param Request $request
-     */
-    public function searchAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Periodical');
-        $q = $request->query->get('q');
-        if ($q) {
-            $query = $repo->searchQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $periodicals = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-        } else {
-            $periodicals = array();
-        }
-
-        return array(
-            'periodicals' => $periodicals,
-            'q' => $q,
-        );
-    }
-
-    /**
      * Creates a new Periodical entity.
      *
      * @Route("/new", name="periodical_new")

@@ -38,32 +38,6 @@ class CompilationController extends Controller
             'compilations' => $compilations,
         );
     }
-    /**
-     * Search for Compilation entities.
-     *
-     * @Route("/search", name="compilation_search")
-     * @Method("GET")
-     * @Template()
-	 * @param Request $request
-     */
-    public function searchAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-		$repo = $em->getRepository('AppBundle:Compilation');
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->searchQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$compilations = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
-		} else {
-			$compilations = array();
-		}
-
-        return array(
-            'compilations' => $compilations,
-			'q' => $q,
-        );
-    }
 
     /**
      * Creates a new Compilation entity.

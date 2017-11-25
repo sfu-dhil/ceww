@@ -35,15 +35,6 @@ class PublicationType extends AbstractType {
                 'help_block' => '',
             ),
         ));
-        $builder->add('source', ChoiceType::class, array(
-            'choices' => array(
-                'Yes' => true,
-                'No' => false,
-                'Unknown' => null,
-            ),
-            'expanded' => true,
-            'multiple' => false,
-        ));
         $builder->add('links', CollectionType::class, array(
             'label' => 'Links',
             'required' => false,
