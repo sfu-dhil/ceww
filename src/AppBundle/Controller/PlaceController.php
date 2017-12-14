@@ -190,6 +190,45 @@ class PlaceController extends Controller
     }
 
     /**
+     * Finds and displays a Place entity.
+     *
+     * @Route("/{id}/merge", name="place_merge")
+     * @Method({"GET","POST"})
+     * @Template()
+     * @param Place $place
+     */
+    public function mergeAction(Request $request, Place $place) {
+        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Place::class);
+        
+        if($request->getMethod() === 'POST') {
+            $places = $repo->findBy(array('id' => $request->request->get('places')));
+            $count = count($places);
+            $merger = $this->container->get('ceww.merger');
+            $merger->places($place, $places);
+            $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
+            return $this->redirect($this->generateUrl('place_show', ['id' => $place->getId()]));
+        }
+        
+        $q = $request->query->get('q');
+        if ($q) {
+            $query = $repo->searchQuery($q);
+            $places = $query->execute();
+        } else {
+                $places = array();
+        }
+        return array(
+            'place' => $place,
+            'places' => $places,
+            'q' => $q,
+        );
+    }
+
+    /**
      * Deletes a Place entity.
      *
      * @Route("/{id}/delete", name="place_delete")

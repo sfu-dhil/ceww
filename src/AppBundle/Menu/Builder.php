@@ -60,7 +60,8 @@ class Builder implements ContainerAwareInterface {
             'route' => 'place_index',
         ));
 
-        if ($this->container->get('security.token_storage')->getToken() && $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
+        if ($this->container->get('security.token_storage')->getToken() && 
+                $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
             $menu->addChild('divider2', array(
                 'label' => '',
             ));

@@ -66,17 +66,20 @@ class Merger
      */
     public function places(Place $destination, $places) {
         foreach ($places as $p) {
-            foreach ($p->getAuthorsBorn() as $a) {
+            foreach ($p->getPeopleBorn() as $a) {
                 $a->setBirthPlace($destination);
                 $p->removeAuthorsBorn($a);
             }
-            foreach ($p->getAuthorsDied() as $a) {
+            foreach ($p->getPeopleDied() as $a) {
                 $a->setDeathPlace($destination);
                 $p->removeAuthorsDied($a);
             }
             foreach ($p->getResidents() as $a) {
                 $a->removeResidence($p);
                 $a->addResidence($destination);
+            }
+            foreach($p->getPublications() as $a) {
+                $a->setLocation($destination);                
             }
         }
         foreach ($places as $p) {

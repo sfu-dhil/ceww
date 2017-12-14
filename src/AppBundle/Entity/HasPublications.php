@@ -55,7 +55,7 @@ trait HasPublications {
     /**
      * Get publications
      *
-     * @return Collection
+     * @return Collection|Publication[]
      */
     public function getPublications($category = null) {
         $publications = $this->publications->toArray();
