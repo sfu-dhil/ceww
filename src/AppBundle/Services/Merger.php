@@ -68,11 +68,11 @@ class Merger
         foreach ($places as $p) {
             foreach ($p->getPeopleBorn() as $a) {
                 $a->setBirthPlace($destination);
-                $p->removeAuthorsBorn($a);
+                $p->removePersonBorn($a);
             }
             foreach ($p->getPeopleDied() as $a) {
                 $a->setDeathPlace($destination);
-                $p->removeAuthorsDied($a);
+                $p->removePersonDied($a);
             }
             foreach ($p->getResidents() as $a) {
                 $a->removeResidence($p);
