@@ -17,11 +17,12 @@ use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Role;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Monolog\Logger;
 use Nines\UtilBundle\Services\TitleCaser;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
 /**
@@ -65,31 +66,19 @@ class AuthorImporter {
     
     private $source;
 
-    public function __construct() {
+    public function __construct(EntityManagerInterface $em, TitleCaser $titleCaser, LoggerInterface $logger, Splitter $splitter) {
         $this->namer = new Namer();
         $this->commit = false;
+        $this->em = $em;
+        $this->titleCaser = $titleCaser;
+        $this->logger = $logger;
+        $this->splitter = $splitter;
     }
     
     public function setSource($source) {
         $this->source = $source;
     }
-
-    public function setDoctrine(Registry $doctrine) {
-        $this->em = $doctrine->getManager();
-    }
-
-    public function setTitleCaser(TitleCaser $titleCaser) {
-        $this->titleCaser = $titleCaser;
-    }
-
-    public function setLogger(Logger $logger) {
-        $this->logger = $logger;
-    }
     
-    public function setSplitter(Splitter $splitter) {
-        $this->splitter = $splitter;
-    }
-
     public function setCommit($commit) {
         $this->commit = $commit;
     }

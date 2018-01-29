@@ -5,6 +5,7 @@ namespace AppBundle\Services;
 use Exception;
 use Monolog\Logger;
 use Normalizer;
+use Psr\Log\LoggerInterface;
 
 class Splitter {
 
@@ -12,12 +13,13 @@ class Splitter {
      * @var Logger
      */
     private $logger;
+    
     private $delimiters = [
         '(' => ')',
         '[' => ']',
     ];
 
-    public function setLogger(Logger $logger) {
+    public function __construct(LoggerInterface $logger) {
         $this->logger = $logger;
     }
 

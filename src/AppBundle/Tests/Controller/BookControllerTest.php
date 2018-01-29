@@ -4,15 +4,15 @@ namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Book;
 use AppBundle\Tests\DataFixtures\ORM\LoadBook;
-use AppBundle\Tests\Util\BaseTestCase;
-use Nines\UserBundle\Tests\DataFixtures\ORM\LoadUsers;
+use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class BookControllerTest extends BaseTestCase
 {
 
     protected function getFixtures() {
         return [
-            LoadUsers::class,
+            LoadUser::class,
             LoadBook::class
         ];
     }

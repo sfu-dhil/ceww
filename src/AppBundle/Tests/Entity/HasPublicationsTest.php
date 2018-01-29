@@ -7,7 +7,7 @@ use AppBundle\Entity\Publication;
 use AppBundle\Tests\DataFixtures\ORM\LoadBook;
 use AppBundle\Tests\DataFixtures\ORM\LoadCompilation;
 use AppBundle\Tests\DataFixtures\ORM\LoadPeriodical;
-use AppBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 
 class HasPublicationsTest extends BaseTestCase {

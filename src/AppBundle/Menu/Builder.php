@@ -3,9 +3,10 @@
 namespace AppBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
-use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class to build some menus for navigation.
@@ -17,59 +18,98 @@ class Builder implements ContainerAwareInterface {
     const CARET = ' ▾'; // U+25BE, black down-pointing small triangle.
 
     /**
+     * @var FactoryInterface
+     */
+    private $factory;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authChecker;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+    
+    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage) {
+        $this->factory = $factory;
+        $this->authChecker = $authChecker;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    private function hasRole($role) {
+        if (!$this->tokenStorage->getToken()) {
+            return false;
+        }
+        return $this->authChecker->isGranted($role);
+    }
+
+    /**
      * Build a menu for blog posts.
      * 
-     * @param FactoryInterface $factory
+     * @param FactoryInterface $this->factory
      * @param array $options
      * @return ItemInterface
      */
 
-    public function navMenu(FactoryInterface $factory, array $options) {
-        $menu = $factory->createItem('root');
+    public function mainMenu(array $options) {
+        $menu = $this->factory->createItem('root');
         $menu->setChildrenAttributes(array(
-            'class' => 'dropdown-menu',
+            'class' => 'nav navbar-nav',
         ));
-        $menu->setAttribute('dropdown', true);
-
-        $menu->addChild('Books', array(
+        
+        $menu->addChild('home', array(
+            'label' => 'Home',
+            'route' => 'homepage',
+        ));
+        
+        $browse = $menu->addChild('browse', array(
+            'uri' => '#',
+            'label' => 'Browse ' . self::CARET,
+        ));
+        $browse->setAttribute('dropdown', true);
+        $browse->setLinkAttribute('class', 'dropdown-toggle');
+        $browse->setLinkAttribute('data-toggle', 'dropdown');
+        $browse->setChildrenAttribute('class', 'dropdown-menu');
+        $browse->addChild('Books', array(
             'route' => 'book_index',
         ));
-        $menu->addChild('Collections', array(
+        $browse->addChild('Collections', array(
             'route' => 'compilation_index',
         ));
-        $menu->addChild('Periodicals', array(
+        $browse->addChild('Periodicals', array(
             'route' => 'periodical_index',
         ));
-        $menu->addChild('divider1', array(
+        $browse->addChild('divider1', array(
             'label' => '',
         ));
-        $menu['divider1']->setAttributes(array(
+        $browse['divider1']->setAttributes(array(
             'role' => 'separator',
             'class' => 'divider',
         ));
-        $menu->addChild('Alternate Names', array(
+        $browse->addChild('Alternate Names', array(
             'route' => 'alias_index',
         ));
-        $menu->addChild('Genres', array(
+        $browse->addChild('Genres', array(
             'route' => 'genre_index',
         ));
-        $menu->addChild('People', array(
+        $browse->addChild('People', array(
             'route' => 'person_index',
         ));
-        $menu->addChild('Places', array(
+        $browse->addChild('Places', array(
             'route' => 'place_index',
         ));
 
-        if ($this->container->get('security.token_storage')->getToken() && 
-                $this->container->get('security.authorization_checker')->isGranted('ROLE_CONTENT_ADMIN')) {
-            $menu->addChild('divider2', array(
+        if ($this->hasRole('ROLE_CONTENT_ADMIN')) {
+            $browse->addChild('divider2', array(
                 'label' => '',
             ));
-            $menu['divider2']->setAttributes(array(
+            $browse['divider2']->setAttributes(array(
                 'role' => 'separator',
                 'class' => 'divider',
             ));
-            $menu->addChild('Roles', array(
+            $browse->addChild('Roles', array(
                 'route' => 'role_index',
             ));
         }

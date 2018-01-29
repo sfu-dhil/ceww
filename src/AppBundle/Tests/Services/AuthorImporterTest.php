@@ -12,7 +12,7 @@ use AppBundle\Entity\Place;
 use AppBundle\Entity\Publication;
 use AppBundle\Services\AuthorImporter;
 use AppBundle\Tests\DataFixtures\ORM\LoadRole;
-use AppBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class AuthorImporterTest extends BaseTestCase {
 
@@ -23,7 +23,7 @@ class AuthorImporterTest extends BaseTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->importer = $this->getContainer()->get('ceww.importer.author');
+        $this->importer = $this->getContainer()->get(AuthorImporter::class);
     }
 
     protected function getFixtures() {

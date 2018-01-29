@@ -4,15 +4,15 @@ namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Place;
 use AppBundle\Tests\DataFixtures\ORM\LoadPlace;
-use AppBundle\Tests\Util\BaseTestCase;
-use Nines\UserBundle\Tests\DataFixtures\ORM\LoadUsers;
+use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class PlaceControllerTest extends BaseTestCase
 {
 
     protected function getFixtures() {
         return [
-            LoadUsers::class,
+            LoadUser::class,
             LoadPlace::class
         ];
     }

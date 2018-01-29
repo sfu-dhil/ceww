@@ -11,7 +11,9 @@ parameters:
 
 framework:
     #esi:             ~
-    translator:      ~
+    translator:
+        enabled: true
+        logging: false
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -24,11 +26,11 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id:  session.handler.native_file
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"        
+        name: PHP_SESSION_CEWW
         cookie_path: '%router.request_context.base_url%'
         cookie_domain: '%router.request_context.host%'
         cookie_secure: '%secure_cookies%'
@@ -48,11 +50,13 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     paths:
-        '%kernel.root_dir%/../src/Nines/UtilBundle/Resources/views': NinesUtilBundle
+        '%kernel.project_dir%/src/Nines/UtilBundle/Resources/views': NinesUtilBundle
+        '%kernel.project_dir%/src/Nines/UserBundle/Resources/views': NinesUser
     exception_controller:  NinesUtilBundle:Error:showException
     globals:
         comment_service: "@feedback.comment"
         text_service: "@nines.util.text"
+        environment: "%kernel.environment%"
     date:
         format: d.m.Y, H:i:s
         interval_format: '%%d days'        
@@ -107,8 +111,8 @@ fos_user:
         form:
             type: Nines\UserBundle\Form\PasswordType
     from_email:
-        address: noreply@dhil.lib.sfu.ca
-        sender_name: DoCEWW User Manager            
+        address:        noreply@'%router.request_context.host%'
+        sender_name:    Do Not Reply
         
 ivory_ck_editor:
     input_sync: true

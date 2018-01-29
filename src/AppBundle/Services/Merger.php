@@ -9,9 +9,10 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\Place;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Description of PlaceMerger
@@ -34,22 +35,9 @@ class Merger
      */
     private $logger;
 
-    /**
-     * Set the service logger.
-     *
-     * @param Logger $logger
-     */
-    public function setLogger(Logger $logger) {
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $em) {
         $this->logger = $logger;
-    }
-
-    /**
-     * Set the ORM.
-     *
-     * @param Registry $registry
-     */
-    public function setDoctrine(Registry $registry) {
-        $this->em = $registry->getManager();
+        $this->em = $em;
     }
 
     /**

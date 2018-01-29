@@ -3,7 +3,7 @@
 namespace AppBundle\Tests\Services;
 
 use AppBundle\Services\Splitter;
-use AppBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 use Exception;
 
 class ImporterTest extends BaseTestCase {
@@ -15,7 +15,7 @@ class ImporterTest extends BaseTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->splitter = $this->getContainer()->get('ceww.splitter');
+        $this->splitter = $this->getContainer()->get(Splitter::class);
     }
 
     public function testSetup() {

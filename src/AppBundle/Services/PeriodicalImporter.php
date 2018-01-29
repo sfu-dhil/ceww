@@ -11,11 +11,13 @@ namespace AppBundle\Services;
 use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Logger;
 use Nines\UtilBundle\Services\TitleCaser;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
+use function mb_convert_case;
 
 
 
@@ -51,20 +53,11 @@ class PeriodicalImporter {
      */
     private $commit;
     
-    public function __construct() {
+    public function __construct(EntityManagerInterface $em, TitleCaser $titleCaser, LoggerInterface $logger) {
         $this->namer = new Namer();
         $this->commit = false;
-    }
-    
-    public function setDoctrine(Registry $doctrine) {
-        $this->em = $doctrine->getManager();
-    }
-    
-    public function setTitleCaser(TitleCaser $titleCaser) {
+        $this->em = $em;
         $this->titleCaser = $titleCaser;
-    }
-    
-    public function setLogger(Logger $logger) {
         $this->logger = $logger;
     }
     

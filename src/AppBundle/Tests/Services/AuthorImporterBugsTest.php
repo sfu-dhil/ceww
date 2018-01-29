@@ -6,7 +6,7 @@ use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Services\AuthorImporter;
 use AppBundle\Tests\DataFixtures\ORM\LoadRole;
-use AppBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 use Exception;
 
 class AuthorImporterBugsTest extends BaseTestCase {
@@ -18,7 +18,7 @@ class AuthorImporterBugsTest extends BaseTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->importer = $this->getContainer()->get('ceww.importer.author');
+        $this->importer = $this->getContainer()->get(AuthorImporter::class);
     }
 
     protected function getFixtures() {

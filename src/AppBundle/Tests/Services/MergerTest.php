@@ -9,7 +9,7 @@ use AppBundle\Tests\DataFixtures\ORM\LoadBook;
 use AppBundle\Tests\DataFixtures\ORM\LoadCompilation;
 use AppBundle\Tests\DataFixtures\ORM\LoadPeriodical;
 use AppBundle\Tests\DataFixtures\ORM\LoadPerson;
-use AppBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class MergerTest extends BaseTestCase {
 
@@ -25,7 +25,7 @@ class MergerTest extends BaseTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->merger = $this->getContainer()->get('ceww.merger');
+        $this->merger = $this->getContainer()->get(Merger::class);
         $this->repo = $this->getContainer()->get('doctrine')->getRepository(Place::class);
     }
 

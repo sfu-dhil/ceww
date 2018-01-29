@@ -3,7 +3,7 @@
 namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Genre;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
@@ -11,7 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadGenres extends AbstractFixture {
+class LoadGenres extends Fixture {
 
     private static $GENRES = [
         [

@@ -9,7 +9,7 @@ use AppBundle\Entity\Contribution;
 use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Publication;
-use AppBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class PersonTest extends BaseTestCase {
 
