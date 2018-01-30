@@ -6,8 +6,8 @@
          backupGlobals="false"
          backupStaticAttributes="false"
          cacheTokens="false"
-         processIsolation="true"
-         colors="true"         
+         processIsolation="false"
+         colors="false"         
          bootstrap="var/bootstrap.php.cache">
     <php>
         <ini name="error_reporting" value="-1" />
