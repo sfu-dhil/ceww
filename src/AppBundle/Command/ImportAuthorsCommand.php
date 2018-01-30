@@ -5,12 +5,12 @@ namespace AppBundle\Command;
 use AppBundle\Services\AuthorImporter;
 use Exception;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Import one or more .CSV files.
@@ -42,9 +42,11 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
      * 
      * @param string $name
      */
-    public function __construct($name = null) {
+    public function __construct($name = null, AuthorImporter $importer, LoggerInterface $logger) {
         parent::__construct($name);
         $this->commit = false;
+        $this->importer = $importer;
+        $this->logger = $logger;
     }
 
     /**
@@ -56,17 +58,6 @@ class ImportAuthorsCommand extends ContainerAwareCommand {
         $this->addOption('skip', null, InputOption::VALUE_REQUIRED, 'Skip this many rows at the top of the CSV files.', 0);
         $this->addOption('commit', null, InputOption::VALUE_NONE, 'Commit the results to the database.');
         $this->addArgument('files', InputArgument::IS_ARRAY, 'One or more CSV files to import.');
-    }
-
-    /**
-     * Inject the container.
-     * 
-     * @param ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null) {
-        parent::setContainer($container);
-        $this->importer = $container->get('ceww.importer.author');
-        $this->logger = $container->get('logger');
     }
 
     /**

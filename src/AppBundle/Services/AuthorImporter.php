@@ -56,14 +56,12 @@ class AuthorImporter {
      * @var boolean
      */
     private $commit;
-    
+
     /**
      * @var Splitter
      */
     private $splitter;
-    
     private $rowCount = 0;
-    
     private $source;
 
     public function __construct(EntityManagerInterface $em, TitleCaser $titleCaser, LoggerInterface $logger, Splitter $splitter) {
@@ -74,11 +72,11 @@ class AuthorImporter {
         $this->logger = $logger;
         $this->splitter = $splitter;
     }
-    
+
     public function setSource($source) {
         $this->source = $source;
     }
-    
+
     public function setCommit($commit) {
         $this->commit = $commit;
     }
@@ -139,10 +137,10 @@ class AuthorImporter {
             $place = new Place();
             $place->setName($name);
             $data = preg_split('/\s*,\s*/u', $name, 3);
-            if(count($data) > 1) {
+            if (count($data) > 1) {
                 $place->setRegionName($data[1]);
             }
-            if(count($data) > 2) {
+            if (count($data) > 2) {
                 $place->setCountryName($data[2]);
             }
             $sortable = mb_convert_case($name, MB_CASE_LOWER, 'UTF-8');
@@ -154,19 +152,12 @@ class AuthorImporter {
     }
 
     public function getDateYear($date) {
-        try {
-            if ($date) {
-                $dateYear = new DateYear();
-                $dateYear->setValue($date);
-                $this->persist($dateYear);
-                return $dateYear;
-            }
-        } catch (Exception $e) {
-            $trace = debug_backtrace(null, 2);
-            $caller = $trace[1];
-            $this->logger->error($caller['function'] . ':' . $e->getMessage());
+        if ($date) {
+            $dateYear = new DateYear();
+            $dateYear->setValue($date);
+            $this->persist($dateYear);
+            return $dateYear;
         }
-        return null;
     }
 
     public function setBirthDate(Person $person, $value) {
@@ -191,7 +182,7 @@ class AuthorImporter {
         $value = $this->trim($value);
         if (!$value) {
             return;
-        }        
+        }
         $deathDate = $this->getDateYear($value);
         $person->setDeathDate($deathDate);
     }
@@ -240,7 +231,7 @@ class AuthorImporter {
         $names = $this->splitter->split($value);
         foreach ($names as $name) {
             $place = $this->getPlace($name);
-            if( ! $place) {
+            if (!$place) {
                 continue;
             }
             $person->addResidence($place);
@@ -319,7 +310,7 @@ class AuthorImporter {
             $periodical = new Periodical();
             $periodical->setTitle($title);
             $periodical->setSortableTitle($this->titleCaser->sortableTitle($title));
-            $this->persist($periodical);    
+            $this->persist($periodical);
         }
         return $periodical;
     }
@@ -401,7 +392,7 @@ class AuthorImporter {
             $person->setDescription($row[10]);
         }
         $notes = '';
-        foreach(array_filter(array_slice($row, 11)) as $note) {
+        foreach (array_filter(array_slice($row, 11)) as $note) {
             $notes .= "<p>{$note}</p>\n";
         }
         $person->setNotes($notes);
