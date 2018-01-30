@@ -38,6 +38,9 @@ class AuthorImporterBugsTest extends BaseTestCase {
         $this->assertEquals(1, count($periodicals));
     }
 
+	/**
+	 * @expectedException Exception
+	 */
     public function testHarriet() {
         $this->importer->setCommit(true);
         $row = [];
@@ -51,12 +54,7 @@ class AuthorImporterBugsTest extends BaseTestCase {
         $row[] = 'LINDEN RHYMES (1854); "THE WHITE ROSE IN ACADIA" AND "AUTUMN IN NOVA SCOTIA" A PRIZE TALE AND POEM (1855); ISABEL LEICESTER: A ROMANCE (1874); NORTH MOUNTAIN, NEAR GRAND PRE (1883)';
         $row[] = "Whyte-Edgar, WREATH OF CANADIAN SONG (1910)";
         $row[] = "CANADIAN DOMINION ILLUSTRATED; PROVINCIAL, OR HALIFAX MONTHLY MAGAZINE; HAMILTON SPECTATOR; SATURDAY READER";
-        try {
-            $this->importer->importRow($row);
-        } catch (Exception $e) {
-            $this->fail('Caught exception: ' . $e->getMessage());
-        }
-        $this->assertEquals(1, count($this->em->getRepository(Person::class)->findAll()));
+		$this->importer->importRow($row);
     }
 
     // Crazy title cases.
