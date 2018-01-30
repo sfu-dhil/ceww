@@ -12,7 +12,7 @@
     {% include 'AppBundle:misc:search-form.html.twig' with {'search_path': 'person_search'} %}
 
     {% if q %}
-        {% include 'AppBundle:Person:partial/table.html.twig' %}
+        {% include 'AppBundle:person:partial/table.html.twig' %}
     {% endif %}
 
     {% include 'AppBundle:misc:search-footer.html.twig' with {'results': people} %}

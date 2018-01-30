@@ -4,7 +4,7 @@
 
 {% block pageheader %} 
     <h1>{{ compilation.title }}</h1>
-    {% embed 'AppBundle:Publication:partial/browse.html.twig' %}
+    {% embed 'AppBundle:publication:partial/browse.html.twig' %}
     {% endembed %}
 {% endblock %} 
 
@@ -95,7 +95,7 @@
                     {% if contribution.role.name != 'author' %}
                         <i>{{ contribution.role }}</i>, 
                     {% endif %}
-                    {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': contribution.person} %}
+                    {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
                     {% endembed %}
                 </li>
             {% endfor %} 

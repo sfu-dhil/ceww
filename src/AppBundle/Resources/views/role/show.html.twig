@@ -28,7 +28,7 @@
     {{ include('NinesUtilBundle:Term:partial/show.html.twig', { 'term': role }) }}
 
     <h2>{{ role.label }} List</h2>
-    {{ include('AppBundle:Person:partial/table.html.twig') }}
+    {{ include('AppBundle:person:partial/table.html.twig') }}
     <div class="navigation">
         {{ knp_pagination_render(people) }}
     </div>

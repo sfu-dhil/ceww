@@ -12,7 +12,7 @@
     {% include 'AppBundle:misc:search-form.html.twig' with {'search_path': 'search'} %}
 
     {% if q %}
-        {% include 'AppBundle:Publication:partial/table.html.twig' %}
+        {% include 'AppBundle:publication:partial/table.html.twig' %}
     {% endif %}
 
     {% include 'AppBundle:misc:search-footer.html.twig' with {'results': publications} %}

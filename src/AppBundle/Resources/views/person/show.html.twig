@@ -7,12 +7,12 @@
     <div class="row">
         <div class="col-sm-6 text-left">
             {% if previous %}
-                Previous person: {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': previous} %}{% endembed %}
+                Previous person: {% embed 'AppBundle:person:partial/link.html.twig' with {'person': previous} %}{% endembed %}
             {% endif %}
         </div>
         <div class="col-sm-6 text-right">
             {% if next %}
-                Next person: {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': next} %}{% endembed %}
+                Next person: {% embed 'AppBundle:person:partial/link.html.twig' with {'person': next} %}{% endembed %}
             {% endif %}
         </div>
     </div>
@@ -49,7 +49,7 @@
                 </tr>
                 <tr>
                     <th>Gender</th>
-                    <td>{{ include('AppBundle:Person:partial/gender.html.twig') }}</td>
+                    <td>{{ include('AppBundle:person:partial/gender.html.twig') }}</td>
                 </tr>
             {% endif %}
             <tr>
@@ -142,7 +142,7 @@
                         {% for contribution in contributions %}
                             {% set publication = contribution.publication %}
                             <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                            {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
                                 {% block callback %}
                                     <i>{{ publication.title }}</i>
                                     {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
@@ -161,7 +161,7 @@
                         {% for contribution in contributions %}                            
                             {% set publication = contribution.publication %}
                             <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                            {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
                                 {% block callback %}
                                     <i>{{ publication.title }}</i>
                                     {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}
@@ -180,7 +180,7 @@
                         {% for contribution in contributions %}
                              {% set publication = contribution.publication %}
                             <li>
-                            {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                            {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
                                 {% block callback %}
                                     <i>{{ publication.title }}</i>
                                     {% if publication.dateYear %}, {{ publication.dateYear }}{% endif %}

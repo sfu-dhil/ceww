@@ -83,7 +83,7 @@
                     <ul>
                         {% for person in place.peopleBorn %}
                             <li>
-                                {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                                {% embed 'AppBundle:person:partial/link.html.twig' %}
                                 {% endembed %}
                                 {%- if person.birthDate %}, {{ person.birthDate }}
                                 {% endif %}
@@ -97,7 +97,7 @@
                     <ul>
                         {% for person in place.peopleDied %}
                             <li>
-                                {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                                {% embed 'AppBundle:person:partial/link.html.twig' %}
                                 {% endembed %}
                                 {%- if person.deathDate %}, {{ person.deathDate }}{% endif %}
                             </li>
@@ -110,7 +110,7 @@
                     <ul>
                         {% for person in place.residents %}
                             <li>
-                                {% embed 'AppBundle:Person:partial/link.html.twig' %}
+                                {% embed 'AppBundle:person:partial/link.html.twig' %}
                                 {% endembed %}
                             </li>
                         {% endfor %} 
@@ -119,17 +119,17 @@
             </div>    
 
             <div role="tabpanel" class="tab-pane" id="book">
-                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) } %}
                 {% endembed %}
             </div>            
 
             <div role="tabpanel" class="tab-pane" id="compilation">
-                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) } %}
                 {% endembed %}
             </div>            
 
             <div role="tabpanel" class="tab-pane" id="periodical">
-                {% embed 'AppBundle:Publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) } %}
                 {% endembed %}
             </div>            
         </div>

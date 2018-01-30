@@ -11,7 +11,7 @@
             {% set author = publication.firstAuthor() %}
             <tr>
                 <td>
-                    {% embed 'AppBundle:Publication:partial/link.html.twig' with {'publication': publication} %}
+                    {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
                     {% block callback %}
                         <i>{{ publication.title }}</i>
                     {% endblock %}
@@ -19,7 +19,7 @@
                 </td>
                 <td>
                 {% if author is not null %}
-                    {% embed 'AppBundle:Person:partial/link.html.twig' with {'person': author} %}
+                    {% embed 'AppBundle:person:partial/link.html.twig' with {'person': author} %}
                     {% endembed %}
                 {% endif %}
                 </td>
