@@ -36,14 +36,12 @@
                 <th>Date</th>
                 <td>{{ periodical.dateYear }}</td>
             </tr>
-            <tr>
-                <th>Location</th>
-                <td>{{ periodical.location }}</td>
-            </tr>
-            <tr>
-                <th>Sortable Title</th>
-                <td>{{ periodical.sortableTitle }}</td>
-            </tr>
+            {% if is_granted('ROLE_USER') %}
+                <tr>
+                    <th>Sortable Title</th>
+                    <td>{{ periodical.sortableTitle }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Links</th>
                 <td>

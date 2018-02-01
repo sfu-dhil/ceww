@@ -35,7 +35,7 @@ class DefaultController extends Controller
         if ($q) {
             $query = $repo->searchQuery($q);
             $paginator = $this->get('knp_paginator');
-            $publications = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+            $publications = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         } else {
             $publications = array();
         }

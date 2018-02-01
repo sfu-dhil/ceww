@@ -40,10 +40,13 @@
                 <th>Location</th>
                 <td>{{ compilation.location }}</td>
             </tr>
+            {% if is_granted('ROLE_USER') %}
+                <tr>
+                    <th>Sortable Title</th>
+                    <td>{{ compilation.sortableTitle }}</td>
+                </tr>
+            {% endif %}
             <tr>
-                <th>Sortable Title</th>
-                <td>{{ compilation.sortableTitle }}</td>
-            </tr><tr>
                 <th>Links</th>
                 <td>
                     {% if compilation.links | length > 0 %}

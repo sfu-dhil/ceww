@@ -33,7 +33,7 @@ class GenreController extends Controller
         $qb->select('e')->from(Genre::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $genres = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $genres = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
         return array(
             'genres' => $genres,

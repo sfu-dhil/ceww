@@ -49,6 +49,22 @@ class AuthorImporterTest extends BaseTestCase {
             ['x', 'x'],
             ['x', ' x '],
             ['Robsonstrauß', ' Robsonstrauß '],
+            
+            ["Robson", "\nRobson"],
+            ["Robson", "\rRobson"],
+            ["Robson", "\tRobson"],            
+            
+            ["Robson", "Robson\n"],
+            ["Robson", "Robson\t"],
+            ["Robson", "Robson\r"],            
+            
+            ["Robson", "\nRobson\n"],
+            ["Robson", "\nRobson\t"],
+            ["Robson", "\rRobson\r"],            
+            
+            ["Rob son", "Rob son"],
+            
+            ["Robson", "\n\n\rRobson"],
         );
     } 
 

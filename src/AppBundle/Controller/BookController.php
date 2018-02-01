@@ -32,7 +32,7 @@ class BookController extends Controller {
         $qb->select('e')->from(Book::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $books = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $books = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
         return array(
             'books' => $books,

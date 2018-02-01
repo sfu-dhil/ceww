@@ -24,7 +24,7 @@ class Splitter {
     }
 
     public function trim($s) {
-        return preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $s);
+        return preg_replace('/^\p{Z}+|\p{Z}+$/su', '', $s);
     }
 
     public function split($string, $delim = ';') {

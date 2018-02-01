@@ -50,8 +50,10 @@
                     {% if alias.people | length > 0 %}
                         <ul>
                             {% for person in alias.people %}
+                                <li>
                                 {% embed 'AppBundle:person:partial/link.html.twig' %}
                                 {% endembed %}
+                                </li>
                             {% endfor %} 
                         </ul>
                     {% endif %}

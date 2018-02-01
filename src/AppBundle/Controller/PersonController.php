@@ -37,7 +37,7 @@ class PersonController extends Controller {
         $qb->orderBy('e.sortableName');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $people = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $people = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
         return array(
             'people' => $people,
@@ -87,7 +87,7 @@ class PersonController extends Controller {
         if ($q) {
             $query = $repo->searchQuery($q);
             $paginator = $this->get('knp_paginator');
-            $people = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+            $people = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         } else {
             $people = array();
         }

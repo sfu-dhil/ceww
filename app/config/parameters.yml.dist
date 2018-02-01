@@ -21,6 +21,9 @@ parameters:
     # geonames user account
     geonames_account: ~
 
+    # number of items on a page.
+    page_size: 50
+
     # configure URL generation
     router.request_context.host: ceww.dv
     router.request_context.scheme: http

@@ -26,7 +26,7 @@ class AuthorImporterBugsTest extends BaseTestCase {
             LoadRole::class,
         );
     }
-
+    
     // Title in the cell, twice.
     public function testDupeData() {
         $row = array_fill(0, 13, '');

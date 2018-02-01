@@ -48,11 +48,9 @@ class Builder implements ContainerAwareInterface {
     /**
      * Build a menu for blog posts.
      * 
-     * @param FactoryInterface $this->factory
      * @param array $options
      * @return ItemInterface
      */
-
     public function mainMenu(array $options) {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttributes(array(

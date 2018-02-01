@@ -33,7 +33,7 @@ class RoleController extends Controller
         $qb->select('e')->from(Role::class, 'e')->orderBy('e.id', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $roles = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $roles = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
         return array(
             'roles' => $roles,
@@ -88,7 +88,7 @@ class RoleController extends Controller
         $repo = $em->getRepository(Person::class);
         $query = $repo->byRoleQuery($role);
         $paginator = $this->get('knp_paginator');
-        $people = $paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $people = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
         return array(
             'role' => $role,

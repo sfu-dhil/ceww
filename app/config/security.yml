@@ -15,6 +15,12 @@ security:
 
     firewalls:
         main:
+            remember_me:
+                secret: '%secret%'
+                lifetime: 604800 # one week in seconds
+                path: '%router.request_context.base_url%'
+                domain: '%router.request_context.host%'
+                secure: '%secure_cookies%'
             pattern: ^/
             form_login:
                 provider: fos_userbundle

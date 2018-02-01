@@ -1,14 +1,14 @@
 <div class="row">
     <div class="col-sm-6 text-left">
         {% if previous %}
-            Previous Book: 
+            Previous Title: 
             {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': previous} %}
             {% endembed %}
         {% endif %}
     </div>
     <div class="col-sm-6 text-right">
         {% if next %}
-            Next Book:
+            Next Title:
             {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': next} %}
             {% endembed %}
         {% endif %}
