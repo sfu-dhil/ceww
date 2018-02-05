@@ -62,6 +62,25 @@ class Builder implements ContainerAwareInterface {
             'route' => 'homepage',
         ));
         
+        $search = $menu->addChild('search', array(
+            'uri' => '#',
+            'label' => 'Search ' . self::CARET,
+        ));
+        $search->setAttribute('dropdown', true);
+        $search->setLinkAttribute('class', 'dropdown-toggle');
+        $search->setLinkAttribute('data-toggle', 'dropdown');
+        $search->setChildrenAttribute('class', 'dropdown-menu');
+        $search->addChild('Titles', array(
+            'route' => 'search',
+        ));
+        
+        $search->addChild('People', array(
+            'route' => 'person_search',
+        ));
+        $search->addChild('Alternate Names', array(
+            'route' => 'alias_search',
+        ));
+        
         $browse = $menu->addChild('browse', array(
             'uri' => '#',
             'label' => 'Browse ' . self::CARET,
