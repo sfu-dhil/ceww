@@ -201,7 +201,7 @@ class AuthorImporter {
         $alias = $repo->findOneBy(array('name' => $name));
         if (!$alias) {
             $alias = new Alias();
-            $alias->setMaiden(preg_match('/^n(é|e)e\s+/u', $name));
+            $alias->setMaiden(preg_match('/^n(é|e)e\s+/iu', $name));
             if ($alias->getMaiden()) {
                 $alias->setName($this->trim(substr($name, 4)));
             } else {

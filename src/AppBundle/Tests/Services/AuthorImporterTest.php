@@ -246,6 +246,9 @@ class AuthorImporterTest extends BaseTestCase {
             ['may', true, 'nee may'],
             ['may', true, 'née may'],
             ['may', true, 'née     may'],
+            ['may', true, 'Nee may'],
+            ['may', true, 'Née may'],
+            ['may', true, 'Née     may'],
         );
     }
 

@@ -17,12 +17,6 @@ class PeriodicalRepository extends PublicationRepository
         $qb = $this->createQueryBuilder('p');
         $qb->andWhere('p.title = :title');
         $qb->setParameter('title', $title);
-
-        if ($placeName) {
-            $qb->innerJoin('p.location', 'l');
-            $qb->andWhere('l.name = :place');
-            $qb->setParameter('place', $placeName);
-        } 
         
         try {
             return $qb->getQuery()->getOneOrNullResult();
