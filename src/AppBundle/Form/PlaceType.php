@@ -23,6 +23,13 @@ class PlaceType extends AbstractType {
                 'help_block' => '',
             ),
         ));
+        $builder->add('sortableName', null, array(
+            'label' => 'Sortable Name',
+            'required' => true,
+            'attr' => array(
+                'help_block' => '',
+            ),
+        ));
         $builder->add('regionName', null, array(
             'label' => 'Region Name',
             'required' => false,

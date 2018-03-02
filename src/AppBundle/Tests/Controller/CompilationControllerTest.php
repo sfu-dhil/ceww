@@ -97,20 +97,24 @@ class CompilationControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/compilation/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+              
         $form = $formCrawler->selectButton('Update')->form([
-            // DO STUFF HERE.
-            // 'compilations[FIELDNAME]' => 'FIELDVALUE',
+            'compilation[title]' => 'The Compilation of Cheese.',
+            'compilation[sortableTitle]' => 'Compilation of Cheese, The',
+            // 'compilation[links]' => 'http://example.com',
+            'compilation[description]' => 'It is a book',
+            'compilation[notes]' => 'A notes about a book',
+            'compilation[dateYear]' => '1934',
+            'compilation[location]' => 1,
+            'compilation[genres]' => 1,
+            // 'compilation[contributions]' =>
         ]);
         
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect('/compilation/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
     }
     
     public function testAnonNew() {
@@ -137,20 +141,24 @@ class CompilationControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/compilation/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+                
         $form = $formCrawler->selectButton('Create')->form([
-            // DO STUFF HERE.
-            // 'compilations[FIELDNAME]' => 'FIELDVALUE',
+            'compilation[title]' => 'The Compilation of Cheese.',
+            'compilation[sortableTitle]' => 'Compilation of Cheese, The',
+            // 'compilation[links]' => 'http://example.com',
+            'compilation[description]' => 'It is a book',
+            'compilation[notes]' => 'A notes about a book',
+            'compilation[dateYear]' => '1934',
+            'compilation[location]' => '',
+            'compilation[genres]' => '',
+            // 'compilation[contributions]' =>
         ]);
         
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
     }
     
     public function testAnonDelete() {
