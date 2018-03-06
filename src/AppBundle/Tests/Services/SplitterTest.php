@@ -26,6 +26,9 @@ class ImporterTest extends BaseTestCase {
      * @dataProvider splitData
      */
     public function testSplit($string, $expected) {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $this->assertEquals($expected, $this->splitter->split($string));
     }
     
@@ -48,6 +51,9 @@ class ImporterTest extends BaseTestCase {
      * @expectedException Exception
      */
     public function testSplitExceptions($string) {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $this->splitter->split($string);
     }
 
