@@ -18,7 +18,7 @@ monolog:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: warning
-            channels: ['!event', '!translation']
+            channels: ['!event', '!doctrine', '!console', '!translation']
         console:
             type: console
             process_psr_3_messages: false

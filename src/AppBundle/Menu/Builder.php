@@ -46,7 +46,7 @@ class Builder implements ContainerAwareInterface {
     }
 
     /**
-     * Build a menu for blog posts.
+     * Build a menu for navigation.
      * 
      * @param array $options
      * @return ItemInterface

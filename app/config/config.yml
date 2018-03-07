@@ -56,7 +56,6 @@ twig:
     globals:
         comment_service: "@feedback.comment"
         text_service: "@nines.util.text"
-        environment: "%kernel.environment%"
     date:
         format: d.m.Y, H:i:s
         interval_format: '%%d days'        
