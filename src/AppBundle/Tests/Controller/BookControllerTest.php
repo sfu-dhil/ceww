@@ -98,19 +98,24 @@ class BookControllerTest extends BaseTestCase
         $formCrawler = $client->request('GET', '/book/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
         $form = $formCrawler->selectButton('Update')->form([
-            // DO STUFF HERE.
-            // 'books[FIELDNAME]' => 'FIELDVALUE',
+            'book[title]' => 'The Book of Cheese.',
+            'book[sortableTitle]' => 'Book of Cheese, The',
+            // 'book[links]' => 'http://example.com'
+            'book[description]' => 'It is a book',
+            'book[notes]' => 'A notes about a book',
+            'book[dateYear]' => '1934',
+            'book[location]' => 1,
+            'book[genres]' => 1,
+            // 'book[contributions]' =>
+
         ]);
         
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect('/book/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
     }
     
     public function testAnonNew() {
@@ -137,20 +142,24 @@ class BookControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/book/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+               
         $form = $formCrawler->selectButton('Create')->form([
-            // DO STUFF HERE.
-            // 'books[FIELDNAME]' => 'FIELDVALUE',
+            'book[title]' => 'The Book of Cheese.',
+            'book[sortableTitle]' => 'Book of Cheese, The',
+            // 'book[links]' => 'http://example.com',
+            'book[description]' => 'It is a book',
+            'book[notes]' => 'A notes about a book',
+            'book[dateYear]' => '1934',
+            'book[location]' => '',
+            'book[genres]' => '',
+            // 'book[contributions]' =>
         ]);
         
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());    
     }
     
     public function testAnonDelete() {

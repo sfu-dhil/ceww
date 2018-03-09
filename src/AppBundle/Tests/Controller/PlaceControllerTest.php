@@ -97,20 +97,22 @@ class PlaceControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/place/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+              
         $form = $formCrawler->selectButton('Update')->form([
-            // DO STUFF HERE.
-            // 'places[FIELDNAME]' => 'FIELDVALUE',
+            'place[name]' => 'London',
+            'place[regionName]' => 'Ontario',
+            'place[countryName]' => 'Canada',
+            'place[latitude]' => 75.43,
+            'place[longitude]' => 120.23,
+            'place[description]' => 'It is a place',
+            'place[notes]' => 'Something about a place'
+
         ]);
-        
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect('/place/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("London")')->count());
     }
     
     public function testAnonNew() {
@@ -137,20 +139,23 @@ class PlaceControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/place/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+              
         $form = $formCrawler->selectButton('Create')->form([
-            // DO STUFF HERE.
-            // 'places[FIELDNAME]' => 'FIELDVALUE',
+            'place[name]' => 'London.',
+            'place[sortableName]' => 'London',
+            'place[regionName]' => 'Ontario',
+            'place[countryName]' => 'Canada',
+            'place[latitude]' => 75.44,
+            'place[longitude]' => 120.23,
+            'place[description]' => 'It is a place',
+            'place[notes]' => 'Something about a place'
         ]);
         
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("London.")')->count());
     }
     
     public function testAnonDelete() {

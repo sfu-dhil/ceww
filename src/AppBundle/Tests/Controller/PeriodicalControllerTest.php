@@ -97,20 +97,27 @@ class PeriodicalControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/periodical/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+               
         $form = $formCrawler->selectButton('Update')->form([
-            // DO STUFF HERE.
-            // 'periodicals[FIELDNAME]' => 'FIELDVALUE',
+            'periodical[title]' => 'The Book of Cheese.',
+            'periodical[sortableTitle]' => 'Book of Cheese, The',
+            // 'periodical[links]' => 'http://example.com'
+            'periodical[description]' => 'It is a book',
+            'periodical[notes]' => 'A notes about a book',
+            'periodical[dateYear]' => '1934',
+            'periodical[location]' => '',
+            'periodical[genres]' => '',
+            // 'periodical[contributions]' =>
+            'periodical[runDates]' => '1990-1999',
+            'periodical[continuedFrom]' => 'test',
+            'periodical[continuedBy]' => 'Test McUser'
         ]);
         
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect('/periodical/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
     }
     
     public function testAnonNew() {
@@ -137,20 +144,27 @@ class PeriodicalControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/periodical/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+              
         $form = $formCrawler->selectButton('Create')->form([
-            // DO STUFF HERE.
-            // 'periodicals[FIELDNAME]' => 'FIELDVALUE',
+            'periodical[title]' => 'The Book of Cheese.',
+            'periodical[sortableTitle]' => 'Book of Cheese, The',
+            // 'periodical[links]' => 'http://example.com'
+            'periodical[description]' => 'It is a book',
+            'periodical[notes]' => 'A notes about a book',
+            'periodical[dateYear]' => '1934',
+            'periodical[location]' => '',
+            'periodical[genres]' => '',
+            // 'periodical[contributions]' =>
+            'periodical[runDates]' => '1990-1999',
+            'periodical[continuedFrom]' => 'test',
+            'periodical[continuedBy]' => 'Test McUser'
         ]);
         
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
     }
     
     public function testAnonDelete() {

@@ -256,6 +256,9 @@ class AuthorImporterTest extends BaseTestCase {
      * @dataProvider addAliasesData
      */
     public function testAddAliases($expected, $value) {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $person = new Person();
         $this->importer->addAliases($person, $value);
         $this->assertEquals(count($expected), count($person->getAliases()));
@@ -279,6 +282,9 @@ class AuthorImporterTest extends BaseTestCase {
      * @dataProvider addMaidenAliasesData
      */
     public function testAddMaidenAliases($expected, $value) {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $person = new Person();
         $this->importer->addAliases($person, $value);
         $this->assertEquals(count($expected), count($person->getAliases()));
@@ -302,6 +308,9 @@ class AuthorImporterTest extends BaseTestCase {
      * @dataProvider addResidencesData
      */
     public function testAddResidences($expected, $value) {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $person = new Person();
         $this->importer->addResidences($person, $value);
         $this->assertEquals(count($expected), count($person->getResidences()));
@@ -492,6 +501,9 @@ class AuthorImporterTest extends BaseTestCase {
      * @dataProvider importRowData
      */
     public function testImportRow($expected, $row) {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $this->importer->setCommit(true);
         $person = $this->importer->importRow($row);
         $this->assertEquals($expected['name'], $person->getFullName());

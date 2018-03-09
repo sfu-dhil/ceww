@@ -29,6 +29,9 @@ class AuthorImporterBugsTest extends BaseTestCase {
     
     // Title in the cell, twice.
     public function testDupeData() {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $row = array_fill(0, 13, '');
         $row[9] = 'Alberta Poetry Yearbook (1936); Alberta Poetry Yearbook (1938)';
 
@@ -59,6 +62,9 @@ class AuthorImporterBugsTest extends BaseTestCase {
 
     // Crazy title cases.
     public function testCaseInsensitive() {
+        if(!extension_loaded('intl')) {
+            $this ->markTestSkipped('Intl required for this test.');
+        }
         $row = array_fill(0, 13, '');
         $row[9] = 'Alberta Poetry Yearbook (1936); ALBERTA POETRY YEARBOOK (1938)';
 
