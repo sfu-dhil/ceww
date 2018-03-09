@@ -8,5 +8,5 @@
 	branch = master
 [submodule "app/Resources/SensioGeneratorBundle/skeleton"]
 	path = app/Resources/SensioGeneratorBundle/skeleton
-	url = git@github.com:sfu-dhil/generator-skeleton.git
+	url = git@github.com:ubermichael/skeleton.git
 	branch = master
