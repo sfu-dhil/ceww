@@ -32,7 +32,7 @@ class PublicationType extends AbstractType {
             'label' => 'Sortable Title',
             'required' => true,
             'attr' => array(
-                'help_block' => 'Name sorting (lowercasse). Sortable name will not be displayed to the public.',
+                'help_block' => 'Name sorting (lowercase). Sortable name will not be displayed to the public.',
             ),
         ));
         $builder->add('links', CollectionType::class, array(
