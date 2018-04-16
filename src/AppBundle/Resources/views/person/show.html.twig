@@ -164,8 +164,8 @@
                             {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
                                 {% block callback %}
                                     <i>{{ publication.title }}</i>
-                                    {% if- publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
-                                    {% if- contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
+                                    {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
+                                    {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
                                 {% endblock %}
                             {% endembed %}
                             </li>
