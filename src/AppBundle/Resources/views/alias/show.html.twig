@@ -27,25 +27,25 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody>
             <tr>
-                <th>Name</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Complete alias (full name) of the listed person" data-trigger="hover" data-placement="bottom">Name</a></th>
                 <td>{{ alias.name }}</td>
             </tr>
             <tr>
-                <th>Birth Name</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Is the name at birth?" data-trigger="hover" data-placement="bottom">Birth Name</a></th>
                 <td>{% if alias.maiden %}Yes{% else %}No{% endif %}</td>
             </tr>
             <tr>
-                <th>Notes</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</a></th>
                 <td>{{ alias.description|raw }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th>Research Notes</th>
+                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="These notes are only available to logged-in users" data-trigger="hover" data-placement="bottom">Research Notes</a></th>
                     <td>{{ alias.notes|raw }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th>People</th>         
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Person to whom entry refers" data-trigger="hover" data-placement="bottom">People</a></th>         
                 <td>
                     {% if alias.people | length > 0 %}
                         <ul>
