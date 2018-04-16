@@ -18,6 +18,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 class Alias extends AbstractEntity
 {
     /**
+     * Name of the alias.
+     * 
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
      */

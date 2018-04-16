@@ -20,21 +20,21 @@ class PeriodicalType extends PublicationType {
             'label' => 'Run Dates',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Publication period as a range of dates (YYYY-YYYY)',
             ),
         ));
         $builder->add('continuedFrom', null, array(
             'label' => 'Continued From',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Name of publication that preceded entry (if any)',
             ),
         ));
         $builder->add('continuedBy', null, array(
             'label' => 'Continued By',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Name of publication that followed entry (if any)',
             ),
         ));
     }

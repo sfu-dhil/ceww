@@ -20,14 +20,14 @@ class PlaceType extends AbstractType {
             'label' => 'Name',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Place name',
             ),
         ));
         $builder->add('sortableName', null, array(
             'label' => 'Sortable Name',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Name used for sorting (lowercase). Sortable name will not be displayed to the public.',
             ),
         ));
         $builder->add('regionName', null, array(
@@ -41,35 +41,35 @@ class PlaceType extends AbstractType {
             'label' => 'Country Name',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Country name',
             ),
         ));
         $builder->add('latitude', null, array(
             'label' => 'Latitude',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Location\'s latitude',
             ),
         ));
         $builder->add('longitude', null, array(
             'label' => 'Longitude',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Location\'s longitude',
             ),
         ));
         $builder->add('description', CKEditorType::class, array(
             'label' => 'Description',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'This description is public',
             ),
         ));
         $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Notes are only available to logged-in users',
             ),
         ));
     }

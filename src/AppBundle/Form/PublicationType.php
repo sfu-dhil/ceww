@@ -25,14 +25,14 @@ class PublicationType extends AbstractType {
             'label' => 'Title',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Full title of the work',
             ),
         ));
         $builder->add('sortableTitle', null, array(
             'label' => 'Sortable Title',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Name sorting (lowercase). Sortable name will not be displayed to the public.',
             ),
         ));
         $builder->add('links', CollectionType::class, array(
@@ -47,25 +47,29 @@ class PublicationType extends AbstractType {
             ),
             'by_reference' => false,
             'attr' => array(
-                'class' => 'collection collection-simple'
+                'class' => 'collection collection-simple',
+                'help_block' => 'A URL link to the specificed publicaiton',
             ),
         ));
         $builder->add('description', CKEditorType::class, array(
             'label' => 'Description',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'This description is public',
             ),
         ));
         $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Notes are only available to logged-in users',
             ),
         ));
         $builder->add('dateYear', TextType::class, array(
-            'required' => false,            
+            'required' => false, 
+            'attr' => array(
+                'help_block' => 'Year work published',
+            ),           
         ));
         
         $builder->add('location',Select2EntityType::class, array(
@@ -78,6 +82,9 @@ class PublicationType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+            'attr' => array(
+                'help_block' => 'Geotagged location for place of publication',
+            ),
         ));
         
         $builder->add('genres',Select2EntityType::class, array(
@@ -90,6 +97,9 @@ class PublicationType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+            'attr' => array(
+                'help_block' => 'Category of the work',
+            ),
         ));
         $builder->add('contributions', CollectionType::class, array(
             'label' => 'Contributors',
@@ -102,7 +112,8 @@ class PublicationType extends AbstractType {
                 'label' => false,
             ),
             'attr' => array(
-                'class' => 'collection collection-complex'
+                'class' => 'collection collection-complex',
+                'help_block' => 'Name of all the women who have contributed to the work and their role in the work\'s production',
             ),
         ));
     }

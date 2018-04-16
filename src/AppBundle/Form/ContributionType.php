@@ -15,7 +15,11 @@ class ContributionType extends AbstractType {
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('role');
+        $builder->add('role', null, array(
+            'attr' => array(
+                'help_block' => 'Role person had in production of work',
+            ),
+        ));
         $builder->add('person', Select2EntityType::class, array(
             'multiple' => false,
             'remote_route' => 'person_typeahead',
@@ -26,6 +30,9 @@ class ContributionType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+            'attr' => array(
+                'help_block' => 'Person\'s full name',
+            ),
         ));
     }
 

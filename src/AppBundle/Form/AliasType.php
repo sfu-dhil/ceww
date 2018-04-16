@@ -19,14 +19,14 @@ class AliasType extends AbstractType {
             'label' => 'Name',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Complete alias (full name) of the listed person',
             ),
         ));
         $builder->add('sortableName', null, array(
             'label' => 'Sortable Name',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Name listed last name, first name (lower case). Sortable name will not be displayed to the public.',
             ),
         ));
         $builder->add('maiden', ChoiceType::class, array(
@@ -40,21 +40,21 @@ class AliasType extends AbstractType {
             'required' => true,
             'placeholder' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Is person\'s maiden name?',
             ),
         ));
         $builder->add('description', CKEditorType::class, array(
             'label' => 'Description',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'This description is public',
             ),
         ));
         $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Notes are only available to logged-in users',
             ),
         ));
     }

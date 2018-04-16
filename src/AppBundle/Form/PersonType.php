@@ -24,7 +24,7 @@ class PersonType extends AbstractType {
             'label' => 'Full Name',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Person\'s full name',
             ),
         ));
         
@@ -32,7 +32,7 @@ class PersonType extends AbstractType {
             'label' => 'Sortable Name',
             'required' => true,
             'attr' => array(
-                'help_block' => 'Sortable name will not be displayed to the public.',
+                'help_block' => 'Name listed last name, first name (lowercase). Sortable name will not be displayed to the public.',
             ),
         ));
         
@@ -57,13 +57,16 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+            'attr' => array(
+                'help_block' => 'Alternate names or aliases including maiden names',
+            ),
         ));
 
         $builder->add('description', CKEditorType::class, array(
             'label' => 'Description',
             'required' => false,
             'attr' => array(
-                'help_block' => 'This description is public.',
+                'help_block' => 'This description is public',
             ),
         ));
         
@@ -71,7 +74,7 @@ class PersonType extends AbstractType {
             'label' => 'Birth Year',
             'required' => false,
             'attr' => array(
-                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here.'
+                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here'
             ),
         ));
 
@@ -86,13 +89,16 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+            'attr' => array(
+                'help_block' => 'Geotagged location for birth place',
+            ),
         ));
 
         $builder->add('deathDate', TextType::class, array(
             'label' => 'Death Year',
             'required' => false,
             'attr' => array(
-                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here.'
+                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here'
             )
         ));
 
@@ -107,6 +113,9 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+            'attr' => array(
+                'help_block' => 'Geotagged locaiton for death place',
+            ),
         ));
 
         $builder->add('residences', Select2EntityType::class, array(
@@ -119,13 +128,16 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
+            'attr' => array(
+                'help_block' => 'List of known residences',
+            ),
         ));
 
         $builder->add('notes', CKEditorType::class, array(
             'label' => 'Notes',
             'required' => false,
             'attr' => array(
-                'help_block' => 'Notes are only available to logged-in users.',
+                'help_block' => 'Notes are only available to logged-in users',
             ),
         ));
     }

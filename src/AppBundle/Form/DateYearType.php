@@ -19,14 +19,14 @@ class DateYearType extends AbstractType {
             'label' => 'Value',
             'required' => true,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Publication date.',
             ),
         ));
         $builder->add('start', null, array(
             'label' => 'Start',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Publication start date as YYYY.',
             ),
         ));
         $builder->add('startCirca', ChoiceType::class, array(
@@ -40,14 +40,14 @@ class DateYearType extends AbstractType {
             'required' => true,
             'placeholder' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Approximate publication start date.',
             ),
         ));
         $builder->add('end', null, array(
             'label' => 'End',
             'required' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Publication end date as YYYY.',
             ),
         ));
         $builder->add('endCirca', ChoiceType::class, array(
@@ -61,7 +61,7 @@ class DateYearType extends AbstractType {
             'required' => true,
             'placeholder' => false,
             'attr' => array(
-                'help_block' => '',
+                'help_block' => 'Approximate publication end date.',
             ),
         ));
     }

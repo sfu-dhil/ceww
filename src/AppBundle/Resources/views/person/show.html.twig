@@ -39,35 +39,35 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody>
             <tr>
-                <th>Full Name</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Person's full name" data-trigger="hover" data-placement="bottom">Full Name</a></th>
                 <td>{{ person.fullName }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th>Sortable Name</th>
+                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Name listed last name, first name. Not visible to public." data-trigger="hover" data-placement="bottom">Sortable Name</th>
                     <td>{{ person.sortableName }}</td>
                 </tr>
                 <tr>
-                    <th>Gender</th>
+                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Person's gender" data-trigger="hover" data-placement="bottom">Gender</a></th>
                     <td>{{ include('AppBundle:person:partial/gender.html.twig') }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th>Notes</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</a></th>
                 <td>{{ person.description|raw }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th>Research Notes</th>
+                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="These notes are ony available to logged-in users" data-trigger="hover" data-placement="bottom">Research Notes</a></th>
                     <td>{{ person.notes|raw }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th>Birth date</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Date of birth" data-trigger="hover" data-placement="bottom">Birth date</a></th>
                 <td>{% if person.birthDate %}{{ person.birthDate }}{% endif %}</td>
             </tr>                
             <tr>
-                <th>Birthplace</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Location for place of birth" data-trigger="hover" data-placement="bottom">Birthplace</a></th>
                 <td>
                     {% if person.birthPlace %}
                         <a href="{{ path('place_show', { 'id': person.birthPlace.id}) }}">
@@ -77,11 +77,11 @@
                 </td>
             </tr>        
             <tr>
-                <th>Death date</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Date of death" data-trigger="hover" data-placement="bottom">Death date</a></th>
                 <td>{% if person.deathDate %}{{ person.deathDate }}{% endif %}</td>
             </tr>                
             <tr>
-                <th>Deathplace</th>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Location for place of death" data-trigger="hover" data-placement="bottom">Deathplace</a></th>
                 <td>
                     {% if person.deathPlace %}
                         <a href="{{ path('place_show', { 'id': person.deathPlace.id}) }}">
@@ -91,7 +91,7 @@
                 </td>
             </tr>        
             <tr>
-                <th>Residences</th>         
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="List of known residences" data-trigger="hover" data-placement="bottom">Residences</a></th>         
                 <td>
                     {% if person.residences | length > 0 %}
                         <ul>
@@ -107,7 +107,7 @@
                 </td>
             </tr>        
             <tr>
-                <th>Alternate Names</th>         
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Alternate names or aliases including maiden names" data-trigger="hover" data-placement="bottom">Alternate Names</a></th>         
                 <td>
                     {% if person.aliases | length > 0 %}
                         <ul>
