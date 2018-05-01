@@ -66,12 +66,12 @@ class PublicationType extends AbstractType {
             ),
         ));
         $builder->add('dateYear', TextType::class, array(
-            'required' => false, 
+            'required' => false,
             'attr' => array(
                 'help_block' => 'Year work published',
-            ),           
+            ),
         ));
-        
+
         $builder->add('location',Select2EntityType::class, array(
             'multiple' => false,
             'remote_route' => 'place_typeahead',
@@ -86,7 +86,7 @@ class PublicationType extends AbstractType {
                 'help_block' => 'Geotagged location for place of publication',
             ),
         ));
-        
+
         $builder->add('genres',Select2EntityType::class, array(
             'multiple' => true,
             'remote_route' => 'genre_typeahead',
@@ -113,7 +113,7 @@ class PublicationType extends AbstractType {
             ),
             'attr' => array(
                 'class' => 'collection collection-complex',
-                'help_block' => 'Name of all the women who have contributed to the work and their role in the work\'s production',
+                'help_block' => 'Name of all the people who have contributed to the work and their role in the work\'s production',
             ),
         ));
     }
