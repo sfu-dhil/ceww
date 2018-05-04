@@ -22,8 +22,9 @@ class PublisherRepository extends EntityRepository {
 
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
-        $qb->addSelect("MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') as score");
-        $qb->add('where', "MATCH_AGAINST (e.name, :q 'IN BOOLEAN MODE') > 0.5");
+        $qb->addSelect("MATCH (e.name) AGAINST (:q BOOLEAN) as score");
+        $qb->add('where', "MATCH (e.name) AGAINST (:q BOOLEAN) > 0.5");
+        $qb->orderBy('score', 'desc');
         $qb->setParameter("q", $q);
         return $qb->getQuery();
     }
