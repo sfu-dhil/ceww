@@ -28,7 +28,7 @@ class Publisher extends AbstractEntity {
     private $name;
 
     /**
-     * @var Place
+     * @var Place[]|Collection
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
      */
     private $places;
@@ -79,7 +79,9 @@ class Publisher extends AbstractEntity {
      * @return Publisher
      */
     public function addPlace(Place $place) {
-        $this->places[] = $place;
+        if( ! $this->places->contains($place)) {
+            $this->places[] = $place;
+        }
 
         return $this;
     }
