@@ -18,12 +18,6 @@ use Doctrine\Common\Collections\Collection;
  */
 trait HasPublications {
 
-    /**
-     * @var Collection|Publication[]
-     * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
-     */
-    private $publications;
-
     public function __construct() {
         $this->publications = new ArrayCollection();
     }

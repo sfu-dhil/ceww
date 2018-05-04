@@ -83,6 +83,9 @@ class Builder implements ContainerAwareInterface {
         $search->addChild('Places', array(
             'route' => 'place_search',
         ));
+        $search->addChild('Publishers', array(
+            'route' => 'publisher_search',
+        ));
 
         $browse = $menu->addChild('browse', array(
             'uri' => '#',
@@ -120,6 +123,10 @@ class Builder implements ContainerAwareInterface {
         $browse->addChild('Places', array(
             'route' => 'place_index',
         ));
+        $browse->addChild('Publishers', array(
+            'route' => 'publisher_index',
+        ));
+
 
         if ($this->hasRole('ROLE_CONTENT_ADMIN')) {
             $browse->addChild('divider2', array(

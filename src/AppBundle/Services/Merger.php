@@ -67,7 +67,11 @@ class Merger
                 $a->addResidence($destination);
             }
             foreach($p->getPublications() as $a) {
-                $a->setLocation($destination);                
+                $a->setLocation($destination);
+            }
+            foreach($p->getPublishers() as $publisher) {
+                $publisher->removePlace($p);
+                $publisher->addPlace($destination);
             }
         }
         foreach ($places as $p) {
