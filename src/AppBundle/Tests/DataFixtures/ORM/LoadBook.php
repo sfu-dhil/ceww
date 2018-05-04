@@ -28,24 +28,24 @@ class LoadBook extends AbstractFixture implements DependentFixtureInterface {
         $book->setSortableTitle("book title, a");
         $book->addGenre($this->getReference("genre.1"));
         $book->setLocation($this->getReference("place.1"));
-        
+
         $contribution = new Contribution();
         $contribution->setPerson($this->getReference("person.1"));
         $contribution->setRole($this->getReference("role.1"));
         $contribution->setPublication($book);
         $manager->persist($contribution);
         $this->setReference('book.1.contribution.1', $contribution);
-        $book->addContribution($contribution);        
-        
+        $book->addContribution($contribution);
+
         $dateYear = new DateYear();
         $dateYear->setValue('1901');
         $manager->persist($dateYear);
         $this->setReference('book.1.dateyear', $dateYear);
         $book->setDateYear($dateYear);
-        
+
         $this->setReference('book.1', $book);
         $manager->persist($book);
-                
+
         $manager->flush();
     }
 
@@ -55,6 +55,7 @@ class LoadBook extends AbstractFixture implements DependentFixtureInterface {
             LoadPerson::class,
             LoadGenre::class,
             LoadRole::class,
+            LoadPublisher::class,
         ];
     }
 

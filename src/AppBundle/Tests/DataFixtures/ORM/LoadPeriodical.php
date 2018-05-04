@@ -28,24 +28,24 @@ class LoadPeriodical extends AbstractFixture implements DependentFixtureInterfac
         $periodical->setSortableTitle("periodical title, a");
         $periodical->addGenre($this->getReference("genre.1"));
         $periodical->setLocation($this->getReference("place.1"));
-        
+
         $contribution = new Contribution();
         $contribution->setPerson($this->getReference("person.1"));
         $contribution->setRole($this->getReference("role.1"));
         $contribution->setPublication($periodical);
         $manager->persist($contribution);
         $this->setReference('periodical.1.contribution.1', $contribution);
-        $periodical->addContribution($contribution);        
-        
+        $periodical->addContribution($contribution);
+
         $dateYear = new DateYear();
         $dateYear->setValue('1901');
         $manager->persist($dateYear);
         $this->setReference('periodical.1.dateyear', $dateYear);
         $periodical->setDateYear($dateYear);
-        
+
         $this->setReference('periodical.1', $periodical);
         $manager->persist($periodical);
-                
+
         $manager->flush();
     }
 
@@ -55,6 +55,7 @@ class LoadPeriodical extends AbstractFixture implements DependentFixtureInterfac
             LoadPerson::class,
             LoadGenre::class,
             LoadRole::class,
+            LoadPublisher::class,
         ];
     }
 

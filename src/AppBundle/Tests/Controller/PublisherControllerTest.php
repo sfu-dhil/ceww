@@ -3,7 +3,7 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Publisher;
-use AppBundle\DataFixtures\ORM\LoadPublisher;
+use AppBundle\Tests\DataFixtures\ORM\LoadPublisher;
 use Nines\UserBundle\DataFixtures\ORM\LoadUser;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
@@ -16,7 +16,7 @@ class PublisherControllerTest extends BaseTestCase
             LoadPublisher::class
         ];
     }
-    
+
     /**
      * @group anon
      * @group index
@@ -27,7 +27,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
-    
+
     /**
      * @group user
      * @group index
@@ -38,7 +38,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
-    
+
     /**
      * @group admin
      * @group index
@@ -49,7 +49,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('New')->count());
     }
-    
+
     /**
      * @group anon
      * @group show
@@ -61,7 +61,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
-    
+
     /**
      * @group user
      * @group show
@@ -73,7 +73,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
-    
+
     /**
      * @group admin
      * @group show
@@ -92,15 +92,12 @@ class PublisherControllerTest extends BaseTestCase
      */
     public function testAnonTypeahead() {
         $client = $this->makeClient();
-        $client->request('GET', '/publisher/typeahead?q=STUFF');
+        $client->request('GET', '/publisher/typeahead?q=cueue');
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('content-type'));
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
         $json = json_decode($response->getContent());
-        $this->assertEquals(4, count($json));
+        $this->assertEquals(1, count($json));
     }
 
     /**
@@ -108,16 +105,13 @@ class PublisherControllerTest extends BaseTestCase
      * @group typeahead
      */
     public function testUserTypeahead() {
-        $client = $this->makeClient(LoadUser::USER);
-        $client->request('GET', '/publisher/typeahead?q=STUFF');
+        $client = $this->makeClient();
+        $client->request('GET', '/publisher/typeahead?q=cueue');
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('content-type'));
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
         $json = json_decode($response->getContent());
-        $this->assertEquals(4, count($json));
+        $this->assertEquals(1, count($json));
     }
 
     /**
@@ -125,16 +119,13 @@ class PublisherControllerTest extends BaseTestCase
      * @group typeahead
      */
     public function testAdminTypeahead() {
-        $client = $this->makeClient(LoadUser::ADMIN);
-        $client->request('GET', '/publisher/typeahead?q=STUFF');
+        $client = $this->makeClient();
+        $client->request('GET', '/publisher/typeahead?q=cueue');
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('content-type'));
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
         $json = json_decode($response->getContent());
-        $this->assertEquals(4, count($json));
+        $this->assertEquals(1, count($json));
     }
     /**
      * @group anon
@@ -146,7 +137,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect());
     }
-    
+
     /**
      * @group user
      * @group edit
@@ -156,7 +147,7 @@ class PublisherControllerTest extends BaseTestCase
         $crawler = $client->request('GET', '/publisher/1/edit');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
-    
+
     /**
      * @group admin
      * @group edit
@@ -165,22 +156,18 @@ class PublisherControllerTest extends BaseTestCase
         $client = $this->makeClient(LoadUser::ADMIN);
         $formCrawler = $client->request('GET', '/publisher/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+
         $form = $formCrawler->selectButton('Update')->form([
-            // DO STUFF HERE.
-            // 'publishers[FIELDNAME]' => 'FIELDVALUE',
+            'publisher[name]' => 'chicanery',
         ]);
-        
+
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect('/publisher/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("chicanery")')->count());
     }
-    
+
     /**
      * @group anon
      * @group new
@@ -191,7 +178,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect());
     }
-    
+
     /**
      * @group anon
      * @group new
@@ -202,7 +189,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect());
     }
-    
+
     /**
      * @group user
      * @group new
@@ -231,22 +218,18 @@ class PublisherControllerTest extends BaseTestCase
         $client = $this->makeClient(LoadUser::ADMIN);
         $formCrawler = $client->request('GET', '/publisher/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+
         $form = $formCrawler->selectButton('Create')->form([
-            // DO STUFF HERE.
-            // 'publishers[FIELDNAME]' => 'FIELDVALUE',
+            'publisher[name]' => 'chicanery',
         ]);
-        
+
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("chicanery")')->count());
     }
-    
+
     /**
      * @group admin
      * @group new
@@ -255,22 +238,18 @@ class PublisherControllerTest extends BaseTestCase
         $client = $this->makeClient(LoadUser::ADMIN);
         $formCrawler = $client->request('GET', '/publisher/new_popup');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );        
+
         $form = $formCrawler->selectButton('Create')->form([
-            // DO STUFF HERE.
-            // 'publishers[FIELDNAME]' => 'FIELDVALUE',
+            'publisher[name]' => 'chicanery',
         ]);
-        
+
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // $this->assertEquals(1, $responseCrawler->filter('td:contains("FIELDVALUE")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("chicanery")')->count());
     }
-    
+
     /**
      * @group anon
      * @group delete
@@ -281,7 +260,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect());
     }
-    
+
     /**
      * @group user
      * @group delete
@@ -304,7 +283,7 @@ class PublisherControllerTest extends BaseTestCase
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
+
         $this->em->clear();
         $postCount = count($this->em->getRepository(Publisher::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);
