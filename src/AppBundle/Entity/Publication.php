@@ -41,7 +41,7 @@ abstract class Publication extends AbstractEntity {
      * @ORM\Column(type="text", nullable=false)
      */
     private $sortableTitle;
-    
+
     /**
      * @var Collection|string[]
      * @ORM\Column(type="array")
@@ -87,11 +87,18 @@ abstract class Publication extends AbstractEntity {
      */
     private $contributions;
 
+    /**
+     * @var Collection|Publisher
+     * @ORM\ManyToMany(targetEntity="Publisher", inversedBy="publications")
+     */
+    private $publishers;
+
     public function __construct() {
         parent::__construct();
         $this->links = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->contributions = new ArrayCollection();
+        $this->publishers = new ArrayCollection();
     }
 
     public function __toString() {
@@ -156,7 +163,7 @@ abstract class Publication extends AbstractEntity {
 
         return $this;
     }
-    
+
     /**
      * Get links
      *
@@ -227,7 +234,7 @@ abstract class Publication extends AbstractEntity {
      * @return Publication
      */
     public function setDateYear($dateYear = null) {
-        if(is_string($dateYear) || is_numeric($dateYear)) {
+        if (is_string($dateYear) || is_numeric($dateYear)) {
             $obj = new DateYear();
             $obj->setValue($dateYear);
             $this->dateYear = $obj;
@@ -268,10 +275,10 @@ abstract class Publication extends AbstractEntity {
     public function getLocation() {
         return $this->location;
     }
-    
+
     /**
      * Set genres
-     * 
+     *
      * @param Collection|Genre[] $genres
      */
     public function setGenres(Collection $genres) {
@@ -343,16 +350,16 @@ abstract class Publication extends AbstractEntity {
     public function getContributions() {
         return $this->contributions;
     }
-    
+
     /**
      * Get the first author contributor for a publication or null if there
      * are no author contributors.
-     * 
+     *
      * @return Person|null
      */
     public function getFirstAuthor() {
-        foreach($this->contributions as $contribution) {
-            if($contribution->getRole()->getName() === 'author') {
+        foreach ($this->contributions as $contribution) {
+            if ($contribution->getRole()->getName() === 'author') {
                 return $contribution->getPerson();
             }
         }
@@ -361,11 +368,46 @@ abstract class Publication extends AbstractEntity {
 
     /**
      * Get the first contribution for a publication.
-     * 
+     *
      * @return Contribution
      */
     public function getFirstContribution() {
         return $this->contributions->first();
+    }
+
+    /**
+     * Add publisher
+     *
+     * @param Publisher $publisher
+     *
+     * @return Publication
+     */
+    public function addPublisher(Publisher $publisher) {
+        $this->publishers[] = $publisher;
+
+        return $this;
+    }
+
+    /**
+     * Remove publisher
+     *
+     * @param Publisher $publisher
+     */
+    public function removePublisher(Publisher $publisher) {
+        $this->publishers->removeElement($publisher);
+    }
+
+    /**
+     * Get publishers
+     *
+     * @return Collection
+     */
+    public function getPublishers() {
+        return $this->publishers;
+    }
+
+    public function setPublishers($publishers) {
+        $this->publishers = $publishers;
     }
 
 }

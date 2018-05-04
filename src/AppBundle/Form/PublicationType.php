@@ -4,9 +4,9 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Genre;
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Publisher;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -72,7 +72,7 @@ class PublicationType extends AbstractType {
             ),
         ));
 
-        $builder->add('location',Select2EntityType::class, array(
+        $builder->add('location', Select2EntityType::class, array(
             'multiple' => false,
             'remote_route' => 'place_typeahead',
             'class' => Place::class,
@@ -87,7 +87,7 @@ class PublicationType extends AbstractType {
             ),
         ));
 
-        $builder->add('genres',Select2EntityType::class, array(
+        $builder->add('genres', Select2EntityType::class, array(
             'multiple' => true,
             'remote_route' => 'genre_typeahead',
             'class' => Genre::class,
@@ -114,6 +114,21 @@ class PublicationType extends AbstractType {
             'attr' => array(
                 'class' => 'collection collection-complex',
                 'help_block' => 'Name of all the people who have contributed to the work and their role in the work\'s production',
+            ),
+        ));
+
+        $builder->add('publishers', Select2EntityType::class, array(
+            'multiple' => true,
+            'remote_route' => 'publisher_typeahead',
+            'class' => Publisher::class,
+            'primary_key' => 'id',
+            'text_property' => 'name',
+            'page_limit' => 10,
+            'allow_clear' => true,
+            'delay' => 250,
+            'language' => 'en',
+            'attr' => array(
+                'help_block' => 'Publisher(s) of the work',
             ),
         ));
     }

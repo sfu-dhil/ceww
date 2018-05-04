@@ -21,24 +21,24 @@ class Place extends AbstractEntity {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }
-    
+
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
      */
     private $name;
-    
+
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
      */
     private $sortableName;
-    
+
     /**
      * A province, state, territory or other sub-national entity.
-     * 
+     *
      * @ORM\Column(type="string", length=250, nullable=true)
      */
     private $regionName;
-    
+
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
      */
@@ -86,12 +86,25 @@ class Place extends AbstractEntity {
      */
     private $residents;
 
+    /**
+     * @var Collection|Publication[]
+     * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
+     */
+    private $publications;
+
+    /**
+     * @var Collection|Publisher[]
+     * @ORM\ManyToMany(targetEntity="Publisher", mappedBy="places")
+     */
+    private $publishers;
+
     public function __construct() {
         $this->trait_constructor();
         parent::__construct();
         $this->peopleBorn = new ArrayCollection();
         $this->peopleDied = new ArrayCollection();
         $this->residents = new ArrayCollection();
+        $this->publishers = new ArrayCollection();
         $this->notes = '';
     }
 
@@ -401,11 +414,11 @@ class Place extends AbstractEntity {
     /**
      * Add peopleBorn
      *
-     * @param \AppBundle\Entity\Person $peopleBorn
+     * @param Person $peopleBorn
      *
      * @return Place
      */
-    public function addPeopleBorn(\AppBundle\Entity\Person $peopleBorn)
+    public function addPeopleBorn(Person $peopleBorn)
     {
         $this->peopleBorn[] = $peopleBorn;
 
@@ -415,9 +428,9 @@ class Place extends AbstractEntity {
     /**
      * Remove peopleBorn
      *
-     * @param \AppBundle\Entity\Person $peopleBorn
+     * @param Person $peopleBorn
      */
-    public function removePeopleBorn(\AppBundle\Entity\Person $peopleBorn)
+    public function removePeopleBorn(Person $peopleBorn)
     {
         $this->peopleBorn->removeElement($peopleBorn);
     }
@@ -425,11 +438,11 @@ class Place extends AbstractEntity {
     /**
      * Add peopleDied
      *
-     * @param \AppBundle\Entity\Person $peopleDied
+     * @param Person $peopleDied
      *
      * @return Place
      */
-    public function addPeopleDied(\AppBundle\Entity\Person $peopleDied)
+    public function addPeopleDied(Person $peopleDied)
     {
         $this->peopleDied[] = $peopleDied;
 
@@ -439,9 +452,9 @@ class Place extends AbstractEntity {
     /**
      * Remove peopleDied
      *
-     * @param \AppBundle\Entity\Person $peopleDied
+     * @param Person $peopleDied
      */
-    public function removePeopleDied(\AppBundle\Entity\Person $peopleDied)
+    public function removePeopleDied(Person $peopleDied)
     {
         $this->peopleDied->removeElement($peopleDied);
     }
@@ -468,5 +481,39 @@ class Place extends AbstractEntity {
     public function getRegionName()
     {
         return $this->regionName;
+    }
+
+    /**
+     * Add publisher
+     *
+     * @param Publisher $publisher
+     *
+     * @return Place
+     */
+    public function addPublisher(Publisher $publisher)
+    {
+        $this->publishers[] = $publisher;
+
+        return $this;
+    }
+
+    /**
+     * Remove publisher
+     *
+     * @param Publisher $publisher
+     */
+    public function removePublisher(Publisher $publisher)
+    {
+        $this->publishers->removeElement($publisher);
+    }
+
+    /**
+     * Get publishers
+     *
+     * @return Collection
+     */
+    public function getPublishers()
+    {
+        return $this->publishers;
     }
 }

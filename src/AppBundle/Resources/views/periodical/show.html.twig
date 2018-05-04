@@ -2,11 +2,11 @@
 
 {% block title %}{{ periodical.title }}{% endblock %}
 
-{% block pageheader %} 
+{% block pageheader %}
     <h1>{{ periodical.title }}</h1>
     {% embed 'AppBundle:publication:partial/browse.html.twig' %}
     {% endembed %}
-{% endblock %} 
+{% endblock %}
 
 {% block body %}
     <div class="btn-toolbar">
@@ -36,6 +36,20 @@
                 <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Publication date" data-trigger="hover" data-placement="bottom">Date</a></th>
                 <td>{{ periodical.dateYear }}</td>
             </tr>
+            <tr>
+                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Publisher(s) of the work" data-trigger="hover" data-placement="bottom">Publisher</a></th>
+                <td>
+                    {% if periodical.publishers|length > 0 %}
+                        <ul>
+                            {% for publisher in periodical.publishers %}
+                                <li>
+                                    <a href="{{ path('publisher_show', {'id': publisher.id}) }}">{{ publisher }}</a>
+                                </li>
+                                {% endfor %}
+                        </ul>
+                        {% endif %}
+                </td>
+            </tr>
             {% if is_granted('ROLE_USER') %}
                 <tr>
                     <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Name sorting (lowercase). Not visible to public." data-trigger="hover" data-placement="bottom">Sortable Title</a></th>
@@ -47,7 +61,7 @@
                 <td>
                     {% if periodical.links | length > 0 %}
                         <ul>
-                            {% for link in periodical.links %}                        
+                            {% for link in periodical.links %}
                                 <li>
                                     <a href="{{ link }}">{{ link }}</a>
                                 </li>
@@ -59,7 +73,7 @@
             <tr>
                 <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</a></th>
                 <td>{{ periodical.description|raw }}</td>
-            </tr> 
+            </tr>
             <tr>
                 <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Category of work" data-trigger="hover" data-placement="bottom">Genres</a></th>
                 <td>
@@ -105,21 +119,21 @@
         </tbody>
     </table>
 
-    {% if periodical.contributions | length > 0 %}    
+    {% if periodical.contributions | length > 0 %}
         <h2>Contributors</h2>
         <ul>
             {% for contribution in periodical.contributions %}
                 <li>
                     {% if contribution.role.name != 'author' %}
-                        <i>{{ contribution.role }}</i>, 
+                        <i>{{ contribution.role }}</i>,
                     {% endif %}
                     {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
                     {% endembed %}
                 </li>
-            {% endfor %} 
+            {% endfor %}
         </ul>
     {% endif %}
 
-    {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': periodical } %}				
+    {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': periodical } %}
 
 {% endblock %}
