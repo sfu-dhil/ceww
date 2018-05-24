@@ -1,5 +1,5 @@
 (function ($, window) {
-    
+
     var hostname = window.location.hostname.replace('www.', '');
 
     function confirm() {
@@ -8,14 +8,14 @@
             return window.confirm($this.data('confirm'));
         });
     }
-    
+
     function link() {
         if(this.hostname.replace('www.', '') === hostname) {
             return;
         }
         $(this).attr('target', '_blank');
     }
-    
+
     function windowBeforeUnload(e) {
         var clean = true;
         $('form').each(function () {
@@ -30,7 +30,7 @@
             return message;
         }
     }
-    
+
     function formDirty() {
         var $form = $(this);
         $form.data('dirty', false);
@@ -41,29 +41,31 @@
             $(window).unbind('beforeunload');
         });
     }
-    
+
     function formPopup(e) {
         e.preventDefault();
         var url = $(this).prop('href');
         window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600");
     }
-    
+
     function simpleCollection() {
         $('.collection-simple').collection({
             init_with_n_elements: 1,
             allow_up: false,
             allow_down: false,
+            max: 200,
             add: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></a>',
             remove: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></a>',
-            add_at_the_end: false,                   
+            add_at_the_end: false,
         });
     }
-    
+
     function complexCollection() {
         $('.collection-complex').collection({
             init_with_n_elements: 1,
             allow_up: false,
             allow_down: false,
+            max: 200,
             add: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></a>',
             remove: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></a>',
             add_at_the_end: true,
@@ -74,7 +76,7 @@
             },
         });
     }
-    
+
 
     $(document).ready(function () {
         $(window).bind('beforeunload', windowBeforeUnload);
