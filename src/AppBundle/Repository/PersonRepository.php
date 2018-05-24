@@ -43,6 +43,14 @@ class PersonRepository extends EntityRepository {
         return $qb->getQuery()->execute();
     }
 
+    /**
+     *
+     * @param type $q
+     * @return type
+     *
+     * @todo This should search the person and alias tables for the name, but
+     * only return results from the person table.
+     */
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH (e.fullName) AGAINST (:q BOOLEAN) as HIDDEN score");
