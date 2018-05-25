@@ -73,6 +73,22 @@
                     {% endif %}
                 </td>
             </tr>
+            <tr>
+                <th>Authors</th>
+                <td>
+                    {% if people | length > 0 %}
+                        <ul>
+                            {% for person in people %}
+                                <li>
+                                    <a href="{{ path('person_show', {'id': person.id}) }}">
+                                        {{ person.fullname }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                        </ul>
+                        {% endif %}
+                </td>
+            </tr>
         </tbody>
     </table>
 {% endblock %}

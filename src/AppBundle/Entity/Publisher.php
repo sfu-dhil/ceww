@@ -108,4 +108,25 @@ class Publisher extends AbstractEntity {
         $this->places = $places;
     }
 
+    public function addPublication(Publication $publication) {
+        $this->publications[] = $publication;
+        return $this;
+    }
+
+    public function removePublication(Publication $publication) {
+        if($this->publications->contains($publication)) {
+            $this->publications->remove($publication);
+        }
+        return $this;
+    }
+
+    public function getPublications() {
+        return $this->publications;
+    }
+
+    public function setPublications($publications) {
+        $this->publications = $publications;
+        return $this;
+    }
+
 }

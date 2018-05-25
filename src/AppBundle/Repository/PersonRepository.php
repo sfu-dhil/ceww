@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Person;
+use AppBundle\Entity\Publisher;
 use AppBundle\Entity\Role;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -43,6 +44,14 @@ class PersonRepository extends EntityRepository {
         return $qb->getQuery()->execute();
     }
 
+    /**
+     *
+     * @param type $q
+     * @return type
+     *
+     * @todo This should search the person and alias tables for the name, but
+     * only return results from the person table.
+     */
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH (e.fullName) AGAINST (:q BOOLEAN) as HIDDEN score");
@@ -64,5 +73,16 @@ class PersonRepository extends EntityRepository {
         return $qb->getQuery();
     }
 
+    public function byPublisher(Publisher $publisher) {
+        $qb = $this->createQueryBuilder('pr');
+        $qb->join('pr.contributions', 'c');
+        $qb->join('c.publication', 'pb');
+        $qb->join('c.role', 'r');
+        $qb->andWhere(':publisher MEMBER OF pb.publishers');
+        $qb->andWhere('r.name = \'author\'');
+        $qb->setParameter('publisher', $publisher);
+        $qb->orderBy('pr.sortableName');
+        return $qb->getQuery()->execute();
+    }
 
 }
