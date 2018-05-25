@@ -22,6 +22,7 @@ class ContributionType extends AbstractType {
         ));
         $builder->add('person', Select2EntityType::class, array(
             'multiple' => false,
+            'required' => true,
             'remote_route' => 'person_typeahead',
             'class' => Person::class,
             'primary_key' => 'id',

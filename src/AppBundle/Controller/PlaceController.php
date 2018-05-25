@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Place;
 use AppBundle\Form\PlaceType;
+use AppBundle\Services\Merger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -39,7 +40,7 @@ class PlaceController extends Controller
             'places' => $places,
         );
     }
-    
+
     /**
      * @param Request $request
      * @Route("/typeahead", name="place_typeahead")
@@ -60,10 +61,10 @@ class PlaceController extends Controller
                 'text' => $result->getName(),
             ];
         }
-        
+
         return new JsonResponse($data);
     }
-    
+
     /**
      *
      * @Route("/search", name="place_search")
@@ -136,8 +137,8 @@ class PlaceController extends Controller
     {
         return $this->newAction($request);
     }
-    
-    
+
+
     /**
      * Finds and displays a Place entity.
      *
@@ -150,7 +151,7 @@ class PlaceController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Place::class);
-        
+
         return array(
             'place' => $place,
             'next' => $repo->next($place),
@@ -197,23 +198,22 @@ class PlaceController extends Controller
      * @Template()
      * @param Place $place
      */
-    public function mergeAction(Request $request, Place $place) {
+    public function mergeAction(Request $request, Place $place, Merger $merger) {
         if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Place::class);
-        
+
         if($request->getMethod() === 'POST') {
             $places = $repo->findBy(array('id' => $request->request->get('places')));
             $count = count($places);
-            $merger = $this->container->get('ceww.merger');
             $merger->places($place, $places);
             $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
             return $this->redirect($this->generateUrl('place_show', ['id' => $place->getId()]));
         }
-        
+
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);

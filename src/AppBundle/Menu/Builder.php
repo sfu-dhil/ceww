@@ -31,7 +31,7 @@ class Builder implements ContainerAwareInterface {
      * @var TokenStorageInterface
      */
     private $tokenStorage;
-    
+
     public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage) {
         $this->factory = $factory;
         $this->authChecker = $authChecker;
@@ -47,7 +47,7 @@ class Builder implements ContainerAwareInterface {
 
     /**
      * Build a menu for navigation.
-     * 
+     *
      * @param array $options
      * @return ItemInterface
      */
@@ -56,12 +56,12 @@ class Builder implements ContainerAwareInterface {
         $menu->setChildrenAttributes(array(
             'class' => 'nav navbar-nav',
         ));
-        
+
         $menu->addChild('home', array(
             'label' => 'Home',
             'route' => 'homepage',
         ));
-        
+
         $search = $menu->addChild('search', array(
             'uri' => '#',
             'label' => 'Search ' . self::CARET,
@@ -73,14 +73,20 @@ class Builder implements ContainerAwareInterface {
         $search->addChild('Titles', array(
             'route' => 'search',
         ));
-        
+
         $search->addChild('People', array(
             'route' => 'person_search',
         ));
         $search->addChild('Alternate Names', array(
             'route' => 'alias_search',
         ));
-        
+        $search->addChild('Places', array(
+            'route' => 'place_search',
+        ));
+        $search->addChild('Publishers', array(
+            'route' => 'publisher_search',
+        ));
+
         $browse = $menu->addChild('browse', array(
             'uri' => '#',
             'label' => 'Browse ' . self::CARET,
@@ -117,6 +123,10 @@ class Builder implements ContainerAwareInterface {
         $browse->addChild('Places', array(
             'route' => 'place_index',
         ));
+        $browse->addChild('Publishers', array(
+            'route' => 'publisher_index',
+        ));
+
 
         if ($this->hasRole('ROLE_CONTENT_ADMIN')) {
             $browse->addChild('divider2', array(

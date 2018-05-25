@@ -16,14 +16,14 @@ class BookControllerTest extends BaseTestCase
             LoadBook::class
         ];
     }
-    
+
     public function testAnonIndex() {
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
-    
+
     public function testUserIndex() {
         $client = $this->makeClient([
             'username' => 'user@example.com',
@@ -33,7 +33,7 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
-    
+
     public function testAdminIndex() {
         $client = $this->makeClient([
             'username' => 'admin@example.com',
@@ -43,7 +43,7 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('New')->count());
     }
-    
+
     public function testAnonShow() {
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/1');
@@ -51,7 +51,7 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
-    
+
     public function testUserShow() {
         $client = $this->makeClient([
             'username' => 'user@example.com',
@@ -62,7 +62,7 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
-    
+
     public function testAdminShow() {
         $client = $this->makeClient([
             'username' => 'admin@example.com',
@@ -79,7 +79,7 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect('/login'));
     }
-    
+
     public function testUserEdit() {
         $client = $this->makeClient([
             'username' => 'user@example.com',
@@ -89,7 +89,7 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect('/login'));
     }
-    
+
     public function testAdminEdit() {
         $client = $this->makeClient([
             'username' => 'admin@example.com',
@@ -97,7 +97,7 @@ class BookControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/book/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
+
         $form = $formCrawler->selectButton('Update')->form([
             'book[title]' => 'The Book of Cheese.',
             'book[sortableTitle]' => 'Book of Cheese, The',
@@ -108,23 +108,22 @@ class BookControllerTest extends BaseTestCase
             'book[location]' => 1,
             'book[genres]' => 1,
             // 'book[contributions]' =>
-
         ]);
-        
+
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect('/book/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
     }
-    
+
     public function testAnonNew() {
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect('/login'));
     }
-    
+
     public function testUserNew() {
         $client = $this->makeClient([
             'username' => 'user@example.com',
@@ -142,7 +141,7 @@ class BookControllerTest extends BaseTestCase
         ]);
         $formCrawler = $client->request('GET', '/book/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-               
+
         $form = $formCrawler->selectButton('Create')->form([
             'book[title]' => 'The Book of Cheese.',
             'book[sortableTitle]' => 'Book of Cheese, The',
@@ -154,21 +153,21 @@ class BookControllerTest extends BaseTestCase
             'book[genres]' => '',
             // 'book[contributions]' =>
         ]);
-        
+
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());    
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
     }
-    
+
     public function testAnonDelete() {
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect('/login'));
     }
-    
+
     public function testUserDelete() {
         $client = $this->makeClient([
             'username' => 'user@example.com',
@@ -192,7 +191,7 @@ class BookControllerTest extends BaseTestCase
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        
+
         $em->clear();
         $postCount = count($em->getRepository(Book::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);

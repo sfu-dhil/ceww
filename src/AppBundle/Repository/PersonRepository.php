@@ -37,12 +37,12 @@ class PersonRepository extends EntityRepository {
 
     public function typeaheadQuery($q) {
         $qb = $this->createQueryBuilder('e');
-        $qb->andWhere("e.name LIKE :q");
+        $qb->andWhere("e.fullName LIKE :q");
         $qb->orderBy('e.sortableName');
         $qb->setParameter('q', "{$q}%");
         return $qb->getQuery()->execute();
     }
-    
+
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH (e.fullName) AGAINST (:q BOOLEAN) as HIDDEN score");
@@ -51,7 +51,7 @@ class PersonRepository extends EntityRepository {
         $qb->setParameter('q', $q);
         return $qb->getQuery();
     }
-    
+
     /**
      * @param Role $role
      * @return Query
@@ -63,6 +63,6 @@ class PersonRepository extends EntityRepository {
         $qb->setParameter('role', $role);
         return $qb->getQuery();
     }
-    
-    
+
+
 }

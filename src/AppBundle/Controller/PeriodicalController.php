@@ -56,6 +56,9 @@ class PeriodicalController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach($periodical->getContributions() as $contribution) {
+                $contribution->setPublication($periodical);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($periodical);
             $em->flush();
@@ -107,6 +110,9 @@ class PeriodicalController extends Controller {
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            foreach($periodical->getContributions() as $contribution) {
+                $contribution->setPublication($periodical);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The periodical has been updated.');
