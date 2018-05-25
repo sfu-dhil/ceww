@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Person;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -27,6 +28,17 @@ class PublisherRepository extends EntityRepository {
         $qb->orderBy('score', 'desc');
         $qb->setParameter("q", $q);
         return $qb->getQuery();
+    }
+
+    public function byPerson(Person $person) {
+        $qb = $this->createQueryBuilder('pb');
+        $qb->distinct();
+        $qb->join('pb.publications', 't'); // t for title.
+        $qb->join('t.contributions', 'c');
+        $qb->andWhere('c.person = :person');
+        $qb->setParameter('person', $person);
+        $qb->orderBy('pb.name');
+        return $qb->getQuery()->execute();
     }
 
 }

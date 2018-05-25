@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Person;
+use AppBundle\Entity\Publisher;
 use AppBundle\Entity\Role;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -72,5 +73,16 @@ class PersonRepository extends EntityRepository {
         return $qb->getQuery();
     }
 
+    public function byPublisher(Publisher $publisher) {
+        $qb = $this->createQueryBuilder('pr');
+        $qb->join('pr.contributions', 'c');
+        $qb->join('c.publication', 'pb');
+        $qb->join('c.role', 'r');
+        $qb->andWhere(':publisher MEMBER OF pb.publishers');
+        $qb->andWhere('r.name = \'author\'');
+        $qb->setParameter('publisher', $publisher);
+        $qb->orderBy('pr.sortableName');
+        return $qb->getQuery()->execute();
+    }
 
 }

@@ -2,16 +2,17 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Person;
+use AppBundle\Entity\Publisher;
+use AppBundle\Form\PublisherType;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Entity\Publisher;
-use AppBundle\Form\PublisherType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Publisher controller.
@@ -36,7 +37,7 @@ class PublisherController extends Controller {
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Publisher::class, 'e')->orderBy('e.id', 'ASC');
+        $qb->select('e')->from(Publisher::class, 'e')->orderBy('e.name', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
         $publishers = $paginator->paginate($query, $request->query->getint('page', 1), 25);
@@ -167,10 +168,11 @@ class PublisherController extends Controller {
      * @Method("GET")
      * @Template()
      */
-    public function showAction(Publisher $publisher) {
+    public function showAction(Publisher $publisher, EntityManagerInterface $em) {
 
         return array(
             'publisher' => $publisher,
+            'people' => $em->getRepository(Person::class)->byPublisher($publisher),
         );
     }
 
