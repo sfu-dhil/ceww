@@ -12,7 +12,7 @@
             <a href="{{ path('publisher_index') }}" class="btn btn-default">
                 <span class="glyphicon glyphicon-arrow-left"></span> Back
             </a>
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}
                 <a href="{{ path('publisher_edit', { 'id': publisher.id }) }}" class="btn btn-default">
                     <span class='glyphicon glyphicon-edit'></span> Edit
                 </a>
@@ -80,9 +80,8 @@
                         <ul>
                             {% for person in people %}
                                 <li>
-                                    <a href="{{ path('person_show', {'id': person.id}) }}">
-                                        {{ person.fullname }}
-                                    </a>
+                                    {% embed "AppBundle:Person:partial/link.html.twig" %}
+                                    {% endembed %}
                                 </li>
                                 {% endfor %}
                         </ul>
