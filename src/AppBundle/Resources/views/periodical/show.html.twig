@@ -33,10 +33,6 @@
                 <td>{{ periodical.title }}</td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Publication date" data-trigger="hover" data-placement="bottom">Date</a></th>
-                <td>{{ periodical.dateYear }}</td>
-            </tr>
-            <tr>
                 <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Publisher(s) of the work" data-trigger="hover" data-placement="bottom">Publisher</a></th>
                 <td>
                     {% if periodical.publishers|length > 0 %}
