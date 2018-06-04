@@ -2,13 +2,16 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Periodical;
 use AppBundle\Form\PeriodicalType;
+use AppBundle\Services\Merger;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Periodical controller.
@@ -123,6 +126,43 @@ class PeriodicalController extends Controller {
             'periodical' => $periodical,
             'edit_form' => $editForm->createView(),
         );
+    }
+
+    /**
+     * Finds and merges periodicals.
+     *
+     * @param Request $request
+     * @param Periodical $periodical
+     *
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     * @Route("/{id}/merge", name="periodical_merge")
+     * @Method({"GET","POST"})
+     * @Template()
+     */
+    public function mergeAction(Request $request, Periodical $periodical, EntityManagerInterface $em, Merger $merger) {
+        $repo = $em->getRepository(Periodical::class);
+
+        if($request->getMethod() === 'POST') {
+            $periodicals = $repo->findBy(array('id' => $request->request->get('periodicals')));
+            $count = count($periodicals);
+            $merger->periodicals($periodical, $periodicals);
+            $this->addFlash('success', "Merged {$count} places into {$periodical->getTitle()}.");
+            return $this->redirect($this->generateUrl('periodical_show', ['id' => $periodical->getId()]));
+        }
+
+        $q = $request->query->get('q');
+        if ($q) {
+            $query = $repo->searchQuery($q);
+            $periodicals = $query->execute();
+        } else {
+            $periodicals = array();
+        }
+        return array(
+            'periodical' => $periodical,
+            'periodicals' => $periodicals,
+            'q' => $q,
+        );
+
     }
 
     /**

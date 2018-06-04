@@ -16,6 +16,7 @@ class PeriodicalType extends PublicationType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         parent::buildForm($builder, $options);
+        $builder->remove('dateYear');
         $builder->add('runDates', null, array(
             'label' => 'Run Dates',
             'required' => false,
