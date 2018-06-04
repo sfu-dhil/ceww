@@ -17,11 +17,11 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PersonRepository")
  */
 class Person extends AbstractEntity {
-    
+
     const MALE = 'm';
-    
+
     const FEMALE = 'f';
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=200, nullable=false)
@@ -33,7 +33,7 @@ class Person extends AbstractEntity {
      * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $sortableName;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=1, nullable=true)
@@ -92,10 +92,10 @@ class Person extends AbstractEntity {
 
     /**
      * @var Collection|Contribution[]
-     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="person")
+     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="person", orphanRemoval=true)
      */
     private $contributions;
-    
+
     public function __construct() {
         parent::__construct();
         $this->residences = new ArrayCollection();
