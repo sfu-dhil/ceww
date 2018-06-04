@@ -3,6 +3,7 @@
 namespace AppBundle\Tests\Services;
 
 use AppBundle\Entity\Place;
+use AppBundle\Entity\Periodical;
 use AppBundle\Repository\PlaceRepository;
 use AppBundle\Services\Merger;
 use AppBundle\Tests\DataFixtures\ORM\LoadBook;
@@ -17,7 +18,7 @@ class MergerTest extends BaseTestCase {
      * @var Merger
      */
     protected $merger;
-    
+
     /**
      * @var PlaceRepository
      */
@@ -26,7 +27,6 @@ class MergerTest extends BaseTestCase {
     public function setUp() {
         parent::setUp();
         $this->merger = $this->getContainer()->get(Merger::class);
-        $this->repo = $this->getContainer()->get('doctrine')->getRepository(Place::class);
     }
 
     protected function getFixtures() {
@@ -37,22 +37,36 @@ class MergerTest extends BaseTestCase {
             LoadCompilation::class,
         );
     }
-        
-    public function testMerge() {
+
+    public function testPlaceMerge() {
         $this->merger->places($this->getReference('place.3'), [
             $this->getReference('place.2'),
             $this->getReference('place.1'),
         ]);
-        
-        $mergedPlaces = $this->repo->findAll();
+
+        $repo = $this->em->getRepository(Place::class);
+        $mergedPlaces = $repo->findAll();
         $this->assertEquals(1, count($mergedPlaces));
-        
+
         $place = $this->getReference('place.3');
         $this->assertEquals(1, count($place->getPeopleBorn()));
         $this->assertEquals(1, count($place->getPeopleDied()));
         $this->assertEquals(0, count($place->getResidents()));
-        $this->assertEquals(3, count($place->getPublications()));
+        $this->assertEquals(4, count($place->getPublications()));
     }
 
+    public function testPeriodicalMerge() {
+        $repo = $this->em->getRepository(Periodical::class);
+        $this->merger->periodicals($this->getReference('periodical.1'), [
+            $this->getReference('periodical.2'),
+        ]);
+        $periodicals = $repo->findAll();
+        $this->assertCount(1, $periodicals);
+        $this->assertCount(2, $periodicals[0]->getGenres());
+        $this->assertCount(2, $periodicals[0]->getLinks());
+        $this->assertEquals("note 1\n\nnote 2", $periodicals[0]->getNotes());
+        $this->assertCount(2, $periodicals[0]->getContributions());
+        $this->assertCount(2, $periodicals[0]->getPublishers());
+    }
 
 }

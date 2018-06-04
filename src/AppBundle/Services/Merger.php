@@ -8,6 +8,8 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Contribution;
+use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Place;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -78,6 +80,42 @@ class Merger
             $this->em->remove($p);
         }
         $this->em->flush();
+    }
+
+    /**
+     * Merge $publications data into $destination and remove $publications.
+     *
+     * @todo this is generic enough that it can apply to publications, not just
+     * periodicals.
+     *
+     * @param Periodical   $destination
+     * @param Periodical[] $publications
+     */
+    public function periodicals(Periodical $destination, array $publications) {
+        foreach($publications as $publication) {
+            foreach($publication->getLinks() as $link) {
+                $destination->addLink($link);
+            }
+            $destination->appendNote($publication->getNotes());
+            foreach($publication->getGenres() as $genre) {
+                $destination->addGenre($genre);
+            }
+            foreach($publication->getContributions() as $contribution) {
+                $replacement = new Contribution();
+                $replacement->setPublication($destination);
+                $replacement->setRole($contribution->getRole());
+                $replacement->setPerson($contribution->getPerson());
+                $this->em->persist($replacement);
+                $this->em->remove($contribution);
+            }
+            foreach($publication->getPublishers() as $publisher) {
+                $publication->removePublisher($publisher);
+                $destination->addPublisher($publisher);
+            }
+            $this->em->remove($publication);
+        }
+        $this->em->flush();
+        // dump($destination);
     }
 
 }

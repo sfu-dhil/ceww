@@ -36,8 +36,6 @@ class LoadPublisher extends AbstractFixture implements DependentFixtureInterface
         $this->setReference('publisher.2', $publisher2);
         $manager->persist($publisher2);
 
-
-
         $manager->flush();
     }
 
