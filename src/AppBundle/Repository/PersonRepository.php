@@ -40,7 +40,7 @@ class PersonRepository extends EntityRepository {
         $qb = $this->createQueryBuilder('e');
         $qb->andWhere("e.fullName LIKE :q");
         $qb->orderBy('e.sortableName');
-        $qb->setParameter('q', "{$q}%");
+        $qb->setParameter('q', "%{$q}%");
         return $qb->getQuery()->execute();
     }
 

@@ -15,7 +15,7 @@ class PlaceRepository extends EntityRepository {
 
     public function next(Place $place) {
         $qb = $this->createQueryBuilder('e');
-        $qb->andWhere('e.sortableName > :q');        
+        $qb->andWhere('e.sortableName > :q');
         $qb->setParameter('q', $place->getSortableName());
         $qb->addOrderBy('e.sortableName', 'ASC');
         $qb->setMaxResults(1);
@@ -35,10 +35,10 @@ class PlaceRepository extends EntityRepository {
         $qb = $this->createQueryBuilder('e');
         $qb->andWhere("e.name LIKE :q");
         $qb->orderBy('e.name');
-        $qb->setParameter('q', "{$q}%");
+        $qb->setParameter('q', "%{$q}%");
         return $qb->getQuery()->execute();
     }
-    
+
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH (e.name, e.countryName) AGAINST (:q BOOLEAN) as HIDDEN score");
