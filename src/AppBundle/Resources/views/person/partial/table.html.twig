@@ -1,3 +1,9 @@
+{% if people.items == null and people.currentPageNumber == 1 %}
+    <p>No results for this query</p>
+{% elseif people.items == null and people.currentPageNumber > 1 %}
+    <p>No results for this page</p>
+{% else %}
+<p class="count">Displaying {{ people.items|length }} people results of {{ people.getTotalItemCount }} total.</p>
 <table class="table table-bordered table-condensed table-hover table-striped">
     <thead>
         <tr>
@@ -19,3 +25,4 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
