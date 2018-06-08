@@ -121,6 +121,18 @@
                         </ul>
                     {% endif %}
                 </td>
+            </tr>
+            <tr>
+                <th>URL Links</th>
+                <td>
+                    {% if person.urlLinks | length > 0 %}
+                        <ul>
+                            {% for urlLink in person.urlLinks %}
+                                <li><a href="{{ urlLink }}">{{ urlLink }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
             </tr>        
         </tbody>
     </table>

@@ -8,7 +8,9 @@ use AppBundle\Entity\Place;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use \Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
@@ -130,6 +132,23 @@ class PersonType extends AbstractType {
             'language' => 'en',
             'attr' => array(
                 'help_block' => 'List of known residences',
+            ),
+        ));
+
+        $builder->add('urlLinks', CollectionType::class, array(
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'delete_empty' => true,
+            'entry_type' => UrlType::class,
+            'entry_options' => array(
+                'label' => false,
+            ),
+            'label' => 'URL Links',
+            'required' => false,
+            'attr' => array(
+                'class' => 'collection collection-simple',
+                'help_block' => 'List of URLs associated with the person',
             ),
         ));
 
