@@ -418,7 +418,7 @@ class Person extends AbstractEntity {
      *
      * @return string
      */
-    public function addUrlLink(string $urlLink) {
+    public function addUrlLink($urlLink) {
         if ( !in_array($urlLink, $this->urlLinks)) {
             $this->urlLinks[] = $urlLink;
         }
@@ -431,8 +431,9 @@ class Person extends AbstractEntity {
      *
      * @param string $urlLink
      */
-    public function removeUrlLink(string $urlLink) {
-        if ($index = array_search($urlLink, $this->urlLinks)) {
+    public function removeUrlLink($urlLink) {
+        $index = array_search($urlLink, $this->urlLinks);
+        if ($index !== false) {
             unset($this->urlLinks[$index]);
         }
         return $this;
@@ -449,9 +450,9 @@ class Person extends AbstractEntity {
 
     /**
      * Set urlLinks
-     * 
+     *
      * @param string[] $urlLinks
-     * 
+     *
      * @return Person
      */
     public function setUrlLinks(array $urlLinks)
