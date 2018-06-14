@@ -48,7 +48,7 @@ class PublicationType extends AbstractType {
             'by_reference' => false,
             'attr' => array(
                 'class' => 'collection collection-simple',
-                'help_block' => 'A URL link to the specificed publicaiton',
+                'help_block' => 'A URL link to the specificed publication',
             ),
         ));
         $builder->add('description', CKEditorType::class, array(

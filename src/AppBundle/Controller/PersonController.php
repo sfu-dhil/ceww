@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Person;
+use AppBundle\Entity\Publisher;
 use AppBundle\Form\PersonType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -43,7 +44,7 @@ class PersonController extends Controller {
             'people' => $people,
         );
     }
-    
+
     /**
      * @param Request $request
      * @Route("/typeahead", name="person_typeahead")
@@ -68,7 +69,7 @@ class PersonController extends Controller {
                 'text' => $name,
             ];
         }
-        
+
         return new JsonResponse($data);
     }
 
@@ -135,7 +136,7 @@ class PersonController extends Controller {
             'form' => $form->createView(),
         );
     }
-    
+
     /**
      * Creates a new Person entity in a popup.
      *
@@ -146,7 +147,7 @@ class PersonController extends Controller {
      */
     public function newPopupAction(Request $request) {
         return $this->newAction($request);
-    }    
+    }
 
     /**
      * Finds and displays a Person entity.
@@ -166,6 +167,7 @@ class PersonController extends Controller {
             'person' => $person,
             'next' => $repo->next($person),
             'previous' => $repo->previous($person),
+            'publishers' => $em->getRepository(Publisher::class)->byPerson($person),
         );
     }
 
@@ -199,7 +201,7 @@ class PersonController extends Controller {
             'edit_form' => $editForm->createView(),
         );
     }
-    
+
     /**
      * Deletes a Person entity.
      *

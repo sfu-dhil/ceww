@@ -14,7 +14,7 @@ class GenreRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('e');
         $qb->andWhere("e.label LIKE :q");
         $qb->orderBy('e.label');
-        $qb->setParameter('q', "{$q}%");
+        $qb->setParameter('q', "%{$q}%");
         return $qb->getQuery()->execute();
-    }   
+    }
 }

@@ -43,7 +43,7 @@ abstract class Publication extends AbstractEntity {
     private $sortableTitle;
 
     /**
-     * @var Collection|string[]
+     * @var string[]
      * @ORM\Column(type="array")
      */
     private $links;
@@ -95,7 +95,7 @@ abstract class Publication extends AbstractEntity {
 
     public function __construct() {
         parent::__construct();
-        $this->links = new ArrayCollection();
+        $this->links = array();
         $this->genres = new ArrayCollection();
         $this->contributions = new ArrayCollection();
         $this->publishers = new ArrayCollection();
@@ -161,6 +161,13 @@ abstract class Publication extends AbstractEntity {
     public function setLinks($links) {
         $this->links = $links;
 
+        return $this;
+    }
+
+    public function addLink($link) {
+        if ( ! in_array($link, $this->links)) {
+            $this->links[] = $link;
+        }
         return $this;
     }
 

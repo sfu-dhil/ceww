@@ -23,29 +23,34 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadPeriodical extends AbstractFixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager) {
-        $periodical = new Periodical();
-        $periodical->setTitle("A Periodical Title");
-        $periodical->setSortableTitle("periodical title, a");
-        $periodical->addGenre($this->getReference("genre.1"));
-        $periodical->setLocation($this->getReference("place.1"));
+        for ($i = 1; $i <= 2; $i++) {
+            $periodical = new Periodical();
+            $periodical->setTitle("A Periodical Title {$i}");
+            $periodical->setSortableTitle("periodical title {$i}, a");
+            $periodical->addGenre($this->getReference("genre.{$i}"));
+            $periodical->setLocation($this->getReference("place.{$i}"));
+            $periodical->setRunDates("190{$i}-");
+            $periodical->addLink("http://example.com/{$i}");
+            $periodical->addPublisher($this->getReference("publisher.{$i}"));
+            $periodical->setNotes("note {$i}");
 
-        $contribution = new Contribution();
-        $contribution->setPerson($this->getReference("person.1"));
-        $contribution->setRole($this->getReference("role.1"));
-        $contribution->setPublication($periodical);
-        $manager->persist($contribution);
-        $this->setReference('periodical.1.contribution.1', $contribution);
-        $periodical->addContribution($contribution);
+            $contribution = new Contribution();
+            $contribution->setPerson($this->getReference("person.{$i}"));
+            $contribution->setRole($this->getReference("role.1"));
+            $contribution->setPublication($periodical);
+            $manager->persist($contribution);
+            $this->setReference("periodical.{$i}.contribution.1", $contribution);
+            $periodical->addContribution($contribution);
 
-        $dateYear = new DateYear();
-        $dateYear->setValue('1901');
-        $manager->persist($dateYear);
-        $this->setReference('periodical.1.dateyear', $dateYear);
-        $periodical->setDateYear($dateYear);
+            $dateYear = new DateYear();
+            $dateYear->setValue(1900 + $i);
+            $manager->persist($dateYear);
+            $this->setReference("periodical.{$i}.dateyear", $dateYear);
+            $periodical->setDateYear($dateYear);
 
-        $this->setReference('periodical.1', $periodical);
-        $manager->persist($periodical);
-
+            $this->setReference("periodical.{$i}", $periodical);
+            $manager->persist($periodical);
+        }
         $manager->flush();
     }
 

@@ -24,8 +24,14 @@ class LoadGenre extends AbstractFixture {
         $genre1->setName("fiction");
         $genre1->setLabel("Fiction");
         $this->setReference('genre.1', $genre1);
-        $manager->persist($genre1);       
-        
+        $manager->persist($genre1);
+
+        $genre2 = new Genre();
+        $genre2->setName("non-fiction");
+        $genre2->setLabel("Non fiction");
+        $this->setReference('genre.2', $genre2);
+        $manager->persist($genre2);
+
         $manager->flush();
     }
 

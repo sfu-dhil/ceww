@@ -2,7 +2,7 @@
 
 {% block title %}{{ person.fullName }}{% endblock %}
 
-{% block pageheader %} 
+{% block pageheader %}
     <h1>{{ person.fullName }}</h1>
     <div class="row">
         <div class="col-sm-6 text-left">
@@ -16,7 +16,7 @@
             {% endif %}
         </div>
     </div>
-{% endblock %} 
+{% endblock %}
 
 {% block body %}
     <div class="btn-toolbar">
@@ -65,7 +65,7 @@
             <tr>
                 <th><span data-toggle="popover" data-content="Date of birth" data-trigger="hover" data-placement="bottom">Birth date</span></th>
                 <td>{% if person.birthDate %}{{ person.birthDate }}{% endif %}</td>
-            </tr>                
+            </tr>
             <tr>
                 <th><span data-toggle="popover" data-content="Location for place of birth" data-trigger="hover" data-placement="bottom">Birthplace</span></th>
                 <td>
@@ -75,11 +75,11 @@
                         </a>
                     {% endif %}
                 </td>
-            </tr>        
+            </tr>
             <tr>
                 <th><span data-toggle="popover" data-content="Date of death" data-trigger="hover" data-placement="bottom">Death date</span></th>
                 <td>{% if person.deathDate %}{{ person.deathDate }}{% endif %}</td>
-            </tr>                
+            </tr>
             <tr>
                 <th><span data-toggle="popover" data-content="Location for place of death" data-trigger="hover" data-placement="bottom">Deathplace</span></th>
                 <td>
@@ -89,9 +89,9 @@
                         </a>
                     {% endif %}
                 </td>
-            </tr>        
+            </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="List of known residences" data-trigger="hover" data-placement="bottom">Residences</span></th>         
+                <th><span data-toggle="popover" data-content="List of known residences" data-trigger="hover" data-placement="bottom">Residences</span></th>
                 <td>
                     {% if person.residences | length > 0 %}
                         <ul>
@@ -101,13 +101,13 @@
                                         {{ residences }}
                                     </a>
                                 </li>
-                            {% endfor %} 
+                            {% endfor %}
                         </ul>
                     {% endif %}
                 </td>
-            </tr>        
+            </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Alternate names or aliases including maiden names" data-trigger="hover" data-placement="bottom">Alternate Names</span></th>         
+                <th><span data-toggle="popover" data-content="Alternate names or aliases including maiden names" data-trigger="hover" data-placement="bottom">Alternate Names</span></th>
                 <td>
                     {% if person.aliases | length > 0 %}
                         <ul>
@@ -117,7 +117,23 @@
                                         {{ aliases }}
                                     </a>
                                 </li>
-                            {% endfor %} 
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Publishers</th>
+                <td>
+                    {% if publishers | length > 0 %}
+                        <ul>
+                            {% for publisher in publishers %}
+                                <li>
+                                    <a href="{{path('publisher_show', {'id': publisher.id}) }}">
+                                        {{ publisher }}
+                                    </a>
+                                </li>
+                            {% endfor %}
                         </ul>
                     {% endif %}
                 </td>
@@ -129,11 +145,11 @@
                         <ul>
                             {% for urlLink in person.urlLinks %}
                                 <li><a href="{{ urlLink }}">{{ urlLink }}</a></li>
-                            {% endfor %}
+                                {% endfor %}
                         </ul>
                     {% endif %}
                 </td>
-            </tr>        
+            </tr>
         </tbody>
     </table>
 
@@ -147,22 +163,22 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="books">                
+            <div role="tabpanel" class="tab-pane active" id="books">
                 {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::BOOK')) %}
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
                             {% set publication = contribution.publication %}
                             <li>
-                            {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
-                                    {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
-                                {% endblock %}
-                            {% endembed %}
+                                {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
+                                    {% block callback %}
+                                        <i>{{ publication.title }}</i>
+                                        {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
+                                        {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
+                                    {% endblock %}
+                                {% endembed %}
                             </li>
-                        {% endfor %} 
+                        {% endfor %}
                     </ul>
                 {% endif %}
             </div>
@@ -170,18 +186,18 @@
                 {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
                 {% if contributions | length > 0 %}
                     <ul>
-                        {% for contribution in contributions %}                            
+                        {% for contribution in contributions %}
                             {% set publication = contribution.publication %}
                             <li>
-                            {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
-                                    {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
-                                {% endblock %}
-                            {% endembed %}
+                                {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
+                                    {% block callback %}
+                                        <i>{{ publication.title }}</i>
+                                        {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
+                                        {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
+                                    {% endblock %}
+                                {% endembed %}
                             </li>
-                        {% endfor %} 
+                        {% endfor %}
                     </ul>
                 {% endif %}
             </div>
@@ -190,23 +206,23 @@
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
-                             {% set publication = contribution.publication %}
+                            {% set publication = contribution.publication %}
                             <li>
-                            {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
-                                {% block callback %}
-                                    <i>{{ publication.title }}</i>
-                                    {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
-                                    {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
-                                {% endblock %}
-                            {% endembed %}
+                                {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
+                                    {% block callback %}
+                                        <i>{{ publication.title }}</i>
+                                        {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
+                                        {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
+                                    {% endblock %}
+                                {% endembed %}
                             </li>
-                       {% endfor %} 
+                        {% endfor %}
                     </ul>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': person } %}				
+    {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': person } %}
 
 {% endblock %}
