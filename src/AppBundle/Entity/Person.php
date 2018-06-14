@@ -55,6 +55,12 @@ class Person extends AbstractEntity {
     private $notes;
 
     /**
+     * @var string[]
+     * @ORM\Column(type="array")
+     */
+    private $urlLinks;
+
+    /**
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
      */
@@ -101,6 +107,7 @@ class Person extends AbstractEntity {
         $this->residences = new ArrayCollection();
         $this->aliases = new ArrayCollection();
         $this->contributions = new ArrayCollection();
+        $this->urlLinks = array();
     }
 
     public function __toString() {
@@ -402,6 +409,56 @@ class Person extends AbstractEntity {
         return array_filter($this->contributions->toArray(), function(Contribution $contribution) use ($category) {
             return $contribution->getPublication()->getCategory() === $category;
         });
+    }
+
+    /**
+     * Add urlLink
+     *
+     * @param string $urlLink
+     *
+     * @return string
+     */
+    public function addUrlLink(string $urlLink) {
+        if ( !in_array($urlLink, $this->urlLinks)) {
+            $this->urlLinks[] = $urlLink;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove urlLink
+     *
+     * @param string $urlLink
+     */
+    public function removeUrlLink(string $urlLink) {
+        if ($index = array_search($urlLink, $this->urlLinks)) {
+            unset($this->urlLinks[$index]);
+        }
+        return $this;
+    }
+
+    /**
+     * Get urlLinks
+     *
+     * @return array
+     */
+    public function getUrlLinks() {
+        return $this->urlLinks;
+    }
+
+    /**
+     * Set urlLinks
+     * 
+     * @param string[] $urlLinks
+     * 
+     * @return Person
+     */
+    public function setUrlLinks(array $urlLinks)
+    {
+        $this->urlLinks = $urlLinks;
+        return $this;
+
     }
 
     /**

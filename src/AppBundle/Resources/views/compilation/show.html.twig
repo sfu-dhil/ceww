@@ -29,15 +29,15 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Full title of the work" data-trigger="hover" data-placement="bottom">Title</a></th>
+                <th><span data-toggle="popover" data-content="Full title of the work" data-trigger="hover" data-placement="bottom">Title</span></th>
                 <td>{{ compilation.title }}</td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Year work published" data-trigger="hover" data-placement="bottom">Date</a></th>
+                <th><span data-toggle="popover" data-content="Year work published" data-trigger="hover" data-placement="bottom">Date</span></th>
                 <td>{{ compilation.dateYear }}</td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Place of publication" data-trigger="hover" data-placement="bottom">Location</a></th>
+                <th><span data-toggle="popover" data-content="Place of publication" data-trigger="hover" data-placement="bottom">Location</span></th>
                 <td>{{ compilation.location }}</td>
             </tr>
             <tr>
@@ -56,12 +56,12 @@
             </tr>
             {% if is_granted('ROLE_USER') %}
                 <tr>
-                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Name sorting (lowercase). Not visible to public." data-trigger="hover" data-placement="bottom">Sortable Title</a></th>
+                    <th><span data-toggle="popover" data-content="Name sorting (lowercase). Not visible to public." data-trigger="hover" data-placement="bottom">Sortable Title</span></th>
                     <td>{{ compilation.sortableTitle }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="URL link to specified publication" data-trigger="hover" data-placement="bottom">Links</a></th>
+                <th><span data-toggle="popover" data-content="URL link to specified publication" data-trigger="hover" data-placement="bottom">Links</span></th>
                 <td>
                     {% if compilation.links | length > 0 %}
                         <ul>
@@ -75,11 +75,11 @@
                 </td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</a></th>
+                <th><span data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</span></th>
                 <td>{{ compilation.description|raw }}</td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Category of work" data-trigger="hover" data-placement="bottom">Genres</a></th>
+                <th><span data-toggle="popover" data-content="Category of work" data-trigger="hover" data-placement="bottom">Genres</span></th>
                 <td>
                     {% if compilation.genres | length > 0 %}
                         <ul>
@@ -97,7 +97,7 @@
 
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="These notes are only available to logged-in users" data-trigger="hover" data-placement="bottom">Research Notes</a></th>
+                    <th><span data-toggle="popover" data-content="These notes are only available to logged-in users" data-trigger="hover" data-placement="bottom">Research Notes</span></th>
                     <td>{{ compilation.notes|raw }}</td>
                 </tr>
             {% endif %}

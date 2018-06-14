@@ -39,35 +39,35 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Person's full name" data-trigger="hover" data-placement="bottom">Full Name</a></th>
+                <th><span data-toggle="popover" data-content="Person's full name" data-trigger="hover" data-placement="bottom">Full Name</span></th>
                 <td>{{ person.fullName }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Name listed last name, first name. Not visible to public." data-trigger="hover" data-placement="bottom">Sortable Name</th>
+                    <th><span data-toggle="popover" data-content="Name listed last name, first name. Not visible to public." data-trigger="hover" data-placement="bottom">Sortable Name</span></th>
                     <td>{{ person.sortableName }}</td>
                 </tr>
                 <tr>
-                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Person's gender" data-trigger="hover" data-placement="bottom">Gender</a></th>
+                    <th><span data-toggle="popover" data-content="Person's gender" data-trigger="hover" data-placement="bottom">Gender</span></th>
                     <td>{{ include('AppBundle:person:partial/gender.html.twig') }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</a></th>
+                <th><span data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</span></th>
                 <td>{{ person.description|raw }}</td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th><a href="#" onClick="return false;" data-toggle="popover" data-content="These notes are ony available to logged-in users" data-trigger="hover" data-placement="bottom">Research Notes</a></th>
+                    <th><span data-toggle="popover" data-content="These notes are ony available to logged-in users" data-trigger="hover" data-placement="bottom">Research Notes</span></th>
                     <td>{{ person.notes|raw }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Date of birth" data-trigger="hover" data-placement="bottom">Birth date</a></th>
+                <th><span data-toggle="popover" data-content="Date of birth" data-trigger="hover" data-placement="bottom">Birth date</span></th>
                 <td>{% if person.birthDate %}{{ person.birthDate }}{% endif %}</td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Location for place of birth" data-trigger="hover" data-placement="bottom">Birthplace</a></th>
+                <th><span data-toggle="popover" data-content="Location for place of birth" data-trigger="hover" data-placement="bottom">Birthplace</span></th>
                 <td>
                     {% if person.birthPlace %}
                         <a href="{{ path('place_show', { 'id': person.birthPlace.id}) }}">
@@ -77,11 +77,11 @@
                 </td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Date of death" data-trigger="hover" data-placement="bottom">Death date</a></th>
+                <th><span data-toggle="popover" data-content="Date of death" data-trigger="hover" data-placement="bottom">Death date</span></th>
                 <td>{% if person.deathDate %}{{ person.deathDate }}{% endif %}</td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Location for place of death" data-trigger="hover" data-placement="bottom">Deathplace</a></th>
+                <th><span data-toggle="popover" data-content="Location for place of death" data-trigger="hover" data-placement="bottom">Deathplace</span></th>
                 <td>
                     {% if person.deathPlace %}
                         <a href="{{ path('place_show', { 'id': person.deathPlace.id}) }}">
@@ -91,7 +91,7 @@
                 </td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="List of known residences" data-trigger="hover" data-placement="bottom">Residences</a></th>
+                <th><span data-toggle="popover" data-content="List of known residences" data-trigger="hover" data-placement="bottom">Residences</span></th>
                 <td>
                     {% if person.residences | length > 0 %}
                         <ul>
@@ -107,7 +107,7 @@
                 </td>
             </tr>
             <tr>
-                <th><a href="#" onClick="return false;" data-toggle="popover" data-content="Alternate names or aliases including maiden names" data-trigger="hover" data-placement="bottom">Alternate Names</a></th>
+                <th><span data-toggle="popover" data-content="Alternate names or aliases including maiden names" data-trigger="hover" data-placement="bottom">Alternate Names</span></th>
                 <td>
                     {% if person.aliases | length > 0 %}
                         <ul>
@@ -138,6 +138,18 @@
                     {% endif %}
                 </td>
             </tr>
+            <tr>
+                <th>URL Links</th>
+                <td>
+                    {% if person.urlLinks | length > 0 %}
+                        <ul>
+                            {% for urlLink in person.urlLinks %}
+                                <li><a href="{{ urlLink }}">{{ urlLink }}</a></li>
+                                {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
         </tbody>
     </table>
 
@@ -162,55 +174,55 @@
                                     {% block callback %}
                                         <i>{{ publication.title }}</i>
                                         {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
-                                            {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
-                                                {% endblock %}
-                                                    {% endembed %}
-                                                    </li>
-                                                    {% endfor %}
-                                                    </ul>
-                                                    {% endif %}
-                                                    </div>
-                                                    <div role="tabpanel" class="tab-pane" id="collections">
-                                                        {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
-                                                        {% if contributions | length > 0 %}
-                                                            <ul>
-                                                                {% for contribution in contributions %}
-                                                                    {% set publication = contribution.publication %}
-                                                                    <li>
-                                                                        {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
-                                                                            {% block callback %}
-                                                                                <i>{{ publication.title }}</i>
-                                                                                {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
-                                                                                    {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
-                                                                                        {% endblock %}
-                                                                                            {% endembed %}
-                                                                                            </li>
-                                                                                            {% endfor %}
-                                                                                            </ul>
-                                                                                            {% endif %}
-                                                                                            </div>
-                                                                                            <div role="tabpanel" class="tab-pane" id="periodicals">
-                                                                                                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
-                                                                                                {% if contributions | length > 0 %}
-                                                                                                    <ul>
-                                                                                                        {% for contribution in contributions %}
-                                                                                                            {% set publication = contribution.publication %}
-                                                                                                            <li>
-                                                                                                                {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
-                                                                                                                    {% block callback %}
-                                                                                                                        <i>{{ publication.title }}</i>
-                                                                                                                        {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
-                                                                                                                            {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
-                                                                                                                                {% endblock %}
-                                                                                                                                    {% endembed %}
-                                                                                                                                    </li>
-                                                                                                                                    {% endfor %}
-                                                                                                                                    </ul>
-                                                                                                                                    {% endif %}
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
+                                        {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
+                                    {% endblock %}
+                                {% endembed %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="collections">
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
+                {% if contributions | length > 0 %}
+                    <ul>
+                        {% for contribution in contributions %}
+                            {% set publication = contribution.publication %}
+                            <li>
+                                {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
+                                    {% block callback %}
+                                        <i>{{ publication.title }}</i>
+                                        {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
+                                        {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
+                                    {% endblock %}
+                                {% endembed %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="periodicals">
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
+                {% if contributions | length > 0 %}
+                    <ul>
+                        {% for contribution in contributions %}
+                            {% set publication = contribution.publication %}
+                            <li>
+                                {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
+                                    {% block callback %}
+                                        <i>{{ publication.title }}</i>
+                                        {%- if publication.dateYear %}, {{ publication.dateYear }}{% endif -%}
+                                        {%- if contribution.role.name != 'author' %}, {{ contribution.role }}{% endif -%}
+                                    {% endblock %}
+                                {% endembed %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-                                                                                                                            {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': person } %}
+    {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': person } %}
 
-                                                                                                                            {% endblock %}
+{% endblock %}

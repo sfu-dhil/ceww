@@ -83,19 +83,25 @@ class PersonController extends Controller {
      */
     public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Person');
+        $personRepo = $em->getRepository('AppBundle:Person');
+        $aliasRepo = $em->getRepository('AppBundle:Alias');
         $q = $request->query->get('q');
         if ($q) {
-            $query = $repo->searchQuery($q);
+            $personQuery = $personRepo->searchQuery($q);
+            $aliasQuery = $aliasRepo->searchQuery($q);
             $paginator = $this->get('knp_paginator');
-            $people = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+            $people = $paginator->paginate($personQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+            $aliases = $paginator->paginate($aliasQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         } else {
             $people = array();
+            $aliases = array();
         }
 
         return array(
             'people' => $people,
+            'aliases' => $aliases,
             'q' => $q,
+            'page' => $request->query->getInt('page', 1),
         );
     }
 

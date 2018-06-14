@@ -4,7 +4,13 @@
 
 {% block pageheader %}
     <h1>Person Search</h1>
-    {% include 'AppBundle:misc:search-header.html.twig' with {'results': people} %}
+    {% embed 'AppBundle:misc:search-header.html.twig' with { 'peopleResults': people, 'aliasesResults': aliases } %}
+        {% block callback %}
+            <p class="count">
+                Displaying {{ peopleResults|length + aliasesResults|length }} search results of {{ peopleResults.getTotalItemCount + aliasesResults.getTotalItemCount }} total.
+            </p>
+        {% endblock %}
+    {% endembed %}
 {% endblock %} 
 
 {% block body %}
@@ -12,7 +18,16 @@
     {% include 'AppBundle:misc:search-form.html.twig' with {'search_path': 'person_search'} %}
 
     {% if q %}
-        {% include 'AppBundle:person:partial/table.html.twig' %}
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-center">People</h2>
+                {% include 'AppBundle:person:partial/table.html.twig' %}
+            </div>
+            <div class="col-md-6">
+                <h2 class="text-center">Alternate Names</h2>
+                {% include 'AppBundle:alias:partial/table.html.twig' %}
+            </div>
+        </div>
     {% endif %}
 
     {% include 'AppBundle:misc:search-footer.html.twig' with {'results': people} %}
