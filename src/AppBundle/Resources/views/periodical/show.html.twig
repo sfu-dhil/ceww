@@ -121,17 +121,22 @@
 
     {% if periodical.contributions | length > 0 %}
         <h2>Contributors</h2>
-        <ul>
-            {% for contribution in periodical.contributions %}
-                <li>
-                    {% if contribution.role.name != 'author' %}
-                        <i>{{ contribution.role }}</i>,
-                    {% endif %}
-                    {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
-                    {% endembed %}
-                </li>
-            {% endfor %}
-        </ul>
+        <table class="table table-bordered table-condensed table-hover table-striped">
+            <tbody>
+                {% for row in periodical.contributions|batch(3, '') %}
+                    <tr>
+                        {% for contribution in row %}
+                            <td>
+                                {% if contribution %}
+                                    {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
+                                    {% endembed %} 
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 
     {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': periodical } %}
