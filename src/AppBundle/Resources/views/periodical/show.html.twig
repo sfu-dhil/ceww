@@ -120,24 +120,42 @@
 
     {% if periodical.contributions | length > 0 %}
         <h2>Contributors</h2>
-        <table class="table table-bordered table-condensed table-hover table-striped">
-            <tbody>
-                {% for row in periodical.contributions|batch(3, '') %}
-                    <tr>
-                        {% for contribution in row %}
-                            <td>
-                                {% if contribution %}
-                                    {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
-                                    {% endembed %} 
-                                {% endif %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <ul class="columns">
+            {% for contribution in periodical.contributions %}
+                <li>
+                    {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
+                    {% endembed %} 
+                </li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
     {% include 'NinesFeedbackBundle:comment:comment-interface.html.twig' with { 'entity': periodical } %}
 
+{% endblock %}
+{% block styles %}
+<style>
+ul.columns {
+    list-style-type: none;
+}
+
+@media (min-width: 460px) and (max-width: 767px) {
+    ul.columns {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    ul.columns {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 992px) {
+    ul.columns {
+        column-count: 4;
+    }
+}
+
+</style>
 {% endblock %}
