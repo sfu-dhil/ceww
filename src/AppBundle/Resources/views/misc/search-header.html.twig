@@ -1,7 +1,13 @@
 {% if q %}
     {% block callback %}
         <p class="count">
-            Displaying {{ results|length }} search results of {{ results.getTotalItemCount }} total.
+            Displaying {{ results|length }} search 
+            {% if results|length == 1 %}
+                result
+            {% else %}
+                results
+            {% endif %}
+            of {{ results.getTotalItemCount }} total.
         </p>
     {% endblock %}
 {% endif %}

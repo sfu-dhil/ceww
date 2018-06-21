@@ -121,5 +121,53 @@ class PersonTest extends BaseTestCase {
         $this->assertEquals(2, count($person->getContributions(Publication::COMPILATION)));
         $this->assertEquals(2, count($person->getContributions(Publication::PERIODICAL)));
     }
+
+    public function testAddUrlLink() {
+        $person = new Person();
+        $urlLink = 'http://www.example.com';
+
+        $person->addUrlLink($urlLink);
+        
+        $this->assertEquals(1, count($person->getUrlLinks()));
+    }
+
+    public function testRemoveUrlLink() {
+        $person = new Person();
+        $urlLink = 'http://www.example.com';
+
+        $person->addUrlLink($urlLink);
+        $person->removeUrlLink($urlLink);
+
+        $this->assertEquals(0, count($person->getUrlLinks()));
+    }
+    
+    public function testGetUrlLinks() {
+        $person = new Person();
+        $urlLinks = ['http://www.example.com', 'http://www.sfu.ca'];
+        
+        $person->setUrlLinks($urlLinks);
+
+        $this->assertEquals(2, count($person->getUrlLinks()));
+        $this->assertContains('http://www.example.com', $person->getUrlLinks());
+    }
+
+    /**
+    * @dataProvider SetUrlLinkData
+    */
+    public function testSetUrlLinks($testUrlLinks) {
+        $person = new Person();
+
+        $person->setUrlLinks($testUrlLinks);
+        
+        $this->AssertEquals($testUrlLinks, $person->getUrlLinks());
+    }
+    
+    public function SetUrlLinkData() {
+        return array(
+
+            [['http://www.example.com', 'http://www.sfu.ca']],
+            [['http://www.sfu.ca']]
+        );
+    }
     
 }    

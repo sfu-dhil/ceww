@@ -7,7 +7,13 @@
     {% embed 'AppBundle:misc:search-header.html.twig' with { 'peopleResults': people, 'aliasesResults': aliases } %}
         {% block callback %}
             <p class="count">
-                Displaying {{ peopleResults|length + aliasesResults|length }} search results of {{ peopleResults.getTotalItemCount + aliasesResults.getTotalItemCount }} total.
+                Displaying {{ peopleResults|length + aliasesResults|length }} search 
+                {% if peopleResults|length + aliasesResults|length == 1 %}
+                    result
+                {% else %}
+                    results
+                {% endif %}
+                of {{ peopleResults.getTotalItemCount + aliasesResults.getTotalItemCount }} total.
             </p>
         {% endblock %}
     {% endembed %}
@@ -21,11 +27,41 @@
         <div class="row">
             <div class="col-md-6">
                 <h2 class="text-center">People</h2>
-                {% include 'AppBundle:person:partial/table.html.twig' %}
+                {% if people.items == null and people.currentPageNumber == 1 %}
+                    <p>No results for this query</p>
+                {% elseif people.items == null and people.currentPageNumber > 1 %}
+                    <p>No results for this page</p>
+                {% else %}
+                    <p class="count">
+                        Displaying {{ people.items|length }} people 
+                        {% if people.items|length == 1 %}
+                            result
+                        {% else %}
+                            results
+                        {% endif %}
+                        of {{ people.getTotalItemCount }} total.
+                    </p>
+                    {% include 'AppBundle:person:partial/table.html.twig' %}
+                {% endif %}
             </div>
             <div class="col-md-6">
                 <h2 class="text-center">Alternate Names</h2>
-                {% include 'AppBundle:alias:partial/table.html.twig' %}
+                {% if aliases.items == null and aliases.currentPageNumber == 1 %}
+                    <p>No results for this query</p>
+                {% elseif aliases.items == null and aliases.currentPageNumber > 1 %}
+                    <p>No results for this page</p>
+                {% else %}
+                    <p class="count">
+                        Displaying {{ aliases.items|length }} alternate name 
+                        {% if aliases.items|length == 1 %}
+                            result
+                        {% else %}
+                            results
+                        {% endif %}
+                        of {{ aliases.getTotalItemCount }} total.
+                    </p>
+                    {% include 'AppBundle:alias:partial/table.html.twig' %}
+                {% endif %}
             </div>
         </div>
     {% endif %}
