@@ -101,20 +101,29 @@ class BookControllerTest extends BaseTestCase
         $form = $formCrawler->selectButton('Update')->form([
             'book[title]' => 'The Book of Cheese.',
             'book[sortableTitle]' => 'Book of Cheese, The',
-            // 'book[links]' => 'http://example.com'
             'book[description]' => 'It is a book',
             'book[notes]' => 'A notes about a book',
             'book[dateYear]' => '1934',
             'book[location]' => 1,
             'book[genres]' => 1,
-            // 'book[contributions]' =>
         ]);
+        $values = $form->getPhpValues();
+        $values['book']['links'][0] = 'http://example.com/path/to/link';
+        $values['book']['links'][1] = 'http://example.com/different/url';
 
-        $client->submit($form);
+        $values['book']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
+        $values['book']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
+
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+
         $this->assertTrue($client->getResponse()->isRedirect('/book/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
+
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
 
     public function testAnonNew() {
