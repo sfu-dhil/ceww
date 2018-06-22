@@ -85,7 +85,7 @@ class BookController extends Controller {
     public function showAction(Book $book) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Book::class);
-        
+
         return array(
             'book' => $book,
             'next' => $repo->next($book),
