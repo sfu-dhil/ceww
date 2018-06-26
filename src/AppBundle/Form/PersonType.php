@@ -144,7 +144,7 @@ class PersonType extends AbstractType {
             'entry_options' => array(
                 'label' => false,
             ),
-            'label' => 'URL Links',
+            'label' => 'Links',
             'required' => false,
             'attr' => array(
                 'class' => 'collection collection-simple',
