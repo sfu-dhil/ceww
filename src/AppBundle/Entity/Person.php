@@ -87,12 +87,14 @@ class Person extends AbstractEntity {
     /**
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $residences;
 
     /**
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Alias", inversedBy="people")
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $aliases;
 

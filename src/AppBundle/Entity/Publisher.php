@@ -24,18 +24,21 @@ class Publisher extends AbstractEntity {
     /**
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $name;
 
     /**
      * @var Place[]|Collection
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $places;
 
     /**
      * @var Collection|Publication[]
      * @ORM\ManyToMany(targetEntity="Publication", mappedBy="publishers")
+     * @ORM\OrderBy({"sortableTitle" = "ASC"})
      */
     private $publications;
 

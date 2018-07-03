@@ -71,30 +71,35 @@ class Place extends AbstractEntity {
     /**
      * @var Collection|Person[]
      * @ORM\OneToMany(targetEntity="Person", mappedBy="birthPlace")
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $peopleBorn;
 
     /**
      * @var Collection|Person[]
      * @ORM\OneToMany(targetEntity="Person", mappedBy="deathPlace")
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $peopleDied;
 
     /**
      * @var Collection|Person[]
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="residences")
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $residents;
 
     /**
      * @var Collection|Publication[]
      * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
+     * @ORM\OrderBy({"title" = "ASC"})
      */
     private $publications;
 
     /**
      * @var Collection|Publisher[]
      * @ORM\ManyToMany(targetEntity="Publisher", mappedBy="places")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $publishers;
 

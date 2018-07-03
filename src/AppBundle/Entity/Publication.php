@@ -78,6 +78,7 @@ abstract class Publication extends AbstractEntity {
      * @var Collection|Genre[]
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publications_genres")
+     * @ORM\OrderBy({"label" = "ASC"})
      */
     private $genres;
 
@@ -90,6 +91,7 @@ abstract class Publication extends AbstractEntity {
     /**
      * @var Collection|Publisher
      * @ORM\ManyToMany(targetEntity="Publisher", inversedBy="publications")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $publishers;
 
