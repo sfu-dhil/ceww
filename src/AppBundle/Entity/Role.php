@@ -20,7 +20,7 @@ class Role extends AbstractTerm
      * @ORM\OneToMany(targetEntity="Contribution", mappedBy="role")
      */
     private $contributions;
-    
+
     public function __construct() {
         parent::__construct();
         $this->contributions = new ArrayCollection();
@@ -59,6 +59,10 @@ class Role extends AbstractTerm
      */
     public function getContributions()
     {
-        return $this->contributions;
+        $contributions = $this->contributions->toArray();
+        usort($contributions, function(Contribution $a, Contribution $b) {
+            return strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
+        });
+        return $contributions;
     }
 }

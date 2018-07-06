@@ -19,12 +19,12 @@ class Alias extends AbstractEntity
 {
     /**
      * Name of the alias.
-     * 
+     *
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $name;
-    
+
     /**
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
@@ -36,33 +36,34 @@ class Alias extends AbstractEntity
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
     private $maiden;
-    
+
     /**
      * public research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-    
+
     /**
      * private research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
-    
+
     /**
      * @var Collection|Person[]
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="aliases")
+     * @ORM\OrderBy({"sortableName" = "ASC"})
      */
     private $people;
-    
+
     public function __construct() {
         parent::__construct();
         $this->people = new ArrayCollection();
         $this->notes = '';
     }
-    
+
     public function __toString() {
         return $this->name;
     }
@@ -151,7 +152,7 @@ class Alias extends AbstractEntity
         $this->notes = $notes;
 
         return $this;
-    }    
+    }
 
     public function appendNote($note) {
         if (!$this->notes) {

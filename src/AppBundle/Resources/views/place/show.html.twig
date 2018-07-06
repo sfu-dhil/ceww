@@ -40,22 +40,32 @@
         </div>
     </div>
     <table class="table table-bordered table-condensed table-hover table-striped">
-        <tbody><tr>
+        <tbody>
+            <tr>
                 <th><span data-toggle="popover" data-content="Place name" data-trigger="hover" data-placement="bottom">Name</span></th>
                 <td>{{ place.name }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
+                <th>Sortable Name</th>
+                <td>{{ place.sortableName }}</td>
+            </tr>
+            <tr>
                 <th><span data-toggle="popover" data-content="State, province, territory or other sub-national entity" data-trigger="hover" data-placement="bottom">Region Name</span></th>
                 <td>{{ place.regionName }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th><span data-toggle="popover" data-content="Country name" data-trigger="hover" data-placement="bottom">Country Name</span></th>
                 <td>{{ place.countryName }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th><span data-toggle="popover" data-content="Location's latitude" data-trigger="hover" data-placement="bottom">Latitude</span></th>
                 <td>{{ place.latitude }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th><span data-toggle="popover" data-content="Location's longitude" data-trigger="hover" data-placement="bottom">Longitude</span></th>
                 <td>{{ place.longitude }}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th><span data-toggle="popover" data-content="Notes about the entry." data-trigger="hover" data-placement="bottom">Notes</span></th>
                 <td>{{ place.description|raw }}</td>
             </tr>
@@ -75,7 +85,7 @@
             <li role="presentation"><a href="#resident" aria-controls="messages" role="tab" data-toggle="tab">Residents</a></li>
             <li role="presentation"><a href="#publisher" aria-controls="messages" role="tab" data-toggle="tab">Publishers</a></li>
             <li role="presentation"><a href="#book" aria-controls="messages" role="tab" data-toggle="tab">Books</a></li>
-            <li role="presentation"><a href="#compilation" aria-controls="messages" role="tab" data-toggle="tab">Collection</a></li>
+            <li role="presentation"><a href="#compilation" aria-controls="messages" role="tab" data-toggle="tab">Collections</a></li>
             <li role="presentation"><a href="#periodical" aria-controls="messages" role="tab" data-toggle="tab">Periodicals</a></li>
         </ul>
         <div class="tab-content">
