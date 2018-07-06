@@ -101,20 +101,30 @@ class CompilationControllerTest extends BaseTestCase
         $form = $formCrawler->selectButton('Update')->form([
             'compilation[title]' => 'The Compilation of Cheese.',
             'compilation[sortableTitle]' => 'Compilation of Cheese, The',
-            // 'compilation[links]' => 'http://example.com',
             'compilation[description]' => 'It is a book',
             'compilation[notes]' => 'A notes about a book',
             'compilation[dateYear]' => '1934',
             'compilation[location]' => 1,
             'compilation[genres]' => 1,
-            // 'compilation[contributions]' =>
         ]);
+
+        $values = $form->getPhpValues();
         
-        $client->submit($form);
+        $values['compilation']['links'][0] = 'http://example.com/path/to/link';
+        $values['compilation']['links'][1] = 'http://example.com/different/url';
+
+        $values['compilation']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
+        $values['compilation']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
+        
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+        
         $this->assertTrue($client->getResponse()->isRedirect('/compilation/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
     
     public function testAnonNew() {
@@ -145,20 +155,30 @@ class CompilationControllerTest extends BaseTestCase
         $form = $formCrawler->selectButton('Create')->form([
             'compilation[title]' => 'The Compilation of Cheese.',
             'compilation[sortableTitle]' => 'Compilation of Cheese, The',
-            // 'compilation[links]' => 'http://example.com',
             'compilation[description]' => 'It is a book',
             'compilation[notes]' => 'A notes about a book',
             'compilation[dateYear]' => '1934',
             'compilation[location]' => '',
             'compilation[genres]' => '',
-            // 'compilation[contributions]' =>
         ]);
+
+        $values = $form->getPhpValues();
         
-        $client->submit($form);
+        $values['compilation']['links'][0] = 'http://example.com/path/to/link';
+        $values['compilation']['links'][1] = 'http://example.com/different/url';
+
+        $values['compilation']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
+        $values['compilation']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
+        
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
     
     public function testAnonDelete() {
