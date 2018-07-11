@@ -114,7 +114,7 @@ fos_user:
         address:        noreply@'%router.request_context.host%'
         sender_name:    Do Not Reply
 
-ivory_ck_editor:
+fos_ck_editor:
     input_sync: true
     default_config: ceww_config
     configs:
