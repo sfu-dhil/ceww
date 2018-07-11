@@ -140,21 +140,33 @@ class PersonControllerTest extends BaseTestCase
             'person[fullName]' => 'Testy McUser.',
             'person[sortableName]' => 'McUser, Testy',
             'person[gender]' => 0,
-            'person[aliases]' => 1,
             'person[description]' => 'It is a person',
             'person[birthDate]' => 'c1902',
-            'person[birthPlace]' => 1,
             'person[deathDate]' => 'c1952',
-            'person[deathPlace]' => 2,
-            'person[residences]' => '',
             'person[notes]' => 'It is a note'
         ]);
         
-        $client->submit($form);
+        $values = $form->getPhpValues();
+
+        $values['person']['urlLinks'][0] = 'http://example.com/path/to/link';
+        $values['person']['urlLinks'][1] = 'http://example.com/different/url';
+        $values['person']['birthPlace'] = $this->getReference('place.1')->getId();
+        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
+        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
+        $values['person']['residences'][0] = $this->getReference('place.3')->getId();
+        $values['person']['aliases'][0] = $this->getReference('alias.1')->getId();
+
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertTrue($client->getResponse()->isRedirect('/person/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("Testy McUser.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Lockside")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Lockchester")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Colchester")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Nee Mariston")')->count());
     }
     
     public function testAnonNew() {
@@ -186,21 +198,33 @@ class PersonControllerTest extends BaseTestCase
             'person[fullName]' => 'Testy McUser.',
             'person[sortableName]' => 'McUser, Testy',
             'person[gender]' => 0,
-            'person[aliases]' => '',
             'person[description]' => 'It is a person',
             'person[birthDate]' => 'c1902',
-            'person[birthPlace]' => '',
             'person[deathDate]' => 'c1952',
-            'person[deathPlace]' => '',
-            'person[residences]' => '',
             'person[notes]' => 'It is a note'
         ]);
-        
-        $client->submit($form);
+
+        $values = $form->getPhpValues();
+
+        $values['person']['urlLinks'][0] = 'http://example.com/path/to/link';
+        $values['person']['urlLinks'][1] = 'http://example.com/different/url';
+        $values['person']['birthPlace'] = $this->getReference('place.1')->getId();
+        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
+        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
+        $values['person']['residences'][0] = $this->getReference('place.3')->getId();
+        $values['person']['aliases'][0] = $this->getReference('alias.1')->getId();
+
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("Testy McUser.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Lockside")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Lockchester")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Colchester")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Nee Mariston")')->count());
     }
     
     public function testAnonDelete() {

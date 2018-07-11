@@ -101,22 +101,31 @@ class PeriodicalControllerTest extends BaseTestCase
         $form = $formCrawler->selectButton('Update')->form([
             'periodical[title]' => 'The Book of Cheese.',
             'periodical[sortableTitle]' => 'Book of Cheese, The',
-            // 'periodical[links]' => 'http://example.com'
             'periodical[description]' => 'It is a book',
             'periodical[notes]' => 'A notes about a book',
             'periodical[location]' => '',
             'periodical[genres]' => '',
-            // 'periodical[contributions]' =>
             'periodical[runDates]' => '1990-1999',
             'periodical[continuedFrom]' => 'test',
             'periodical[continuedBy]' => 'Test McUser'
         ]);
 
-        $client->submit($form);
+        $values = $form->getPhpValues();
+
+        $values['periodical']['links'][0] = 'http://example.com/path/to/link';
+        $values['periodical']['links'][1] = 'http://example.com/different/url';
+
+        $values['periodical']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
+        $values['periodical']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
+
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertTrue($client->getResponse()->isRedirect('/periodical/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
 
     public function testAnonNew() {
@@ -147,22 +156,31 @@ class PeriodicalControllerTest extends BaseTestCase
         $form = $formCrawler->selectButton('Create')->form([
             'periodical[title]' => 'The Book of Cheese.',
             'periodical[sortableTitle]' => 'Book of Cheese, The',
-            // 'periodical[links]' => 'http://example.com'
             'periodical[description]' => 'It is a book',
             'periodical[notes]' => 'A notes about a book',
             'periodical[location]' => '',
             'periodical[genres]' => '',
-            // 'periodical[contributions]' =>
             'periodical[runDates]' => '1990-1999',
             'periodical[continuedFrom]' => 'test',
             'periodical[continuedBy]' => 'Test McUser'
         ]);
 
-        $client->submit($form);
+        $values = $form->getPhpValues();
+
+        $values['periodical']['links'][0] = 'http://example.com/path/to/link';
+        $values['periodical']['links'][1] = 'http://example.com/different/url';
+
+        $values['periodical']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
+        $values['periodical']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
+
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
 
     public function testAnonDelete() {
