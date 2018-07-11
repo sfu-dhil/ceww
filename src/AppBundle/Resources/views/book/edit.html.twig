@@ -19,6 +19,7 @@
 
         <div class='btn-toolbar pull-right'>
             <div class='btn-group'>
+                <a href="{{ path('book_show_contributions', { 'id': book.id }) }}" class="btn btn-primary">Edit contributions</a>
                 <a href="{{ path('place_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Place</a>
                 <a href="{{ path('person_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Person</a>
                 <a href="{{ path('publisher_new_popup') }}" class="btn btn-primary popup" id="newPublisher"><span class="glyphicon glyphicon-plus"></span> Publisher</a>
