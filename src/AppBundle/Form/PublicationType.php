@@ -101,21 +101,6 @@ class PublicationType extends AbstractType {
                 'help_block' => 'Category of the work',
             ),
         ));
-        $builder->add('contributions', CollectionType::class, array(
-            'label' => 'Contributors',
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'delete_empty' => true,
-            'entry_type' => ContributionType::class,
-            'entry_options' => array(
-                'label' => false,
-            ),
-            'attr' => array(
-                'class' => 'collection collection-complex',
-                'help_block' => 'Name of all the people who have contributed to the work and their role in the work\'s production',
-            ),
-        ));
 
         $builder->add('publishers', Select2EntityType::class, array(
             'multiple' => true,

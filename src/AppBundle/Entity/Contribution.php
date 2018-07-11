@@ -114,4 +114,14 @@ class Contribution extends AbstractEntity
     {
         return $this->publication;
     }
+
+    /**
+     * Get publication id
+     * 
+     * @return publicaiton
+     */
+    public function getPublicationId()
+    {
+        return $this->publication->getId();
+    }
 }
