@@ -8,7 +8,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Compilation;
+use AppBundle\Entity\Contribution;
 use AppBundle\Form\CompilationType;
+use AppBundle\Form\ContributionType;
 
 /**
  * Compilation controller.
@@ -150,4 +152,115 @@ class CompilationController extends Controller
 
         return $this->redirectToRoute('compilation_index');
     }
+
+        /**
+     * Creates a new Compilation contribution entity.
+     *
+     * @Route("/{id}/contributions/new", name="compilation_new_contribution")
+     * @Method({"GET", "POST"})
+     * @Template()
+     * @param Request $request
+     * @param Compilation $compilation
+     */
+    public function newContribution(Request $request, Compilation $compilation) {
+        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
+        $contribution = new Contribution();
+
+        $form = $this->createForm(ContributionType::class, $contribution);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $contribution->setPublication($compilation);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($contribution);
+            $em->flush();
+
+            $this->addFlash('success', 'The new contribution was created.');
+            return $this->redirectToRoute('compilation_show_contributions', array('id' => $compilation->getId()));
+        }
+
+        return array(
+            'compilation' => $compilation,
+            'form' => $form->createView(),
+        );
+    }
+    
+    /**
+     * Show compilation contributions list with edit/delete action items
+     * 
+     * @Route("/{id}/contributions", name="compilation_show_contributions")
+     * @Method("GET")
+     * @Template()
+     * @param Compilation $compilation
+     */
+    public function showContributions(Compilation $compilation) {
+        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Compilation::class);
+
+        return array(
+            'compilation' => $compilation,
+        );
+    }
+    
+    /**
+     * Displays a form to edit an existing compilation Contribution entity.
+     *
+     * @Route("/contributions/{id}/edit", name="compilation_edit_contributions")
+     * @Method({"GET", "POST"})
+     * @Template()
+     * @param Request $request
+     * @param Compilation $compilation
+     */
+    public function editContribution(Request $request, Contribution $contribution) {
+        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
+        $editForm = $this->createForm(ContributionType::class, $contribution);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            $this->addFlash('success', 'The contribution has been updated.');
+            return $this->redirectToRoute('compilation_show_contributions', array('id' => $contribution->getPublicationId()));
+        }
+
+        return array(
+            'contribution' => $contribution,
+            'edit_form' => $editForm->CreateView(),
+        );
+    }
+
+    /**
+     * Deletes a compilation Contribution entity.
+     *
+     * @Route("contributions/{id}/delete", name="compilation_delete_contributions")
+     * @Method("GET")
+     * @param Request $request
+     * @param Contribution $contribution
+     */
+    public function deleteContribution(Request $request, Contribution $contribution) {
+        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
+            $this->addFlash('danger', 'You must login to access this page.');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($contribution);
+        $em->flush();
+        $this->addFlash('success', 'The contribution was deleted.');
+
+        return $this->redirectToRoute('compilation_show_contributions', array('id' => $contribution->getPublicationId()));
+    }
+
 }
