@@ -24,7 +24,7 @@ class PublisherRepository extends EntityRepository {
     public function searchQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->addSelect("MATCH (e.name) AGAINST (:q BOOLEAN) as HIDDEN score");
-        $qb->add('where', "MATCH (e.name) AGAINST (:q BOOLEAN) > 0.5");
+        $qb->add('where', "MATCH (e.name) AGAINST (:q BOOLEAN) > 0.0");
         $qb->orderBy('score', 'desc');
         $qb->setParameter("q", $q);
         return $qb->getQuery();

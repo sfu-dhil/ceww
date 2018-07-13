@@ -21,7 +21,7 @@
         </div>
     </div>
         
-    {{ include('NinesUtilBundle:Term:partial/index.html.twig', { 'terms': genres, 'path': 'genre_show' }) }}
+    {{ include('NinesUtilBundle:term:partial/index.html.twig', { 'terms': genres, 'path': 'genre_show' }) }}
         
     <div class="navigation">
         {{ knp_pagination_render(genres) }}
