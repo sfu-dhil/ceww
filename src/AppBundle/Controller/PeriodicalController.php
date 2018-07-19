@@ -238,9 +238,6 @@ class PeriodicalController extends Controller {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Periodical::class);
-
         return array(
             'periodical' => $periodical,
         );

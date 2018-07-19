@@ -203,9 +203,6 @@ class CompilationController extends Controller
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Compilation::class);
-
         return array(
             'compilation' => $compilation,
         );

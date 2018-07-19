@@ -199,9 +199,6 @@ class BookController extends Controller {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Book::class);
-
         return array(
             'book' => $book,
         );

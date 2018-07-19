@@ -112,9 +112,6 @@ class BookControllerTest extends BaseTestCase
         $values['book']['links'][0] = 'http://example.com/path/to/link';
         $values['book']['links'][1] = 'http://example.com/different/url';
 
-        $values['book']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
-        $values['book']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
-
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
         $this->assertTrue($client->getResponse()->isRedirect('/book/1'));
@@ -124,7 +121,6 @@ class BookControllerTest extends BaseTestCase
 
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
-        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
 
     public function testAnonNew() {
@@ -166,9 +162,6 @@ class BookControllerTest extends BaseTestCase
         $values['book']['links'][0] = 'http://example.com/path/to/link';
         $values['book']['links'][1] = 'http://example.com/different/url';
 
-        $values['book']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
-        $values['book']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
-
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
         $this->assertTrue($client->getResponse()->isRedirect());
@@ -177,7 +170,6 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
-        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
 
     public function testAnonDelete() {
@@ -215,5 +207,18 @@ class BookControllerTest extends BaseTestCase
         $postCount = count($em->getRepository(Book::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);
     }
+
+    public function testAdminNewContribution() {}
+    public function testAnonNewContribution() {}
+    public function testUserNewContribution() {}
+    public function testAdminShowContributions() {}
+    public function testAnonShowContributions() {}
+    public function testUserShowContributions() {}
+    public function testAdminEditContribution() {}
+    public function testAnonEditContribution() {}
+    public function testUserEditContribution() {}
+    public function testAdminDeleteContribution() {}
+    public function testAnonDeleteContribution() {}
+    public function testUserDeleteContribution() {}
 
 }
