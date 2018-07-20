@@ -238,7 +238,7 @@ class BookController extends Controller {
     /**
      * Deletes a book Contribution entity.
      *
-     * @Route("contributions/{id}/delete", name="book_delete_contributions")
+     * @Route("/contributions/{id}/delete", name="book_delete_contributions")
      * @Method("GET")
      * @param Request $request
      * @param Contribution $contribution
