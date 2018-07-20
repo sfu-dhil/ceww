@@ -208,17 +208,4 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals($preCount - 1, $postCount);
     }
 
-    public function testAdminNewContribution() {}
-    public function testAnonNewContribution() {}
-    public function testUserNewContribution() {}
-    public function testAdminShowContributions() {}
-    public function testAnonShowContributions() {}
-    public function testUserShowContributions() {}
-    public function testAdminEditContribution() {}
-    public function testAnonEditContribution() {}
-    public function testUserEditContribution() {}
-    public function testAdminDeleteContribution() {}
-    public function testAnonDeleteContribution() {}
-    public function testUserDeleteContribution() {}
-
 }
