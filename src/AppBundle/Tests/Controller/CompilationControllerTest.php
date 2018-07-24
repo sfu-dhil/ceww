@@ -112,9 +112,6 @@ class CompilationControllerTest extends BaseTestCase
         
         $values['compilation']['links'][0] = 'http://example.com/path/to/link';
         $values['compilation']['links'][1] = 'http://example.com/different/url';
-
-        $values['compilation']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
-        $values['compilation']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
         
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         
@@ -124,7 +121,6 @@ class CompilationControllerTest extends BaseTestCase
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
-        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
     
     public function testAnonNew() {
@@ -166,9 +162,6 @@ class CompilationControllerTest extends BaseTestCase
         
         $values['compilation']['links'][0] = 'http://example.com/path/to/link';
         $values['compilation']['links'][1] = 'http://example.com/different/url';
-
-        $values['compilation']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
-        $values['compilation']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
         
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
@@ -178,7 +171,6 @@ class CompilationControllerTest extends BaseTestCase
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
-        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
     
     public function testAnonDelete() {
@@ -215,6 +207,143 @@ class CompilationControllerTest extends BaseTestCase
         $em->clear();
         $postCount = count($em->getRepository(Compilation::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);
+    }
+
+    public function testAnonNewContribution() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/compilation/1/contributions/new');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserNewContribution() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/compilation/1/contributions/new');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminNewContribution() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $formCrawler = $client->request('GET', '/compilation/1/contributions/new');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $form = $formCrawler->selectButton('Create')->form([]);
+
+        $values=$form->getPhpValues();
+        $values['contribution']['role'] = $this->getReference('role.2')->getId();
+        $values['contribution']['person'] = $this->getReference('person.2')->getId();
+        
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+
+        $this->assertTrue($client->getResponse()->isRedirect('/compilation/1/contributions'));
+        $responseCrawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
+    }
+
+    public function testAnonShowContributions() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/compilation/1/contributions');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserShowContributions() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/compilation/1/contributions');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminShowContributions() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $crawler = $client->request('GET', '/compilation/1/contributions');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->selectLink('Contribution')->count());
+    }
+
+    public function testAnonEditContribution() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/compilation/contributions/1/edit');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserEditContribution() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/compilation/contributions/1/edit');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminEditContribution() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $formCrawler = $client->request('GET', '/compilation/contributions/1/edit');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $form = $formCrawler->selectButton('Update')->form([]);
+
+        $values=$form->getPhpValues();
+        $values['contribution']['role'] = $this->getReference('role.2')->getId();
+        $values['contribution']['person'] = $this->getReference('person.2')->getId();
+        
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+
+        $this->assertTrue($client->getResponse()->isRedirect('/compilation/1/contributions'));
+        $responseCrawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
+    }
+
+    public function testAnonDeleteContribution() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/compilation/contributions/1/delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserDeleteContribution() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/compilation/contributions/1/delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminDeleteContribution() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $crawler = $client->request('GET', '/compilation/contributions/1/delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect());
+        
+        $responseCrawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(0, $responseCrawler->filter('td:contains("Bobby Janesdotter")')->count());
     }
 
 }
