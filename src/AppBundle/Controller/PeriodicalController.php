@@ -277,7 +277,7 @@ class PeriodicalController extends Controller {
     /**
      * Deletes a periodical Contribution entity.
      *
-     * @Route("contributions/{id}/delete", name="periodical_delete_contributions")
+     * @Route("/contributions/{id}/delete", name="periodical_delete_contributions")
      * @Method("GET")
      * @param Request $request
      * @param Contribution $contribution

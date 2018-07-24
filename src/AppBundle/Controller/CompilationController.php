@@ -242,7 +242,7 @@ class CompilationController extends Controller
     /**
      * Deletes a compilation Contribution entity.
      *
-     * @Route("contributions/{id}/delete", name="compilation_delete_contributions")
+     * @Route("/contributions/{id}/delete", name="compilation_delete_contributions")
      * @Method("GET")
      * @param Request $request
      * @param Contribution $contribution
