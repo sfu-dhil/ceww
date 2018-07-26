@@ -112,9 +112,6 @@ class BookControllerTest extends BaseTestCase
         $values['book']['links'][0] = 'http://example.com/path/to/link';
         $values['book']['links'][1] = 'http://example.com/different/url';
 
-        $values['book']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
-        $values['book']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
-
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
         $this->assertTrue($client->getResponse()->isRedirect('/book/1'));
@@ -124,7 +121,6 @@ class BookControllerTest extends BaseTestCase
 
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
-        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
 
     public function testAnonNew() {
@@ -166,9 +162,6 @@ class BookControllerTest extends BaseTestCase
         $values['book']['links'][0] = 'http://example.com/path/to/link';
         $values['book']['links'][1] = 'http://example.com/different/url';
 
-        $values['book']['contributions'][0]['role'] = $this->getReference('role.1')->getId();
-        $values['book']['contributions'][0]['person'] = $this->getReference('person.1')->getId();
-
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
         $this->assertTrue($client->getResponse()->isRedirect());
@@ -177,7 +170,6 @@ class BookControllerTest extends BaseTestCase
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
-        $this->assertEquals(1, $responseCrawler->filter('a:contains("Bobby Janesdotter")')->count());
     }
 
     public function testAnonDelete() {
@@ -214,6 +206,143 @@ class BookControllerTest extends BaseTestCase
         $em->clear();
         $postCount = count($em->getRepository(Book::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);
+    }
+
+    public function testAnonNewContribution() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/book/1/contributions/new');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserNewContribution() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/book/1/contributions/new');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminNewContribution() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $formCrawler = $client->request('GET', '/book/1/contributions/new');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $form = $formCrawler->selectButton('Create')->form([]);
+
+        $values=$form->getPhpValues();
+        $values['contribution']['role'] = $this->getReference('role.2')->getId();
+        $values['contribution']['person'] = $this->getReference('person.2')->getId();
+        
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+
+        $this->assertTrue($client->getResponse()->isRedirect('/book/1/contributions'));
+        $responseCrawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
+    }
+
+    public function testAnonShowContributions() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/book/1/contributions');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserShowContributions() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/book/1/contributions');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminShowContributions() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $crawler = $client->request('GET', '/book/1/contributions');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->selectLink('Contribution')->count());
+    }
+
+    public function testAnonEditContribution() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/book/contributions/1/edit');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserEditContribution() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/book/contributions/1/edit');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminEditContribution() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $formCrawler = $client->request('GET', '/book/contributions/1/edit');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $form = $formCrawler->selectButton('Update')->form([]);
+
+        $values=$form->getPhpValues();
+        $values['contribution']['role'] = $this->getReference('role.2')->getId();
+        $values['contribution']['person'] = $this->getReference('person.2')->getId();
+        
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+
+        $this->assertTrue($client->getResponse()->isRedirect('/book/1/contributions'));
+        $responseCrawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
+    }
+
+    public function testAnonDeleteContribution() {
+        $client = $this->makeClient();
+        $crawler = $client->request('GET', '/book/contributions/1/delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testUserDeleteContribution() {
+        $client = $this->makeClient([
+            'username' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+        $crawler = $client->request('GET', '/book/contributions/1/delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    public function testAdminDeleteContribution() {
+        $client = $this->makeClient([
+            'username' => 'admin@example.com',
+            'password' => 'supersecret',
+        ]);
+        $crawler = $client->request('GET', '/book/contributions/1/delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $this->assertTrue($client->getResponse()->isRedirect());
+        
+        $responseCrawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals(0, $responseCrawler->filter('td:contains("Bobby Janesdotter")')->count());
     }
 
 }
