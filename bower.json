@@ -3,10 +3,10 @@
   "authors": [
     "Michael Joyce <ubermichael@gmail.com>"
   ],
-  "description": "",
+  "description": "Database of Canada's Early Women Writers",
   "main": "",
   "license": "GPL",
-  "homepage": "",
+  "homepage": "https://dhil.lib.sfu.ca/doceww",
   "private": true,
   "dependencies": {
     "jquery": "^3.2.1",
