@@ -14,6 +14,11 @@
         <input type="submit" value="Update" class="btn btn-primary" />
         <a href="{{ path('compilation_show_contributions', { 'id': contribution.getPublicationId() }) }}" class="btn btn-warning">Cancel</a>
     </div>
+    <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            <a href="{{ path('person_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Person</a>
+        </div>
+    </div>
     {{ form_end(edit_form) }}
 
 {% endblock %}
