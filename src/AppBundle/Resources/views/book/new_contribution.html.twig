@@ -4,6 +4,10 @@
 
 {% block body %}
     <h1>Create Book Contribtion</h1>
+    <p class="count">
+        Creating contribution for <em>{{ book.title }}</em>.
+    </p>
+
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
