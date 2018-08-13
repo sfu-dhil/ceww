@@ -4,6 +4,9 @@
 
 {% block body %}
     <h1>Periodical Contributions List</h1>
+    <p class="count">
+        Displaying contributions for <em>{{periodical.title}}</em>.
+    </p>
 
     <div class="btn-toolbar pull-right">
         <div class="btn-group">
@@ -33,7 +36,7 @@
                                         <span class='glyphicon glyphicon-edit'></span> Edit
                                     </a>
                                     <a href="{{ path('periodical_delete_contributions', { 'id': contribution.id }) }}" class="btn btn-danger" data-confirm="Are you sure you want to delete this Contribution?">
-                                            <span class=' glyphicon glyphicon-resize-small'></span> Delete
+                                            <span class=' glyphicon glyphicon-trash'></span> Delete
                                     </a>
                             </div>
                         </div>

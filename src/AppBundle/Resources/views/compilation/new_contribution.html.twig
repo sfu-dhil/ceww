@@ -4,6 +4,9 @@
 
 {% block body %}
     <h1>Create Collection Contribtion</h1>
+    <p class="count">
+        Creating contribution for <em>{{ compilation.title }}</em>.
+    </p>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
@@ -14,6 +17,11 @@
             <div class='btn-group'>
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a href="{{ path('compilation_show_contributions', {'id': compilation.id}) }}" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="{{ path('person_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Person</a>
             </div>
         </div>
     </div>
