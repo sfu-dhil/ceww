@@ -28,14 +28,14 @@ class PeriodicalType extends PublicationType {
             'label' => 'Continued From',
             'required' => false,
             'attr' => array(
-                'help_block' => 'Name of publication that preceded entry (if any)',
+                'help_block' => 'Name under which the periodical was previously published',
             ),
         ));
         $builder->add('continuedBy', null, array(
             'label' => 'Continued By',
             'required' => false,
             'attr' => array(
-                'help_block' => 'Name of publication that followed entry (if any)',
+                'help_block' => 'Name under which the periodical was subsequently published',
             ),
         ));
     }

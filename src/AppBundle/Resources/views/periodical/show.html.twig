@@ -108,11 +108,11 @@
                 <td>{{ periodical.runDates }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Name of publication that preceded entry" data-trigger="hover" data-placement="bottom">Continued From</span></th>
+                <th><span data-toggle="popover" data-content="Name under which the periodical was previously published" data-trigger="hover" data-placement="bottom">Continued From</span></th>
                 <td>{{ periodical.continuedFrom }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Name of publication that followed entry" data-trigger="hover" data-placement="bottom">Continued By</span></th>
+                <th><span data-toggle="popover" data-content="Name under which the periodical was subsequently published" data-trigger="hover" data-placement="bottom">Continued By</span></th>
                 <td>{{ periodical.continuedBy }}</td>
             </tr>
         </tbody>
@@ -124,7 +124,7 @@
             {% for contribution in periodical.contributions %}
                 <li>
                     {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
-                    {% endembed %} 
+                    {% endembed %}
                 </li>
             {% endfor %}
         </ul>
@@ -137,6 +137,11 @@
 <style>
 ul.columns {
     list-style-type: none;
+    padding-left: 0;
+}
+
+ul.columns > li {
+  display: flex;
 }
 
 @media (min-width: 460px) and (max-width: 767px) {
