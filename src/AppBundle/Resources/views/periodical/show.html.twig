@@ -124,7 +124,7 @@
             {% for contribution in periodical.contributions %}
                 <li>
                     {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
-                    {% endembed %} 
+                    {% endembed %}
                 </li>
             {% endfor %}
         </ul>
@@ -137,6 +137,11 @@
 <style>
 ul.columns {
     list-style-type: none;
+    padding-left: 0;
+}
+
+ul.columns > li {
+  display: flex;
 }
 
 @media (min-width: 460px) and (max-width: 767px) {
