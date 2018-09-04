@@ -6,12 +6,12 @@
  * and open the template in the editor.
  */
 
-namespace AppBundle\Tests\DataFixtures\ORM;
+namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Book;
 use AppBundle\Entity\Contribution;
 use AppBundle\Entity\DateYear;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -20,7 +20,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadBook extends AbstractFixture implements DependentFixtureInterface {
+class LoadBook extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager) {
         $book = new Book();

@@ -7,9 +7,9 @@ use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Publication;
 use AppBundle\Entity\Genre;
 use AppBundle\Entity\Contribution;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class PeriodicalTest extends PHPUnit_Framework_TestCase {
+class PeriodicalTest extends TestCase {
 
     public function testGetCategory() {
         $compilation = new Periodical();        

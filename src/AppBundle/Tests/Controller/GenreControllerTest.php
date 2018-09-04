@@ -3,7 +3,7 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Genre;
-use AppBundle\Tests\DataFixtures\ORM\LoadGenre;
+use AppBundle\DataFixtures\ORM\LoadGenre;
 use Nines\UserBundle\DataFixtures\ORM\LoadUser;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 

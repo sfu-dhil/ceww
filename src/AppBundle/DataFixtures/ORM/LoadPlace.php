@@ -6,10 +6,10 @@
  * and open the template in the editor.
  */
 
-namespace AppBundle\Tests\DataFixtures\ORM;
+namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Place;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
@@ -17,7 +17,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadPlace extends AbstractFixture {
+class LoadPlace extends Fixture {
 
     public function load(ObjectManager $manager) {
         $place1 = new Place();

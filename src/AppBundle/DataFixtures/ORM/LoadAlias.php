@@ -6,10 +6,10 @@
  * and open the template in the editor.
  */
 
-namespace AppBundle\Tests\DataFixtures\ORM;
+namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Alias;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
@@ -17,7 +17,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadAlias extends AbstractFixture {
+class LoadAlias extends Fixture {
 
     public function load(ObjectManager $manager) {
         $alias = new Alias();

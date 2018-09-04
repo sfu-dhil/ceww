@@ -3,7 +3,7 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Alias;
-use AppBundle\Tests\DataFixtures\ORM\LoadAlias;
+use AppBundle\DataFixtures\ORM\LoadAlias;
 use Nines\UserBundle\DataFixtures\ORM\LoadUser;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 

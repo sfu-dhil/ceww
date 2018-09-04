@@ -3,7 +3,7 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Periodical;
-use AppBundle\Tests\DataFixtures\ORM\LoadPeriodical;
+use AppBundle\DataFixtures\ORM\LoadPeriodical;
 use Nines\UserBundle\DataFixtures\ORM\LoadUser;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 

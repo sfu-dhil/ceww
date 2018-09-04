@@ -14,5 +14,8 @@ nines_feedback:
     resource: "@NinesFeedbackBundle/Controller/"
     type: annotation
 
+nines_dc:
+    resource: "@NinesDublinCoreBundle/Controller/"
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
