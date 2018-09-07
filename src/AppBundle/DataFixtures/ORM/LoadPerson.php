@@ -6,11 +6,11 @@
  * and open the template in the editor.
  */
 
-namespace AppBundle\Tests\DataFixtures\ORM;
+namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Person;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -19,7 +19,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadPerson extends AbstractFixture implements DependentFixtureInterface {
+class LoadPerson extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager) {
         $female = new Person();

@@ -8,9 +8,9 @@ use AppBundle\Entity\DateYear;
 use AppBundle\Entity\Periodical;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class PlaceTest extends PHPUnit_Framework_TestCase {
+class PlaceTest extends TestCase {
     
     /**
      * @dataProvider GetNameData

@@ -7,9 +7,9 @@ use AppBundle\Entity\Compilation;
 use AppBundle\Entity\Publication;
 use AppBundle\Entity\Genre;
 use AppBundle\Entity\Contribution;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class CompilationTest extends PHPUnit_Framework_TestCase {
+class CompilationTest extends TestCase {
 
     public function testGetCategory() {
         $compilation = new Compilation();        

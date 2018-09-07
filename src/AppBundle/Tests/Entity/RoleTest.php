@@ -4,9 +4,9 @@ namespace AppBundle\Tests\Entity;
 
 use AppBundle\Entity\Contribution;
 use AppBundle\Entity\Role;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class RoleTest extends PHPUnit_Framework_TestCase {
+class RoleTest extends TestCase {
     
     public function testAddContribution() {
         $role = new Role();

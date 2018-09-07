@@ -3,9 +3,9 @@
 namespace AppBundle\Tests\Entity;
 
 use AppBundle\Entity\DateYear;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class DateYearTest extends PHPUnit_Framework_TestCase {
+class DateYearTest extends TestCase {
     
     /**
      * @dataProvider setValueData

@@ -3,7 +3,7 @@
 namespace AppBundle\Tests\Controller;
 
 use AppBundle\Entity\Publisher;
-use AppBundle\Tests\DataFixtures\ORM\LoadPublisher;
+use AppBundle\DataFixtures\ORM\LoadPublisher;
 use Nines\UserBundle\DataFixtures\ORM\LoadUser;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 

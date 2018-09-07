@@ -6,10 +6,10 @@ use AppBundle\Entity\Place;
 use AppBundle\Entity\Periodical;
 use AppBundle\Repository\PlaceRepository;
 use AppBundle\Services\Merger;
-use AppBundle\Tests\DataFixtures\ORM\LoadBook;
-use AppBundle\Tests\DataFixtures\ORM\LoadCompilation;
-use AppBundle\Tests\DataFixtures\ORM\LoadPeriodical;
-use AppBundle\Tests\DataFixtures\ORM\LoadPerson;
+use AppBundle\DataFixtures\ORM\LoadBook;
+use AppBundle\DataFixtures\ORM\LoadCompilation;
+use AppBundle\DataFixtures\ORM\LoadPeriodical;
+use AppBundle\DataFixtures\ORM\LoadPerson;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class MergerTest extends BaseTestCase {

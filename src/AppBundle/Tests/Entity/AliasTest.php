@@ -5,7 +5,7 @@ namespace AppBundle\Tests\Entity;
 use AppBundle\Entity\Alias;
 use AppBundle\Entity\Person;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
-use AppBundle\Tests\DataFixtures\ORM\LoadAlias;
+use AppBundle\DataFixtures\ORM\LoadAlias;
 
 
 class AliasTest extends BaseTestCase {

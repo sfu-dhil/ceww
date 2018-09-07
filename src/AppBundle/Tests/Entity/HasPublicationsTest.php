@@ -4,9 +4,9 @@ namespace AppBundle\Tests\Entity;
 
 use AppBundle\Entity\HasPublications;
 use AppBundle\Entity\Publication;
-use AppBundle\Tests\DataFixtures\ORM\LoadBook;
-use AppBundle\Tests\DataFixtures\ORM\LoadCompilation;
-use AppBundle\Tests\DataFixtures\ORM\LoadPeriodical;
+use AppBundle\DataFixtures\ORM\LoadBook;
+use AppBundle\DataFixtures\ORM\LoadCompilation;
+use AppBundle\DataFixtures\ORM\LoadPeriodical;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 

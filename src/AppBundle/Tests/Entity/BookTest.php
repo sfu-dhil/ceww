@@ -7,9 +7,9 @@ use AppBundle\Entity\Book;
 use AppBundle\Entity\Publication;
 use AppBundle\Entity\Genre;
 use AppBundle\Entity\Contribution;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class BookTest extends PHPUnit_Framework_TestCase {
+class BookTest extends TestCase {
 
     public function testGetCategory() {
         $book = new Book();        

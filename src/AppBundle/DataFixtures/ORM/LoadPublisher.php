@@ -6,10 +6,10 @@
  * and open the template in the editor.
  */
 
-namespace AppBundle\Tests\DataFixtures\ORM;
+namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Publisher;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -18,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class LoadPublisher extends AbstractFixture implements DependentFixtureInterface {
+class LoadPublisher extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager) {
         $publisher1 = new Publisher();

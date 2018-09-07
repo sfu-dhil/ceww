@@ -3,9 +3,9 @@
 namespace AppBundle\Tests\Entity;
 
 use AppBundle\Entity\Contribution;
-use AppBundle\Tests\DataFixtures\ORM\LoadPeriodical;
-use AppBundle\Tests\DataFixtures\ORM\LoadPerson;
-use AppBundle\Tests\DataFixtures\ORM\LoadRole;
+use AppBundle\DataFixtures\ORM\LoadPeriodical;
+use AppBundle\DataFixtures\ORM\LoadPerson;
+use AppBundle\DataFixtures\ORM\LoadRole;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class ContributionTest extends BaseTestCase {
