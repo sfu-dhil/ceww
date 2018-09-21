@@ -29,7 +29,7 @@ class PersonType extends AbstractType {
                 'help_block' => 'Person\'s full name',
             ),
         ));
-        
+
         $builder->add('sortableName', null, array(
             'label' => 'Sortable Name',
             'required' => true,
@@ -37,7 +37,7 @@ class PersonType extends AbstractType {
                 'help_block' => 'Name listed last name, first name (lowercase). Sortable name will not be displayed to the public.',
             ),
         ));
-        
+
         $builder->add('gender', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => false,
@@ -45,7 +45,7 @@ class PersonType extends AbstractType {
                 'Female' => Person::FEMALE,
                 'Male' => Person::MALE,
                 'Unknown' => null,
-            ),            
+            ),
         ));
 
         $builder->add('aliases', Select2EntityType::class, array(
@@ -71,7 +71,7 @@ class PersonType extends AbstractType {
                 'help_block' => 'This description is public',
             ),
         ));
-        
+
         $builder->add('birthDate', TextType::class, array(
             'label' => 'Birth Year',
             'required' => false,
@@ -116,7 +116,7 @@ class PersonType extends AbstractType {
             'delay' => 250,
             'language' => 'en',
             'attr' => array(
-                'help_block' => 'Geotagged locaiton for death place',
+                'help_block' => 'Geotagged location for death place',
             ),
         ));
 

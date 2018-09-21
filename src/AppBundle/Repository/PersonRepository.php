@@ -36,6 +36,35 @@ class PersonRepository extends EntityRepository {
         return $qb->getQuery()->getOneOrNullResult();
     }
 
+    public function pageInfoQuery($q, $pageSize) {
+        $start = ($q - 1) * $pageSize;
+        $fb = $this->createQueryBuilder('e');
+        $fb->where("e.gender <> 'm'");
+        $fb->orderBy('e.sortableName');
+        $fb->setMaxResults(1);
+        $fb->setFirstResult($start);
+        $first = $fb->getQuery()->getOneOrNullResult();
+
+        $cb = $this->createQueryBuilder('u');
+        $cb->select($cb->expr()->count('u'));
+        $cb->where("u.gender <> 'm'");
+        $count = $cb->getQuery()->getSingleScalarResult();
+
+        $end = $q * $pageSize - 1;
+        $lb = $this->createQueryBuilder('e');
+        $lb->where("e.gender <> 'm'");
+        $lb->orderBy('e.sortableName');
+        $lb->setMaxResults(1);
+        $lb->setFirstResult($end);
+        $last = $lb->getQuery()->getOneOrNullResult();
+
+        return array(
+            'first' => $first,
+            'last' => $last,
+            'total' => $count,
+        );
+    }
+
     public function typeaheadQuery($q) {
         $qb = $this->createQueryBuilder('e');
         $qb->andWhere("e.fullName LIKE :q");
