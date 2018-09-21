@@ -45,6 +45,11 @@ class PersonRepository extends EntityRepository {
         $fb->setFirstResult($start);
         $first = $fb->getQuery()->getOneOrNullResult();
 
+        $cb = $this->createQueryBuilder('u');
+        $cb->select($cb->expr()->count('u'));
+        $cb->where("u.gender <> 'm'");
+        $count = $cb->getQuery()->getSingleScalarResult();
+
         $end = $q * $pageSize - 1;
         $lb = $this->createQueryBuilder('e');
         $lb->where("e.gender <> 'm'");
@@ -53,7 +58,11 @@ class PersonRepository extends EntityRepository {
         $lb->setFirstResult($end);
         $last = $lb->getQuery()->getOneOrNullResult();
 
-        return array('first' => $first, 'last' => $last);
+        return array(
+            'first' => $first,
+            'last' => $last,
+            'total' => $count,
+        );
     }
 
     public function typeaheadQuery($q) {

@@ -67,7 +67,8 @@ class PersonController extends Controller {
             'last' => ($people['last'] ? [
                 'name' => $people['last']->getFullname(),
                 'id' => $people['last']->getId(),
-            ] : null)
+            ] : null),
+            'pages' => ceil($people['total'] / $this->getParameter('page_size')),
         ];
 
         return new JsonResponse($data);
