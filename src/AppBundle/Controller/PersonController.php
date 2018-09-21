@@ -47,6 +47,34 @@ class PersonController extends Controller {
 
     /**
      * @param Request $request
+     * @Route("/pageinfo", name="person_pageinfo")
+     * @Method("GET")
+     * @return JsonResponse
+     */
+    public function pageInfoAction(Request $request) {
+        $q = $request->query->get('q');
+        if( ! $q) {
+            return new JsonResponse([]);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('AppBundle:Person');
+        $people = $repo->pageInfoQuery($q, $this->getParameter('page_size'));// should be first person on page, last person on page.
+        $data = [
+            'first' => ($people['first'] ? [
+                'name' => $people['first']->getFullname(),
+                'id' => $people['first']->getId(),
+            ] : null),
+            'last' => ($people['last'] ? [
+                'name' => $people['last']->getFullname(),
+                'id' => $people['last']->getId(),
+            ] : null)
+        ];
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @param Request $request
      * @Route("/typeahead", name="person_typeahead")
      * @Method("GET")
      * @return JsonResponse
