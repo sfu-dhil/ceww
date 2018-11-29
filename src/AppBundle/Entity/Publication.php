@@ -290,8 +290,13 @@ abstract class Publication extends AbstractEntity {
      *
      * @param Collection|Genre[] $genres
      */
-    public function setGenres(Collection $genres) {
-        $this->genres = $genres;
+//    public function setGenres(Collection $genres) {
+    public function setGenres($genres) {
+        if(is_array($genres)) {
+            $this->genres = new ArrayCollection($genres);
+        } else {
+            $this->genres = $genres;
+        }
     }
 
     /**
@@ -415,8 +420,15 @@ abstract class Publication extends AbstractEntity {
         return $this->publishers;
     }
 
+    /**
+     * @param Collection|array $publishers
+     */
     public function setPublishers($publishers) {
-        $this->publishers = $publishers;
+        if(is_array($publishers)) {
+            $this->publishers = new ArrayCollection($publishers);
+        } else {
+            $this->publishers = $publishers;
+        }
     }
 
 }
