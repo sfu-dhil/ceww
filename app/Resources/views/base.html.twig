@@ -29,6 +29,9 @@
                     {{ knp_menu_render('main') }}
                     {{ knp_menu_render('pages') }}
                     {{ knp_menu_render('posts') }}
+                    {% if is_granted('ROLE_COMMENT_ADMIN') %}
+                        {{ knp_menu_render('feedback') }}
+                    {% endif %}
                     <ul class="nav navbar-nav navbar-right">
                     {{ knp_menu_render('user') }}
                     </ul>
