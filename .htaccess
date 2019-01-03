@@ -1,0 +1,1 @@
+RedirectMatch "/doceww/?$" "/doceww/web/app_dev.php"
