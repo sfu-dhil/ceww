@@ -56,6 +56,10 @@ twig:
     globals:
         comment_service: "@feedback.comment"
         text_service: "@nines.util.text"
+        piwik_enabled: '%dhil.piwik_enabled%'
+        piwik_url: '%dhil.piwik_url%'
+        piwik_siteid: '%dhil.piwik_siteid%'
+        piwik_domain: '%dhil.piwik_domain%'
     date:
         # July 1, 2017
         format: M j, Y H:i:s

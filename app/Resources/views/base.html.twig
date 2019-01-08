@@ -29,6 +29,9 @@
                     {{ knp_menu_render('main') }}
                     {{ knp_menu_render('pages') }}
                     {{ knp_menu_render('posts') }}
+                    {% if is_granted('ROLE_COMMENT_ADMIN') %}
+                        {{ knp_menu_render('feedback') }}
+                    {% endif %}
                     <ul class="nav navbar-nav navbar-right">
                     {{ knp_menu_render('user') }}
                     </ul>
@@ -56,20 +59,36 @@
             {% endblock %}
         </div>
 
+        <footer class="footer">
+            <div class="container">
+                <p>
+                    <b>Database of Canadian Early Women Writers</b>
+                    <br/>
+                    <a href="docs/build/html/index.html">Documentation</a> |
+                    <a href="{{ path('privacy') }}">Privacy</a> |
+                    <a href="https://github.com/sfu-dhil/doceww">GitHub</a>
+                </p>
+            </div>
+        </footer>
+
         <script src="{{ asset('bower/bootstrap/dist/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('bundles/app/js/form.js') }}"></script>
         <script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>
         {% block javascripts %}
         {% endblock %}
+
+        {% if piwik_enabled %}
         <!-- Piwik -->
         <script type="text/javascript">
             var _paq = _paq || [];
+            _paq.push(["setDomains", ["{{ piwik_domain }}"]]);
+            _paq.push(["setDoNotTrack", true]);
             _paq.push(['trackPageView']);
             _paq.push(['enableLinkTracking']);
             (function () {
-                var u = "//piwik.lib.sfu.ca/piwik/";
+                var u = "{{ piwik_url }}";
                 _paq.push(['setTrackerUrl', u + 'piwik.php']);
-                _paq.push(['setSiteId', '37']);
+                _paq.push(['setSiteId', '{{ piwik_siteid }}']);
                 var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
                 g.type = 'text/javascript';
                 g.async = true;
@@ -78,6 +97,10 @@
                 s.parentNode.insertBefore(g, s);
             })();
         </script>
+        <noscript>
+        <p><img src="{{ piwik_url }}piwik.php?idsite={{ piwik_siteid }}" style="border:0;" alt="" /></p>
+        </noscript>
         <!-- End Piwik Code -->
+        {% endif %}
     </body>
 </html>
