@@ -19,9 +19,9 @@ class DefaultController extends Controller
     {
         return [];
     }
-    
+
     /**
-     * Search for Periodical entities.
+     * Search for publication entities.
      *
      * @Route("/search", name="search")
      * @Method("GET")
@@ -46,5 +46,12 @@ class DefaultController extends Controller
         );
     }
 
-    
+    /**
+     * @Route("/privacy", name="privacy")
+     * @Template()
+     */
+    public function privacyAction(Request $request) {
+
+    }
+
 }
