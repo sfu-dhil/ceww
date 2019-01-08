@@ -149,6 +149,7 @@ task('success', function(){
 
 task('deploy', [
     'deploy:info',
+    'dhil:precheck',
     'deploy:prepare',
     'deploy:lock',
     'deploy:release',
