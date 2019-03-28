@@ -124,7 +124,7 @@
             {% for contribution in periodical.contributions %}
                 <li>
                     {% embed 'AppBundle:person:partial/link.html.twig' with {'person': contribution.person} %}
-                    {% endembed %}
+                    {% endembed %}{% if contribution.role.name != 'contributor' %}, {{ contribution.role.label }}{% endif %}
                 </li>
             {% endfor %}
         </ul>

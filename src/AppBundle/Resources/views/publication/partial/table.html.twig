@@ -3,6 +3,7 @@
         <tr>
             <th>Title</th>
             <th>Author</th>
+            <th>Type</th>
             <th>Publication Date</th>
         </tr>
     </thead>
@@ -23,6 +24,7 @@
                     {% endembed %}
                 {% endif %}
                 </td>
+                <td>{{ publication.getCategory() }}</td>
                 <td>{{ publication.dateYear }}</td>
             </tr>
         {% endfor %}
