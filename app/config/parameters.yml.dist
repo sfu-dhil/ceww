@@ -35,6 +35,9 @@ parameters:
     nines_blog.homepage_posts: 3
     nines_blog.menu_posts: 5
 
+    # blog stuff.
+    nines_text.trim_length: 50
+
     # comment system.
     nines_feedback.sender: ~
     nines_feedback.recipient: ~
