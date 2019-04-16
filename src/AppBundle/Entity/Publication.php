@@ -362,7 +362,11 @@ abstract class Publication extends AbstractEntity {
      * @return Collection
      */
     public function getContributions() {
-        return $this->contributions;
+        $data = $this->contributions->toArray();
+        usort($data, function(Contribution $a, Contribution $b){
+            return strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
+        });
+        return $data;
     }
 
     /**
