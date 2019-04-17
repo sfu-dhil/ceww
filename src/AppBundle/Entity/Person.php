@@ -47,7 +47,7 @@ class Person extends AbstractEntity {
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true, options={"default": true})
      */
     private $canadian;
 
@@ -118,6 +118,7 @@ class Person extends AbstractEntity {
     public function __construct() {
         parent::__construct();
         $this->trait_constructor();
+        $this->canadian = true;
         $this->residences = new ArrayCollection();
         $this->aliases = new ArrayCollection();
         $this->urlLinks = array();
