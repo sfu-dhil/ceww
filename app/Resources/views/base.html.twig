@@ -28,7 +28,6 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     {{ knp_menu_render('main') }}
                     {{ knp_menu_render('pages') }}
-                    {{ knp_menu_render('posts') }}
                     {% if is_granted('ROLE_COMMENT_ADMIN') %}
                         {{ knp_menu_render('feedback') }}
                     {% endif %}
