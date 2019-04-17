@@ -60,10 +60,10 @@ class MergerTest extends BaseTestCase {
         $this->merger->periodicals($this->getReference('periodical.1'), [
             $this->getReference('periodical.2'),
         ]);
+        $repo->clear();
         $periodicals = $repo->findAll();
         $this->assertCount(1, $periodicals);
         $this->assertCount(2, $periodicals[0]->getGenres());
-        $this->assertCount(2, $periodicals[0]->getLinks());
         $this->assertEquals("note 1\n\nnote 2", $periodicals[0]->getNotes());
         $this->assertCount(2, $periodicals[0]->getContributions());
         $this->assertCount(2, $periodicals[0]->getPublishers());
