@@ -6,6 +6,7 @@ use AppBundle\Entity\Alias;
 use AppBundle\Form\AliasType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -94,14 +95,11 @@ class AliasController extends Controller {
      *
      * @Route("/new", name="alias_new")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      */
     public function newAction(Request $request) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $alias = new Alias();
         $form = $this->createForm(AliasType::class, $alias);
         $form->handleRequest($request);
@@ -126,6 +124,7 @@ class AliasController extends Controller {
      *
      * @Route("/new", name="alias_new_popup")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      */
@@ -153,15 +152,12 @@ class AliasController extends Controller {
      *
      * @Route("/{id}/edit", name="alias_edit")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Alias $alias
      */
     public function editAction(Request $request, Alias $alias) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $editForm = $this->createForm(AliasType::class, $alias);
         $editForm->handleRequest($request);
 
@@ -183,14 +179,11 @@ class AliasController extends Controller {
      *
      * @Route("/{id}/delete", name="alias_delete")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Alias $alias
      */
     public function deleteAction(Request $request, Alias $alias) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($alias);
         $em->flush();

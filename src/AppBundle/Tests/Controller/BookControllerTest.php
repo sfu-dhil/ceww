@@ -77,7 +77,7 @@ class BookControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserEdit() {
@@ -86,9 +86,8 @@ class BookControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/book/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
-    }
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+  }
 
     public function testAdminEdit() {
         $client = $this->makeClient([
@@ -127,7 +126,7 @@ class BookControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserNew() {
@@ -136,8 +135,7 @@ class BookControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/book/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() {
@@ -176,7 +174,7 @@ class BookControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserDelete() {
@@ -185,8 +183,7 @@ class BookControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/book/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() {
@@ -212,7 +209,7 @@ class BookControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/1/contributions/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserNewContribution() {
@@ -221,8 +218,7 @@ class BookControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/book/1/contributions/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNewContribution() {
@@ -251,7 +247,7 @@ class BookControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/1/contributions');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserShowContributions() {
@@ -260,8 +256,7 @@ class BookControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/book/1/contributions');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminShowContributions() {
@@ -278,7 +273,7 @@ class BookControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/contributions/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserEditContribution() {
@@ -287,9 +282,8 @@ class BookControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/book/contributions/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
-    }
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+  }
 
     public function testAdminEditContribution() {
         $client = $this->makeClient([
@@ -317,7 +311,7 @@ class BookControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/book/contributions/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserDeleteContribution() {
@@ -326,8 +320,7 @@ class BookControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/book/contributions/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteContribution() {

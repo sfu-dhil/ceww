@@ -9,6 +9,7 @@ use AppBundle\Form\ContributionType;
 use AppBundle\Form\ContributionCollectionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,14 +47,11 @@ class BookController extends Controller {
      *
      * @Route("/new", name="book_new")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      */
     public function newAction(Request $request) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
@@ -100,6 +98,7 @@ class BookController extends Controller {
      *
      * @Route("/{id}/edit", name="book_edit")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Book $book
@@ -133,14 +132,11 @@ class BookController extends Controller {
      *
      * @Route("/{id}/delete", name="book_delete")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Book $book
      */
     public function deleteAction(Request $request, Book $book) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($book);
         $em->flush();
@@ -155,15 +151,11 @@ class BookController extends Controller {
      * @Route("/{id}/contributions/new", name="book_new_contribution")
      * @Method({"GET", "POST"})
      * @Template()
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @param Request $request
      * @param Book $book
      */
     public function newContribution(Request $request, Book $book) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         $contribution = new Contribution();
 
         $form = $this->createForm(ContributionType::class, $contribution);
@@ -190,15 +182,11 @@ class BookController extends Controller {
      * 
      * @Route("/{id}/contributions", name="book_show_contributions")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Book $book
      */
     public function showContributions(Book $book) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         return array(
             'book' => $book,
         );
@@ -209,16 +197,12 @@ class BookController extends Controller {
      *
      * @Route("/contributions/{id}/edit", name="book_edit_contributions")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Contribution $contribution
      */
     public function editContribution(Request $request, Contribution $contribution) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         $editForm = $this->createForm(ContributionType::class, $contribution);
         $editForm->handleRequest($request);
 
@@ -240,14 +224,11 @@ class BookController extends Controller {
      *
      * @Route("/contributions/{id}/delete", name="book_delete_contributions")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Contribution $contribution
      */
     public function deleteContribution(Request $request, Contribution $contribution) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($contribution);
         $em->flush();

@@ -48,14 +48,11 @@ class PeriodicalController extends Controller {
      *
      * @Route("/new", name="periodical_new")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      */
     public function newAction(Request $request) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $periodical = new Periodical();
         $form = $this->createForm(PeriodicalType::class, $periodical);
         $form->handleRequest($request);
@@ -102,15 +99,12 @@ class PeriodicalController extends Controller {
      *
      * @Route("/{id}/edit", name="periodical_edit")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Periodical $periodical
      */
     public function editAction(Request $request, Periodical $periodical) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $editForm = $this->createForm(PeriodicalType::class, $periodical);
         $editForm->handleRequest($request);
 
@@ -172,14 +166,11 @@ class PeriodicalController extends Controller {
      *
      * @Route("/{id}/delete", name="periodical_delete")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Periodical $periodical
      */
     public function deleteAction(Request $request, Periodical $periodical) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($periodical);
         $em->flush();
@@ -193,16 +184,12 @@ class PeriodicalController extends Controller {
      *
      * @Route("/{id}/contributions/new", name="periodical_new_contribution")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Periodical $periodical
      */
     public function newContribution(Request $request, Periodical $periodical) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         $contribution = new Contribution();
 
         $form = $this->createForm(ContributionType::class, $contribution);
@@ -229,15 +216,11 @@ class PeriodicalController extends Controller {
      * 
      * @Route("/{id}/contributions", name="periodical_show_contributions")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Periodical $periodical
      */
     public function showContributions(Periodical $periodical) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         return array(
             'periodical' => $periodical,
         );
@@ -248,16 +231,12 @@ class PeriodicalController extends Controller {
      *
      * @Route("/contributions/{id}/edit", name="periodical_edit_contributions")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Contribution $contribution
      */
     public function editContribution(Request $request, Contribution $contribution) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         $editForm = $this->createForm(ContributionType::class, $contribution);
         $editForm->handleRequest($request);
 
@@ -279,14 +258,11 @@ class PeriodicalController extends Controller {
      *
      * @Route("/contributions/{id}/delete", name="periodical_delete_contributions")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Contribution $contribution
      */
     public function deleteContribution(Request $request, Contribution $contribution) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($contribution);
         $em->flush();
