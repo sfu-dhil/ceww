@@ -24,7 +24,7 @@
                     {% endembed %}
                 {% endif %}
                 </td>
-                <td>{{ publication.getCategory() }}</td>
+                <td>{{ publication.getCategory()|capitalize }}</td>
                 <td>{{ publication.dateYear }}</td>
             </tr>
         {% endfor %}
