@@ -34,6 +34,7 @@ class PersonController extends Controller {
         $qb->select('e')->from(Person::class, 'e');
         if( ! $this->isGranted('ROLE_USER')) {
             $qb->where("e.gender <> 'm'");
+            $qb->andWhere('e.canadian is null OR e.canadian != 0');
         }
         $qb->orderBy('e.sortableName');
         $query = $qb->getQuery();

@@ -51,6 +51,10 @@
                     <th><span data-toggle="popover" data-content="Person's gender" data-trigger="hover" data-placement="bottom">Gender</span></th>
                     <td>{{ include('AppBundle:person:partial/gender.html.twig') }}</td>
                 </tr>
+                <tr>
+                    <th><span data-toggle="popover" data-content="Canadian Citizen" data-trigger="hover" data-placement="bottom">Canadian</span></th>
+                    <td>{% include 'AppBundle:misc:bool.html.twig' with { 'value': person.canadian } %}</td>
+                </tr>
             {% endif %}
             <tr>
                 <th><span data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</span></th>

@@ -41,6 +41,12 @@ class Person extends AbstractEntity {
     private $gender;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $canadian;
+
+    /**
      * public research notes.
      * @var string
      * @ORM\Column(type="text", nullable=true)
@@ -486,5 +492,29 @@ class Person extends AbstractEntity {
     public function getGender()
     {
         return $this->gender;
+    }
+
+    /**
+     * Set canadian.
+     *
+     * @param bool|null $canadian
+     *
+     * @return Person
+     */
+    public function setCanadian($canadian = null)
+    {
+        $this->canadian = $canadian;
+
+        return $this;
+    }
+
+    /**
+     * Get canadian.
+     *
+     * @return bool|null
+     */
+    public function getCanadian()
+    {
+        return $this->canadian;
     }
 }
