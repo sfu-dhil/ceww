@@ -102,9 +102,8 @@ abstract class Publication extends AbstractEntity {
     public function __construct() {
         parent::__construct();
         $this->trait_constructor();
-        $this->links = array();
+        $this->links = new ArrayCollection();
         $this->genres = new ArrayCollection();
-        $this->contributions = new ArrayCollection();
         $this->publishers = new ArrayCollection();
     }
 
@@ -166,7 +165,11 @@ abstract class Publication extends AbstractEntity {
      * @return Publication
      */
     public function setLinks($links) {
-        $this->links = $links;
+        if( ! $links instanceof ArrayCollection) {
+            $this->links = new ArrayCollection($links);
+        } else {
+            $this->links = $links;
+        }
 
         return $this;
     }
@@ -184,7 +187,11 @@ abstract class Publication extends AbstractEntity {
      * @return array
      */
     public function getLinks() {
-        $data = $this->links->toArray();
+        $data = $this->links;
+        if($data instanceof ArrayCollection) {
+            // In the test setup, this can be a bunch of links. For some reason.
+            $data = $this->links->toArray();
+        }
         usort($data, function($a, $b){
             return substr($a, strpos($a, '//')+1) <=> substr($b,strpos($b, '//')+1);
         });
