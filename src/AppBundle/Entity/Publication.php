@@ -26,6 +26,10 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  */
 abstract class Publication extends AbstractEntity {
 
+    use HasContributions {
+        HasContributions::__construct as private trait_constructor;
+    }
+
     const BOOK = 'book';
     const COMPILATION = 'compilation';
     const PERIODICAL = 'periodical';
@@ -97,6 +101,7 @@ abstract class Publication extends AbstractEntity {
 
     public function __construct() {
         parent::__construct();
+        $this->trait_constructor();
         $this->links = array();
         $this->genres = new ArrayCollection();
         $this->contributions = new ArrayCollection();
@@ -179,7 +184,11 @@ abstract class Publication extends AbstractEntity {
      * @return array
      */
     public function getLinks() {
-        return $this->links;
+        $data = $this->links->toArray();
+        usort($data, function($a, $b){
+            return substr($a, strpos($a, '//')+1) <=> substr($b,strpos($b, '//')+1);
+        });
+        return $data;
     }
 
     /**
@@ -330,43 +339,6 @@ abstract class Publication extends AbstractEntity {
      */
     public function getGenres() {
         return $this->genres;
-    }
-
-    /**
-     * Add contribution
-     *
-     * @param Contribution $contribution
-     *
-     * @return Publication
-     */
-    public function addContribution(Contribution $contribution) {
-        if (!$this->contributions->contains($contribution)) {
-            $this->contributions[] = $contribution;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove contribution
-     *
-     * @param Contribution $contribution
-     */
-    public function removeContribution(Contribution $contribution) {
-        $this->contributions->removeElement($contribution);
-    }
-
-    /**
-     * Get contributions
-     *
-     * @return Collection
-     */
-    public function getContributions() {
-        $data = $this->contributions->toArray();
-        usort($data, function(Contribution $a, Contribution $b){
-            return strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
-        });
-        return $data;
     }
 
     /**

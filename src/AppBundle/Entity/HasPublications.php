@@ -16,9 +16,11 @@ use Doctrine\Common\Collections\Collection;
  *
  * @author mjoyce
  */
-trait HasPublications {
+trait HasPublications
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->publications = new ArrayCollection();
     }
 
@@ -29,7 +31,8 @@ trait HasPublications {
      *
      * @return Place
      */
-    public function addPublication(Publication $publication) {
+    public function addPublication(Publication $publication)
+    {
         if (!$this->publications->contains($publication)) {
             $this->publications[] = $publication;
         }
@@ -42,7 +45,8 @@ trait HasPublications {
      *
      * @param Publication $publication
      */
-    public function removePublication(Publication $publication) {
+    public function removePublication(Publication $publication)
+    {
         $this->publications->removeElement($publication);
     }
 
@@ -51,16 +55,46 @@ trait HasPublications {
      *
      * @return Collection|Publication[]
      */
-    public function getPublications($category = null) {
+    public function getPublications($category = null, $order = 'title')
+    {
         $publications = $this->publications->toArray();
         if ($category !== null) {
-            $publications = array_filter($publications, function(Publication $publication) use ($category) {
+            $publications = array_filter($publications, function (Publication $publication) use ($category) {
                 return $publication->getCategory() === $category;
             });
         }
-        usort($publications, function($a, $b) {
-            return strcmp($a->getSortableTitle(), $b->getSortableTitle());
-        });
+        $cmp = null;
+        switch ($order) {
+            case 'title':
+                $cmp = function (Publication $a, Publication $b) {
+                    return strcmp($a->getSortableTitle(), $b->getSortableTitle());
+                };
+                break;
+            case 'year':
+                $cmp = function (Publication $a, Publication $b) {
+                    $ad = $a->getDateYear();
+                    $bd = $b->getDateYear();
+
+                    if( ! $ad && $bd) {
+                        return -1;
+                    }
+                    if( $ad && !$bd) {
+                        return 1;
+                    }
+
+                    if( ! $ad && ! $bd ) {
+                        return strcasecmp($a->getSortableTitle(), $b->getSortableTitle());
+                    }
+
+                    if($ad->getStart(false) <=> $bd->getStart(false)) {
+                        return $ad->getStart(false) <=> $bd->getStart(false);
+                    }
+
+                    return $a->getSortableTitle() <=> $b->getSortableTitle();
+                };
+                break;
+        }
+        usort($publications, $cmp);
         return $publications;
     }
 

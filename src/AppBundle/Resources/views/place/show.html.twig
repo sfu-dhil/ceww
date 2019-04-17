@@ -144,17 +144,17 @@
             </div>
 
             <div role="tabpanel" class="tab-pane" id="book">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK'), 'year') } %}
                 {% endembed %}
             </div>
 
             <div role="tabpanel" class="tab-pane" id="compilation">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION'), 'year') } %}
                 {% endembed %}
             </div>
 
             <div role="tabpanel" class="tab-pane" id="periodical">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL'), 'year') } %}
                 {% endembed %}
             </div>
         </div>

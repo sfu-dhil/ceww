@@ -168,7 +168,7 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="books">
-                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::BOOK')) %}
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::BOOK'), 'year') %}
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
@@ -187,7 +187,7 @@
                 {% endif %}
             </div>
             <div role="tabpanel" class="tab-pane" id="collections">
-                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION'), 'year') %}
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
@@ -206,7 +206,7 @@
                 {% endif %}
             </div>
             <div role="tabpanel" class="tab-pane" id="periodicals">
-                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::PERIODICAL'), 'title') %}
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
