@@ -76,7 +76,7 @@ class PersonType extends AbstractType {
             'delay' => 250,
             'language' => 'en',
             'attr' => array(
-                'help_block' => 'Alternate names or aliases including maiden names',
+                'help_block' => 'Alternate names or aliases including birth name or married names',
             ),
         ));
 
