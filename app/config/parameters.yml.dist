@@ -19,7 +19,7 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     # geonames user account
-    geonames_account: ~
+    doceww.geonames_user: ~
 
     # number of items on a page.
     page_size: 50

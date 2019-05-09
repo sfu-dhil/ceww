@@ -27,6 +27,10 @@ services:
         # but if a service is unused, it's removed anyway
         exclude: '../../src/AppBundle/{Entity,Repository,Resources,Tests}'
 
+    AppBundle\Command\PlacesUpdateCommand:
+        arguments:
+            $username: '%doceww.geonames_user%'
+
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
     AppBundle\Controller\:

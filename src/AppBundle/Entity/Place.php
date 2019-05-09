@@ -33,6 +33,12 @@ class Place extends AbstractEntity {
     private $sortableName;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", length=16, nullable=true)
+     */
+    private $geoNamesId;
+
+    /**
      * A province, state, territory or other sub-national entity.
      *
      * @ORM\Column(type="string", length=250, nullable=true)
@@ -520,5 +526,29 @@ class Place extends AbstractEntity {
     public function getPublishers()
     {
         return $this->publishers;
+    }
+
+    /**
+     * Set geoNamesId.
+     *
+     * @param string|null $geoNamesId
+     *
+     * @return Place
+     */
+    public function setGeoNamesId($geoNamesId = null)
+    {
+        $this->geoNamesId = $geoNamesId;
+
+        return $this;
+    }
+
+    /**
+     * Get geoNamesId.
+     *
+     * @return string|null
+     */
+    public function getGeoNamesId()
+    {
+        return $this->geoNamesId;
     }
 }
