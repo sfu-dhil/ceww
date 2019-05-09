@@ -30,7 +30,7 @@ class AliasType extends AbstractType {
             ),
         ));
         $builder->add('maiden', ChoiceType::class, array(
-            'label' => 'Maiden',
+            'label' => 'Birth Name',
             'expanded' => true,
             'multiple' => false,
             'choices' => array(
@@ -41,7 +41,7 @@ class AliasType extends AbstractType {
             'required' => true,
             'placeholder' => false,
             'attr' => array(
-                'help_block' => 'Is person\'s maiden name?',
+                'help_block' => 'Is person\'s birth name?',
             ),
         ));
         $builder->add('married', ChoiceType::class, array(
