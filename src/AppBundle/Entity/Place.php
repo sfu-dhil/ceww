@@ -34,7 +34,7 @@ class Place extends AbstractEntity {
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=16, nullable=true)
+     * @ORM\Column(name="geonames_id", type="string", length=16, nullable=true)
      */
     private $geoNamesId;
 
