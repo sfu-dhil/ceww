@@ -77,7 +77,7 @@ class AliasControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/alias/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
     
     public function testUserEdit() {
@@ -86,9 +86,8 @@ class AliasControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/alias/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
-    }
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+  }
     
     public function testAdminEdit() {
         $client = $this->makeClient([
@@ -117,7 +116,7 @@ class AliasControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/alias/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
     
     public function testUserNew() {
@@ -126,8 +125,7 @@ class AliasControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/alias/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() {
@@ -157,7 +155,7 @@ class AliasControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/alias/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
     
     public function testUserDelete() {
@@ -166,8 +164,7 @@ class AliasControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/alias/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() {

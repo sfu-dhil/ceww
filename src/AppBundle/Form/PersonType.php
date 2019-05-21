@@ -48,6 +48,22 @@ class PersonType extends AbstractType {
             ),
         ));
 
+        $builder->add('canadian', ChoiceType::class, array(
+            'label' => 'Canadian',
+            'expanded' => true,
+            'multiple' => false,
+            'choices' => array(
+                'Yes' => true,
+                'No' => false,
+                'Unknown' => null,
+            ),
+            'required' => true,
+            'placeholder' => false,
+            'attr' => array(
+                'help_block' => 'Is the person a Canadian?',
+            ),
+        ));
+
         $builder->add('aliases', Select2EntityType::class, array(
             'label' => 'Alternate Names',
             'multiple' => true,
@@ -60,7 +76,7 @@ class PersonType extends AbstractType {
             'delay' => 250,
             'language' => 'en',
             'attr' => array(
-                'help_block' => 'Alternate names or aliases including maiden names',
+                'help_block' => 'Alternate names or aliases including birth name or married names',
             ),
         ));
 

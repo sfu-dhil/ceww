@@ -51,6 +51,10 @@
                     <th><span data-toggle="popover" data-content="Person's gender" data-trigger="hover" data-placement="bottom">Gender</span></th>
                     <td>{{ include('AppBundle:person:partial/gender.html.twig') }}</td>
                 </tr>
+                <tr>
+                    <th><span data-toggle="popover" data-content="Canadian Citizen" data-trigger="hover" data-placement="bottom">Canadian</span></th>
+                    <td>{% include 'AppBundle:misc:bool.html.twig' with { 'value': person.canadian } %}</td>
+                </tr>
             {% endif %}
             <tr>
                 <th><span data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</span></th>
@@ -107,7 +111,7 @@
                 </td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Alternate names or aliases including maiden names" data-trigger="hover" data-placement="bottom">Alternate Names</span></th>
+                <th><span data-toggle="popover" data-content="Alternate names or aliases including birth name or maiden names" data-trigger="hover" data-placement="bottom">Alternate Names</span></th>
                 <td>
                     {% if person.aliases | length > 0 %}
                         <ul>
@@ -164,7 +168,7 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="books">
-                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::BOOK')) %}
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::BOOK'), 'year') %}
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
@@ -183,7 +187,7 @@
                 {% endif %}
             </div>
             <div role="tabpanel" class="tab-pane" id="collections">
-                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION')) %}
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::COMPILATION'), 'year') %}
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}
@@ -202,7 +206,7 @@
                 {% endif %}
             </div>
             <div role="tabpanel" class="tab-pane" id="periodicals">
-                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::PERIODICAL')) %}
+                {% set contributions = person.getContributions(constant('AppBundle\\Entity\\Publication::PERIODICAL'), 'title') %}
                 {% if contributions | length > 0 %}
                     <ul>
                         {% for contribution in contributions %}

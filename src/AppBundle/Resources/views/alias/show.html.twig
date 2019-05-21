@@ -32,7 +32,11 @@
             </tr>
             <tr>
                 <th><span data-toggle="popover" data-content="Is the name at birth?" data-trigger="hover" data-placement="bottom">Birth Name</span></th>
-                <td>{% if alias.maiden %}Yes{% else %}No{% endif %}</td>
+                <td>{% include 'AppBundle:misc:bool.html.twig' with {'value': alias.maiden} %}</td>
+            </tr>
+            <tr>
+                <th><span data-toggle="popover" data-content="Is the name at birth?" data-trigger="hover" data-placement="bottom">Married Name</span></th>
+                <td>{% include 'AppBundle:misc:bool.html.twig' with {'value': alias.married} %}</td>
             </tr>
             <tr>
                 <th><span data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</span></th>

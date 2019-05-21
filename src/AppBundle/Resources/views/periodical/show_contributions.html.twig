@@ -28,7 +28,7 @@
             {% for contribution in periodical.contributions %}
                 <tr>
                     <td>{{ contribution.role }}</td>
-                    <td>{{ contribution.person }}</td>
+                    <td><a href="{{ path('person_show', {'id': contribution.person.id}) }}">{{ contribution.person }}</a></td>
                     <td>
                         <div class="btn-toolbar">
                             <div class="btn-group">

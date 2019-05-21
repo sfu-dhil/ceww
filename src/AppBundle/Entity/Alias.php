@@ -33,9 +33,15 @@ class Alias extends AbstractEntity
 
     /**
      * @var boolean
-     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $maiden;
+
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $married;
 
     /**
      * public research notes.
@@ -229,5 +235,29 @@ class Alias extends AbstractEntity
     public function getSortableName()
     {
         return $this->sortableName;
+    }
+
+    /**
+     * Set married.
+     *
+     * @param bool|null $married
+     *
+     * @return Alias
+     */
+    public function setMarried($married = null)
+    {
+        $this->married = $married;
+
+        return $this;
+    }
+
+    /**
+     * Get married.
+     *
+     * @return bool|null
+     */
+    public function getMarried()
+    {
+        return $this->married;
     }
 }

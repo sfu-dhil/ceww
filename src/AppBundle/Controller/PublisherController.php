@@ -112,7 +112,7 @@ class PublisherController extends Controller {
      * @return array|RedirectResponse
      *   Array data for the template processor or a redirect to the Publisher.
      *
-     * @Security("has_role('ROLE_CONTENT_ADMIN')")
+     * @Security("has_role('ROLE_CONTENT_EDITOR')")
      * @Route("/new", name="publisher_new")
      * @Method({"GET", "POST"})
      * @Template()
@@ -146,7 +146,7 @@ class PublisherController extends Controller {
      * @return array|RedirectResponse
      *   Array data for the template processor or a redirect to the Artwork.
      *
-     * @Security("has_role('ROLE_CONTENT_ADMIN')")
+     * @Security("has_role('ROLE_CONTENT_EDITOR')")
      * @Route("/new_popup", name="publisher_new_popup")
      * @Method({"GET", "POST"})
      * @Template()
@@ -188,7 +188,7 @@ class PublisherController extends Controller {
      * @return array|RedirectResponse
      *   Array data for the template processor or a redirect to the Publisher.
      *
-     * @Security("has_role('ROLE_CONTENT_ADMIN')")
+     * @Security("has_role('ROLE_CONTENT_EDITOR')")
      * @Route("/{id}/edit", name="publisher_edit")
      * @Method({"GET", "POST"})
      * @Template()

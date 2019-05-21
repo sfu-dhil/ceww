@@ -26,6 +26,10 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  */
 abstract class Publication extends AbstractEntity {
 
+    use HasContributions {
+        HasContributions::__construct as private trait_constructor;
+    }
+
     const BOOK = 'book';
     const COMPILATION = 'compilation';
     const PERIODICAL = 'periodical';
@@ -97,9 +101,9 @@ abstract class Publication extends AbstractEntity {
 
     public function __construct() {
         parent::__construct();
-        $this->links = array();
+        $this->trait_constructor();
+        $this->links = new ArrayCollection();
         $this->genres = new ArrayCollection();
-        $this->contributions = new ArrayCollection();
         $this->publishers = new ArrayCollection();
     }
 
@@ -161,14 +165,18 @@ abstract class Publication extends AbstractEntity {
      * @return Publication
      */
     public function setLinks($links) {
-        $this->links = $links;
+        if( ! $links instanceof ArrayCollection) {
+            $this->links = new ArrayCollection($links);
+        } else {
+            $this->links = $links;
+        }
 
         return $this;
     }
 
     public function addLink($link) {
-        if ( ! in_array($link, $this->links)) {
-            $this->links[] = $link;
+        if( ! $this->links->contains($link)) {
+            $this->links->add($link);
         }
         return $this;
     }
@@ -179,7 +187,11 @@ abstract class Publication extends AbstractEntity {
      * @return array
      */
     public function getLinks() {
-        return $this->links;
+        $data = $this->links->toArray();
+        usort($data, function($a, $b){
+            return substr($a, strpos($a, '//')+1) <=> substr($b,strpos($b, '//')+1);
+        });
+        return $data;
     }
 
     /**
@@ -330,39 +342,6 @@ abstract class Publication extends AbstractEntity {
      */
     public function getGenres() {
         return $this->genres;
-    }
-
-    /**
-     * Add contribution
-     *
-     * @param Contribution $contribution
-     *
-     * @return Publication
-     */
-    public function addContribution(Contribution $contribution) {
-        if (!$this->contributions->contains($contribution)) {
-            $this->contributions[] = $contribution;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove contribution
-     *
-     * @param Contribution $contribution
-     */
-    public function removeContribution(Contribution $contribution) {
-        $this->contributions->removeElement($contribution);
-    }
-
-    /**
-     * Get contributions
-     *
-     * @return Collection
-     */
-    public function getContributions() {
-        return $this->contributions;
     }
 
     /**

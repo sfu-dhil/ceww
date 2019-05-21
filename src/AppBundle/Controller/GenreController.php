@@ -6,6 +6,7 @@ use AppBundle\Entity\Genre;
 use AppBundle\Form\GenreType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +31,7 @@ class GenreController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('e')->from(Genre::class, 'e')->orderBy('e.id', 'ASC');
+        $qb->select('e')->from(Genre::class, 'e')->orderBy('e.label', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
         $genres = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
@@ -69,15 +70,12 @@ class GenreController extends Controller
      *
      * @Route("/new", name="genre_new")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
      */
     public function newAction(Request $request)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $genre = new Genre();
         $form = $this->createForm(GenreType::class, $genre);
         $form->handleRequest($request);
@@ -118,16 +116,13 @@ class GenreController extends Controller
      *
      * @Route("/{id}/edit", name="genre_edit")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
 	 * @param Genre $genre
      */
     public function editAction(Request $request, Genre $genre)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $editForm = $this->createForm(GenreType::class, $genre);
         $editForm->handleRequest($request);
 
@@ -147,6 +142,7 @@ class GenreController extends Controller
     /**
      * Deletes a Genre entity.
      *
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Route("/{id}/delete", name="genre_delete")
      * @Method("GET")
 	 * @param Request $request
@@ -154,10 +150,6 @@ class GenreController extends Controller
      */
     public function deleteAction(Request $request, Genre $genre)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($genre);
         $em->flush();

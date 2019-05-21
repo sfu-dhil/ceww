@@ -13,12 +13,6 @@
             <input type="submit" value="Update" class="btn btn-primary" />
             <a href="{{ path('place_show', { 'id': place.id }) }}" class="btn btn-warning">Cancel</a>
         </div>
-        <div class="col-sm-2">
-            <a href="{{ path('alias_new_popup') }}" class="btn btn-primary popup" id="newPlace">New Alternate Name</a>
-        </div>
-        <div class="col-sm-2">
-            <a href="{{ path('place_new_popup') }}" class="btn btn-primary popup" id="newPlace">New Place</a>
-        </div>
     </div>
     {{ form_end(edit_form) }}
 

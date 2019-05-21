@@ -57,7 +57,7 @@
                 <td>
                     {% if publisher.publications | length > 0 %}
                         <ul>
-                            {% for publication in publisher.publications %}
+                            {% for publication in publisher.publications(null, 'year') %}
                                 <li>
                                     {% embed 'AppBundle:publication:partial/link.html.twig' with {'publication': publication} %}
                                         {% block callback %}

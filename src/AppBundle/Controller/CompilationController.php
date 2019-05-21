@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Compilation;
 use AppBundle\Entity\Contribution;
@@ -46,15 +47,12 @@ class CompilationController extends Controller
      *
      * @Route("/new", name="compilation_new")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
      */
     public function newAction(Request $request)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $compilation = new Compilation();
         $form = $this->createForm(CompilationType::class, $compilation);
         $form->handleRequest($request);
@@ -102,16 +100,13 @@ class CompilationController extends Controller
      *
      * @Route("/{id}/edit", name="compilation_edit")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
 	 * @param Compilation $compilation
      */
     public function editAction(Request $request, Compilation $compilation)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $editForm = $this->createForm(CompilationType::class, $compilation);
         $editForm->handleRequest($request);
 
@@ -136,15 +131,12 @@ class CompilationController extends Controller
      *
      * @Route("/{id}/delete", name="compilation_delete")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
 	 * @param Request $request
 	 * @param Compilation $compilation
      */
     public function deleteAction(Request $request, Compilation $compilation)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($compilation);
         $em->flush();
@@ -153,21 +145,17 @@ class CompilationController extends Controller
         return $this->redirectToRoute('compilation_index');
     }
 
-        /**
+    /**
      * Creates a new Compilation contribution entity.
      *
      * @Route("/{id}/contributions/new", name="compilation_new_contribution")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Compilation $compilation
      */
     public function newContribution(Request $request, Compilation $compilation) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         $contribution = new Contribution();
 
         $form = $this->createForm(ContributionType::class, $contribution);
@@ -194,15 +182,11 @@ class CompilationController extends Controller
      * 
      * @Route("/{id}/contributions", name="compilation_show_contributions")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Compilation $compilation
      */
     public function showContributions(Compilation $compilation) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         return array(
             'compilation' => $compilation,
         );
@@ -213,16 +197,12 @@ class CompilationController extends Controller
      *
      * @Route("/contributions/{id}/edit", name="compilation_edit_contributions")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
-     * @param Compilation $compilation
+     * @param Contribution $contribution
      */
     public function editContribution(Request $request, Contribution $contribution) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         $editForm = $this->createForm(ContributionType::class, $contribution);
         $editForm->handleRequest($request);
 
@@ -245,13 +225,10 @@ class CompilationController extends Controller
      * @Route("/contributions/{id}/delete", name="compilation_delete_contributions")
      * @Method("GET")
      * @param Request $request
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Contribution $contribution
      */
     public function deleteContribution(Request $request, Contribution $contribution) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($contribution);
         $em->flush();

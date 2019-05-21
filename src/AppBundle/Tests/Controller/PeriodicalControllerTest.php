@@ -77,7 +77,7 @@ class PeriodicalControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserEdit() {
@@ -86,9 +86,8 @@ class PeriodicalControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/periodical/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
-    }
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+  }
 
     public function testAdminEdit() {
         $client = $this->makeClient([
@@ -128,7 +127,7 @@ class PeriodicalControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserNew() {
@@ -137,8 +136,7 @@ class PeriodicalControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/periodical/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() {
@@ -179,7 +177,7 @@ class PeriodicalControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserDelete() {
@@ -188,8 +186,7 @@ class PeriodicalControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/periodical/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() {
@@ -215,7 +212,7 @@ class PeriodicalControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/1/contributions/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserNewContribution() {
@@ -224,8 +221,7 @@ class PeriodicalControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/periodical/1/contributions/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNewContribution() {
@@ -254,7 +250,7 @@ class PeriodicalControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/1/contributions');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserShowContributions() {
@@ -263,8 +259,7 @@ class PeriodicalControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/periodical/1/contributions');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminShowContributions() {
@@ -281,7 +276,7 @@ class PeriodicalControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/contributions/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserEditContribution() {
@@ -290,9 +285,8 @@ class PeriodicalControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/periodical/contributions/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
-    }
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+  }
 
     public function testAdminEditContribution() {
         $client = $this->makeClient([
@@ -320,7 +314,7 @@ class PeriodicalControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/contributions/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserDeleteContribution() {
@@ -329,8 +323,7 @@ class PeriodicalControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/periodical/contributions/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteContribution() {

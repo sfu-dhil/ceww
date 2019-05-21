@@ -77,7 +77,7 @@ class CompilationControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/compilation/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
     
     public function testUserEdit() {
@@ -86,9 +86,8 @@ class CompilationControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/compilation/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
-    }
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+  }
     
     public function testAdminEdit() {
         $client = $this->makeClient([
@@ -127,7 +126,7 @@ class CompilationControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/compilation/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
     
     public function testUserNew() {
@@ -136,8 +135,7 @@ class CompilationControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/compilation/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() {
@@ -177,7 +175,7 @@ class CompilationControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/compilation/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
     
     public function testUserDelete() {
@@ -186,8 +184,7 @@ class CompilationControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/compilation/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() {
@@ -213,7 +210,7 @@ class CompilationControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/compilation/1/contributions/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserNewContribution() {
@@ -222,8 +219,7 @@ class CompilationControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/compilation/1/contributions/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNewContribution() {
@@ -252,7 +248,7 @@ class CompilationControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/compilation/1/contributions');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserShowContributions() {
@@ -261,8 +257,7 @@ class CompilationControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/compilation/1/contributions');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminShowContributions() {
@@ -279,7 +274,7 @@ class CompilationControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/compilation/contributions/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserEditContribution() {
@@ -288,9 +283,8 @@ class CompilationControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/compilation/contributions/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
-    }
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+  }
 
     public function testAdminEditContribution() {
         $client = $this->makeClient([
@@ -318,7 +312,7 @@ class CompilationControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/compilation/contributions/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     public function testUserDeleteContribution() {
@@ -327,8 +321,7 @@ class CompilationControllerTest extends BaseTestCase
             'password' => 'secret',
         ]);
         $crawler = $client->request('GET', '/compilation/contributions/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('/login'));
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteContribution() {

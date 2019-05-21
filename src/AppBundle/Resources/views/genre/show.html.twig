@@ -36,12 +36,12 @@
         
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane" id="book">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': genre.publications(constant('AppBundle\\Entity\\Publication::BOOK')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': genre.publications(constant('AppBundle\\Entity\\Publication::BOOK'), 'year') } %}
                 {% endembed %}
             </div>            
 
             <div role="tabpanel" class="tab-pane" id="compilation">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': genre.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': genre.publications(constant('AppBundle\\Entity\\Publication::COMPILATION'), 'year') } %}
                 {% endembed %}
             </div>            
 

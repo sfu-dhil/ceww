@@ -18,6 +18,11 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  */
 class Person extends AbstractEntity {
 
+    use HasContributions {
+        HasContributions::__construct as private trait_constructor;
+        getContributions as private traitContributions;
+    }
+
     const MALE = 'm';
 
     const FEMALE = 'f';
@@ -39,6 +44,12 @@ class Person extends AbstractEntity {
      * @ORM\Column(type="string", length=1, nullable=true)
      */
     private $gender;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true, options={"default": true})
+     */
+    private $canadian;
 
     /**
      * public research notes.
@@ -106,9 +117,10 @@ class Person extends AbstractEntity {
 
     public function __construct() {
         parent::__construct();
+        $this->trait_constructor();
+        $this->canadian = true;
         $this->residences = new ArrayCollection();
         $this->aliases = new ArrayCollection();
-        $this->contributions = new ArrayCollection();
         $this->urlLinks = array();
     }
 
@@ -374,41 +386,13 @@ class Person extends AbstractEntity {
         return $this->aliases;
     }
 
-    /**
-     * Add contribution
-     *
-     * @param Contribution $contribution
-     *
-     * @return Person
-     */
-    public function addContribution(Contribution $contribution) {
-        if (!$this->contributions->contains($contribution)) {
-            $this->contributions[] = $contribution;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove contribution
-     *
-     * @param Contribution $contribution
-     */
-    public function removeContribution(Contribution $contribution) {
-        $this->contributions->removeElement($contribution);
-    }
-
-    /**
-     * Get contributions
-     *
-     * @return Collection
-     */
-    public function getContributions($category = null) {
+    public function getContributions($category = null, $sort = 'year') {
+        $data = $this->traitContributions($sort);
         if ($category === null) {
-            return $this->contributions;
+            return $data;
         }
 
-        return array_filter($this->contributions->toArray(), function(Contribution $contribution) use ($category) {
+        return array_filter($data, function(Contribution $contribution) use ($category) {
             return $contribution->getPublication()->getCategory() === $category;
         });
     }
@@ -486,5 +470,29 @@ class Person extends AbstractEntity {
     public function getGender()
     {
         return $this->gender;
+    }
+
+    /**
+     * Set canadian.
+     *
+     * @param bool|null $canadian
+     *
+     * @return Person
+     */
+    public function setCanadian($canadian = null)
+    {
+        $this->canadian = $canadian;
+
+        return $this;
+    }
+
+    /**
+     * Get canadian.
+     *
+     * @return bool|null
+     */
+    public function getCanadian()
+    {
+        return $this->canadian;
     }
 }

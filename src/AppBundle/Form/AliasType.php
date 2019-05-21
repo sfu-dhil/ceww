@@ -30,17 +30,33 @@ class AliasType extends AbstractType {
             ),
         ));
         $builder->add('maiden', ChoiceType::class, array(
-            'label' => 'Maiden',
+            'label' => 'Birth Name',
             'expanded' => true,
             'multiple' => false,
             'choices' => array(
                 'Yes' => true,
                 'No' => false,
+                'Unknown' => null,
             ),
             'required' => true,
             'placeholder' => false,
             'attr' => array(
-                'help_block' => 'Is person\'s maiden name?',
+                'help_block' => 'Is person\'s birth name?',
+            ),
+        ));
+        $builder->add('married', ChoiceType::class, array(
+            'label' => 'Married',
+            'expanded' => true,
+            'multiple' => false,
+            'choices' => array(
+                'Yes' => true,
+                'No' => false,
+                'Unknown' => null,
+            ),
+            'required' => true,
+            'placeholder' => false,
+            'attr' => array(
+                'help_block' => 'Is person\'s married name?',
             ),
         ));
         $builder->add('description', CKEditorType::class, array(

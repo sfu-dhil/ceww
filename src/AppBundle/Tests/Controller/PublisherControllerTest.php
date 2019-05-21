@@ -135,7 +135,7 @@ class PublisherControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/publisher/1/edit');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect());
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     /**
@@ -176,7 +176,7 @@ class PublisherControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/publisher/new');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect());
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     /**
@@ -187,7 +187,7 @@ class PublisherControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/publisher/new_popup');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect());
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     /**
@@ -258,7 +258,7 @@ class PublisherControllerTest extends BaseTestCase
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/publisher/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect());
+        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
     }
 
     /**

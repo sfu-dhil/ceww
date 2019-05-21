@@ -115,7 +115,6 @@ class Merger
             $this->em->remove($publication);
         }
         $this->em->flush();
-        // dump($destination);
     }
 
 }

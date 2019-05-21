@@ -7,6 +7,7 @@ use AppBundle\Form\PlaceType;
 use AppBundle\Services\Merger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -96,15 +97,12 @@ class PlaceController extends Controller
      *
      * @Route("/new", name="place_new")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
      */
     public function newAction(Request $request)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $place = new Place();
         $form = $this->createForm(PlaceType::class, $place);
         $form->handleRequest($request);
@@ -130,6 +128,7 @@ class PlaceController extends Controller
      *
      * @Route("/new_popup", name="place_new_popup")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
      */
@@ -164,16 +163,13 @@ class PlaceController extends Controller
      *
      * @Route("/{id}/edit", name="place_edit")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
 	 * @param Place $place
      */
     public function editAction(Request $request, Place $place)
     {
-        if( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $editForm = $this->createForm(PlaceType::class, $place);
         $editForm->handleRequest($request);
 
@@ -195,14 +191,11 @@ class PlaceController extends Controller
      *
      * @Route("/{id}/merge", name="place_merge")
      * @Method({"GET","POST"})
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Template()
      * @param Place $place
      */
     public function mergeAction(Request $request, Place $place, Merger $merger) {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Place::class);
 
@@ -233,6 +226,7 @@ class PlaceController extends Controller
      *
      * @Route("/{id}/delete", name="place_delete")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
 	 * @param Request $request
 	 * @param Place $place
      */

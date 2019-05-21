@@ -7,6 +7,7 @@ use AppBundle\Entity\Publisher;
 use AppBundle\Form\PersonType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,6 +35,7 @@ class PersonController extends Controller {
         $qb->select('e')->from(Person::class, 'e');
         if( ! $this->isGranted('ROLE_USER')) {
             $qb->where("e.gender <> 'm'");
+            $qb->andWhere('e.canadian is null OR e.canadian != 0');
         }
         $qb->orderBy('e.sortableName');
         $query = $qb->getQuery();
@@ -139,14 +141,11 @@ class PersonController extends Controller {
      *
      * @Route("/new", name="person_new")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      */
     public function newAction(Request $request) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $person = new Person();
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
@@ -171,6 +170,7 @@ class PersonController extends Controller {
      *
      * @Route("/new_popup", name="person_new_popup")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      */
@@ -205,15 +205,12 @@ class PersonController extends Controller {
      *
      * @Route("/{id}/edit", name="person_edit")
      * @Method({"GET", "POST"})
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
      * @param Person $person
      */
     public function editAction(Request $request, Person $person) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $editForm = $this->createForm(PersonType::class, $person);
         $editForm->handleRequest($request);
 
@@ -236,14 +233,11 @@ class PersonController extends Controller {
      *
      * @Route("/{id}/delete", name="person_delete")
      * @Method("GET")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Person $person
      */
     public function deleteAction(Request $request, Person $person) {
-        if (!$this->isGranted('ROLE_CONTENT_ADMIN')) {
-            $this->addFlash('danger', 'You must login to access this page.');
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($person);
         $em->flush();

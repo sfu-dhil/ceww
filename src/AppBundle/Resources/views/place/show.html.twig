@@ -69,6 +69,10 @@
                 <th><span data-toggle="popover" data-content="Notes about the entry." data-trigger="hover" data-placement="bottom">Notes</span></th>
                 <td>{{ place.description|raw }}</td>
             </tr>
+            <tr>
+                <th><span data-toggle="popover" data-content="GeoNames ID for this place." data-trigger="hover" data-placement="bottom">GeoNames ID</span></th>
+                <td>{{ place.geoNamesId }}</td>
+            </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th><span data-toggle="popover" data-content="These notes are only available to logged-in users." data-trigger="hover" data-placement="bottom">Research Notes</span></th>
@@ -144,17 +148,17 @@
             </div>
 
             <div role="tabpanel" class="tab-pane" id="book">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::BOOK'), 'year') } %}
                 {% endembed %}
             </div>
 
             <div role="tabpanel" class="tab-pane" id="compilation">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::COMPILATION'), 'year') } %}
                 {% endembed %}
             </div>
 
             <div role="tabpanel" class="tab-pane" id="periodical">
-                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL')) } %}
+                {% embed 'AppBundle:publication:partial/list.html.twig' with {'publications': place.publications(constant('AppBundle\\Entity\\Publication::PERIODICAL'), 'year') } %}
                 {% endembed %}
             </div>
         </div>
