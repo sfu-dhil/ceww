@@ -81,7 +81,7 @@ class PersonType extends AbstractType {
         ));
 
         $builder->add('description', CKEditorType::class, array(
-            'label' => 'Description',
+            'label' => 'Notes (for the public)',
             'required' => false,
             'attr' => array(
                 'help_block' => 'This description is public',
@@ -169,7 +169,7 @@ class PersonType extends AbstractType {
         ));
 
         $builder->add('notes', CKEditorType::class, array(
-            'label' => 'Notes',
+            'label' => 'Research Notes (for editors/admins)',
             'required' => false,
             'attr' => array(
                 'help_block' => 'Notes are only available to logged-in users',
