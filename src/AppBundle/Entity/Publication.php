@@ -175,6 +175,9 @@ abstract class Publication extends AbstractEntity {
     }
 
     public function addLink($link) {
+        if( ! $this->links instanceof ArrayCollection) {
+            $this->links = new ArrayCollection($this->links);
+        }
         if( ! $this->links->contains($link)) {
             $this->links->add($link);
         }
@@ -187,7 +190,10 @@ abstract class Publication extends AbstractEntity {
      * @return array
      */
     public function getLinks() {
-        $data = $this->links->toArray();
+        $data = $this->links;
+        if($this->links instanceof ArrayCollection) {
+            $data = $this->links->toArray();
+        }
         usort($data, function($a, $b){
             return substr($a, strpos($a, '//')+1) <=> substr($b,strpos($b, '//')+1);
         });
