@@ -4,8 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Compilation;
@@ -23,8 +22,8 @@ class CompilationController extends Controller
     /**
      * Lists all Compilation entities.
      *
-     * @Route("/", name="compilation_index")
-     * @Method("GET")
+     * @Route("/", name="compilation_index", methods={"GET"})
+     *
      * @Template()
 	 * @param Request $request
      */
@@ -45,8 +44,8 @@ class CompilationController extends Controller
     /**
      * Creates a new Compilation entity.
      *
-     * @Route("/new", name="compilation_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="compilation_new", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
@@ -78,8 +77,8 @@ class CompilationController extends Controller
     /**
      * Finds and displays a Compilation entity.
      *
-     * @Route("/{id}", name="compilation_show")
-     * @Method("GET")
+     * @Route("/{id}", name="compilation_show", methods={"GET"})
+     *
      * @Template()
 	 * @param Compilation $compilation
      */
@@ -98,8 +97,8 @@ class CompilationController extends Controller
     /**
      * Displays a form to edit an existing Compilation entity.
      *
-     * @Route("/{id}/edit", name="compilation_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/edit", name="compilation_edit", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
@@ -129,8 +128,8 @@ class CompilationController extends Controller
     /**
      * Deletes a Compilation entity.
      *
-     * @Route("/{id}/delete", name="compilation_delete")
-     * @Method("GET")
+     * @Route("/{id}/delete", name="compilation_delete", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
 	 * @param Request $request
 	 * @param Compilation $compilation
@@ -149,7 +148,7 @@ class CompilationController extends Controller
      * Creates a new Compilation contribution entity.
      *
      * @Route("/{id}/contributions/new", name="compilation_new_contribution")
-     * @Method({"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -181,7 +180,7 @@ class CompilationController extends Controller
      * Show compilation contributions list with edit/delete action items
      * 
      * @Route("/{id}/contributions", name="compilation_show_contributions")
-     * @Method("GET")
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Compilation $compilation
@@ -196,7 +195,7 @@ class CompilationController extends Controller
      * Displays a form to edit an existing compilation Contribution entity.
      *
      * @Route("/contributions/{id}/edit", name="compilation_edit_contributions")
-     * @Method({"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -223,7 +222,7 @@ class CompilationController extends Controller
      * Deletes a compilation Contribution entity.
      *
      * @Route("/contributions/{id}/delete", name="compilation_delete_contributions")
-     * @Method("GET")
+     *
      * @param Request $request
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Contribution $contribution

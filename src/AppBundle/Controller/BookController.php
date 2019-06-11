@@ -8,8 +8,7 @@ use AppBundle\Entity\Publication;
 use AppBundle\Form\BookType;
 use AppBundle\Form\ContributionType;
 use AppBundle\Form\ContributionCollectionType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,8 +25,8 @@ class BookController extends Controller {
     /**
      * Lists all Book entities.
      *
-     * @Route("/", name="book_index")
-     * @Method("GET")
+     * @Route("/", name="book_index", methods={"GET"})
+     *
      * @Template()
      * @param Request $request
      * @return array|RedirectResponse
@@ -64,8 +63,8 @@ class BookController extends Controller {
     /**
      * Creates a new Book entity.
      *
-     * @Route("/new", name="book_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="book_new", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -96,8 +95,8 @@ class BookController extends Controller {
     /**
      * Finds and displays a Book entity.
      *
-     * @Route("/{id}", name="book_show")
-     * @Method("GET")
+     * @Route("/{id}", name="book_show", methods={"GET"})
+     *
      * @Template()
      * @param Book $book
      */
@@ -115,8 +114,8 @@ class BookController extends Controller {
     /**
      * Displays a form to edit an existing Book entity.
      *
-     * @Route("/{id}/edit", name="book_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/edit", name="book_edit", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -149,8 +148,8 @@ class BookController extends Controller {
     /**
      * Deletes a Book entity.
      *
-     * @Route("/{id}/delete", name="book_delete")
-     * @Method("GET")
+     * @Route("/{id}/delete", name="book_delete", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Book $book
@@ -168,7 +167,7 @@ class BookController extends Controller {
      * Creates a new Book contribution entity.
      *
      * @Route("/{id}/contributions/new", name="book_new_contribution")
-     * @Method({"GET", "POST"})
+     *
      * @Template()
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @param Request $request
@@ -200,7 +199,7 @@ class BookController extends Controller {
      * Show book contributions list with edit/delete action items
      * 
      * @Route("/{id}/contributions", name="book_show_contributions")
-     * @Method("GET")
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Book $book
@@ -215,7 +214,7 @@ class BookController extends Controller {
      * Displays a form to edit an existing book Contribution entity.
      *
      * @Route("/contributions/{id}/edit", name="book_edit_contributions")
-     * @Method({"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -242,7 +241,7 @@ class BookController extends Controller {
      * Deletes a book Contribution entity.
      *
      * @Route("/contributions/{id}/delete", name="book_delete_contributions")
-     * @Method("GET")
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Contribution $contribution

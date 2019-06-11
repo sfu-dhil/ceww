@@ -5,8 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Role;
 use AppBundle\Form\RoleType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,8 +22,8 @@ class RoleController extends Controller
     /**
      * Lists all Role entities.
      *
-     * @Route("/", name="role_index")
-     * @Method("GET")
+     * @Route("/", name="role_index", methods={"GET"})
+     *
      * @Template()
 	 * @param Request $request
      */
@@ -44,8 +44,8 @@ class RoleController extends Controller
     /**
      * Creates a new Role entity.
      *
-     * @Route("/new", name="role_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="role_new", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
@@ -74,8 +74,8 @@ class RoleController extends Controller
     /**
      * Finds and displays a Role entity.
      *
-     * @Route("/{id}", name="role_show")
-     * @Method("GET")
+     * @Route("/{id}", name="role_show", methods={"GET"})
+     *
      * @Template()
      * @param Request $request
 	 * @param Role $role
@@ -97,8 +97,8 @@ class RoleController extends Controller
     /**
      * Displays a form to edit an existing Role entity.
      *
-     * @Route("/{id}/edit", name="role_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/edit", name="role_edit", methods={"GET","POST"})
+     *
      * @Template()
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
 	 * @param Request $request
@@ -125,8 +125,8 @@ class RoleController extends Controller
     /**
      * Deletes a Role entity.
      *
-     * @Route("/{id}/delete", name="role_delete")
-     * @Method("GET")
+     * @Route("/{id}/delete", name="role_delete", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
 	 * @param Request $request
 	 * @param Role $role

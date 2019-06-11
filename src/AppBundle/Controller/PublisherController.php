@@ -6,7 +6,7 @@ use AppBundle\Entity\Person;
 use AppBundle\Entity\Publisher;
 use AppBundle\Form\PublisherType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,8 +30,8 @@ class PublisherController extends Controller {
      * @return array
      *   Array data for the template processor.
      *
-     * @Route("/", name="publisher_index")
-     * @Method("GET")
+     * @Route("/", name="publisher_index", methods={"GET"})
+     *
      * @Template()
      */
     public function indexAction(Request $request) {
@@ -53,8 +53,8 @@ class PublisherController extends Controller {
      * @param Request $request
      *   Dependency injected HTTP request object.
      *
-     * @Route("/typeahead", name="publisher_typeahead")
-     * @Method("GET")
+     * @Route("/typeahead", name="publisher_typeahead", methods={"GET"})
+     *
      * @return JsonResponse
      */
     public function typeahead(Request $request) {
@@ -81,8 +81,8 @@ class PublisherController extends Controller {
      * @param Request $request
      *   Dependency injected HTTP request object.
      *
-     * @Route("/search", name="publisher_search")
-     * @Method("GET")
+     * @Route("/search", name="publisher_search", methods={"GET"})
+     *
      * @Template()
      */
     public function searchAction(Request $request) {
@@ -113,8 +113,8 @@ class PublisherController extends Controller {
      *   Array data for the template processor or a redirect to the Publisher.
      *
      * @Security("has_role('ROLE_CONTENT_EDITOR')")
-     * @Route("/new", name="publisher_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="publisher_new", methods={"GET","POST"})
+     *
      * @Template()
      */
     public function newAction(Request $request) {
@@ -147,8 +147,8 @@ class PublisherController extends Controller {
      *   Array data for the template processor or a redirect to the Artwork.
      *
      * @Security("has_role('ROLE_CONTENT_EDITOR')")
-     * @Route("/new_popup", name="publisher_new_popup")
-     * @Method({"GET", "POST"})
+     * @Route("/new_popup", name="publisher_new_popup", methods={"GET","POST"})
+     *
      * @Template()
      */
     public function newPopupAction(Request $request) {
@@ -164,8 +164,8 @@ class PublisherController extends Controller {
      * @return array
      *   Array data for the template processor.
      *
-     * @Route("/{id}", name="publisher_show")
-     * @Method("GET")
+     * @Route("/{id}", name="publisher_show", methods={"GET"})
+     *
      * @Template()
      */
     public function showAction(Publisher $publisher, EntityManagerInterface $em) {
@@ -189,8 +189,8 @@ class PublisherController extends Controller {
      *   Array data for the template processor or a redirect to the Publisher.
      *
      * @Security("has_role('ROLE_CONTENT_EDITOR')")
-     * @Route("/{id}/edit", name="publisher_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/edit", name="publisher_edit", methods={"GET","POST"})
+     *
      * @Template()
      */
     public function editAction(Request $request, Publisher $publisher) {
@@ -223,8 +223,8 @@ class PublisherController extends Controller {
      *   A redirect to the publisher_index.
      *
      * @Security("has_role('ROLE_CONTENT_ADMIN')")
-     * @Route("/{id}/delete", name="publisher_delete")
-     * @Method("GET")
+     * @Route("/{id}/delete", name="publisher_delete", methods={"GET","POST"})
+     *
      */
     public function deleteAction(Request $request, Publisher $publisher) {
         $em = $this->getDoctrine()->getManager();

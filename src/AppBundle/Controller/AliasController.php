@@ -4,8 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Alias;
 use AppBundle\Form\AliasType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,8 +21,8 @@ class AliasController extends Controller {
     /**
      * Lists all Alias entities.
      *
-     * @Route("/", name="alias_index")
-     * @Method("GET")
+     * @Route("/", name="alias_index", methods={"GET"})
+     *
      * @Template()
      * @param Request $request
      */
@@ -43,8 +42,8 @@ class AliasController extends Controller {
     /**
      * Search for Alias entities.
      *
-     * @Route("/search", name="alias_search")
-     * @Method("GET")
+     * @Route("/search", name="alias_search", methods={"GET"})
+     *
      * @Template()
      * @param Request $request
      */
@@ -68,8 +67,8 @@ class AliasController extends Controller {
 
     /**
      * @param Request $request
-     * @Route("/typeahead", name="alias_typeahead")
-     * @Method("GET")
+     * @Route("/typeahead", name="alias_typeahead", methods={"GET"})
+     *
      * @return JsonResponse
      */
     public function typeahead(Request $request) {
@@ -93,8 +92,8 @@ class AliasController extends Controller {
     /**
      * Creates a new Alias entity.
      *
-     * @Route("/new", name="alias_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="alias_new", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -122,8 +121,8 @@ class AliasController extends Controller {
     /**
      * Creates a new Alias entity.
      *
-     * @Route("/new", name="alias_new_popup")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="alias_new_popup", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -135,8 +134,8 @@ class AliasController extends Controller {
     /**
      * Finds and displays a Alias entity.
      *
-     * @Route("/{id}", name="alias_show")
-     * @Method("GET")
+     * @Route("/{id}", name="alias_show", methods={"GET"})
+     *
      * @Template()
      * @param Alias $alias
      */
@@ -150,8 +149,8 @@ class AliasController extends Controller {
     /**
      * Displays a form to edit an existing Alias entity.
      *
-     * @Route("/{id}/edit", name="alias_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/edit", name="alias_edit", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -177,8 +176,8 @@ class AliasController extends Controller {
     /**
      * Deletes a Alias entity.
      *
-     * @Route("/{id}/delete", name="alias_delete")
-     * @Method("GET")
+     * @Route("/{id}/delete", name="alias_delete", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Alias $alias

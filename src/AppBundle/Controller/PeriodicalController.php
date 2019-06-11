@@ -8,12 +8,11 @@ use AppBundle\Form\ContributionType;
 use AppBundle\Form\PeriodicalType;
 use AppBundle\Services\Merger;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Periodical controller.
@@ -25,8 +24,8 @@ class PeriodicalController extends Controller {
     /**
      * Lists all Periodical entities.
      *
-     * @Route("/", name="periodical_index")
-     * @Method("GET")
+     * @Route("/", name="periodical_index", methods={"GET"})
+     *
      * @Template()
      * @param Request $request
      */
@@ -46,8 +45,8 @@ class PeriodicalController extends Controller {
     /**
      * Creates a new Periodical entity.
      *
-     * @Route("/new", name="periodical_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="periodical_new", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -78,8 +77,8 @@ class PeriodicalController extends Controller {
     /**
      * Finds and displays a Periodical entity.
      *
-     * @Route("/{id}", name="periodical_show")
-     * @Method("GET")
+     * @Route("/{id}", name="periodical_show", methods={"GET"})
+     *
      * @Template()
      * @param Periodical $periodical
      */
@@ -97,8 +96,8 @@ class PeriodicalController extends Controller {
     /**
      * Displays a form to edit an existing Periodical entity.
      *
-     * @Route("/{id}/edit", name="periodical_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/edit", name="periodical_edit", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -132,7 +131,7 @@ class PeriodicalController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Route("/{id}/merge", name="periodical_merge")
-     * @Method({"GET","POST"})
+     *
      * @Template()
      */
     public function mergeAction(Request $request, Periodical $periodical, EntityManagerInterface $em, Merger $merger) {
@@ -164,8 +163,8 @@ class PeriodicalController extends Controller {
     /**
      * Deletes a Periodical entity.
      *
-     * @Route("/{id}/delete", name="periodical_delete")
-     * @Method("GET")
+     * @Route("/{id}/delete", name="periodical_delete", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Periodical $periodical
@@ -183,7 +182,7 @@ class PeriodicalController extends Controller {
      * Creates a new Periodical contribution entity.
      *
      * @Route("/{id}/contributions/new", name="periodical_new_contribution")
-     * @Method({"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -215,7 +214,7 @@ class PeriodicalController extends Controller {
      * Show periodical contributions list with edit/delete action items
      * 
      * @Route("/{id}/contributions", name="periodical_show_contributions")
-     * @Method("GET")
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Periodical $periodical
@@ -230,7 +229,7 @@ class PeriodicalController extends Controller {
      * Displays a form to edit an existing periodical Contribution entity.
      *
      * @Route("/contributions/{id}/edit", name="periodical_edit_contributions")
-     * @Method({"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
      * @param Request $request
@@ -257,7 +256,7 @@ class PeriodicalController extends Controller {
      * Deletes a periodical Contribution entity.
      *
      * @Route("/contributions/{id}/delete", name="periodical_delete_contributions")
-     * @Method("GET")
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @param Request $request
      * @param Contribution $contribution

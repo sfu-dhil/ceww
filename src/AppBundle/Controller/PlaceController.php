@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Place;
 use AppBundle\Form\PlaceType;
 use AppBundle\Services\Merger;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -23,8 +23,8 @@ class PlaceController extends Controller
     /**
      * Lists all Place entities.
      *
-     * @Route("/", name="place_index")
-     * @Method("GET")
+     * @Route("/", name="place_index", methods={"GET"})
+     *
      * @Template()
 	 * @param Request $request
      */
@@ -44,8 +44,8 @@ class PlaceController extends Controller
 
     /**
      * @param Request $request
-     * @Route("/typeahead", name="place_typeahead")
-     * @Method("GET")
+     * @Route("/typeahead", name="place_typeahead", methods={"GET"})
+     *
      * @return JsonResponse
      */
     public function typeahead(Request $request) {
@@ -68,8 +68,8 @@ class PlaceController extends Controller
 
     /**
      *
-     * @Route("/search", name="place_search")
-     * @Method("GET")
+     * @Route("/search", name="place_search", methods={"GET"})
+     *
      * @Template()
 	 * @param Request $request
      */
@@ -95,8 +95,8 @@ class PlaceController extends Controller
     /**
      * Creates a new Place entity.
      *
-     * @Route("/new", name="place_new")
-     * @Method({"GET", "POST"})
+     * @Route("/new", name="place_new", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
@@ -126,8 +126,8 @@ class PlaceController extends Controller
     /**
      * Creates a new Place entity.
      *
-     * @Route("/new_popup", name="place_new_popup")
-     * @Method({"GET", "POST"})
+     * @Route("/new_popup", name="place_new_popup", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
@@ -141,8 +141,8 @@ class PlaceController extends Controller
     /**
      * Finds and displays a Place entity.
      *
-     * @Route("/{id}", name="place_show")
-     * @Method("GET")
+     * @Route("/{id}", name="place_show", methods={"GET"})
+     *
      * @Template()
 	 * @param Place $place
      */
@@ -161,8 +161,8 @@ class PlaceController extends Controller
     /**
      * Displays a form to edit an existing Place entity.
      *
-     * @Route("/{id}/edit", name="place_edit")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/edit", name="place_edit", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
 	 * @param Request $request
@@ -190,7 +190,7 @@ class PlaceController extends Controller
      * Finds and displays a Place entity.
      *
      * @Route("/{id}/merge", name="place_merge")
-     * @Method({"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Template()
      * @param Place $place
@@ -224,8 +224,8 @@ class PlaceController extends Controller
     /**
      * Deletes a Place entity.
      *
-     * @Route("/{id}/delete", name="place_delete")
-     * @Method("GET")
+     * @Route("/{id}/delete", name="place_delete", methods={"GET","POST"})
+     *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
 	 * @param Request $request
 	 * @param Place $place
