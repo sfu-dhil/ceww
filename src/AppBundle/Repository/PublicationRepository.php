@@ -12,7 +12,18 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class PublicationRepository extends EntityRepository {
-    
+
+    public function letterPage($letter, $category, $pageSize) {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('count(1)');
+        $qb->from('AppBundle:Publication', 'p');
+        $qb->where('p INSTANCE OF :category');
+        $qb->setParameter('category', $category);
+        $qb->andWhere('p.sortableTitle < :letter');
+        $qb->setParameter('letter', $letter);
+        $count = $qb->getQuery()->getSingleScalarResult();
+        return ceil($count / $pageSize);
+    }
 
     public function next(Publication $publication) {
         $qb = $this->createQueryBuilder('e');

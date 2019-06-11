@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Book;
 use AppBundle\Entity\Contribution;
+use AppBundle\Entity\Publication;
 use AppBundle\Form\BookType;
 use AppBundle\Form\ContributionType;
 use AppBundle\Form\ContributionCollectionType;
@@ -12,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,17 +30,34 @@ class BookController extends Controller {
      * @Method("GET")
      * @Template()
      * @param Request $request
+     * @return array|RedirectResponse
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $pageSize = $this->getParameter('page_size');
+
+        if($request->query->has('alpha')) {
+            $repo = $em->getRepository(Publication::class);
+            $page = $repo->letterPage($request->query->get('alpha'), Publication::BOOK, $pageSize);
+            return $this->redirectToRoute('book_index', array('page' => $page));
+        }
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Book::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
         $books = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+        $letterIndex = array();
+        foreach($books as $book) {
+            $title = $book->getSortableTitle();
+            if( ! $title) {
+                continue;
+            }
+            $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
+        }
 
         return array(
             'books' => $books,
+            'activeLetters' => array_keys($letterIndex),
         );
     }
 

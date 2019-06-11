@@ -27,4 +27,8 @@
         {{ knp_pagination_render(books) }}
     </div>
 
+    <div class="navigation">
+        {% include 'AppBundle:publication:partial/alpha.html.twig' with {'letters': activeLetters} %}
+    </div>
+
 {% endblock %}
