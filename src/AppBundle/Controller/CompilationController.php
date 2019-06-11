@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Publication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,14 +31,32 @@ class CompilationController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $pageSize = $this->getParameter('page_size');
+
+        if($request->query->has('alpha')) {
+            $repo = $em->getRepository(Publication::class);
+            $page = $repo->letterPage($request->query->get('alpha'), Publication::COMPILATION, $pageSize);
+            return $this->redirectToRoute('compilation_index', array('page' => $page));
+        }
+
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Compilation::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $compilations = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+        $compilations = $paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
+
+        $letterIndex = array();
+        foreach($compilations as $compilation) {
+            $title = $compilation->getSortableTitle();
+            if( ! $title) {
+                continue;
+            }
+            $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
+        }
 
         return array(
             'compilations' => $compilations,
+            'activeLetters' => array_keys($letterIndex),
         );
     }
 

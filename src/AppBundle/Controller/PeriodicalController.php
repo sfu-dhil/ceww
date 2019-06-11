@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Contribution;
 use AppBundle\Entity\Periodical;
+use AppBundle\Entity\Publication;
 use AppBundle\Form\ContributionType;
 use AppBundle\Form\PeriodicalType;
 use AppBundle\Services\Merger;
@@ -31,14 +32,30 @@ class PeriodicalController extends Controller {
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $pageSize = $this->getParameter('page_size');
+
+        if($request->query->has('alpha')) {
+            $repo = $em->getRepository(Publication::class);
+            $page = $repo->letterPage($request->query->get('alpha'), Publication::PERIODICAL, $pageSize);
+            return $this->redirectToRoute('periodical_index', array('page' => $page));
+        }
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Periodical::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
         $paginator = $this->get('knp_paginator');
-        $periodicals = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+        $periodicals = $paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
+        $letterIndex = array();
+        foreach($periodicals as $periodical) {
+            $title = $periodical->getSortableTitle();
+            if( ! $title) {
+                continue;
+            }
+            $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
+        }
 
         return array(
             'periodicals' => $periodicals,
+            'activeLetters' => array_keys($letterIndex),
         );
     }
 
