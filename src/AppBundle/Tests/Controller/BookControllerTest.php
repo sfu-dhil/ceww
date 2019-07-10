@@ -152,8 +152,6 @@ class BookControllerTest extends BaseTestCase
             'book[description]' => 'It is a book',
             'book[notes]' => 'A notes about a book',
             'book[dateYear]' => '1934',
-            'book[location]' => '',
-            'book[genres]' => '',
         ]);
 
         $values = $form->getPhpValues();

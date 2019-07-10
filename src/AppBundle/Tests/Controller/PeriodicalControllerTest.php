@@ -102,8 +102,6 @@ class PeriodicalControllerTest extends BaseTestCase
             'periodical[sortableTitle]' => 'Book of Cheese, The',
             'periodical[description]' => 'It is a book',
             'periodical[notes]' => 'A notes about a book',
-            'periodical[location]' => '',
-            'periodical[genres]' => '',
             'periodical[runDates]' => '1990-1999',
             'periodical[continuedFrom]' => 'test',
             'periodical[continuedBy]' => 'Test McUser'
@@ -152,8 +150,6 @@ class PeriodicalControllerTest extends BaseTestCase
             'periodical[sortableTitle]' => 'Book of Cheese, The',
             'periodical[description]' => 'It is a book',
             'periodical[notes]' => 'A notes about a book',
-            'periodical[location]' => '',
-            'periodical[genres]' => '',
             'periodical[runDates]' => '1990-1999',
             'periodical[continuedFrom]' => 'test',
             'periodical[continuedBy]' => 'Test McUser'

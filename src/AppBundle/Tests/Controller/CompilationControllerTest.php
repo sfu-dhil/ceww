@@ -152,8 +152,6 @@ class CompilationControllerTest extends BaseTestCase
             'compilation[description]' => 'It is a book',
             'compilation[notes]' => 'A notes about a book',
             'compilation[dateYear]' => '1934',
-            'compilation[location]' => '',
-            'compilation[genres]' => '',
         ]);
 
         $values = $form->getPhpValues();
