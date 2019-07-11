@@ -124,17 +124,6 @@ fos_user:
         address:        noreply@dhil.lib.sfu.ca
         sender_name:    Do Not Reply
 
-fos_ck_editor:
-    input_sync: true
-    default_config: ceww_config
-    configs:
-        ceww_config:
-            entities: false
-            toolbar:
-                - [ Source, -, Cut, Copy, Paste, PasteText, PasteFromWord, -, Undo, Redo ]
-                - [ Link, Unlink, Anchor, -, SpecialChar ]
-                - [ Format, Styles, -, Bold, Italic, Strike, -, RemoveFormat, -, NumberedList, BulletedList, -, Indent, Outdent, -, Blockquote, -, JustifyLeft, JustifyCenter, JustifyRight, JustifyBlock ]
-
 knp_menu:
     twig:
         template: KnpMenuBundle::menu.html.twig

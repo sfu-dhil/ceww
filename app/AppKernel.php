@@ -20,7 +20,6 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new FOS\UserBundle\FOSUserBundle(),
-            new FOS\CKEditorBundle\FOSCKEditorBundle(),
 
             new Tetranz\Select2EntityBundle\TetranzSelect2EntityBundle(),
 
@@ -28,6 +27,7 @@ class AppKernel extends Kernel
 
             new Nines\UserBundle\NinesUserBundle(),
             new Nines\DublinCoreBundle\NinesDublinCoreBundle(),
+            new Nines\EditorBundle\NinesEditorBundle(),
             new Nines\FeedbackBundle\NinesFeedbackBundle(),
             new Nines\BlogBundle\NinesBlogBundle(),
             new Nines\UtilBundle\NinesUtilBundle(),

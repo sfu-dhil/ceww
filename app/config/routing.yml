@@ -17,5 +17,8 @@ nines_feedback:
 nines_dc:
     resource: "@NinesDublinCoreBundle/Controller/"
 
+nines_editor:
+    resource: "@NinesEditorBundle/Controller/"
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
