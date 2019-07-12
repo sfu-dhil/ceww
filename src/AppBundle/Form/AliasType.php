@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -59,18 +60,20 @@ class AliasType extends AbstractType {
                 'help_block' => 'Is person\'s married name?',
             ),
         ));
-        $builder->add('description', TextType::class, array(
+        $builder->add('description', TextAreaType::class, array(
             'label' => 'Notes (for the public)',
             'required' => false,
             'attr' => array(
                 'help_block' => 'This description is public',
+                'class' => 'tinymce',
             ),
         ));
-        $builder->add('notes', TextType::class, array(
+        $builder->add('notes', TextAreaType::class, array(
             'label' => 'Research Notes (for editors/admins)',
             'required' => false,
             'attr' => array(
                 'help_block' => 'Notes are only available to logged-in users',
+                'class' => 'tinymce',
             ),
         ));
     }
