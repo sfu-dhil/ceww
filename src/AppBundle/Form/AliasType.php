@@ -2,9 +2,9 @@
 
 namespace AppBundle\Form;
 
-use FOS\CKEditorBundle\Form\Type\CKEditorType;;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -59,14 +59,14 @@ class AliasType extends AbstractType {
                 'help_block' => 'Is person\'s married name?',
             ),
         ));
-        $builder->add('description', CKEditorType::class, array(
+        $builder->add('description', TextType::class, array(
             'label' => 'Notes (for the public)',
             'required' => false,
             'attr' => array(
                 'help_block' => 'This description is public',
             ),
         ));
-        $builder->add('notes', CKEditorType::class, array(
+        $builder->add('notes', TextType::class, array(
             'label' => 'Research Notes (for editors/admins)',
             'required' => false,
             'attr' => array(

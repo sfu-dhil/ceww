@@ -5,7 +5,6 @@ namespace AppBundle\Form;
 use AppBundle\Entity\Genre;
 use AppBundle\Entity\Place;
 use AppBundle\Entity\Publisher;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -51,14 +50,14 @@ class PublicationType extends AbstractType {
                 'help_block' => 'A URL link to the specificed publication',
             ),
         ));
-        $builder->add('description', CKEditorType::class, array(
+        $builder->add('description', TextType::class, array(
             'label' => 'Notes (for the public)',
             'required' => false,
             'attr' => array(
                 'help_block' => 'This description is public',
             ),
         ));
-        $builder->add('notes', CKEditorType::class, array(
+        $builder->add('notes', TextType::class, array(
             'label' => 'Research Notes (for editors/admins)',
             'required' => false,
             'attr' => array(

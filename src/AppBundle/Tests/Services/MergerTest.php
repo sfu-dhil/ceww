@@ -24,7 +24,7 @@ class MergerTest extends BaseTestCase {
      */
     protected $repo;
 
-    public function setUp() {
+    public function setUp() : void {
         parent::setUp();
         $this->merger = $this->getContainer()->get(Merger::class);
     }

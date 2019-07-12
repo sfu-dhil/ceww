@@ -5,7 +5,6 @@ namespace AppBundle\Form;
 use AppBundle\Entity\Alias;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Place;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -80,7 +79,7 @@ class PersonType extends AbstractType {
             ),
         ));
 
-        $builder->add('description', CKEditorType::class, array(
+        $builder->add('description', TextType::class, array(
             'label' => 'Notes (for the public)',
             'required' => false,
             'attr' => array(
@@ -168,7 +167,7 @@ class PersonType extends AbstractType {
             ),
         ));
 
-        $builder->add('notes', CKEditorType::class, array(
+        $builder->add('notes', TextType::class, array(
             'label' => 'Research Notes (for editors/admins)',
             'required' => false,
             'attr' => array(
