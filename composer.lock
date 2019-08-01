@@ -3310,7 +3310,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -4236,12 +4236,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ubermichael/nines-bundles.git",
-                "reference": "081301aeefcbf056780f9f3770571f8fc2c5b1c3"
+                "reference": "62acb2ba81bd1cc2067abff7ed0f1661b4cb398e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/081301aeefcbf056780f9f3770571f8fc2c5b1c3",
-                "reference": "081301aeefcbf056780f9f3770571f8fc2c5b1c3",
+                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/62acb2ba81bd1cc2067abff7ed0f1661b4cb398e",
+                "reference": "62acb2ba81bd1cc2067abff7ed0f1661b4cb398e",
                 "shasum": ""
             },
             "require": {
@@ -4276,7 +4276,7 @@
                 "source": "https://github.com/ubermichael/nines-bundles/tree/2.x",
                 "issues": "https://github.com/ubermichael/nines-bundles/issues"
             },
-            "time": "2019-07-24T19:50:07+00:00"
+            "time": "2019-08-01T16:54:42+00:00"
         },
         {
             "name": "zendframework/zend-code",
