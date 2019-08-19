@@ -27,7 +27,7 @@ parameters:
     # configure URL generation
     router.request_context.host: localhost
     router.request_context.scheme: http
-    router.request_context.base_url: /ceww/web/app_dev.php
+    router.request_context.base_url: /doceww/web/app_dev.php
     secure_cookies: true
 
     # configure other stuff.
@@ -57,3 +57,6 @@ parameters:
     # Where the application lives
     # eg. "*.example.com/application"
     dhil.piwik_domain: ~
+
+    # Prevent logins by setting this to false
+    dhil.allow_logins: true
