@@ -98,7 +98,6 @@ class GenreControllerTest extends BaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
       
         $form = $formCrawler->selectButton('Update')->form([
-            'genre[name]' => 'Cheese.',
             'genre[label]' =>'Cheese',
             'genre[description]' => 'It is a cheese'
         ]);
@@ -107,7 +106,7 @@ class GenreControllerTest extends BaseTestCase
         $this->assertTrue($client->getResponse()->isRedirect('/genre/1'));
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $responseCrawler->filter('td:contains("Cheese.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("Cheese")')->count());
     }
     
     public function testAnonNew() {
@@ -135,7 +134,6 @@ class GenreControllerTest extends BaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         
         $form = $formCrawler->selectButton('Create')->form([
-            'genre[name]' => 'Cheese.',
             'genre[label]' =>'Cheese',
             'genre[description]' => 'It is a cheese'
         ]);
@@ -144,7 +142,7 @@ class GenreControllerTest extends BaseTestCase
         $this->assertTrue($client->getResponse()->isRedirect());
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $responseCrawler->filter('td:contains("Cheese.")')->count());
+        $this->assertEquals(1, $responseCrawler->filter('td:contains("Cheese")')->count());
     }
     
     public function testAnonDelete() {
