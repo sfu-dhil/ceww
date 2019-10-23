@@ -40,7 +40,7 @@ class PublisherType extends AbstractType {
             'delay' => 250,
             'language' => 'en',
             'attr' => array(
-                'help_block' => 'Geotagged location for birth place',
+                'help_block' => 'Geotagged location for place',
             ),
         ));
     }

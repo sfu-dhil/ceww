@@ -174,6 +174,7 @@ class PersonType extends AbstractType {
             'required' => false,
             'attr' => array(
                 'help_block' => 'Notes are only available to logged-in users',
+                'class' => 'tinymce',
             ),
         ));
     }
