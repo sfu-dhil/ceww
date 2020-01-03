@@ -37,20 +37,6 @@
                 <th><span data-toggle="popover" data-content="Full title of the work" data-trigger="hover" data-placement="bottom">Title</span></th>
                 <td>{{ periodical.title }}</td>
             </tr>
-            <tr>
-                <th><span data-toggle="popover" data-content="Publisher(s) of the work" data-trigger="hover" data-placement="bottom">Publisher</span></th>
-                <td>
-                    {% if periodical.publishers|length > 0 %}
-                        <ul>
-                            {% for publisher in periodical.publishers %}
-                                <li>
-                                    <a href="{{ path('publisher_show', {'id': publisher.id}) }}">{{ publisher }}</a>
-                                </li>
-                                {% endfor %}
-                        </ul>
-                        {% endif %}
-                </td>
-            </tr>
             {% if is_granted('ROLE_USER') %}
                 <tr>
                     <th><span data-toggle="popover" data-content="Name sorting (lowercase). Not visible to public." data-trigger="hover" data-placement="bottom">Sortable Title</span></th>
@@ -74,22 +60,6 @@
             <tr>
                 <th><span data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</span></th>
                 <td>{{ periodical.description|raw }}</td>
-            </tr>
-            <tr>
-                <th><span data-toggle="popover" data-content="Category of work" data-trigger="hover" data-placement="bottom">Genres</span></th>
-                <td>
-                    {% if periodical.genres | length > 0 %}
-                        <ul>
-                            {% for genre in periodical.genres %}
-                                <li>
-                                    <a href="{{ path('genre_show', {'id': genre.id}) }}">
-                                        {{ genre }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </td>
             </tr>
             <tr>
                 <th><span data-toggle="popover" data-content="Place of publication" data-trigger="hover" data-placement="bottom">Location</span></th>
