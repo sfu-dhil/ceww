@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Periodical Contribtion{% endblock %}
+
+{% block body %}
+    <h1>Create Periodical Contribtion</h1>
+    <p class="count">
+        Creating contribution for <em>{{ periodical.title }}</em>.
+    </p>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+
+        <div class='btn-toolbar pull-left'>
+            <div class='btn-group'>
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a href="{{ path('periodical_show_contributions', {'id': periodical.id}) }}" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="{{ path('person_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Person</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

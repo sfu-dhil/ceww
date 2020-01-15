@@ -1,0 +1,19 @@
+{% if publication.category == constant('App\\Entity\\Publication::BOOK') %}
+    {% set path_name = 'book_show' %}
+{% elseif publication.category == constant('App\\Entity\\Publication::COMPILATION') %}
+    {% set path_name = 'compilation_show' %}
+{% elseif publication.category == constant('App\\Entity\\Publication::PERIODICAL') %}
+    {% set path_name = 'periodical_show' %}
+{% else %}
+    <p>Cannot generate link for entity type {{ publication.category }}.</p>
+{% endif %}
+
+{% if path_name is defined %}
+    {% apply spaceless %}
+        <a href="{{ path(path_name, { 'id': publication.id}) }}">
+            {% block callback -%}
+                {{ publication -}}
+            {% endblock -%}
+        </a>
+    {% endapply %}
+{% endif -%}

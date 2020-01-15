@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Book Edit{% endblock %}
+
+{% block body %}
+    <h1>Book edit</h1>
+
+    {{ form_start(edit_form) }}
+    {{ form_widget(edit_form) }}
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+
+        <div class='btn-toolbar pull-left'>
+            <div class='btn-group'>
+                <input type="submit" value="Update" class="btn btn-primary" />
+                <a href="{{ path('book_index') }}" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="{{ path('book_show_contributions', { 'id': book.id }) }}" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Contributions</a>
+                <a href="{{ path('place_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Place</a>
+                <a href="{{ path('person_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Person</a>
+                <a href="{{ path('publisher_new_popup') }}" class="btn btn-primary popup" id="newPublisher"><span class="glyphicon glyphicon-plus"></span> Publisher</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(edit_form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% include '@NinesEditor/editor/widget.html.twig' %}
+{% endblock %}

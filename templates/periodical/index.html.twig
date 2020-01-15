@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}periodicals{% endblock %}
+
+{% block pageheader %}
+    <h1>Periodical List</h1>
+    <p class="count">
+        Displaying {{ periodicals|length }} periodicals of {{ periodicals.getTotalItemCount }} total.
+    </p>
+    <p>The data in our periodicals list has been accumulated from a number of sources, some more reliable than
+        others. Data provided here should not therefore be used for statistical purposes.</p>
+{% endblock %} 
+
+{% block body %}
+
+    <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            {% if is_granted('ROLE_CONTENT_ADMIN') %}
+                <a href="{{ path('periodical_new') }}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> New
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'periodical/partial/table.html.twig' %}
+
+    <div class="navigation">
+        {{ knp_pagination_render(periodicals) }}
+    </div>
+
+    <div class="navigation">
+        {% include 'misc/alpha.html.twig' with {'letters': activeLetters} %}
+    </div>
+
+{% endblock %}

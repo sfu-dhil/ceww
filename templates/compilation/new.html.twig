@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Collection{% endblock %}
+
+{% block body %}
+    <h1>Collection Creation</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+
+        <div class='btn-toolbar pull-left'>
+            <div class='btn-group'>
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a href="{{ path('compilation_index') }}" class="btn btn-warning">Cancel</a>
+            </div>
+        </div>
+
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="{{ path('place_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Place</a>
+                <a href="{{ path('person_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Person</a>
+                <a href="{{ path('publisher_new_popup') }}" class="btn btn-primary popup" id="newPublisher"><span class="glyphicon glyphicon-plus"></span> Publisher</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

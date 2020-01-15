@@ -1,0 +1,9 @@
+{% apply spaceless %}
+    {% if value is null %}
+        Unknown
+    {% elseif value == true %}
+        Yes
+    {% else %}
+        No
+    {% endif %}
+{% endapply %}

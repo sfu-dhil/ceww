@@ -1,0 +1,32 @@
+<table class="table table-bordered table-condensed table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Type</th>
+            <th>Publication Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for publication in publications %}
+            {% set author = publication.firstAuthor() %}
+            <tr>
+                <td>
+                    {% embed 'publication/partial/link.html.twig' with {'publication': publication} %}
+                    {% block callback %}
+                        <i>{{ publication.title }}</i>
+                    {% endblock %}
+                    {% endembed %}
+                </td>
+                <td>
+                {% if author is not null %}
+                    {% embed 'person/partial/link.html.twig' with {'person': author} %}
+                    {% endembed %}
+                {% endif %}
+                </td>
+                <td>{{ publication.getCategory()|capitalize }}</td>
+                <td>{{ publication.dateYear }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

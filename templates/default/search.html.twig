@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Title Search{% endblock %}
+
+{% block pageheader %}
+    <h1>Title Search</h1>
+    {% include 'misc/search-header.html.twig' with {'results': publications} %}
+{% endblock %} 
+
+{% block body %}
+
+    {% include 'misc/search-form.html.twig' with {'search_path': 'search'} %}
+
+    {% if q %}
+        {% include 'publication/partial/table.html.twig' %}
+    {% endif %}
+
+    {% include 'misc/search-footer.html.twig' with {'results': publications} %}
+
+{% endblock %}

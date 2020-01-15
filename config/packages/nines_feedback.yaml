@@ -1,0 +1,33 @@
+nines_feedback:
+    default_status: submitted
+    public_status: published
+    subject: New feedback received
+    sender: noreply@example.com
+    recipients:
+        - user@example.com
+        - another@example.com
+    routing:
+        nines_blog_page:
+            class: Nines\BlogBundle\Entity\Post
+            route: nines_blog_post_show
+        nines_blog_post:
+            class: Nines\BlogBundle\Entity\Page
+            route: nines_blog_page_show
+        alias:
+            class: App\Entity\Alias
+            route: alias_show
+        author:
+            class: App\Entity\Person
+            route: person_show
+        book:
+            class: App\Entity\Book
+            route: book_show
+        compilation:
+            class: App\Entity\Compilation
+            route: compilation_show
+        periodical:
+            class: App\Entity\Periodical
+            route: periodical_show
+        place:
+            class: App\Entity\Place
+            route: place_show

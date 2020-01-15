@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Person Edit{% endblock %}
+
+{% block body %}
+    <h1>Person Creation</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+		<div class="col-sm-8">
+			<input type="submit" value="Create" class="btn btn-primary" />
+			<a href="{{ path('person_index') }}" class="btn btn-warning">Cancel</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block javascripts %}
+    {% include '@NinesEditor/editor/widget.html.twig' %}
+    <script>
+        $("#newPlace").click(function(e){
+            e.preventDefault();
+            var url = $(this).prop('href');            
+            window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600")
+        });
+    </script>
+{% endblock %}

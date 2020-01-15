@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-sm-6 text-left">
+        {% if previous %}
+            Previous Title: 
+            {% embed 'publication/partial/link.html.twig' with {'publication': previous} %}
+            {% endembed %}
+        {% endif %}
+    </div>
+    <div class="col-sm-6 text-right">
+        {% if next %}
+            Next Title:
+            {% embed 'publication/partial/link.html.twig' with {'publication': next} %}
+            {% endembed %}
+        {% endif %}
+    </div>
+</div>    

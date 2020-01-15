@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Alternate Name Search{% endblock %}
+
+{% block pageheader %}
+    <h1>Alternate Name Search</h1>
+    {% include 'misc/search-header.html.twig' with {'results': aliases} %}
+{% endblock %} 
+
+{% block body %}
+
+    {% include 'misc/search-form.html.twig' with {'search_path': 'alias_search'} %}
+
+    {% if q %}
+        {% include 'alias/partial/table.html.twig' %}
+    {% endif %}
+
+    {% include 'misc/search-footer.html.twig' with {'results': aliases} %}
+
+
+{% endblock %}

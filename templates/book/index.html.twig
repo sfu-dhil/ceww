@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}books{% endblock %}
+
+{% block pageheader %}
+    <h1>Book List</h1>
+    <p class="count">
+        Displaying {{ books|length }} books of {{ books.getTotalItemCount }} total.
+    </p>
+{% endblock %} 
+
+{% block body %}
+
+    {% if is_granted('ROLE_CONTENT_ADMIN') %}
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="{{ path('book_new') }}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> New
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+    {% include 'book/partial/table.html.twig' %}
+
+    <div class="navigation">
+        {{ knp_pagination_render(books) }}
+    </div>
+
+    <div class="navigation">
+        {% include 'misc/alpha.html.twig' with {'letters': activeLetters} %}
+    </div>
+
+{% endblock %}

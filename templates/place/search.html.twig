@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Place Search{% endblock %}
+
+{% block pageheader %}
+    <h1>Place Search</h1>
+    {% include 'misc/search-header.html.twig' with {'results': places} %}
+{% endblock %} 
+
+{% block body %}
+
+    {% include 'misc/search-form.html.twig' with {'search_path': 'place_search'} %}
+
+    {% if q %}
+        {% include 'place/partial/table.html.twig' %}
+    {% endif %}
+
+    {% include 'misc/search-footer.html.twig' with {'results': places} %}
+
+{% endblock %}
