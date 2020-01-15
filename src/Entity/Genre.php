@@ -6,12 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractTerm;
 
 /**
- * Genre
+ * Genre.
  *
  * @ORM\Table(name="genre")
  * @ORM\Entity(repositoryClass="App\Repository\GenreRepository")
  */
 class Genre extends AbstractTerm {
+    use HasPublications {
+        HasPublications::__construct as private trait_constructor;
+    }
 
     /**
      * @var Collection|Publication[]
@@ -20,13 +23,8 @@ class Genre extends AbstractTerm {
      */
     private $publications;
 
-    use HasPublications {
-        HasPublications::__construct as private trait_constructor;
-    }
-
     public function __construct() {
         $this->trait_constructor();
         parent::__construct();
     }
-
 }

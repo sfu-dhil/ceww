@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
- * Person
+ * Person.
  *
  * @ORM\Table(name="person", indexes={
  *  @ORM\Index(columns={"full_name"}, flags={"fulltext"}),
@@ -17,7 +17,6 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  */
 class Person extends AbstractEntity {
-
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
         getContributions as private traitContributions;
@@ -53,6 +52,7 @@ class Person extends AbstractEntity {
 
     /**
      * public research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -60,6 +60,7 @@ class Person extends AbstractEntity {
 
     /**
      * private research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -128,11 +129,12 @@ class Person extends AbstractEntity {
         if ($this->fullName) {
             return $this->fullName;
         }
+
         return '(unknown)';
     }
 
     /**
-     * Set fullName
+     * Set fullName.
      *
      * @param string $fullName
      *
@@ -145,20 +147,20 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get fullName
+     * Get fullName.
      *
      * @return string
      */
     public function getFullName() {
         if ($this->fullName) {
             return $this->fullName;
-        } else {
-            return '(unknown)';
         }
+
+        return '(unknown)';
     }
 
     /**
-     * Set sortableName
+     * Set sortableName.
      *
      * @param string $sortableName
      *
@@ -171,7 +173,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get sortableName
+     * Get sortableName.
      *
      * @return string
      */
@@ -180,7 +182,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -193,7 +195,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -202,7 +204,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Set notes
+     * Set notes.
      *
      * @param string $notes
      *
@@ -215,7 +217,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return string
      */
@@ -224,25 +226,26 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Set birthDate
+     * Set birthDate.
      *
-     * @param string|DateYear $birthDate
+     * @param DateYear|string $birthDate
      *
      * @return Person
      */
     public function setBirthDate($birthDate = null) {
-        if(is_string($birthDate) || is_numeric($birthDate)) {
+        if (is_string($birthDate) || is_numeric($birthDate)) {
             $dateYear = new DateYear();
             $dateYear->setValue($birthDate);
             $this->birthDate = $dateYear;
         } else {
             $this->birthDate = $birthDate;
         }
+
         return $this;
     }
 
     /**
-     * Get birthDate
+     * Get birthDate.
      *
      * @return DateYear
      */
@@ -251,7 +254,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Set birthPlace
+     * Set birthPlace.
      *
      * @param Place $birthPlace
      *
@@ -264,7 +267,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get birthPlace
+     * Get birthPlace.
      *
      * @return Place
      */
@@ -273,14 +276,14 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Set deathDate
+     * Set deathDate.
      *
-     * @param string|DateYear $deathDate
+     * @param DateYear|string $deathDate
      *
      * @return Person
      */
     public function setDeathDate($deathDate = null) {
-        if(is_string($deathDate) || is_numeric($deathDate)) {
+        if (is_string($deathDate) || is_numeric($deathDate)) {
             $dateYear = new DateYear();
             $dateYear->setValue($deathDate);
             $this->deathDate = $dateYear;
@@ -290,7 +293,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get deathDate
+     * Get deathDate.
      *
      * @return DateYear
      */
@@ -299,7 +302,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Set deathPlace
+     * Set deathPlace.
      *
      * @param Place $deathPlace
      *
@@ -312,7 +315,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get deathPlace
+     * Get deathPlace.
      *
      * @return Place
      */
@@ -321,14 +324,14 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Add residence
+     * Add residence.
      *
      * @param Place $residence
      *
      * @return Person
      */
     public function addResidence(Place $residence) {
-        if (!$this->residences->contains($residence)) {
+        if ( ! $this->residences->contains($residence)) {
             $this->residences[] = $residence;
         }
 
@@ -336,7 +339,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Remove residence
+     * Remove residence.
      *
      * @param Place $residence
      */
@@ -345,7 +348,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get residences
+     * Get residences.
      *
      * @return Collection
      */
@@ -354,14 +357,14 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Add alias
+     * Add alias.
      *
      * @param Alias $alias
      *
      * @return Person
      */
     public function addAlias(Alias $alias) {
-        if (!$this->aliases->contains($alias)) {
+        if ( ! $this->aliases->contains($alias)) {
             $this->aliases[] = $alias;
         }
 
@@ -369,7 +372,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Remove alias
+     * Remove alias.
      *
      * @param Alias $alias
      */
@@ -378,7 +381,7 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Get aliases
+     * Get aliases.
      *
      * @return Collection
      */
@@ -388,24 +391,24 @@ class Person extends AbstractEntity {
 
     public function getContributions($category = null, $sort = 'year') {
         $data = $this->traitContributions($sort);
-        if ($category === null) {
+        if (null === $category) {
             return $data;
         }
 
-        return array_filter($data, function(Contribution $contribution) use ($category) {
+        return array_filter($data, function (Contribution $contribution) use ($category) {
             return $contribution->getPublication()->getCategory() === $category;
         });
     }
 
     /**
-     * Add urlLink
+     * Add urlLink.
      *
      * @param string $urlLink
      *
      * @return string
      */
     public function addUrlLink($urlLink) {
-        if ( !in_array($urlLink, $this->urlLinks)) {
+        if ( ! in_array($urlLink, $this->urlLinks)) {
             $this->urlLinks[] = $urlLink;
         }
 
@@ -413,20 +416,21 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Remove urlLink
+     * Remove urlLink.
      *
      * @param string $urlLink
      */
     public function removeUrlLink($urlLink) {
         $index = array_search($urlLink, $this->urlLinks);
-        if ($index !== false) {
+        if (false !== $index) {
             unset($this->urlLinks[$index]);
         }
+
         return $this;
     }
 
     /**
-     * Get urlLinks
+     * Get urlLinks.
      *
      * @return array
      */
@@ -435,52 +439,48 @@ class Person extends AbstractEntity {
     }
 
     /**
-     * Set urlLinks
+     * Set urlLinks.
      *
      * @param string[] $urlLinks
      *
      * @return Person
      */
-    public function setUrlLinks(array $urlLinks)
-    {
+    public function setUrlLinks(array $urlLinks) {
         $this->urlLinks = $urlLinks;
-        return $this;
 
+        return $this;
     }
 
     /**
-     * Set gender
+     * Set gender.
      *
      * @param string $gender
      *
      * @return Person
      */
-    public function setGender($gender)
-    {
+    public function setGender($gender) {
         $this->gender = $gender;
 
         return $this;
     }
 
     /**
-     * Get gender
+     * Get gender.
      *
      * @return string
      */
-    public function getGender()
-    {
+    public function getGender() {
         return $this->gender;
     }
 
     /**
      * Set canadian.
      *
-     * @param bool|null $canadian
+     * @param null|bool $canadian
      *
      * @return Person
      */
-    public function setCanadian($canadian = null)
-    {
+    public function setCanadian($canadian = null) {
         $this->canadian = $canadian;
 
         return $this;
@@ -489,10 +489,9 @@ class Person extends AbstractEntity {
     /**
      * Get canadian.
      *
-     * @return bool|null
+     * @return null|bool
      */
-    public function getCanadian()
-    {
+    public function getCanadian() {
         return $this->canadian;
     }
 }

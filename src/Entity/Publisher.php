@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
- * Publisher
+ * Publisher.
  *
  * @ORM\Table(name="publisher", indexes={
  *  @ORM\Index(columns="name", flags={"fulltext"})
@@ -16,7 +16,6 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="App\Repository\PublisherRepository")
  */
 class Publisher extends AbstractEntity {
-
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }
@@ -29,7 +28,7 @@ class Publisher extends AbstractEntity {
     private $name;
 
     /**
-     * @var Place[]|Collection
+     * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
      * @ORM\OrderBy({"sortableName" = "ASC"})
      */
@@ -53,7 +52,7 @@ class Publisher extends AbstractEntity {
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -66,7 +65,7 @@ class Publisher extends AbstractEntity {
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -75,14 +74,14 @@ class Publisher extends AbstractEntity {
     }
 
     /**
-     * Add place
+     * Add place.
      *
      * @param Place $place
      *
      * @return Publisher
      */
     public function addPlace(Place $place) {
-        if( ! $this->places->contains($place)) {
+        if ( ! $this->places->contains($place)) {
             $this->places[] = $place;
         }
 
@@ -90,7 +89,7 @@ class Publisher extends AbstractEntity {
     }
 
     /**
-     * Remove place
+     * Remove place.
      *
      * @param Place $place
      */
@@ -99,7 +98,7 @@ class Publisher extends AbstractEntity {
     }
 
     /**
-     * Get places
+     * Get places.
      *
      * @return Collection
      */
@@ -110,5 +109,4 @@ class Publisher extends AbstractEntity {
     public function setPlaces($places) {
         $this->places = $places;
     }
-
 }

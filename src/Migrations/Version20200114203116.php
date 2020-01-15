@@ -10,23 +10,21 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200114203116 extends AbstractMigration
-{
-    public function getDescription() : string
-    {
+final class Version20200114203116 extends AbstractMigration {
+    public function getDescription() : string {
         return '';
     }
 
-    public function up(Schema $schema) : void
-    {
+    public function up(Schema $schema) : void {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('DROP INDEX UNIQ_5BA994A192FC23A8 ON nines_user');
         $this->addSql('DROP INDEX UNIQ_5BA994A1A0D96FBF ON nines_user');
         $this->addSql('DROP INDEX UNIQ_5BA994A1C05FB297 ON nines_user');
 
-        $this->addSql(<<<ENDSQL
+        $this->addSql(
+            <<<'ENDSQL'
 ALTER TABLE nines_user
     DROP username_canonical, 
     DROP email_canonical, 
@@ -51,7 +49,6 @@ ENDSQL
         $this->addSql('CREATE UNIQUE INDEX UNIQ_5BA994A1E7927C74 ON nines_user (email)');
     }
 
-    public function down(Schema $schema) : void
-    {
+    public function down(Schema $schema) : void {
     }
 }

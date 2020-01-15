@@ -16,22 +16,21 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Description of LoadGenres
+ * Description of LoadGenres.
  *
  * @author mjoyce
  */
 class LoadCompilation extends Fixture implements DependentFixtureInterface {
-
     public function load(ObjectManager $manager) {
         $compilation = new Compilation();
-        $compilation->setTitle("A Compilation Title");
-        $compilation->setSortableTitle("compilation title, a");
-        $compilation->addGenre($this->getReference("genre.1"));
-        $compilation->setLocation($this->getReference("place.1"));
+        $compilation->setTitle('A Compilation Title');
+        $compilation->setSortableTitle('compilation title, a');
+        $compilation->addGenre($this->getReference('genre.1'));
+        $compilation->setLocation($this->getReference('place.1'));
 
         $contribution = new Contribution();
-        $contribution->setPerson($this->getReference("person.1"));
-        $contribution->setRole($this->getReference("role.1"));
+        $contribution->setPerson($this->getReference('person.1'));
+        $contribution->setRole($this->getReference('role.1'));
         $contribution->setPublication($compilation);
         $manager->persist($contribution);
         $this->setReference('compilation.1.contribution.1', $contribution);
@@ -50,13 +49,12 @@ class LoadCompilation extends Fixture implements DependentFixtureInterface {
     }
 
     public function getDependencies() {
-        return [
+        return array(
             LoadPlace::class,
             LoadPerson::class,
             LoadGenre::class,
             LoadRole::class,
             LoadPublisher::class,
-        ];
+        );
     }
-
 }

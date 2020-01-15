@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GenreType extends TermType {
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -21,8 +20,7 @@ class GenreType extends TermType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Genre'
+            'data_class' => 'App\Entity\Genre',
         ));
     }
-
 }

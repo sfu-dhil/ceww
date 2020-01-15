@@ -2,19 +2,17 @@
 
 namespace AppBundle\Tests\Controller;
 
-use AppBundle\Entity\Periodical;
 use AppBundle\DataFixtures\ORM\LoadPeriodical;
+use AppBundle\Entity\Periodical;
 use Nines\UserBundle\DataFixtures\ORM\LoadUser;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
-class PeriodicalControllerTest extends BaseTestCase
-{
-
+class PeriodicalControllerTest extends BaseTestCase {
     protected function getFixtures() {
-        return [
+        return array(
             LoadUser::class,
-            LoadPeriodical::class
-        ];
+            LoadPeriodical::class,
+        );
     }
 
     public function testAnonIndex() {
@@ -25,20 +23,20 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserIndex() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
 
     public function testAdminIndex() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('New')->count());
@@ -53,10 +51,10 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserShow() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
@@ -64,15 +62,16 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testAdminShow() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('Edit')->count());
         $this->assertEquals(1, $crawler->selectLink('Delete')->count());
     }
+
     public function testAnonEdit() {
         $client = $this->makeClient();
         $crawler = $client->request('GET', '/periodical/1/edit');
@@ -81,31 +80,31 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserEdit() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1/edit');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
-  }
+    }
 
     public function testAdminEdit() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $formCrawler = $client->request('GET', '/periodical/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $form = $formCrawler->selectButton('Update')->form([
+        $form = $formCrawler->selectButton('Update')->form(array(
             'periodical[title]' => 'The Book of Cheese.',
             'periodical[sortableTitle]' => 'Book of Cheese, The',
             'periodical[description]' => 'It is a book',
             'periodical[notes]' => 'A notes about a book',
             'periodical[runDates]' => '1990-1999',
             'periodical[continuedFrom]' => 'test',
-            'periodical[continuedBy]' => 'Test McUser'
-        ]);
+            'periodical[continuedBy]' => 'Test McUser',
+        ));
 
         $values = $form->getPhpValues();
 
@@ -129,31 +128,31 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserNew() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/new');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $formCrawler = $client->request('GET', '/periodical/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $form = $formCrawler->selectButton('Create')->form([
+        $form = $formCrawler->selectButton('Create')->form(array(
             'periodical[title]' => 'The Book of Cheese.',
             'periodical[sortableTitle]' => 'Book of Cheese, The',
             'periodical[description]' => 'It is a book',
             'periodical[notes]' => 'A notes about a book',
             'periodical[runDates]' => '1990-1999',
             'periodical[continuedFrom]' => 'test',
-            'periodical[continuedBy]' => 'Test McUser'
-        ]);
+            'periodical[continuedBy]' => 'Test McUser',
+        ));
 
         $values = $form->getPhpValues();
 
@@ -177,10 +176,10 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserDelete() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1/delete');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
@@ -189,10 +188,10 @@ class PeriodicalControllerTest extends BaseTestCase
         self::bootKernel();
         $em = static::$kernel->getContainer()->get('doctrine')->getManager();
         $preCount = count($em->getRepository(Periodical::class)->findAll());
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect());
@@ -212,28 +211,28 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserNewContribution() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1/contributions/new');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminNewContribution() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $formCrawler = $client->request('GET', '/periodical/1/contributions/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $form = $formCrawler->selectButton('Create')->form([]);
+        $form = $formCrawler->selectButton('Create')->form(array());
 
-        $values=$form->getPhpValues();
+        $values = $form->getPhpValues();
         $values['contribution']['role'] = $this->getReference('role.2')->getId();
         $values['contribution']['person'] = $this->getReference('person.2')->getId();
-        
+
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
         $this->assertTrue($client->getResponse()->isRedirect('/periodical/1/contributions'));
@@ -250,19 +249,19 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserShowContributions() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1/contributions');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminShowContributions() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/1/contributions');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('Contribution')->count());
@@ -276,28 +275,28 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserEditContribution() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/contributions/1/edit');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
-  }
+    }
 
     public function testAdminEditContribution() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $formCrawler = $client->request('GET', '/periodical/contributions/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $form = $formCrawler->selectButton('Update')->form([]);
+        $form = $formCrawler->selectButton('Update')->form(array());
 
-        $values=$form->getPhpValues();
+        $values = $form->getPhpValues();
         $values['contribution']['role'] = $this->getReference('role.2')->getId();
         $values['contribution']['person'] = $this->getReference('person.2')->getId();
-        
+
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
         $this->assertTrue($client->getResponse()->isRedirect('/periodical/1/contributions'));
@@ -314,27 +313,26 @@ class PeriodicalControllerTest extends BaseTestCase
     }
 
     public function testUserDeleteContribution() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'user@example.com',
             'password' => 'secret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/contributions/1/delete');
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteContribution() {
-        $client = $this->makeClient([
+        $client = $this->makeClient(array(
             'username' => 'admin@example.com',
             'password' => 'supersecret',
-        ]);
+        ));
         $crawler = $client->request('GET', '/periodical/contributions/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $this->assertTrue($client->getResponse()->isRedirect());
-        
+
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(0, $responseCrawler->filter('td:contains("Bobby Janesdotter")')->count());
     }
-
 }

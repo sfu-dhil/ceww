@@ -8,13 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractTerm;
 
 /**
- * Role
+ * Role.
  *
  * @ORM\Table(name="role")
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  */
-class Role extends AbstractTerm
-{
+class Role extends AbstractTerm {
     /**
      * @var Collection|Contribution[]
      * @ORM\OneToMany(targetEntity="Contribution", mappedBy="role")
@@ -27,15 +26,14 @@ class Role extends AbstractTerm
     }
 
     /**
-     * Add contribution
+     * Add contribution.
      *
      * @param Contribution $contribution
      *
      * @return Role
      */
-    public function addContribution(Contribution $contribution)
-    {
-        if( ! $this->contributions->contains($contribution)) {
+    public function addContribution(Contribution $contribution) {
+        if ( ! $this->contributions->contains($contribution)) {
             $this->contributions[] = $contribution;
         }
 
@@ -43,26 +41,25 @@ class Role extends AbstractTerm
     }
 
     /**
-     * Remove contribution
+     * Remove contribution.
      *
      * @param Contribution $contribution
      */
-    public function removeContribution(Contribution $contribution)
-    {
+    public function removeContribution(Contribution $contribution) {
         $this->contributions->removeElement($contribution);
     }
 
     /**
-     * Get contributions
+     * Get contributions.
      *
      * @return Collection
      */
-    public function getContributions()
-    {
+    public function getContributions() {
         $contributions = $this->contributions->toArray();
-        usort($contributions, function(Contribution $a, Contribution $b) {
+        usort($contributions, function (Contribution $a, Contribution $b) {
             return strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
         });
+
         return $contributions;
     }
 }

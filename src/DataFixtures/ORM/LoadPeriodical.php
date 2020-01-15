@@ -8,20 +8,19 @@
 
 namespace App\DataFixtures\ORM;
 
-use App\Entity\Periodical;
 use App\Entity\Contribution;
 use App\Entity\DateYear;
+use App\Entity\Periodical;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Description of LoadGenres
+ * Description of LoadGenres.
  *
  * @author mjoyce
  */
 class LoadPeriodical extends Fixture implements DependentFixtureInterface {
-
     public function load(ObjectManager $manager) {
         for ($i = 1; $i <= 2; $i++) {
             $periodical = new Periodical();
@@ -36,7 +35,7 @@ class LoadPeriodical extends Fixture implements DependentFixtureInterface {
 
             $contribution = new Contribution();
             $contribution->setPerson($this->getReference("person.{$i}"));
-            $contribution->setRole($this->getReference("role.1"));
+            $contribution->setRole($this->getReference('role.1'));
             $contribution->setPublication($periodical);
             $manager->persist($contribution);
             $this->setReference("periodical.{$i}.contribution.1", $contribution);
@@ -55,13 +54,12 @@ class LoadPeriodical extends Fixture implements DependentFixtureInterface {
     }
 
     public function getDependencies() {
-        return [
+        return array(
             LoadPlace::class,
             LoadPerson::class,
             LoadGenre::class,
             LoadRole::class,
             LoadPublisher::class,
-        ];
+        );
     }
-
 }

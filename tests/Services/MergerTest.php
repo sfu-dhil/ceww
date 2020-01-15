@@ -2,18 +2,17 @@
 
 namespace AppBundle\Tests\Services;
 
-use AppBundle\Entity\Place;
-use AppBundle\Entity\Periodical;
-use AppBundle\Repository\PlaceRepository;
-use AppBundle\Services\Merger;
 use AppBundle\DataFixtures\ORM\LoadBook;
 use AppBundle\DataFixtures\ORM\LoadCompilation;
 use AppBundle\DataFixtures\ORM\LoadPeriodical;
 use AppBundle\DataFixtures\ORM\LoadPerson;
+use AppBundle\Entity\Periodical;
+use AppBundle\Entity\Place;
+use AppBundle\Repository\PlaceRepository;
+use AppBundle\Services\Merger;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class MergerTest extends BaseTestCase {
-
     /**
      * @var Merger
      */
@@ -23,11 +22,6 @@ class MergerTest extends BaseTestCase {
      * @var PlaceRepository
      */
     protected $repo;
-
-    public function setUp() : void {
-        parent::setUp();
-        $this->merger = $this->getContainer()->get(Merger::class);
-    }
 
     protected function getFixtures() {
         return array(
@@ -39,10 +33,10 @@ class MergerTest extends BaseTestCase {
     }
 
     public function testPlaceMerge() {
-        $this->merger->places($this->getReference('place.3'), [
+        $this->merger->places($this->getReference('place.3'), array(
             $this->getReference('place.2'),
             $this->getReference('place.1'),
-        ]);
+        ));
 
         $repo = $this->em->getRepository(Place::class);
         $mergedPlaces = $repo->findAll();
@@ -57,9 +51,9 @@ class MergerTest extends BaseTestCase {
 
     public function testPeriodicalMerge() {
         $repo = $this->em->getRepository(Periodical::class);
-        $this->merger->periodicals($this->getReference('periodical.1'), [
+        $this->merger->periodicals($this->getReference('periodical.1'), array(
             $this->getReference('periodical.2'),
-        ]);
+        ));
         $repo->clear();
         $periodicals = $repo->findAll();
         $this->assertCount(1, $periodicals);
@@ -69,4 +63,8 @@ class MergerTest extends BaseTestCase {
         $this->assertCount(2, $periodicals[0]->getPublishers());
     }
 
+    public function setUp() : void {
+        parent::setUp();
+        $this->merger = $this->getContainer()->get(Merger::class);
+    }
 }

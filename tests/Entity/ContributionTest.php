@@ -2,20 +2,19 @@
 
 namespace AppBundle\Tests\Entity;
 
-use AppBundle\Entity\Contribution;
 use AppBundle\DataFixtures\ORM\LoadPeriodical;
 use AppBundle\DataFixtures\ORM\LoadPerson;
 use AppBundle\DataFixtures\ORM\LoadRole;
+use AppBundle\Entity\Contribution;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class ContributionTest extends BaseTestCase {
-
     protected function getFixtures() {
-        return [
+        return array(
             LoadPeriodical::class,
             LoadPerson::class,
-            LoadRole::class
-        ];
+            LoadRole::class,
+        );
     }
 
     public function testGetPublicationId() {

@@ -23,13 +23,13 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Route("/periodical")
  */
 class PeriodicalController extends Controller {
-
     /**
      * Lists all Periodical entities.
      *
      * @Route("/", name="periodical_index", methods={"GET"})
      *
      * @Template()
+     *
      * @param Request $request
      * @param PublicationRepository $repo
      *
@@ -39,8 +39,9 @@ class PeriodicalController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $pageSize = $this->getParameter('page_size');
 
-        if($request->query->has('alpha')) {
+        if ($request->query->has('alpha')) {
             $page = $repo->letterPage($request->query->get('alpha'), Publication::PERIODICAL, $pageSize);
+
             return $this->redirectToRoute('periodical_index', array('page' => $page));
         }
         $qb = $em->createQueryBuilder();
@@ -49,9 +50,9 @@ class PeriodicalController extends Controller {
         $paginator = $this->get('knp_paginator');
         $periodicals = $paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
         $letterIndex = array();
-        foreach($periodicals as $periodical) {
+        foreach ($periodicals as $periodical) {
             $title = $periodical->getSortableTitle();
-            if( ! $title) {
+            if ( ! $title) {
                 continue;
             }
             $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
@@ -70,6 +71,7 @@ class PeriodicalController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      */
     public function newAction(Request $request) {
@@ -78,7 +80,7 @@ class PeriodicalController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach($periodical->getContributions() as $contribution) {
+            foreach ($periodical->getContributions() as $contribution) {
                 $contribution->setPublication($periodical);
             }
             $em = $this->getDoctrine()->getManager();
@@ -86,6 +88,7 @@ class PeriodicalController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new periodical was created.');
+
             return $this->redirectToRoute('periodical_show', array('id' => $periodical->getId()));
         }
 
@@ -101,6 +104,7 @@ class PeriodicalController extends Controller {
      * @Route("/{id}", name="periodical_show", methods={"GET"})
      *
      * @Template()
+     *
      * @param Periodical $periodical
      */
     public function showAction(Periodical $periodical) {
@@ -121,6 +125,7 @@ class PeriodicalController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      * @param Periodical $periodical
      */
@@ -129,12 +134,13 @@ class PeriodicalController extends Controller {
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach($periodical->getContributions() as $contribution) {
+            foreach ($periodical->getContributions() as $contribution) {
                 $contribution->setPublication($periodical);
             }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The periodical has been updated.');
+
             return $this->redirectToRoute('periodical_show', array('id' => $periodical->getId()));
         }
 
@@ -149,7 +155,6 @@ class PeriodicalController extends Controller {
      *
      * @param Request $request
      * @param Periodical $periodical
-     *
      * @param EntityManagerInterface $em
      * @param Merger $merger
      * @param PeriodicalRepository $repo
@@ -161,12 +166,13 @@ class PeriodicalController extends Controller {
      * @Template()
      */
     public function mergeAction(Request $request, Periodical $periodical, EntityManagerInterface $em, Merger $merger, PeriodicalRepository $repo) {
-        if($request->getMethod() === 'POST') {
+        if ('POST' === $request->getMethod()) {
             $periodicals = $repo->findBy(array('id' => $request->request->get('periodicals')));
             $count = count($periodicals);
             $merger->periodicals($periodical, $periodicals);
             $this->addFlash('success', "Merged {$count} places into {$periodical->getTitle()}.");
-            return $this->redirect($this->generateUrl('periodical_show', ['id' => $periodical->getId()]));
+
+            return $this->redirect($this->generateUrl('periodical_show', array('id' => $periodical->getId())));
         }
 
         $q = $request->query->get('q');
@@ -176,12 +182,12 @@ class PeriodicalController extends Controller {
         } else {
             $periodicals = array();
         }
+
         return array(
             'periodical' => $periodical,
             'periodicals' => $periodicals,
             'q' => $q,
         );
-
     }
 
     /**
@@ -190,6 +196,7 @@ class PeriodicalController extends Controller {
      * @Route("/{id}/delete", name="periodical_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     *
      * @param Request $request
      * @param Periodical $periodical
      */
@@ -209,6 +216,7 @@ class PeriodicalController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      * @param Periodical $periodical
      */
@@ -225,6 +233,7 @@ class PeriodicalController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new contribution was created.');
+
             return $this->redirectToRoute('periodical_show_contributions', array('id' => $periodical->getId()));
         }
 
@@ -233,14 +242,15 @@ class PeriodicalController extends Controller {
             'form' => $form->createView(),
         );
     }
-    
+
     /**
-     * Show periodical contributions list with edit/delete action items
-     * 
+     * Show periodical contributions list with edit/delete action items.
+     *
      * @Route("/{id}/contributions", name="periodical_show_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Periodical $periodical
      */
     public function showContributions(Periodical $periodical) {
@@ -248,7 +258,7 @@ class PeriodicalController extends Controller {
             'periodical' => $periodical,
         );
     }
-    
+
     /**
      * Displays a form to edit an existing periodical Contribution entity.
      *
@@ -256,6 +266,7 @@ class PeriodicalController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      * @param Contribution $contribution
      */
@@ -267,6 +278,7 @@ class PeriodicalController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The contribution has been updated.');
+
             return $this->redirectToRoute('periodical_show_contributions', array('id' => $contribution->getPublicationId()));
         }
 
@@ -282,6 +294,7 @@ class PeriodicalController extends Controller {
      * @Route("/contributions/{id}/delete", name="periodical_delete_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     *
      * @param Request $request
      * @param Contribution $contribution
      */
@@ -293,5 +306,4 @@ class PeriodicalController extends Controller {
 
         return $this->redirectToRoute('periodical_show_contributions', array('id' => $contribution->getPublicationId()));
     }
-
 }

@@ -13,25 +13,23 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Description of LoadGenres
+ * Description of LoadGenres.
  *
  * @author mjoyce
  */
 class LoadRole extends Fixture {
-
     public function load(ObjectManager $manager) {
         $role = new Role();
-        $role->setName("author");
-        $role->setLabel("Author");
+        $role->setName('author');
+        $role->setLabel('Author');
         $this->setReference('role.1', $role);
-        $manager->persist($role);       
-        
+        $manager->persist($role);
+
         $editor = new Role();
-        $editor->setName("editor");
-        $editor->setLabel("Editor");
+        $editor->setName('editor');
+        $editor->setLabel('Editor');
         $this->setReference('role.2', $editor);
-        $manager->persist($editor);       
+        $manager->persist($editor);
         $manager->flush();
     }
-
 }

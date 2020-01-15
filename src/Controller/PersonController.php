@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Person;
-use App\Entity\Publisher;
 use App\Form\PersonType;
-
 use App\Repository\AliasRepository;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
@@ -23,20 +21,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @Route("/person")
  */
 class PersonController extends Controller {
-
     /**
      * Lists all Person entities.
      *
      * @Route("/", name="person_index", methods={"GET"})
      *
      * @Template()
+     *
      * @param Request $request
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Person::class, 'e');
-        if( ! $this->isGranted('ROLE_USER')) {
+        if ( ! $this->isGranted('ROLE_USER')) {
             $qb->where("e.gender <> 'm'");
             $qb->andWhere('e.canadian is null OR e.canadian != 0');
         }
@@ -52,27 +50,28 @@ class PersonController extends Controller {
 
     /**
      * @param Request $request
+     * @param PersonRepository $repo
      * @Route("/pageinfo", name="person_pageinfo")
      *
      * @return JsonResponse
      */
     public function pageInfoAction(Request $request, PersonRepository $repo) {
         $q = $request->query->get('q');
-        if( ! $q) {
-            return new JsonResponse([]);
+        if ( ! $q) {
+            return new JsonResponse(array());
         }
-        $people = $repo->pageInfoQuery($q, $this->getParameter('page_size'));// should be first person on page, last person on page.
-        $data = [
-            'first' => ($people['first'] ? [
+        $people = $repo->pageInfoQuery($q, $this->getParameter('page_size')); // should be first person on page, last person on page.
+        $data = array(
+            'first' => ($people['first'] ? array(
                 'name' => $people['first']->getFullname(),
                 'id' => $people['first']->getId(),
-            ] : null),
-            'last' => ($people['last'] ? [
+            ) : null),
+            'last' => ($people['last'] ? array(
                 'name' => $people['last']->getFullname(),
                 'id' => $people['last']->getId(),
-            ] : null),
+            ) : null),
             'pages' => ceil($people['total'] / $this->getParameter('page_size')),
-        ];
+        );
 
         return new JsonResponse($data);
     }
@@ -85,21 +84,21 @@ class PersonController extends Controller {
      */
     public function typeaheadAction(Request $request) {
         $q = $request->query->get('q');
-        if( ! $q) {
-            return new JsonResponse([]);
+        if ( ! $q) {
+            return new JsonResponse(array());
         }
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Person');
-        $data = [];
-        foreach($repo->typeaheadQuery($q) as $result) {
+        $data = array();
+        foreach ($repo->typeaheadQuery($q) as $result) {
             $name = $result->getFullname();
-            if(count($result->getAliases())) {
+            if (count($result->getAliases())) {
                 $name .= ' aka ' . $result->getAliases()->first();
             }
-            $data[] = [
+            $data[] = array(
                 'id' => $result->getId(),
                 'text' => $name,
-            ];
+            );
         }
 
         return new JsonResponse($data);
@@ -111,6 +110,7 @@ class PersonController extends Controller {
      * @Route("/search", name="person_search", methods={"GET"})
      *
      * @Template()
+     *
      * @param Request $request
      * @param PersonRepository $personRepo
      * @param AliasRepository $aliasRepo
@@ -145,6 +145,7 @@ class PersonController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      */
     public function newAction(Request $request) {
@@ -158,6 +159,7 @@ class PersonController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new person was created.');
+
             return $this->redirectToRoute('person_show', array('id' => $person->getId()));
         }
 
@@ -174,6 +176,7 @@ class PersonController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      */
     public function newPopupAction(Request $request) {
@@ -186,12 +189,16 @@ class PersonController extends Controller {
      * @Route("/{id}", name="person_show", methods={"GET"})
      *
      * @Template()
+     *
      * @param Person $person
+     * @param PersonRepository $repo
+     * @param PublisherRepository $publisherRepo
      */
     public function showAction(Person $person, PersonRepository $repo, PublisherRepository $publisherRepo) {
-        if( ! $this->isGranted('ROLE_USER') && $person->getGender() != Person::FEMALE) {
-            throw new NotFoundHttpException("Cannot find that person.");
+        if ( ! $this->isGranted('ROLE_USER') && Person::FEMALE != $person->getGender()) {
+            throw new NotFoundHttpException('Cannot find that person.');
         }
+
         return array(
             'person' => $person,
             'next' => $repo->next($person),
@@ -207,6 +214,7 @@ class PersonController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      * @param Person $person
      */
@@ -219,6 +227,7 @@ class PersonController extends Controller {
 
             $em->flush();
             $this->addFlash('success', 'The person has been updated.');
+
             return $this->redirectToRoute('person_show', array('id' => $person->getId()));
         }
 
@@ -234,6 +243,7 @@ class PersonController extends Controller {
      * @Route("/{id}/delete", name="person_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     *
      * @param Request $request
      * @param Person $person
      */
@@ -245,5 +255,4 @@ class PersonController extends Controller {
 
         return $this->redirectToRoute('person_index');
     }
-
 }

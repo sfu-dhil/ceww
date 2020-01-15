@@ -4,21 +4,20 @@ namespace App\Controller;
 
 use App\Entity\Publication;
 use App\Repository\PublicationRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class DefaultController extends AbstractController
-{
+class DefaultController extends AbstractController {
     /**
      * @Route("/", name="homepage")
      * @Template()
+     *
+     * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
-        return [];
+    public function indexAction(Request $request) {
+        return array();
     }
 
     /**
@@ -27,7 +26,9 @@ class DefaultController extends AbstractController
      * @Route("/search", name="search")
      *
      * @Template()
+     *
      * @param Request $request
+     * @param PublicationRepository $repo
      */
     public function searchAction(Request $request, PublicationRepository $repo) {
         $q = $request->query->get('q');
@@ -48,9 +49,9 @@ class DefaultController extends AbstractController
     /**
      * @Route("/privacy", name="privacy")
      * @Template()
+     *
+     * @param Request $request
      */
     public function privacyAction(Request $request) {
-
     }
-
 }

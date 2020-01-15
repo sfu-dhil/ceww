@@ -8,15 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
- * Alias
+ * Alias.
  *
  * @ORM\Table(name="alias", indexes={
  *  @ORM\Index(columns="name", flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\AliasRepository")
  */
-class Alias extends AbstractEntity
-{
+class Alias extends AbstractEntity {
     /**
      * Name of the alias.
      *
@@ -32,19 +31,20 @@ class Alias extends AbstractEntity
     private $sortableName;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $maiden;
 
     /**
-     * @var boolean
+     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $married;
 
     /**
      * public research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -52,6 +52,7 @@ class Alias extends AbstractEntity
 
     /**
      * private research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -75,177 +76,164 @@ class Alias extends AbstractEntity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
      * @return Alias
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
     /**
-     * Set maiden
+     * Set maiden.
      *
-     * @param boolean $maiden
+     * @param bool $maiden
      *
      * @return Alias
      */
-    public function setMaiden($maiden)
-    {
+    public function setMaiden($maiden) {
         $this->maiden = $maiden;
 
         return $this;
     }
 
     /**
-     * Get maiden
+     * Get maiden.
      *
-     * @return boolean
+     * @return bool
      */
-    public function getMaiden()
-    {
+    public function getMaiden() {
         return $this->maiden;
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
      * @return Alias
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
     /**
-     * Set notes
+     * Set notes.
      *
      * @param string $notes
      *
      * @return Alias
      */
-    public function setNotes($notes)
-    {
+    public function setNotes($notes) {
         $this->notes = $notes;
 
         return $this;
     }
 
     public function appendNote($note) {
-        if (!$this->notes) {
+        if ( ! $this->notes) {
             $this->notes = $note;
         } else {
             $this->notes .= "\n\n" . $note;
         }
+
         return $this;
     }
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->notes;
     }
 
     /**
-     * Add person
+     * Add person.
      *
      * @param Person $person
      *
      * @return Alias
      */
-    public function addPerson(Person $person)
-    {
+    public function addPerson(Person $person) {
         $this->people[] = $person;
 
         return $this;
     }
 
     /**
-     * Remove person
+     * Remove person.
      *
      * @param Person $person
      */
-    public function removePerson(Person $person)
-    {
+    public function removePerson(Person $person) {
         $this->people->removeElement($person);
     }
 
     /**
-     * Get people
+     * Get people.
      *
      * @return Collection
      */
-    public function getPeople()
-    {
+    public function getPeople() {
         return $this->people;
     }
 
     /**
-     * Set sortableName
+     * Set sortableName.
      *
      * @param string $sortableName
      *
      * @return Alias
      */
-    public function setSortableName($sortableName)
-    {
+    public function setSortableName($sortableName) {
         $this->sortableName = $sortableName;
 
         return $this;
     }
 
     /**
-     * Get sortableName
+     * Get sortableName.
      *
      * @return string
      */
-    public function getSortableName()
-    {
+    public function getSortableName() {
         return $this->sortableName;
     }
 
     /**
      * Set married.
      *
-     * @param bool|null $married
+     * @param null|bool $married
      *
      * @return Alias
      */
-    public function setMarried($married = null)
-    {
+    public function setMarried($married = null) {
         $this->married = $married;
 
         return $this;
@@ -254,10 +242,9 @@ class Alias extends AbstractEntity
     /**
      * Get married.
      *
-     * @return bool|null
+     * @return null|bool
      */
-    public function getMarried()
-    {
+    public function getMarried() {
         return $this->married;
     }
 }

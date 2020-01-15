@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * Class to build some menus for navigation.
  */
 class Builder implements ContainerAwareInterface {
-
     use ContainerAwareTrait;
 
     const CARET = ' ▾'; // U+25BE, black down-pointing small triangle.
@@ -39,9 +38,10 @@ class Builder implements ContainerAwareInterface {
     }
 
     private function hasRole($role) {
-        if (!$this->tokenStorage->getToken()) {
+        if ( ! $this->tokenStorage->getToken()) {
             return false;
         }
+
         return $this->authChecker->isGranted($role);
     }
 
@@ -49,6 +49,7 @@ class Builder implements ContainerAwareInterface {
      * Build a menu for navigation.
      *
      * @param array $options
+     *
      * @return ItemInterface
      */
     public function mainMenu(array $options) {
@@ -127,7 +128,6 @@ class Builder implements ContainerAwareInterface {
             'route' => 'publisher_index',
         ));
 
-
         if ($this->hasRole('ROLE_CONTENT_ADMIN')) {
             $browse->addChild('divider2', array(
                 'label' => '',
@@ -143,5 +143,4 @@ class Builder implements ContainerAwareInterface {
 
         return $menu;
     }
-
 }

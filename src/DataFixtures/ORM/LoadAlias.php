@@ -13,12 +13,11 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Description of LoadGenres
+ * Description of LoadGenres.
  *
  * @author mjoyce
  */
 class LoadAlias extends Fixture {
-
     public function load(ObjectManager $manager) {
         $alias = new Alias();
         $alias->setDescription('An alias');
@@ -26,9 +25,8 @@ class LoadAlias extends Fixture {
         $alias->setName('Nee Mariston');
         $alias->setSortableName('mariston, n');
         $this->setReference('alias.1', $alias);
-        $manager->persist($alias);        
-        
+        $manager->persist($alias);
+
         $manager->flush();
     }
-
 }

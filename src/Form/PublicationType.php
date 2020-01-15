@@ -15,7 +15,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class PublicationType extends AbstractType {
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -125,8 +124,7 @@ class PublicationType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Publication'
+            'data_class' => 'App\Entity\Publication',
         ));
     }
-
 }

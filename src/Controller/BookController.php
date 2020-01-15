@@ -7,14 +7,13 @@ use App\Entity\Contribution;
 use App\Entity\Publication;
 use App\Form\BookType;
 use App\Form\ContributionType;
-use App\Form\ContributionCollectionType;
 use App\Repository\PublicationRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Book controller.
@@ -22,22 +21,25 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("/book")
  */
 class BookController extends Controller {
-
     /**
      * Lists all Book entities.
      *
      * @Route("/", name="book_index", methods={"GET"})
      *
      * @Template()
+     *
      * @param Request $request
+     * @param PublicationRepository $repo
+     *
      * @return array|RedirectResponse
      */
     public function indexAction(Request $request, PublicationRepository $repo) {
         $em = $this->getDoctrine()->getManager();
         $pageSize = $this->getParameter('page_size');
 
-        if($request->query->has('alpha')) {
+        if ($request->query->has('alpha')) {
             $page = $repo->letterPage($request->query->get('alpha'), Publication::BOOK, $pageSize);
+
             return $this->redirectToRoute('book_index', array('page' => $page));
         }
         $qb = $em->createQueryBuilder();
@@ -46,9 +48,9 @@ class BookController extends Controller {
         $paginator = $this->get('knp_paginator');
         $books = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
         $letterIndex = array();
-        foreach($books as $book) {
+        foreach ($books as $book) {
             $title = $book->getSortableTitle();
-            if( ! $title) {
+            if ( ! $title) {
                 continue;
             }
             $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
@@ -67,6 +69,7 @@ class BookController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      */
     public function newAction(Request $request) {
@@ -75,7 +78,7 @@ class BookController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach($book->getContributions() as $contribution) {
+            foreach ($book->getContributions() as $contribution) {
                 $contribution->setPublication($book);
             }
             $em = $this->getDoctrine()->getManager();
@@ -83,6 +86,7 @@ class BookController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new book was created.');
+
             return $this->redirectToRoute('book_show', array('id' => $book->getId()));
         }
 
@@ -98,6 +102,7 @@ class BookController extends Controller {
      * @Route("/{id}", name="book_show", methods={"GET"})
      *
      * @Template()
+     *
      * @param Book $book
      */
     public function showAction(Book $book) {
@@ -118,24 +123,27 @@ class BookController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      * @param Book $book
      */
     public function editAction(Request $request, Book $book) {
-        if (!$this->isGranted('ROLE_CONTENT_EDITOR')) {
+        if ( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
             $this->addFlash('danger', 'You must login to access this page.');
+
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $editForm = $this->createForm(BookType::class, $book);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach($book->getContributions() as $contribution) {
+            foreach ($book->getContributions() as $contribution) {
                 $contribution->setPublication($book);
             }
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The book has been updated.');
+
             return $this->redirectToRoute('book_show', array('id' => $book->getId()));
         }
 
@@ -151,6 +159,7 @@ class BookController extends Controller {
      * @Route("/{id}/delete", name="book_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     *
      * @param Request $request
      * @param Book $book
      */
@@ -170,6 +179,7 @@ class BookController extends Controller {
      *
      * @Template()
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
+     *
      * @param Request $request
      * @param Book $book
      */
@@ -186,6 +196,7 @@ class BookController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new contribution was created.');
+
             return $this->redirectToRoute('book_show_contributions', array('id' => $book->getId()));
         }
 
@@ -194,14 +205,15 @@ class BookController extends Controller {
             'form' => $form->createView(),
         );
     }
-    
+
     /**
-     * Show book contributions list with edit/delete action items
-     * 
+     * Show book contributions list with edit/delete action items.
+     *
      * @Route("/{id}/contributions", name="book_show_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Book $book
      */
     public function showContributions(Book $book) {
@@ -209,7 +221,7 @@ class BookController extends Controller {
             'book' => $book,
         );
     }
-    
+
     /**
      * Displays a form to edit an existing book Contribution entity.
      *
@@ -217,6 +229,7 @@ class BookController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      * @param Contribution $contribution
      */
@@ -228,6 +241,7 @@ class BookController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The contribution has been updated.');
+
             return $this->redirectToRoute('book_show_contributions', array('id' => $contribution->getPublicationId()));
         }
 
@@ -243,6 +257,7 @@ class BookController extends Controller {
      * @Route("/contributions/{id}/delete", name="book_delete_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     *
      * @param Request $request
      * @param Contribution $contribution
      */
@@ -254,5 +269,4 @@ class BookController extends Controller {
 
         return $this->redirectToRoute('book_show_contributions', array('id' => $contribution->getPublicationId()));
     }
-
 }

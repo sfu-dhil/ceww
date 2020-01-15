@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Entity\Alias;
 use App\Form\AliasType;
 use App\Repository\AliasRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Alias controller.
@@ -18,13 +18,13 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("/alias")
  */
 class AliasController extends Controller {
-
     /**
      * Lists all Alias entities.
      *
      * @Route("/", name="alias_index", methods={"GET"})
      *
      * @Template()
+     *
      * @param Request $request
      */
     public function indexAction(Request $request) {
@@ -46,6 +46,7 @@ class AliasController extends Controller {
      * @Route("/search", name="alias_search", methods={"GET"})
      *
      * @Template()
+     *
      * @param Request $request
      * @param AliasRepository $repo
      *
@@ -69,26 +70,27 @@ class AliasController extends Controller {
 
     /**
      * @param Request $request
+     * @param AliasRepository $repo
      * @Route("/typeahead", name="alias_typeahead", methods={"GET"})
      *
      * @return JsonResponse
      */
     public function typeahead(Request $request, AliasRepository $repo) {
         $q = $request->query->get('q');
-        if( ! $q) {
-            return new JsonResponse([]);
+        if ( ! $q) {
+            return new JsonResponse(array());
         }
-        $data = [];
-        foreach($repo->typeaheadQuery($q) as $result) {
-            $data[] = [
+        $data = array();
+        foreach ($repo->typeaheadQuery($q) as $result) {
+            $data[] = array(
                 'id' => $result->getId(),
                 'text' => $result->getName(),
-            ];
+            );
         }
-        
+
         return new JsonResponse($data);
     }
-    
+
     /**
      * Creates a new Alias entity.
      *
@@ -96,6 +98,7 @@ class AliasController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      */
     public function newAction(Request $request) {
@@ -109,6 +112,7 @@ class AliasController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new alias was created.');
+
             return $this->redirectToRoute('alias_show', array('id' => $alias->getId()));
         }
 
@@ -117,7 +121,7 @@ class AliasController extends Controller {
             'form' => $form->createView(),
         );
     }
-    
+
     /**
      * Creates a new Alias entity.
      *
@@ -125,6 +129,7 @@ class AliasController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      */
     public function newPopupAction(Request $request) {
@@ -137,10 +142,10 @@ class AliasController extends Controller {
      * @Route("/{id}", name="alias_show", methods={"GET"})
      *
      * @Template()
+     *
      * @param Alias $alias
      */
     public function showAction(Alias $alias) {
-
         return array(
             'alias' => $alias,
         );
@@ -153,6 +158,7 @@ class AliasController extends Controller {
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
+     *
      * @param Request $request
      * @param Alias $alias
      */
@@ -164,6 +170,7 @@ class AliasController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The alias has been updated.');
+
             return $this->redirectToRoute('alias_show', array('id' => $alias->getId()));
         }
 
@@ -179,6 +186,7 @@ class AliasController extends Controller {
      * @Route("/{id}/delete", name="alias_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     *
      * @param Request $request
      * @param Alias $alias
      */
@@ -190,5 +198,4 @@ class AliasController extends Controller {
 
         return $this->redirectToRoute('alias_index');
     }
-
 }

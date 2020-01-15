@@ -5,105 +5,97 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Periodical
+ * Periodical.
  *
  * @ORM\Table(name="periodical")
  * @ORM\Entity(repositoryClass="App\Repository\PeriodicalRepository")
  */
-class Periodical extends Publication
-{
+class Periodical extends Publication {
     /**
-     * @var String
+     * @var string
      * @ORM\Column(type="string", length=48, nullable=true)
      */
     private $runDates;
-    
+
     /**
-     * @var String
+     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $continuedFrom;
-    
+
     /**
-     * @var String
+     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $continuedBy;
-    
+
     /**
-     * Set runDates
+     * Set runDates.
      *
      * @param string $runDates
      *
      * @return Periodical
      */
-    public function setRunDates($runDates)
-    {
+    public function setRunDates($runDates) {
         $this->runDates = $runDates;
 
         return $this;
     }
 
     /**
-     * Get runDates
+     * Get runDates.
      *
      * @return string
      */
-    public function getRunDates()
-    {
+    public function getRunDates() {
         return $this->runDates;
     }
 
     /**
-     * Set continuedFrom
+     * Set continuedFrom.
      *
      * @param string $continuedFrom
      *
      * @return Periodical
      */
-    public function setContinuedFrom($continuedFrom)
-    {
+    public function setContinuedFrom($continuedFrom) {
         $this->continuedFrom = $continuedFrom;
 
         return $this;
     }
 
     /**
-     * Get continuedFrom
+     * Get continuedFrom.
      *
      * @return string
      */
-    public function getContinuedFrom()
-    {
+    public function getContinuedFrom() {
         return $this->continuedFrom;
     }
 
     /**
-     * Set continuedBy
+     * Set continuedBy.
      *
      * @param string $continuedBy
      *
      * @return Periodical
      */
-    public function setContinuedBy($continuedBy)
-    {
+    public function setContinuedBy($continuedBy) {
         $this->continuedBy = $continuedBy;
 
         return $this;
     }
 
     /**
-     * Get continuedBy
+     * Get continuedBy.
      *
      * @return string
      */
-    public function getContinuedBy()
-    {
+    public function getContinuedBy() {
         return $this->continuedBy;
     }
 
     public function getCategory() {
         return self::PERIODICAL;
     }
-
 }

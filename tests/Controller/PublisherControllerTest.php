@@ -2,19 +2,17 @@
 
 namespace AppBundle\Tests\Controller;
 
-use AppBundle\Entity\Publisher;
 use AppBundle\DataFixtures\ORM\LoadPublisher;
+use AppBundle\Entity\Publisher;
 use Nines\UserBundle\DataFixtures\ORM\LoadUser;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
-class PublisherControllerTest extends BaseTestCase
-{
-
+class PublisherControllerTest extends BaseTestCase {
     protected function getFixtures() {
-        return [
+        return array(
             LoadUser::class,
-            LoadPublisher::class
-        ];
+            LoadPublisher::class,
+        );
     }
 
     /**
@@ -127,6 +125,7 @@ class PublisherControllerTest extends BaseTestCase
         $json = json_decode($response->getContent());
         $this->assertEquals(1, count($json));
     }
+
     /**
      * @group anon
      * @group edit
@@ -157,9 +156,9 @@ class PublisherControllerTest extends BaseTestCase
         $formCrawler = $client->request('GET', '/publisher/1/edit');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $form = $formCrawler->selectButton('Update')->form([
+        $form = $formCrawler->selectButton('Update')->form(array(
             'publisher[name]' => 'chicanery',
-        ]);
+        ));
 
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect('/publisher/1'));
@@ -219,9 +218,9 @@ class PublisherControllerTest extends BaseTestCase
         $formCrawler = $client->request('GET', '/publisher/new');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $form = $formCrawler->selectButton('Create')->form([
+        $form = $formCrawler->selectButton('Create')->form(array(
             'publisher[name]' => 'chicanery',
-        ]);
+        ));
 
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
@@ -239,9 +238,9 @@ class PublisherControllerTest extends BaseTestCase
         $formCrawler = $client->request('GET', '/publisher/new_popup');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $form = $formCrawler->selectButton('Create')->form([
+        $form = $formCrawler->selectButton('Create')->form(array(
             'publisher[name]' => 'chicanery',
-        ]);
+        ));
 
         $client->submit($form);
         $this->assertTrue($client->getResponse()->isRedirect());
@@ -288,5 +287,4 @@ class PublisherControllerTest extends BaseTestCase
         $postCount = count($this->em->getRepository(Publisher::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);
     }
-
 }

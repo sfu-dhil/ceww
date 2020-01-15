@@ -12,25 +12,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Description of PublicationTrait
+ * Description of PublicationTrait.
  *
  * @author mjoyce
  */
 trait HasContributions {
-
     public function __construct() {
         $this->contributions = new ArrayCollection();
     }
 
     /**
-     * Add contribution
+     * Add contribution.
      *
      * @param Contribution $contribution
      *
      * @return Publication
      */
     public function addContribution(Contribution $contribution) {
-        if (!$this->contributions->contains($contribution)) {
+        if ( ! $this->contributions->contains($contribution)) {
             $this->contributions[] = $contribution;
         }
 
@@ -38,7 +37,7 @@ trait HasContributions {
     }
 
     /**
-     * Remove contribution
+     * Remove contribution.
      *
      * @param Contribution $contribution
      */
@@ -47,7 +46,9 @@ trait HasContributions {
     }
 
     /**
-     * Get contributions
+     * Get contributions.
+     *
+     * @param mixed $sort
      *
      * @return Collection
      */
@@ -55,45 +56,48 @@ trait HasContributions {
         $data = $this->contributions->toArray();
 
         $cmp = null;
-        switch($sort) {
+        switch ($sort) {
             case 'year':
-                $cmp = function(Contribution $a, Contribution $b) {
+                $cmp = function (Contribution $a, Contribution $b) {
                     $ad = $a->getPublication()->getDateYear();
                     $bd = $b->getPublication()->getDateYear();
 
-                    if( ! $ad && $bd) {
+                    if ( ! $ad && $bd) {
                         return -1;
                     }
-                    if( $ad && !$bd) {
+                    if ($ad && ! $bd) {
                         return 1;
                     }
 
-                    if( ! $ad && ! $bd ) {
+                    if ( ! $ad && ! $bd) {
                         return strcasecmp($a->getPublication()->getSortableTitle(), $b->getPublication()->getSortableTitle());
                     }
 
-                    if($ad->getStart(false) <=> $bd->getStart(false)) {
+                    if ($ad->getStart(false) <=> $bd->getStart(false)) {
                         return $ad->getStart(false) <=> $bd->getStart(false);
                     }
 
                     return $a->getPublication()->getSortableTitle() <=> $b->getPublication()->getSortableTitle();
                 };
+
                 break;
             case 'title':
-                $cmp = function(Contribution $a, Contribution $b) {
+                $cmp = function (Contribution $a, Contribution $b) {
                     return strcasecmp($a->getPublication()->getSortableTitle(), $b->getPublication()->getSortableTitle());
                 };
+
                 break;
             case 'person':
             default:
-                $cmp = function(Contribution $a, Contribution $b) {
+                $cmp = function (Contribution $a, Contribution $b) {
                     return strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
                 };
+
                 break;
         }
 
         usort($data, $cmp);
+
         return $data;
     }
-
 }

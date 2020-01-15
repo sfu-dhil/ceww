@@ -2,13 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Person;
 use App\Entity\Publisher;
 use App\Form\PublisherType;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
-use Doctrine\ORM\EntityManagerInterface;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -22,15 +19,14 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("/publisher")
  */
 class PublisherController extends Controller {
-
     /**
      * Lists all Publisher entities.
      *
      * @param Request $request
-     *   Dependency injected HTTP request object.
+     *                         Dependency injected HTTP request object.
      *
      * @return array
-     *   Array data for the template processor.
+     *               Array data for the template processor.
      *
      * @Route("/", name="publisher_index", methods={"GET"})
      *
@@ -53,7 +49,8 @@ class PublisherController extends Controller {
      * Typeahead API endpoint for Publisher entities.
      *
      * @param Request $request
-     *   Dependency injected HTTP request object.
+     *                         Dependency injected HTTP request object.
+     * @param PublisherRepository $repo
      *
      * @Route("/typeahead", name="publisher_typeahead", methods={"GET"})
      *
@@ -61,15 +58,15 @@ class PublisherController extends Controller {
      */
     public function typeahead(Request $request, PublisherRepository $repo) {
         $q = $request->query->get('q');
-        if (!$q) {
-            return new JsonResponse([]);
+        if ( ! $q) {
+            return new JsonResponse(array());
         }
-        $data = [];
+        $data = array();
         foreach ($repo->typeaheadQuery($q) as $result) {
-            $data[] = [
+            $data[] = array(
                 'id' => $result->getId(),
                 'text' => (string) $result,
-            ];
+            );
         }
 
         return new JsonResponse($data);
@@ -79,7 +76,7 @@ class PublisherController extends Controller {
      * Search for Publisher entities.
      *
      * @param Request $request
-     *   Dependency injected HTTP request object.
+     *                         Dependency injected HTTP request object.
      *
      * @Route("/search", name="publisher_search", methods={"GET"})
      *
@@ -107,10 +104,10 @@ class PublisherController extends Controller {
      * Creates a new Publisher entity.
      *
      * @param Request $request
-     *   Dependency injected HTTP request object.
+     *                         Dependency injected HTTP request object.
      *
      * @return array|RedirectResponse
-     *   Array data for the template processor or a redirect to the Publisher.
+     *                                Array data for the template processor or a redirect to the Publisher.
      *
      * @Security("has_role('ROLE_CONTENT_EDITOR')")
      * @Route("/new", name="publisher_new", methods={"GET","POST"})
@@ -128,6 +125,7 @@ class PublisherController extends Controller {
             $em->flush();
 
             $this->addFlash('success', 'The new publisher was created.');
+
             return $this->redirectToRoute('publisher_show', array('id' => $publisher->getId()));
         }
 
@@ -141,10 +139,10 @@ class PublisherController extends Controller {
      * Creates a new Publisher entity in a popup.
      *
      * @param Request $request
-     *   Dependency injected HTTP request object.
+     *                         Dependency injected HTTP request object.
      *
      * @return array|RedirectResponse
-     *   Array data for the template processor or a redirect to the Artwork.
+     *                                Array data for the template processor or a redirect to the Artwork.
      *
      * @Security("has_role('ROLE_CONTENT_EDITOR')")
      * @Route("/new_popup", name="publisher_new_popup", methods={"GET","POST"})
@@ -159,17 +157,17 @@ class PublisherController extends Controller {
      * Finds and displays a Publisher entity.
      *
      * @param Publisher $publisher
-     *   The Publisher to show.
+     *                             The Publisher to show.
+     * @param PersonRepository $repo
      *
      * @return array
-     *   Array data for the template processor.
+     *               Array data for the template processor.
      *
      * @Route("/{id}", name="publisher_show", methods={"GET"})
      *
      * @Template()
      */
     public function showAction(Publisher $publisher, PersonRepository $repo) {
-
         return array(
             'publisher' => $publisher,
             'people' => $repo->byPublisher($publisher),
@@ -179,14 +177,13 @@ class PublisherController extends Controller {
     /**
      * Displays a form to edit an existing Publisher entity.
      *
-     *
      * @param Request $request
-     *   Dependency injected HTTP request object.
+     *                         Dependency injected HTTP request object.
      * @param Publisher $publisher
-     *   The Publisher to edit.
+     *                             The Publisher to edit.
      *
      * @return array|RedirectResponse
-     *   Array data for the template processor or a redirect to the Publisher.
+     *                                Array data for the template processor or a redirect to the Publisher.
      *
      * @Security("has_role('ROLE_CONTENT_EDITOR')")
      * @Route("/{id}/edit", name="publisher_edit", methods={"GET","POST"})
@@ -201,6 +198,7 @@ class PublisherController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The publisher has been updated.');
+
             return $this->redirectToRoute('publisher_show', array('id' => $publisher->getId()));
         }
 
@@ -213,18 +211,16 @@ class PublisherController extends Controller {
     /**
      * Deletes a Publisher entity.
      *
-     *
      * @param Request $request
-     *   Dependency injected HTTP request object.
+     *                         Dependency injected HTTP request object.
      * @param Publisher $publisher
-     *   The Publisher to delete.
+     *                             The Publisher to delete.
      *
      * @return array|RedirectResponse
-     *   A redirect to the publisher_index.
+     *                                A redirect to the publisher_index.
      *
      * @Security("has_role('ROLE_CONTENT_ADMIN')")
      * @Route("/{id}/delete", name="publisher_delete", methods={"GET","POST"})
-     *
      */
     public function deleteAction(Request $request, Publisher $publisher) {
         $em = $this->getDoctrine()->getManager();
@@ -234,5 +230,4 @@ class PublisherController extends Controller {
 
         return $this->redirectToRoute('publisher_index');
     }
-
 }

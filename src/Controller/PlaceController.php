@@ -6,7 +6,6 @@ use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
 use App\Services\Merger;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -20,18 +19,17 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Route("/place")
  */
-class PlaceController extends AbstractController
-{
+class PlaceController extends AbstractController {
     /**
      * Lists all Place entities.
      *
      * @Route("/", name="place_index", methods={"GET"})
      *
      * @Template()
-	 * @param Request $request
+     *
+     * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Place::class, 'e')->orderBy('e.sortableName', 'ASC');
@@ -46,47 +44,48 @@ class PlaceController extends AbstractController
 
     /**
      * @param Request $request
+     * @param PlaceRepository $repo
      * @Route("/typeahead", name="place_typeahead", methods={"GET"})
      *
      * @return JsonResponse
      */
     public function typeahead(Request $request, PlaceRepository $repo) {
         $q = $request->query->get('q');
-        if( ! $q) {
-            return new JsonResponse([]);
+        if ( ! $q) {
+            return new JsonResponse(array());
         }
-        $data = [];
-        foreach($repo->typeaheadQuery($q) as $result) {
-            $data[] = [
+        $data = array();
+        foreach ($repo->typeaheadQuery($q) as $result) {
+            $data[] = array(
                 'id' => $result->getId(),
                 'text' => $result->getName(),
-            ];
+            );
         }
 
         return new JsonResponse($data);
     }
 
     /**
-     *
      * @Route("/search", name="place_search", methods={"GET"})
      *
      * @Template()
-	 * @param Request $request
+     *
+     * @param Request $request
+     * @param PlaceRepository $repo
      */
-    public function searchAction(Request $request, PlaceRepository $repo)
-    {
-		$q = $request->query->get('q');
-		if($q) {
-	        $query = $repo->searchQuery($q);
-			$paginator = $this->get('knp_paginator');
-			$places = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
-		} else {
-			$places = array();
-		}
+    public function searchAction(Request $request, PlaceRepository $repo) {
+        $q = $request->query->get('q');
+        if ($q) {
+            $query = $repo->searchQuery($q);
+            $paginator = $this->get('knp_paginator');
+            $places = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+        } else {
+            $places = array();
+        }
 
         return array(
             'places' => $places,
-			'q' => $q,
+            'q' => $q,
         );
     }
 
@@ -97,10 +96,10 @@ class PlaceController extends AbstractController
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-	 * @param Request $request
+     *
+     * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $place = new Place();
         $form = $this->createForm(PlaceType::class, $place);
         $form->handleRequest($request);
@@ -111,6 +110,7 @@ class PlaceController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'The new place was created.');
+
             return $this->redirectToRoute('place_show', array('id' => $place->getId()));
         }
 
@@ -120,7 +120,6 @@ class PlaceController extends AbstractController
         );
     }
 
-
     /**
      * Creates a new Place entity.
      *
@@ -128,13 +127,12 @@ class PlaceController extends AbstractController
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-	 * @param Request $request
+     *
+     * @param Request $request
      */
-    public function newPopupAction(Request $request)
-    {
+    public function newPopupAction(Request $request) {
         return $this->newAction($request);
     }
-
 
     /**
      * Finds and displays a Place entity.
@@ -142,10 +140,10 @@ class PlaceController extends AbstractController
      * @Route("/{id}", name="place_show", methods={"GET"})
      *
      * @Template()
-	 * @param Place $place
+     *
+     * @param Place $place
      */
-    public function showAction(Place $place)
-    {
+    public function showAction(Place $place) {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Place::class);
 
@@ -163,11 +161,11 @@ class PlaceController extends AbstractController
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-	 * @param Request $request
-	 * @param Place $place
+     *
+     * @param Request $request
+     * @param Place $place
      */
-    public function editAction(Request $request, Place $place)
-    {
+    public function editAction(Request $request, Place $place) {
         $editForm = $this->createForm(PlaceType::class, $place);
         $editForm->handleRequest($request);
 
@@ -175,6 +173,7 @@ class PlaceController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The place has been updated.');
+
             return $this->redirectToRoute('place_show', array('id' => $place->getId()));
         }
 
@@ -191,15 +190,20 @@ class PlaceController extends AbstractController
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Template()
+     *
      * @param Place $place
+     * @param Request $request
+     * @param Merger $merger
+     * @param PlaceRepository $repo
      */
     public function mergeAction(Request $request, Place $place, Merger $merger, PlaceRepository $repo) {
-        if($request->getMethod() === 'POST') {
+        if ('POST' === $request->getMethod()) {
             $places = $repo->findBy(array('id' => $request->request->get('places')));
             $count = count($places);
             $merger->places($place, $places);
             $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
-            return $this->redirect($this->generateUrl('place_show', ['id' => $place->getId()]));
+
+            return $this->redirect($this->generateUrl('place_show', array('id' => $place->getId())));
         }
 
         $q = $request->query->get('q');
@@ -207,8 +211,9 @@ class PlaceController extends AbstractController
             $query = $repo->searchQuery($q);
             $places = $query->execute();
         } else {
-                $places = array();
+            $places = array();
         }
+
         return array(
             'place' => $place,
             'places' => $places,
@@ -222,13 +227,14 @@ class PlaceController extends AbstractController
      * @Route("/{id}/delete", name="place_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-	 * @param Request $request
-	 * @param Place $place
+     *
+     * @param Request $request
+     * @param Place $place
      */
-    public function deleteAction(Request $request, Place $place)
-    {
-        if( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
+    public function deleteAction(Request $request, Place $place) {
+        if ( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
+
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
         $em = $this->getDoctrine()->getManager();

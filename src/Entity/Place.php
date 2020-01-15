@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
- * Place
+ * Place.
  *
  * @ORM\Table(name="place", indexes={
  *  @ORM\Index(columns={"name", "country_name"}, flags={"fulltext"}),
@@ -17,7 +17,6 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
  */
 class Place extends AbstractEntity {
-
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }
@@ -62,6 +61,7 @@ class Place extends AbstractEntity {
 
     /**
      * public research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -69,6 +69,7 @@ class Place extends AbstractEntity {
 
     /**
      * private research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -124,7 +125,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -137,7 +138,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -146,7 +147,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Set countryName
+     * Set countryName.
      *
      * @param string $countryName
      *
@@ -159,7 +160,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get countryName
+     * Get countryName.
      *
      * @return string
      */
@@ -168,7 +169,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Set latitude
+     * Set latitude.
      *
      * @param string $latitude
      *
@@ -181,7 +182,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get latitude
+     * Get latitude.
      *
      * @return string
      */
@@ -190,7 +191,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Set longitude
+     * Set longitude.
      *
      * @param string $longitude
      *
@@ -203,7 +204,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get longitude
+     * Get longitude.
      *
      * @return string
      */
@@ -212,7 +213,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -225,7 +226,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -234,7 +235,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Set notes
+     * Set notes.
      *
      * @param string $notes
      *
@@ -247,16 +248,17 @@ class Place extends AbstractEntity {
     }
 
     public function appendNote($note) {
-        if (!$this->notes) {
+        if ( ! $this->notes) {
             $this->notes = $note;
         } else {
             $this->notes .= "\n\n" . $note;
         }
+
         return $this;
     }
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return string
      */
@@ -265,14 +267,14 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Add peopleBorn
+     * Add peopleBorn.
      *
      * @param Person $peopleBorn
      *
      * @return Place
      */
     public function addPersonBorn(Person $peopleBorn) {
-        if (!$this->peopleBorn->contains($peopleBorn)) {
+        if ( ! $this->peopleBorn->contains($peopleBorn)) {
             $this->peopleBorn[] = $peopleBorn;
         }
 
@@ -280,7 +282,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Remove peopleBorn
+     * Remove peopleBorn.
      *
      * @param Person $peopleBorn
      */
@@ -289,38 +291,40 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get peopleBorn
+     * Get peopleBorn.
      *
      * @return Collection
      */
     public function getPeopleBorn() {
         $births = $this->peopleBorn->toArray();
-        usort($births, function($a, $b) {
+        usort($births, function ($a, $b) {
             $aDate = $a->getBirthDate();
             $bDate = $b->getBirthDate();
-            if( (! $aDate) && (!$bDate)) {
+            if (( ! $aDate) && ( ! $bDate)) {
                 return 0;
             }
-            if( (! $aDate) && $bDate) {
+            if (( ! $aDate) && $bDate) {
                 return -1;
             }
-            if( $aDate && (! $bDate)) {
+            if ($aDate && ( ! $bDate)) {
                 return 1;
             }
+
             return $aDate->getStart(false) - $bDate->getStart(false);
         });
+
         return $births;
     }
 
     /**
-     * Add peopleDied
+     * Add peopleDied.
      *
      * @param Person $peopleDied
      *
      * @return Place
      */
     public function addPersonDied(Person $peopleDied) {
-        if (!$this->peopleDied->contains($peopleDied)) {
+        if ( ! $this->peopleDied->contains($peopleDied)) {
             $this->peopleDied[] = $peopleDied;
         }
 
@@ -328,7 +332,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Remove peopleDied
+     * Remove peopleDied.
      *
      * @param Person $peopleDied
      */
@@ -337,38 +341,40 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get peopleDied
+     * Get peopleDied.
      *
      * @return Collection
      */
     public function getPeopleDied() {
         $deaths = $this->peopleDied->toArray();
-        usort($deaths, function($a, $b) {
+        usort($deaths, function ($a, $b) {
             $aDate = $a->getBirthDate();
             $bDate = $b->getBirthDate();
-            if( (! $aDate) && (!$bDate)) {
+            if (( ! $aDate) && ( ! $bDate)) {
                 return 0;
             }
-            if( (! $aDate) && $bDate) {
+            if (( ! $aDate) && $bDate) {
                 return -1;
             }
-            if( $aDate && (! $bDate)) {
+            if ($aDate && ( ! $bDate)) {
                 return 1;
             }
+
             return $aDate->getStart(false) - $bDate->getStart(false);
         });
+
         return $deaths;
     }
 
     /**
-     * Add resident
+     * Add resident.
      *
      * @param Person $resident
      *
      * @return Place
      */
     public function addResident(Person $resident) {
-        if( ! $this->residents->contains($resident)) {
+        if ( ! $this->residents->contains($resident)) {
             $this->residents[] = $resident;
         }
 
@@ -376,7 +382,7 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Remove resident
+     * Remove resident.
      *
      * @param Person $resident
      */
@@ -385,158 +391,146 @@ class Place extends AbstractEntity {
     }
 
     /**
-     * Get residents
+     * Get residents.
      *
      * @return Collection
      */
     public function getResidents() {
         $residents = $this->residents->toArray();
-        usort($residents, function($a, $b) {
+        usort($residents, function ($a, $b) {
             return strcmp($a->getSortableName(), $b->getSortableName());
         });
+
         return $residents;
     }
 
-
     /**
-     * Set sortableName
+     * Set sortableName.
      *
      * @param string $sortableName
      *
      * @return Place
      */
-    public function setSortableName($sortableName)
-    {
+    public function setSortableName($sortableName) {
         $this->sortableName = $sortableName;
 
         return $this;
     }
 
     /**
-     * Get sortableName
+     * Get sortableName.
      *
      * @return string
      */
-    public function getSortableName()
-    {
+    public function getSortableName() {
         return $this->sortableName;
     }
 
     /**
-     * Add peopleBorn
+     * Add peopleBorn.
      *
      * @param Person $peopleBorn
      *
      * @return Place
      */
-    public function addPeopleBorn(Person $peopleBorn)
-    {
+    public function addPeopleBorn(Person $peopleBorn) {
         $this->peopleBorn[] = $peopleBorn;
 
         return $this;
     }
 
     /**
-     * Remove peopleBorn
+     * Remove peopleBorn.
      *
      * @param Person $peopleBorn
      */
-    public function removePeopleBorn(Person $peopleBorn)
-    {
+    public function removePeopleBorn(Person $peopleBorn) {
         $this->peopleBorn->removeElement($peopleBorn);
     }
 
     /**
-     * Add peopleDied
+     * Add peopleDied.
      *
      * @param Person $peopleDied
      *
      * @return Place
      */
-    public function addPeopleDied(Person $peopleDied)
-    {
+    public function addPeopleDied(Person $peopleDied) {
         $this->peopleDied[] = $peopleDied;
 
         return $this;
     }
 
     /**
-     * Remove peopleDied
+     * Remove peopleDied.
      *
      * @param Person $peopleDied
      */
-    public function removePeopleDied(Person $peopleDied)
-    {
+    public function removePeopleDied(Person $peopleDied) {
         $this->peopleDied->removeElement($peopleDied);
     }
 
     /**
-     * Set regionName
+     * Set regionName.
      *
      * @param string $regionName
      *
      * @return Place
      */
-    public function setRegionName($regionName)
-    {
+    public function setRegionName($regionName) {
         $this->regionName = $regionName;
 
         return $this;
     }
 
     /**
-     * Get regionName
+     * Get regionName.
      *
      * @return string
      */
-    public function getRegionName()
-    {
+    public function getRegionName() {
         return $this->regionName;
     }
 
     /**
-     * Add publisher
+     * Add publisher.
      *
      * @param Publisher $publisher
      *
      * @return Place
      */
-    public function addPublisher(Publisher $publisher)
-    {
+    public function addPublisher(Publisher $publisher) {
         $this->publishers[] = $publisher;
 
         return $this;
     }
 
     /**
-     * Remove publisher
+     * Remove publisher.
      *
      * @param Publisher $publisher
      */
-    public function removePublisher(Publisher $publisher)
-    {
+    public function removePublisher(Publisher $publisher) {
         $this->publishers->removeElement($publisher);
     }
 
     /**
-     * Get publishers
+     * Get publishers.
      *
      * @return Collection
      */
-    public function getPublishers()
-    {
+    public function getPublishers() {
         return $this->publishers;
     }
 
     /**
      * Set geoNamesId.
      *
-     * @param string|null $geoNamesId
+     * @param null|string $geoNamesId
      *
      * @return Place
      */
-    public function setGeoNamesId($geoNamesId = null)
-    {
+    public function setGeoNamesId($geoNamesId = null) {
         $this->geoNamesId = $geoNamesId;
 
         return $this;
@@ -545,10 +539,9 @@ class Place extends AbstractEntity {
     /**
      * Get geoNamesId.
      *
-     * @return string|null
+     * @return null|string
      */
-    public function getGeoNamesId()
-    {
+    public function getGeoNamesId() {
         return $this->geoNamesId;
     }
 }

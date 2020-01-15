@@ -19,12 +19,11 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
- * Description of PlaceMerger
+ * Description of PlaceMerger.
  *
  * @author mjoyce
  */
-class Merger
-{
+class Merger {
     /**
      * ORM entity manager.
      *
@@ -60,13 +59,14 @@ class Merger
 
     /**
      * @param Place[]
+     * @param mixed $placeIds
      */
     public function getPlaces($placeIds) {
         return $this->placeRepository->findBy(array('id' => $placeIds));
     }
 
     /**
-     * @param Place   $destination
+     * @param Place $destination
      * @param Place[] $places
      */
     public function places(Place $destination, $places) {
@@ -83,10 +83,10 @@ class Merger
                 $a->removeResidence($p);
                 $a->addResidence($destination);
             }
-            foreach($p->getPublications() as $a) {
+            foreach ($p->getPublications() as $a) {
                 $a->setLocation($destination);
             }
-            foreach($p->getPublishers() as $publisher) {
+            foreach ($p->getPublishers() as $publisher) {
                 $publisher->removePlace($p);
                 $publisher->addPlace($destination);
             }
@@ -103,19 +103,19 @@ class Merger
      * @todo this is generic enough that it can apply to publications, not just
      * periodicals.
      *
-     * @param Periodical   $destination
+     * @param Periodical $destination
      * @param Periodical[] $publications
      */
     public function periodicals(Periodical $destination, array $publications) {
-        foreach($publications as $publication) {
-            foreach($publication->getLinks() as $link) {
+        foreach ($publications as $publication) {
+            foreach ($publication->getLinks() as $link) {
                 $destination->addLink($link);
             }
             $destination->appendNote($publication->getNotes());
-            foreach($publication->getGenres() as $genre) {
+            foreach ($publication->getGenres() as $genre) {
                 $destination->addGenre($genre);
             }
-            foreach($publication->getContributions() as $contribution) {
+            foreach ($publication->getContributions() as $contribution) {
                 $replacement = new Contribution();
                 $replacement->setPublication($destination);
                 $replacement->setRole($contribution->getRole());
@@ -123,7 +123,7 @@ class Merger
                 $this->em->persist($replacement);
                 $this->em->remove($contribution);
             }
-            foreach($publication->getPublishers() as $publisher) {
+            foreach ($publication->getPublishers() as $publisher) {
                 $publication->removePublisher($publisher);
                 $destination->addPublisher($publisher);
             }
@@ -131,5 +131,4 @@ class Merger
         }
         $this->em->flush();
     }
-
 }

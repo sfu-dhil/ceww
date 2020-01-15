@@ -10,13 +10,12 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use \Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class PersonType extends AbstractType {
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -93,7 +92,7 @@ class PersonType extends AbstractType {
             'label' => 'Birth Year',
             'required' => false,
             'attr' => array(
-                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here'
+                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here',
             ),
         ));
 
@@ -117,8 +116,8 @@ class PersonType extends AbstractType {
             'label' => 'Death Year',
             'required' => false,
             'attr' => array(
-                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here'
-            )
+                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here',
+            ),
         ));
 
         // deathPlace is a typeahead thing.
@@ -184,8 +183,7 @@ class PersonType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => 'App\Entity\Person'
+            'data_class' => 'App\Entity\Person',
         ));
     }
-
 }

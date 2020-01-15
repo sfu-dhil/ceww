@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
- * Publication
+ * Publication.
  *
  * @ORM\Entity(repositoryClass="App\Repository\PublicationRepository")
  * @ORM\Table(name="publication", indexes={
@@ -25,7 +25,6 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  */
 abstract class Publication extends AbstractEntity {
-
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
     }
@@ -54,6 +53,7 @@ abstract class Publication extends AbstractEntity {
 
     /**
      * public research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -61,6 +61,7 @@ abstract class Publication extends AbstractEntity {
 
     /**
      * private research notes.
+     *
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -114,7 +115,7 @@ abstract class Publication extends AbstractEntity {
     abstract public function getCategory();
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -127,7 +128,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -136,7 +137,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Set sortableTitle
+     * Set sortableTitle.
      *
      * @param string $sortableTitle
      *
@@ -149,7 +150,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Get sortableTitle
+     * Get sortableTitle.
      *
      * @return string
      */
@@ -158,14 +159,14 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Set links
+     * Set links.
      *
      * @param array $links
      *
      * @return Publication
      */
     public function setLinks($links) {
-        if( ! $links instanceof ArrayCollection) {
+        if ( ! $links instanceof ArrayCollection) {
             $this->links = new ArrayCollection($links);
         } else {
             $this->links = $links;
@@ -175,33 +176,35 @@ abstract class Publication extends AbstractEntity {
     }
 
     public function addLink($link) {
-        if( ! $this->links instanceof ArrayCollection) {
+        if ( ! $this->links instanceof ArrayCollection) {
             $this->links = new ArrayCollection($this->links);
         }
-        if( ! $this->links->contains($link)) {
+        if ( ! $this->links->contains($link)) {
             $this->links->add($link);
         }
+
         return $this;
     }
 
     /**
-     * Get links
+     * Get links.
      *
      * @return array
      */
     public function getLinks() {
         $data = $this->links;
-        if($this->links instanceof ArrayCollection) {
+        if ($this->links instanceof ArrayCollection) {
             $data = $this->links->toArray();
         }
-        usort($data, function($a, $b){
-            return substr($a, strpos($a, '//')+1) <=> substr($b,strpos($b, '//')+1);
+        usort($data, function ($a, $b) {
+            return substr($a, strpos($a, '//') + 1) <=> substr($b, strpos($b, '//') + 1);
         });
+
         return $data;
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -214,7 +217,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -223,7 +226,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Set notes
+     * Set notes.
      *
      * @param string $notes
      *
@@ -236,16 +239,17 @@ abstract class Publication extends AbstractEntity {
     }
 
     public function appendNote($note) {
-        if (!$this->notes) {
+        if ( ! $this->notes) {
             $this->notes = $note;
         } else {
             $this->notes .= "\n\n" . $note;
         }
+
         return $this;
     }
 
     /**
-     * Get notes
+     * Get notes.
      *
      * @return string
      */
@@ -254,9 +258,9 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Set dateYear
+     * Set dateYear.
      *
-     * @param string|DateYear $dateYear
+     * @param DateYear|string $dateYear
      *
      * @return Publication
      */
@@ -273,7 +277,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Get dateYear
+     * Get dateYear.
      *
      * @return DateYear
      */
@@ -282,7 +286,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Set location
+     * Set location.
      *
      * @param Place $location
      *
@@ -295,7 +299,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Get location
+     * Get location.
      *
      * @return Place
      */
@@ -304,13 +308,13 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Set genres
+     * Set genres.
      *
      * @param Collection|Genre[] $genres
      */
 //    public function setGenres(Collection $genres) {
     public function setGenres($genres) {
-        if(is_array($genres)) {
+        if (is_array($genres)) {
             $this->genres = new ArrayCollection($genres);
         } else {
             $this->genres = $genres;
@@ -318,14 +322,14 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Add genre
+     * Add genre.
      *
      * @param Genre $genre
      *
      * @return Publication
      */
     public function addGenre(Genre $genre) {
-        if (!$this->genres->contains($genre)) {
+        if ( ! $this->genres->contains($genre)) {
             $this->genres[] = $genre;
         }
 
@@ -333,7 +337,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Remove genre
+     * Remove genre.
      *
      * @param Genre $genre
      */
@@ -342,7 +346,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Get genres
+     * Get genres.
      *
      * @return Collection
      */
@@ -354,15 +358,14 @@ abstract class Publication extends AbstractEntity {
      * Get the first author contributor for a publication or null if there
      * are no author contributors.
      *
-     * @return Person|null
+     * @return null|Person
      */
     public function getFirstAuthor() {
         foreach ($this->contributions as $contribution) {
-            if ($contribution->getRole()->getName() === 'author') {
+            if ('author' === $contribution->getRole()->getName()) {
                 return $contribution->getPerson();
             }
         }
-        return null;
     }
 
     /**
@@ -375,7 +378,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Add publisher
+     * Add publisher.
      *
      * @param Publisher $publisher
      *
@@ -388,7 +391,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Remove publisher
+     * Remove publisher.
      *
      * @param Publisher $publisher
      */
@@ -397,7 +400,7 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * Get publishers
+     * Get publishers.
      *
      * @return Collection
      */
@@ -406,14 +409,13 @@ abstract class Publication extends AbstractEntity {
     }
 
     /**
-     * @param Collection|array $publishers
+     * @param array|Collection $publishers
      */
     public function setPublishers($publishers) {
-        if(is_array($publishers)) {
+        if (is_array($publishers)) {
             $this->publishers = new ArrayCollection($publishers);
         } else {
             $this->publishers = $publishers;
         }
     }
-
 }

@@ -2,34 +2,31 @@
 
 namespace App\Controller;
 
-use App\Entity\Person;
 use App\Entity\Role;
 use App\Form\RoleType;
-
 use App\Repository\PersonRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Role controller.
  *
  * @Route("/role")
  */
-class RoleController extends Controller
-{
+class RoleController extends Controller {
     /**
      * Lists all Role entities.
      *
      * @Route("/", name="role_index", methods={"GET"})
      *
      * @Template()
-	 * @param Request $request
+     *
+     * @param Request $request
      */
-    public function indexAction(Request $request)
-    {
+    public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Role::class, 'e')->orderBy('e.label', 'ASC');
@@ -49,10 +46,10 @@ class RoleController extends Controller
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-	 * @param Request $request
+     *
+     * @param Request $request
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $role = new Role();
         $form = $this->createForm(RoleType::class, $role);
         $form->handleRequest($request);
@@ -63,6 +60,7 @@ class RoleController extends Controller
             $em->flush();
 
             $this->addFlash('success', 'The new role was created.');
+
             return $this->redirectToRoute('role_show', array('id' => $role->getId()));
         }
 
@@ -78,11 +76,12 @@ class RoleController extends Controller
      * @Route("/{id}", name="role_show", methods={"GET"})
      *
      * @Template()
+     *
      * @param Request $request
-	 * @param Role $role
+     * @param Role $role
+     * @param PersonRepository $repo
      */
-    public function showAction(Request $request, Role $role, PersonRepository $repo)
-    {
+    public function showAction(Request $request, Role $role, PersonRepository $repo) {
         $query = $repo->byRoleQuery($role);
         $paginator = $this->get('knp_paginator');
         $people = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
@@ -100,11 +99,11 @@ class RoleController extends Controller
      *
      * @Template()
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-	 * @param Request $request
-	 * @param Role $role
+     *
+     * @param Request $request
+     * @param Role $role
      */
-    public function editAction(Request $request, Role $role)
-    {
+    public function editAction(Request $request, Role $role) {
         $editForm = $this->createForm(RoleType::class, $role);
         $editForm->handleRequest($request);
 
@@ -112,6 +111,7 @@ class RoleController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The role has been updated.');
+
             return $this->redirectToRoute('role_show', array('id' => $role->getId()));
         }
 
@@ -127,11 +127,11 @@ class RoleController extends Controller
      * @Route("/{id}/delete", name="role_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-	 * @param Request $request
-	 * @param Role $role
+     *
+     * @param Request $request
+     * @param Role $role
      */
-    public function deleteAction(Request $request, Role $role)
-    {
+    public function deleteAction(Request $request, Role $role) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($role);
         $em->flush();
