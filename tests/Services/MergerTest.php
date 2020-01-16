@@ -37,12 +37,13 @@ class MergerTest extends ServiceBaseCase {
     }
 
     public function testPlaceMerge() {
-        $this->merger->places($this->getReference('place.3'), array(
-            $this->getReference('place.2'),
-            $this->getReference('place.1'),
-        ));
+        $repo = $this->entityManager->getRepository(Place::class);
+        $colchester = $repo->findOneBy(array('name' => 'Colchester'));
+        $lockchester = $repo->findOneBy(array('name' => 'Lockchester'));
+        $lockside = $repo->findOneBy(array('name' => 'Lockside'));
 
-        $repo = $this->em->getRepository(Place::class);
+        $this->merger->places($colchester, array($lockchester, $lockside));
+
         $mergedPlaces = $repo->findAll();
         $this->assertEquals(1, count($mergedPlaces));
 
@@ -54,7 +55,7 @@ class MergerTest extends ServiceBaseCase {
     }
 
     public function testPeriodicalMerge() {
-        $repo = $this->em->getRepository(Periodical::class);
+        $repo = $this->entityManager->getRepository(Periodical::class);
         $this->merger->periodicals($this->getReference('periodical.1'), array(
             $this->getReference('periodical.2'),
         ));
