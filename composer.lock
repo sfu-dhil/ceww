@@ -6331,7 +6331,7 @@
             "source": {
                 "type": "git",
                 "url": "/Users/michael/Sites/nines-v4/src/lib/Nines/",
-                "reference": "42b655f373b84933dde622bd0f61abd858a22478"
+                "reference": "a6600d298ae0312b92a653045d91bb01d8408f5b"
             },
             "require": {
                 "egulias/email-validator": "^2.1",
@@ -6369,7 +6369,7 @@
                 }
             ],
             "description": "Some useful bundles.",
-            "time": "2020-01-14T21:15:34+00:00"
+            "time": "2020-01-16T21:42:21+00:00"
         },
         {
             "name": "webmozart/assert",

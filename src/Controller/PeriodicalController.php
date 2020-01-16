@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Contribution;
@@ -11,6 +19,8 @@ use App\Repository\PeriodicalRepository;
 use App\Repository\PublicationRepository;
 use App\Services\Merger;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +33,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/periodical")
  */
-class PeriodicalController extends AbstractController {
+class PeriodicalController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Periodical entities.
      *
@@ -36,21 +48,21 @@ class PeriodicalController extends AbstractController {
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function indexAction(Request $request, PublicationRepository $repo) {
+    public function indexAction(Request $request, PeriodicalRepository $repo) {
         $em = $this->getDoctrine()->getManager();
         $pageSize = $this->getParameter('page_size');
 
         if ($request->query->has('alpha')) {
             $page = $repo->letterPage($request->query->get('alpha'), Publication::PERIODICAL, $pageSize);
 
-            return $this->redirectToRoute('periodical_index', array('page' => $page));
+            return $this->redirectToRoute('periodical_index', ['page' => $page]);
         }
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Periodical::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $periodicals = $paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
-        $letterIndex = array();
+
+        $periodicals = $this->paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
+        $letterIndex = [];
         foreach ($periodicals as $periodical) {
             $title = $periodical->getSortableTitle();
             if ( ! $title) {
@@ -59,10 +71,10 @@ class PeriodicalController extends AbstractController {
             $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
         }
 
-        return array(
+        return [
             'periodicals' => $periodicals,
             'activeLetters' => array_keys($letterIndex),
-        );
+        ];
     }
 
     /**
@@ -90,13 +102,13 @@ class PeriodicalController extends AbstractController {
 
             $this->addFlash('success', 'The new periodical was created.');
 
-            return $this->redirectToRoute('periodical_show', array('id' => $periodical->getId()));
+            return $this->redirectToRoute('periodical_show', ['id' => $periodical->getId()]);
         }
 
-        return array(
+        return [
             'periodical' => $periodical,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -112,11 +124,11 @@ class PeriodicalController extends AbstractController {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Periodical::class);
 
-        return array(
+        return [
             'periodical' => $periodical,
             'next' => $repo->next($periodical),
             'previous' => $repo->previous($periodical),
-        );
+        ];
     }
 
     /**
@@ -142,13 +154,13 @@ class PeriodicalController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The periodical has been updated.');
 
-            return $this->redirectToRoute('periodical_show', array('id' => $periodical->getId()));
+            return $this->redirectToRoute('periodical_show', ['id' => $periodical->getId()]);
         }
 
-        return array(
+        return [
             'periodical' => $periodical,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**
@@ -168,12 +180,12 @@ class PeriodicalController extends AbstractController {
      */
     public function mergeAction(Request $request, Periodical $periodical, EntityManagerInterface $em, Merger $merger, PeriodicalRepository $repo) {
         if ('POST' === $request->getMethod()) {
-            $periodicals = $repo->findBy(array('id' => $request->request->get('periodicals')));
+            $periodicals = $repo->findBy(['id' => $request->request->get('periodicals')]);
             $count = count($periodicals);
             $merger->periodicals($periodical, $periodicals);
             $this->addFlash('success', "Merged {$count} places into {$periodical->getTitle()}.");
 
-            return $this->redirect($this->generateUrl('periodical_show', array('id' => $periodical->getId())));
+            return $this->redirect($this->generateUrl('periodical_show', ['id' => $periodical->getId()]));
         }
 
         $q = $request->query->get('q');
@@ -181,14 +193,14 @@ class PeriodicalController extends AbstractController {
             $query = $repo->searchQuery($q);
             $periodicals = $query->execute();
         } else {
-            $periodicals = array();
+            $periodicals = [];
         }
 
-        return array(
+        return [
             'periodical' => $periodical,
             'periodicals' => $periodicals,
             'q' => $q,
-        );
+        ];
     }
 
     /**
@@ -235,13 +247,13 @@ class PeriodicalController extends AbstractController {
 
             $this->addFlash('success', 'The new contribution was created.');
 
-            return $this->redirectToRoute('periodical_show_contributions', array('id' => $periodical->getId()));
+            return $this->redirectToRoute('periodical_show_contributions', ['id' => $periodical->getId()]);
         }
 
-        return array(
+        return [
             'periodical' => $periodical,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -255,9 +267,9 @@ class PeriodicalController extends AbstractController {
      * @param Periodical $periodical
      */
     public function showContributions(Periodical $periodical) {
-        return array(
+        return [
             'periodical' => $periodical,
-        );
+        ];
     }
 
     /**
@@ -280,13 +292,13 @@ class PeriodicalController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The contribution has been updated.');
 
-            return $this->redirectToRoute('periodical_show_contributions', array('id' => $contribution->getPublicationId()));
+            return $this->redirectToRoute('periodical_show_contributions', ['id' => $contribution->getPublicationId()]);
         }
 
-        return array(
+        return [
             'contribution' => $contribution,
             'edit_form' => $editForm->CreateView(),
-        );
+        ];
     }
 
     /**
@@ -305,6 +317,6 @@ class PeriodicalController extends AbstractController {
         $em->flush();
         $this->addFlash('success', 'The contribution was deleted.');
 
-        return $this->redirectToRoute('periodical_show_contributions', array('id' => $contribution->getPublicationId()));
+        return $this->redirectToRoute('periodical_show_contributions', ['id' => $contribution->getPublicationId()]);
     }
 }

@@ -1,10 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Role;
 use App\Form\RoleType;
 use App\Repository\PersonRepository;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +27,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/role")
  */
-class RoleController extends AbstractController {
+class RoleController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Role entities.
      *
@@ -32,12 +44,12 @@ class RoleController extends AbstractController {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Role::class, 'e')->orderBy('e.label', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $roles = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
-        return array(
+        $roles = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+
+        return [
             'roles' => $roles,
-        );
+        ];
     }
 
     /**
@@ -62,13 +74,13 @@ class RoleController extends AbstractController {
 
             $this->addFlash('success', 'The new role was created.');
 
-            return $this->redirectToRoute('role_show', array('id' => $role->getId()));
+            return $this->redirectToRoute('role_show', ['id' => $role->getId()]);
         }
 
-        return array(
+        return [
             'role' => $role,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -84,13 +96,13 @@ class RoleController extends AbstractController {
      */
     public function showAction(Request $request, Role $role, PersonRepository $repo) {
         $query = $repo->byRoleQuery($role);
-        $paginator = $this->get('knp_paginator');
-        $people = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
-        return array(
+        $people = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+
+        return [
             'role' => $role,
             'people' => $people,
-        );
+        ];
     }
 
     /**
@@ -113,13 +125,13 @@ class RoleController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The role has been updated.');
 
-            return $this->redirectToRoute('role_show', array('id' => $role->getId()));
+            return $this->redirectToRoute('role_show', ['id' => $role->getId()]);
         }
 
-        return array(
+        return [
             'role' => $role,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**

@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Command;
 
 use App\Entity\Place;
@@ -18,13 +26,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PlacesUpdateCommand extends Command {
     use LoggerAwareTrait;
 
-    const BATCH_SIZE = 100;
+    public const BATCH_SIZE = 100;
 
-    const PROVINCES = array(
+    public const PROVINCES = [
         'AB' => '01', 'BC' => '02', 'MB' => '03', 'NB' => '04', 'NL' => '05', 'NS' => '07',
         'NT' => '14', 'ON' => '08', 'PE' => '09', 'QC' => '10', 'SK' => '11', 'YT' => '12',
         'PQ' => '10',
-    );
+    ];
 
     /**
      * @var EntityManagerInterface
@@ -46,7 +54,7 @@ class PlacesUpdateCommand extends Command {
     /**
      * Configure the command.
      */
-    protected function configure() {
+    protected function configure() : void {
         $this
             ->setName('doceww:places:update')
             ->setDescription('Update the place data from GeoNames')
@@ -86,7 +94,7 @@ class PlacesUpdateCommand extends Command {
      * @param OutputInterface $output
      *                                Output destination.
      */
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : void {
         $iterator = $this->getPlaces($input->getOption('limit'), $input->getOption('start'));
         $sleep = $input->getOption('sleep');
         while ($row = $iterator->next()) {
@@ -102,7 +110,7 @@ class PlacesUpdateCommand extends Command {
         $this->logger->warning('Finished. ' . $iterator->key());
     }
 
-    public function doUpdate(Place $place, $sleep) {
+    public function doUpdate(Place $place, $sleep) : void {
         if ($place->getCountryName()) {
             // only canadian places for now.
             return;
@@ -110,36 +118,36 @@ class PlacesUpdateCommand extends Command {
 
         $data = preg_split('/,\s*/u', $place->getName());
         if (2 !== count($data)) {
-            $this->logger->warning('Malformed Canadian place name.', array('id' => $place->getId(), 'name' => $place->getName()));
+            $this->logger->warning('Malformed Canadian place name.', ['id' => $place->getId(), 'name' => $place->getName()]);
 
             return;
         }
         list($name, $province) = $data;
 
         if ( ! array_key_exists($province, self::PROVINCES)) {
-            $this->logger->warning('Not a Canadian province.', array('id' => $place->getId(), 'name' => $place->getName()));
+            $this->logger->warning('Not a Canadian province.', ['id' => $place->getId(), 'name' => $place->getName()]);
 
             return;
         }
 
-        $results = $this->client->search(array(
+        $results = $this->client->search([
             'name_equals' => $name,
             'country' => 'CA',
             'lang' => 'en',
             'style' => 'long',
             'featureClass' => 'P',
             'adminCode1' => self::PROVINCES[$province],
-        ));
+        ]);
         sleep($sleep);
 
-        if (0 == count($results)) {
-            $this->logger->warning('No results found.', array('id' => $place->getId(), 'name' => $place->getName()));
+        if (0 === count($results)) {
+            $this->logger->warning('No results found.', ['id' => $place->getId(), 'name' => $place->getName()]);
 
             return;
         }
 
         if (count($results) > 1) {
-            $this->logger->warning('Too many results found.', array('count' => count($results), 'id' => $place->getId(), 'name' => $place->getName()));
+            $this->logger->warning('Too many results found.', ['count' => count($results), 'id' => $place->getId(), 'name' => $place->getName()]);
 
             return;
         }

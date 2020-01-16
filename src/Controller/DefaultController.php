@@ -1,15 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Publication;
 use App\Repository\PublicationRepository;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DefaultController extends AbstractController {
+class DefaultController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * @Route("/", name="homepage")
      * @Template()
@@ -17,7 +29,7 @@ class DefaultController extends AbstractController {
      * @param Request $request
      */
     public function indexAction(Request $request) {
-        return array();
+        return [];
     }
 
     /**
@@ -34,16 +46,16 @@ class DefaultController extends AbstractController {
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $publications = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+
+            $publications = $this->paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         } else {
-            $publications = array();
+            $publications = [];
         }
 
-        return array(
+        return [
             'publications' => $publications,
             'q' => $q,
-        );
+        ];
     }
 
     /**
@@ -52,6 +64,6 @@ class DefaultController extends AbstractController {
      *
      * @param Request $request
      */
-    public function privacyAction(Request $request) {
+    public function privacyAction(Request $request) : void {
     }
 }

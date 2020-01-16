@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Menu;
 
 use Knp\Menu\FactoryInterface;
@@ -14,7 +22,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class Builder implements ContainerAwareInterface {
     use ContainerAwareTrait;
 
-    const CARET = ' ▾'; // U+25BE, black down-pointing small triangle.
+    public const CARET = ' ▾'; // U+25BE, black down-pointing small triangle.
 
     /**
      * @var FactoryInterface
@@ -54,91 +62,91 @@ class Builder implements ContainerAwareInterface {
      */
     public function mainMenu(array $options) {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttributes(array(
+        $menu->setChildrenAttributes([
             'class' => 'nav navbar-nav',
-        ));
+        ]);
 
-        $menu->addChild('home', array(
+        $menu->addChild('home', [
             'label' => 'Home',
             'route' => 'homepage',
-        ));
+        ]);
 
-        $search = $menu->addChild('search', array(
+        $search = $menu->addChild('search', [
             'uri' => '#',
             'label' => 'Search ' . self::CARET,
-        ));
+        ]);
         $search->setAttribute('dropdown', true);
         $search->setLinkAttribute('class', 'dropdown-toggle');
         $search->setLinkAttribute('data-toggle', 'dropdown');
         $search->setChildrenAttribute('class', 'dropdown-menu');
-        $search->addChild('Titles', array(
+        $search->addChild('Titles', [
             'route' => 'search',
-        ));
+        ]);
 
-        $search->addChild('People', array(
+        $search->addChild('People', [
             'route' => 'person_search',
-        ));
-        $search->addChild('Alternate Names', array(
+        ]);
+        $search->addChild('Alternate Names', [
             'route' => 'alias_search',
-        ));
-        $search->addChild('Places', array(
+        ]);
+        $search->addChild('Places', [
             'route' => 'place_search',
-        ));
-        $search->addChild('Publishers', array(
+        ]);
+        $search->addChild('Publishers', [
             'route' => 'publisher_search',
-        ));
+        ]);
 
-        $browse = $menu->addChild('browse', array(
+        $browse = $menu->addChild('browse', [
             'uri' => '#',
             'label' => 'Browse ' . self::CARET,
-        ));
+        ]);
         $browse->setAttribute('dropdown', true);
         $browse->setLinkAttribute('class', 'dropdown-toggle');
         $browse->setLinkAttribute('data-toggle', 'dropdown');
         $browse->setChildrenAttribute('class', 'dropdown-menu');
-        $browse->addChild('Books', array(
+        $browse->addChild('Books', [
             'route' => 'book_index',
-        ));
-        $browse->addChild('Collections', array(
+        ]);
+        $browse->addChild('Collections', [
             'route' => 'compilation_index',
-        ));
-        $browse->addChild('Periodicals', array(
+        ]);
+        $browse->addChild('Periodicals', [
             'route' => 'periodical_index',
-        ));
-        $browse->addChild('divider1', array(
+        ]);
+        $browse->addChild('divider1', [
             'label' => '',
-        ));
-        $browse['divider1']->setAttributes(array(
+        ]);
+        $browse['divider1']->setAttributes([
             'role' => 'separator',
             'class' => 'divider',
-        ));
-        $browse->addChild('Alternate Names', array(
+        ]);
+        $browse->addChild('Alternate Names', [
             'route' => 'alias_index',
-        ));
-        $browse->addChild('Genres', array(
+        ]);
+        $browse->addChild('Genres', [
             'route' => 'genre_index',
-        ));
-        $browse->addChild('People', array(
+        ]);
+        $browse->addChild('People', [
             'route' => 'person_index',
-        ));
-        $browse->addChild('Places', array(
+        ]);
+        $browse->addChild('Places', [
             'route' => 'place_index',
-        ));
-        $browse->addChild('Publishers', array(
+        ]);
+        $browse->addChild('Publishers', [
             'route' => 'publisher_index',
-        ));
+        ]);
 
         if ($this->hasRole('ROLE_CONTENT_ADMIN')) {
-            $browse->addChild('divider2', array(
+            $browse->addChild('divider2', [
                 'label' => '',
-            ));
-            $browse['divider2']->setAttributes(array(
+            ]);
+            $browse['divider2']->setAttributes([
                 'role' => 'separator',
                 'class' => 'divider',
-            ));
-            $browse->addChild('Roles', array(
+            ]);
+            $browse->addChild('Roles', [
                 'route' => 'role_index',
-            ));
+            ]);
         }
 
         return $menu;

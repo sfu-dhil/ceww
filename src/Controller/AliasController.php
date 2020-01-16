@@ -1,10 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Alias;
 use App\Form\AliasType;
 use App\Repository\AliasRepository;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +28,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/alias")
  */
-class AliasController extends AbstractController {
+class AliasController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Alias entities.
      *
@@ -33,12 +45,12 @@ class AliasController extends AbstractController {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Alias::class, 'e')->orderBy('e.sortableName', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $aliases = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
-        return array(
+        $aliases = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+
+        return [
             'aliases' => $aliases,
-        );
+        ];
     }
 
     /**
@@ -57,16 +69,16 @@ class AliasController extends AbstractController {
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $aliases = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+
+            $aliases = $this->paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         } else {
-            $aliases = array();
+            $aliases = [];
         }
 
-        return array(
+        return [
             'aliases' => $aliases,
             'q' => $q,
-        );
+        ];
     }
 
     /**
@@ -79,14 +91,14 @@ class AliasController extends AbstractController {
     public function typeahead(Request $request, AliasRepository $repo) {
         $q = $request->query->get('q');
         if ( ! $q) {
-            return new JsonResponse(array());
+            return new JsonResponse([]);
         }
-        $data = array();
+        $data = [];
         foreach ($repo->typeaheadQuery($q) as $result) {
-            $data[] = array(
+            $data[] = [
                 'id' => $result->getId(),
                 'text' => $result->getName(),
-            );
+            ];
         }
 
         return new JsonResponse($data);
@@ -114,13 +126,13 @@ class AliasController extends AbstractController {
 
             $this->addFlash('success', 'The new alias was created.');
 
-            return $this->redirectToRoute('alias_show', array('id' => $alias->getId()));
+            return $this->redirectToRoute('alias_show', ['id' => $alias->getId()]);
         }
 
-        return array(
+        return [
             'alias' => $alias,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -147,9 +159,9 @@ class AliasController extends AbstractController {
      * @param Alias $alias
      */
     public function showAction(Alias $alias) {
-        return array(
+        return [
             'alias' => $alias,
-        );
+        ];
     }
 
     /**
@@ -172,13 +184,13 @@ class AliasController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The alias has been updated.');
 
-            return $this->redirectToRoute('alias_show', array('id' => $alias->getId()));
+            return $this->redirectToRoute('alias_show', ['id' => $alias->getId()]);
         }
 
-        return array(
+        return [
             'alias' => $alias,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
-    * To change this license header, choose License Headers in Project Properties.
-    * To change this template file, choose Tools | Templates
-    * and open the template in the editor.
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace App\Services;
@@ -53,7 +55,7 @@ class Merger {
      *
      * @param PlaceRepository $placeRepository
      */
-    public function setPlaceRepository(PlaceRepository $placeRepository) {
+    public function setPlaceRepository(PlaceRepository $placeRepository) : void {
         $this->placeRepository = $placeRepository;
     }
 
@@ -62,14 +64,14 @@ class Merger {
      * @param mixed $placeIds
      */
     public function getPlaces($placeIds) {
-        return $this->placeRepository->findBy(array('id' => $placeIds));
+        return $this->placeRepository->findBy(['id' => $placeIds]);
     }
 
     /**
      * @param Place $destination
      * @param Place[] $places
      */
-    public function places(Place $destination, $places) {
+    public function places(Place $destination, $places) : void {
         foreach ($places as $p) {
             foreach ($p->getPeopleBorn() as $a) {
                 $a->setBirthPlace($destination);
@@ -106,7 +108,7 @@ class Merger {
      * @param Periodical $destination
      * @param Periodical[] $publications
      */
-    public function periodicals(Periodical $destination, array $publications) {
+    public function periodicals(Periodical $destination, array $publications) : void {
         foreach ($publications as $publication) {
             foreach ($publication->getLinks() as $link) {
                 $destination->addLink($link);

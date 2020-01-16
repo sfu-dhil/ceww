@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -12,64 +20,64 @@ class DateYearType extends AbstractType {
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('value', null, array(
+    public function buildForm(FormBuilderInterface $builder, array $options) : void {
+        $builder->add('value', null, [
             'label' => 'Value',
             'required' => true,
-            'attr' => array(
+            'attr' => [
                 'help_block' => 'Publication date.',
-            ),
-        ));
-        $builder->add('start', null, array(
+            ],
+        ]);
+        $builder->add('start', null, [
             'label' => 'Start',
             'required' => false,
-            'attr' => array(
+            'attr' => [
                 'help_block' => 'Publication start date as YYYY.',
-            ),
-        ));
-        $builder->add('startCirca', ChoiceType::class, array(
+            ],
+        ]);
+        $builder->add('startCirca', ChoiceType::class, [
             'label' => 'Start Circa',
             'expanded' => true,
             'multiple' => false,
-            'choices' => array(
+            'choices' => [
                 'Yes' => true,
                 'No' => false,
-            ),
+            ],
             'required' => true,
             'placeholder' => false,
-            'attr' => array(
+            'attr' => [
                 'help_block' => 'Approximate publication start date.',
-            ),
-        ));
-        $builder->add('end', null, array(
+            ],
+        ]);
+        $builder->add('end', null, [
             'label' => 'End',
             'required' => false,
-            'attr' => array(
+            'attr' => [
                 'help_block' => 'Publication end date as YYYY.',
-            ),
-        ));
-        $builder->add('endCirca', ChoiceType::class, array(
+            ],
+        ]);
+        $builder->add('endCirca', ChoiceType::class, [
             'label' => 'End Circa',
             'expanded' => true,
             'multiple' => false,
-            'choices' => array(
+            'choices' => [
                 'Yes' => true,
                 'No' => false,
-            ),
+            ],
             'required' => true,
             'placeholder' => false,
-            'attr' => array(
+            'attr' => [
                 'help_block' => 'Approximate publication end date.',
-            ),
-        ));
+            ],
+        ]);
     }
 
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults(array(
+    public function configureOptions(OptionsResolver $resolver) : void {
+        $resolver->setDefaults([
             'data_class' => 'App\Entity\DateYear',
-        ));
+        ]);
     }
 }

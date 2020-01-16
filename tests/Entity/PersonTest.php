@@ -8,9 +8,9 @@ use App\Entity\Contribution;
 use App\Entity\Periodical;
 use App\Entity\Person;
 use App\Entity\Publication;
-use Nines\UtilBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\BaseCase;
 
-class PersonTest extends BaseTestCase {
+class PersonTest extends BaseCase {
     /**
      * @dataProvider SetBirthDateData
      *

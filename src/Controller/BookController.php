@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Book;
@@ -7,11 +15,13 @@ use App\Entity\Contribution;
 use App\Entity\Publication;
 use App\Form\BookType;
 use App\Form\ContributionType;
+use App\Repository\BookRepository;
 use App\Repository\PublicationRepository;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +31,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/book")
  */
-class BookController extends AbstractController {
+class BookController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Book entities.
      *
@@ -34,21 +46,20 @@ class BookController extends AbstractController {
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Request $request, PublicationRepository $repo) {
+    public function indexAction(Request $request, BookRepository $repo) {
         $em = $this->getDoctrine()->getManager();
         $pageSize = $this->getParameter('page_size');
 
         if ($request->query->has('alpha')) {
             $page = $repo->letterPage($request->query->get('alpha'), Publication::BOOK, $pageSize);
 
-            return $this->redirectToRoute('book_index', array('page' => $page));
+            return $this->redirectToRoute('book_index', ['page' => $page]);
         }
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Book::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $books = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
-        $letterIndex = array();
+        $books = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+        $letterIndex = [];
         foreach ($books as $book) {
             $title = $book->getSortableTitle();
             if ( ! $title) {
@@ -57,10 +68,10 @@ class BookController extends AbstractController {
             $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
         }
 
-        return array(
+        return [
             'books' => $books,
             'activeLetters' => array_keys($letterIndex),
-        );
+        ];
     }
 
     /**
@@ -88,13 +99,13 @@ class BookController extends AbstractController {
 
             $this->addFlash('success', 'The new book was created.');
 
-            return $this->redirectToRoute('book_show', array('id' => $book->getId()));
+            return $this->redirectToRoute('book_show', ['id' => $book->getId()]);
         }
 
-        return array(
+        return [
             'book' => $book,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -110,11 +121,11 @@ class BookController extends AbstractController {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Book::class);
 
-        return array(
+        return [
             'book' => $book,
             'next' => $repo->next($book),
             'previous' => $repo->previous($book),
-        );
+        ];
     }
 
     /**
@@ -145,13 +156,13 @@ class BookController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The book has been updated.');
 
-            return $this->redirectToRoute('book_show', array('id' => $book->getId()));
+            return $this->redirectToRoute('book_show', ['id' => $book->getId()]);
         }
 
-        return array(
+        return [
             'book' => $book,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**
@@ -198,13 +209,13 @@ class BookController extends AbstractController {
 
             $this->addFlash('success', 'The new contribution was created.');
 
-            return $this->redirectToRoute('book_show_contributions', array('id' => $book->getId()));
+            return $this->redirectToRoute('book_show_contributions', ['id' => $book->getId()]);
         }
 
-        return array(
+        return [
             'book' => $book,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -218,9 +229,9 @@ class BookController extends AbstractController {
      * @param Book $book
      */
     public function showContributions(Book $book) {
-        return array(
+        return [
             'book' => $book,
-        );
+        ];
     }
 
     /**
@@ -243,13 +254,13 @@ class BookController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The contribution has been updated.');
 
-            return $this->redirectToRoute('book_show_contributions', array('id' => $contribution->getPublicationId()));
+            return $this->redirectToRoute('book_show_contributions', ['id' => $contribution->getPublicationId()]);
         }
 
-        return array(
+        return [
             'contribution' => $contribution,
             'edit_form' => $editForm->CreateView(),
-        );
+        ];
     }
 
     /**
@@ -268,6 +279,6 @@ class BookController extends AbstractController {
         $em->flush();
         $this->addFlash('success', 'The contribution was deleted.');
 
-        return $this->redirectToRoute('book_show_contributions', array('id' => $contribution->getPublicationId()));
+        return $this->redirectToRoute('book_show_contributions', ['id' => $contribution->getPublicationId()]);
     }
 }

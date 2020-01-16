@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Compilation;
@@ -7,7 +15,10 @@ use App\Entity\Contribution;
 use App\Entity\Publication;
 use App\Form\CompilationType;
 use App\Form\ContributionType;
+use App\Repository\CompilationRepository;
 use App\Repository\PublicationRepository;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +31,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/compilation")
  */
-class CompilationController extends AbstractController {
+class CompilationController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Compilation entities.
      *
@@ -31,23 +44,23 @@ class CompilationController extends AbstractController {
      * @param Request $request
      * @param PublicationRepository $repo
      */
-    public function indexAction(Request $request, PublicationRepository $repo) {
+    public function indexAction(Request $request, CompilationRepository $repo) {
         $em = $this->getDoctrine()->getManager();
         $pageSize = $this->getParameter('page_size');
 
         if ($request->query->has('alpha')) {
             $page = $repo->letterPage($request->query->get('alpha'), Publication::COMPILATION, $pageSize);
 
-            return $this->redirectToRoute('compilation_index', array('page' => $page));
+            return $this->redirectToRoute('compilation_index', ['page' => $page]);
         }
 
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Compilation::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $compilations = $paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
 
-        $letterIndex = array();
+        $compilations = $this->paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
+
+        $letterIndex = [];
         foreach ($compilations as $compilation) {
             $title = $compilation->getSortableTitle();
             if ( ! $title) {
@@ -56,10 +69,10 @@ class CompilationController extends AbstractController {
             $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
         }
 
-        return array(
+        return [
             'compilations' => $compilations,
             'activeLetters' => array_keys($letterIndex),
-        );
+        ];
     }
 
     /**
@@ -87,13 +100,13 @@ class CompilationController extends AbstractController {
 
             $this->addFlash('success', 'The new collection was created.');
 
-            return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
+            return $this->redirectToRoute('compilation_show', ['id' => $compilation->getId()]);
         }
 
-        return array(
+        return [
             'compilation' => $compilation,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -109,11 +122,11 @@ class CompilationController extends AbstractController {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Compilation::class);
 
-        return array(
+        return [
             'compilation' => $compilation,
             'next' => $repo->next($compilation),
             'previous' => $repo->previous($compilation),
-        );
+        ];
     }
 
     /**
@@ -139,13 +152,13 @@ class CompilationController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The collection has been updated.');
 
-            return $this->redirectToRoute('compilation_show', array('id' => $compilation->getId()));
+            return $this->redirectToRoute('compilation_show', ['id' => $compilation->getId()]);
         }
 
-        return array(
+        return [
             'compilation' => $compilation,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**
@@ -192,13 +205,13 @@ class CompilationController extends AbstractController {
 
             $this->addFlash('success', 'The new contribution was created.');
 
-            return $this->redirectToRoute('compilation_show_contributions', array('id' => $compilation->getId()));
+            return $this->redirectToRoute('compilation_show_contributions', ['id' => $compilation->getId()]);
         }
 
-        return array(
+        return [
             'compilation' => $compilation,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -212,9 +225,9 @@ class CompilationController extends AbstractController {
      * @param Compilation $compilation
      */
     public function showContributions(Compilation $compilation) {
-        return array(
+        return [
             'compilation' => $compilation,
-        );
+        ];
     }
 
     /**
@@ -237,13 +250,13 @@ class CompilationController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The contribution has been updated.');
 
-            return $this->redirectToRoute('compilation_show_contributions', array('id' => $contribution->getPublicationId()));
+            return $this->redirectToRoute('compilation_show_contributions', ['id' => $contribution->getPublicationId()]);
         }
 
-        return array(
+        return [
             'contribution' => $contribution,
             'edit_form' => $editForm->CreateView(),
-        );
+        ];
     }
 
     /**
@@ -262,6 +275,6 @@ class CompilationController extends AbstractController {
         $em->flush();
         $this->addFlash('success', 'The contribution was deleted.');
 
-        return $this->redirectToRoute('compilation_show_contributions', array('id' => $contribution->getPublicationId()));
+        return $this->redirectToRoute('compilation_show_contributions', ['id' => $contribution->getPublicationId()]);
     }
 }

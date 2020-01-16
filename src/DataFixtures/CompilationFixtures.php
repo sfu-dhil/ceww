@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace App\DataFixtures;
@@ -21,7 +23,7 @@ use Doctrine\Persistence\ObjectManager;
  * @author mjoyce
  */
 class CompilationFixtures extends Fixture implements DependentFixtureInterface {
-    public function load(ObjectManager $manager) {
+    public function load(ObjectManager $manager) : void {
         $compilation = new Compilation();
         $compilation->setTitle('A Compilation Title');
         $compilation->setSortableTitle('compilation title, a');
@@ -49,12 +51,12 @@ class CompilationFixtures extends Fixture implements DependentFixtureInterface {
     }
 
     public function getDependencies() {
-        return array(
+        return [
             PlaceFixtures::class,
             PersonFixtures::class,
             GenreFixtures::class,
             RoleFixtures::class,
             PublisherFixtures::class,
-        );
+        ];
     }
 }

@@ -1,10 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Genre;
 use App\Form\GenreType;
 use App\Repository\GenreRepository;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +28,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/genre")
  */
-class GenreController extends AbstractController {
+class GenreController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Genre entities.
      *
@@ -33,12 +45,12 @@ class GenreController extends AbstractController {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Genre::class, 'e')->orderBy('e.label', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $genres = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
-        return array(
+        $genres = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+
+        return [
             'genres' => $genres,
-        );
+        ];
     }
 
     /**
@@ -51,14 +63,14 @@ class GenreController extends AbstractController {
     public function typeahead(Request $request, GenreRepository $repo) {
         $q = $request->query->get('q');
         if ( ! $q) {
-            return new JsonResponse(array());
+            return new JsonResponse([]);
         }
-        $data = array();
+        $data = [];
         foreach ($repo->typeaheadQuery($q) as $result) {
-            $data[] = array(
+            $data[] = [
                 'id' => $result->getId(),
                 'text' => $result->getName(),
-            );
+            ];
         }
 
         return new JsonResponse($data);
@@ -86,13 +98,13 @@ class GenreController extends AbstractController {
 
             $this->addFlash('success', 'The new genre was created.');
 
-            return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
+            return $this->redirectToRoute('genre_show', ['id' => $genre->getId()]);
         }
 
-        return array(
+        return [
             'genre' => $genre,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -105,9 +117,9 @@ class GenreController extends AbstractController {
      * @param Genre $genre
      */
     public function showAction(Genre $genre) {
-        return array(
+        return [
             'genre' => $genre,
-        );
+        ];
     }
 
     /**
@@ -130,13 +142,13 @@ class GenreController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The genre has been updated.');
 
-            return $this->redirectToRoute('genre_show', array('id' => $genre->getId()));
+            return $this->redirectToRoute('genre_show', ['id' => $genre->getId()]);
         }
 
-        return array(
+        return [
             'genre' => $genre,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**

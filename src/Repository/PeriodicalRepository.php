@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Repository;
 
 use App\Entity\Periodical;
@@ -26,7 +34,7 @@ class PeriodicalRepository extends PublicationRepository {
         try {
             return $qb->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            throw new Exception("Duplicate publication detected:{$e->getMessage()} - " . implode(':', array('periodical', $title, $placeName)));
+            throw new Exception("Duplicate publication detected:{$e->getMessage()} - " . implode(':', ['periodical', $title, $placeName]));
         }
     }
 }

@@ -5,9 +5,10 @@ namespace App\Tests\Entity;
 use App\DataFixtures\AliasFixtures;
 use App\Entity\Alias;
 use App\Entity\Person;
-use Nines\UtilBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\ServiceBaseCase;
+use Nines\UtilBundle\Tests\BaseCase;
 
-class AliasTest extends BaseTestCase {
+class AliasTest extends BaseCase {
     protected function fixtures() : array {
         return array(
             AliasFixtures::class,

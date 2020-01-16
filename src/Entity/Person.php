@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,9 +30,9 @@ class Person extends AbstractEntity {
         getContributions as private traitContributions;
     }
 
-    const MALE = 'm';
+    public const MALE = 'm';
 
-    const FEMALE = 'f';
+    public const FEMALE = 'f';
 
     /**
      * @var string
@@ -122,7 +130,7 @@ class Person extends AbstractEntity {
         $this->canadian = true;
         $this->residences = new ArrayCollection();
         $this->aliases = new ArrayCollection();
-        $this->urlLinks = array();
+        $this->urlLinks = [];
     }
 
     public function __toString() {
@@ -343,7 +351,7 @@ class Person extends AbstractEntity {
      *
      * @param Place $residence
      */
-    public function removeResidence(Place $residence) {
+    public function removeResidence(Place $residence) : void {
         $this->residences->removeElement($residence);
     }
 
@@ -376,7 +384,7 @@ class Person extends AbstractEntity {
      *
      * @param Alias $alias
      */
-    public function removeAlias(Alias $alias) {
+    public function removeAlias(Alias $alias) : void {
         $this->aliases->removeElement($alias);
     }
 
@@ -408,7 +416,7 @@ class Person extends AbstractEntity {
      * @return string
      */
     public function addUrlLink($urlLink) {
-        if ( ! in_array($urlLink, $this->urlLinks)) {
+        if ( ! in_array($urlLink, $this->urlLinks, true)) {
             $this->urlLinks[] = $urlLink;
         }
 
@@ -421,7 +429,7 @@ class Person extends AbstractEntity {
      * @param string $urlLink
      */
     public function removeUrlLink($urlLink) {
-        $index = array_search($urlLink, $this->urlLinks);
+        $index = array_search($urlLink, $this->urlLinks, true);
         if (false !== $index) {
             unset($this->urlLinks[$index]);
         }

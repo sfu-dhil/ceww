@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Person;
@@ -7,7 +15,8 @@ use App\Form\PersonType;
 use App\Repository\AliasRepository;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,13 +24,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Person controller.
  *
  * @Route("/person")
  */
-class PersonController extends AbstractController {
+class PersonController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Person entities.
      *
@@ -41,12 +53,12 @@ class PersonController extends AbstractController {
         }
         $qb->orderBy('e.sortableName');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $people = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
-        return array(
+        $people = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+
+        return [
             'people' => $people,
-        );
+        ];
     }
 
     /**
@@ -59,20 +71,20 @@ class PersonController extends AbstractController {
     public function pageInfoAction(Request $request, PersonRepository $repo) {
         $q = $request->query->get('q');
         if ( ! $q) {
-            return new JsonResponse(array());
+            return new JsonResponse([]);
         }
         $people = $repo->pageInfoQuery($q, $this->getParameter('page_size')); // should be first person on page, last person on page.
-        $data = array(
-            'first' => ($people['first'] ? array(
+        $data = [
+            'first' => ($people['first'] ? [
                 'name' => $people['first']->getFullname(),
                 'id' => $people['first']->getId(),
-            ) : null),
-            'last' => ($people['last'] ? array(
+            ] : null),
+            'last' => ($people['last'] ? [
                 'name' => $people['last']->getFullname(),
                 'id' => $people['last']->getId(),
-            ) : null),
+            ] : null),
             'pages' => ceil($people['total'] / $this->getParameter('page_size')),
-        );
+        ];
 
         return new JsonResponse($data);
     }
@@ -86,20 +98,20 @@ class PersonController extends AbstractController {
     public function typeaheadAction(Request $request) {
         $q = $request->query->get('q');
         if ( ! $q) {
-            return new JsonResponse(array());
+            return new JsonResponse([]);
         }
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('AppBundle:Person');
-        $data = array();
+        $data = [];
         foreach ($repo->typeaheadQuery($q) as $result) {
             $name = $result->getFullname();
             if (count($result->getAliases())) {
                 $name .= ' aka ' . $result->getAliases()->first();
             }
-            $data[] = array(
+            $data[] = [
                 'id' => $result->getId(),
                 'text' => $name,
-            );
+            ];
         }
 
         return new JsonResponse($data);
@@ -123,20 +135,20 @@ class PersonController extends AbstractController {
         if ($q) {
             $personQuery = $personRepo->searchQuery($q);
             $aliasQuery = $aliasRepo->searchQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $people = $paginator->paginate($personQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
-            $aliases = $paginator->paginate($aliasQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+
+            $people = $this->paginator->paginate($personQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+            $aliases = $this->paginator->paginate($aliasQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         } else {
-            $people = array();
-            $aliases = array();
+            $people = [];
+            $aliases = [];
         }
 
-        return array(
+        return [
             'people' => $people,
             'aliases' => $aliases,
             'q' => $q,
             'page' => $request->query->getInt('page', 1),
-        );
+        ];
     }
 
     /**
@@ -161,13 +173,13 @@ class PersonController extends AbstractController {
 
             $this->addFlash('success', 'The new person was created.');
 
-            return $this->redirectToRoute('person_show', array('id' => $person->getId()));
+            return $this->redirectToRoute('person_show', ['id' => $person->getId()]);
         }
 
-        return array(
+        return [
             'person' => $person,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -196,16 +208,16 @@ class PersonController extends AbstractController {
      * @param PublisherRepository $publisherRepo
      */
     public function showAction(Person $person, PersonRepository $repo, PublisherRepository $publisherRepo) {
-        if ( ! $this->isGranted('ROLE_USER') && Person::FEMALE != $person->getGender()) {
+        if ( ! $this->isGranted('ROLE_USER') && Person::FEMALE !== $person->getGender()) {
             throw new NotFoundHttpException('Cannot find that person.');
         }
 
-        return array(
+        return [
             'person' => $person,
             'next' => $repo->next($person),
             'previous' => $repo->previous($person),
             'publishers' => $publisherRepo->byPerson($person),
-        );
+        ];
     }
 
     /**
@@ -229,13 +241,13 @@ class PersonController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The person has been updated.');
 
-            return $this->redirectToRoute('person_show', array('id' => $person->getId()));
+            return $this->redirectToRoute('person_show', ['id' => $person->getId()]);
         }
 
-        return array(
+        return [
             'person' => $person,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**

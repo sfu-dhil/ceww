@@ -1,33 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Publisher;
 use App\Form\PublisherType;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Publisher controller.
  *
  * @Route("/publisher")
  */
-class PublisherController extends AbstractController {
+class PublisherController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Publisher entities.
      *
      * @param Request $request
-     *                         Dependency injected HTTP request object.
      *
      * @return array
-     *               Array data for the template processor.
      *
      * @Route("/", name="publisher_index", methods={"GET"})
      *
@@ -38,19 +48,18 @@ class PublisherController extends AbstractController {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Publisher::class, 'e')->orderBy('e.name', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $publishers = $paginator->paginate($query, $request->query->getint('page', 1), 25);
 
-        return array(
+        $publishers = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+
+        return [
             'publishers' => $publishers,
-        );
+        ];
     }
 
     /**
      * Typeahead API endpoint for Publisher entities.
      *
      * @param Request $request
-     *                         Dependency injected HTTP request object.
      * @param PublisherRepository $repo
      *
      * @Route("/typeahead", name="publisher_typeahead", methods={"GET"})
@@ -60,14 +69,14 @@ class PublisherController extends AbstractController {
     public function typeahead(Request $request, PublisherRepository $repo) {
         $q = $request->query->get('q');
         if ( ! $q) {
-            return new JsonResponse(array());
+            return new JsonResponse([]);
         }
-        $data = array();
+        $data = [];
         foreach ($repo->typeaheadQuery($q) as $result) {
-            $data[] = array(
+            $data[] = [
                 'id' => $result->getId(),
                 'text' => (string) $result,
-            );
+            ];
         }
 
         return new JsonResponse($data);
@@ -77,7 +86,6 @@ class PublisherController extends AbstractController {
      * Search for Publisher entities.
      *
      * @param Request $request
-     *                         Dependency injected HTTP request object.
      *
      * @Route("/search", name="publisher_search", methods={"GET"})
      *
@@ -89,28 +97,26 @@ class PublisherController extends AbstractController {
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $publishers = $paginator->paginate($query, $request->query->getInt('page', 1), 25);
+
+            $publishers = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
         } else {
-            $publishers = array();
+            $publishers = [];
         }
 
-        return array(
+        return [
             'publishers' => $publishers,
             'q' => $q,
-        );
+        ];
     }
 
     /**
      * Creates a new Publisher entity.
      *
      * @param Request $request
-     *                         Dependency injected HTTP request object.
      *
      * @return array|RedirectResponse
-     *                                Array data for the template processor or a redirect to the Publisher.
      *
-     * @Security("has_role('ROLE_CONTENT_EDITOR')")
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Route("/new", name="publisher_new", methods={"GET","POST"})
      *
      * @Template()
@@ -127,25 +133,23 @@ class PublisherController extends AbstractController {
 
             $this->addFlash('success', 'The new publisher was created.');
 
-            return $this->redirectToRoute('publisher_show', array('id' => $publisher->getId()));
+            return $this->redirectToRoute('publisher_show', ['id' => $publisher->getId()]);
         }
 
-        return array(
+        return [
             'publisher' => $publisher,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
      * Creates a new Publisher entity in a popup.
      *
      * @param Request $request
-     *                         Dependency injected HTTP request object.
      *
      * @return array|RedirectResponse
-     *                                Array data for the template processor or a redirect to the Artwork.
      *
-     * @Security("has_role('ROLE_CONTENT_EDITOR')")
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Route("/new_popup", name="publisher_new_popup", methods={"GET","POST"})
      *
      * @Template()
@@ -158,35 +162,30 @@ class PublisherController extends AbstractController {
      * Finds and displays a Publisher entity.
      *
      * @param Publisher $publisher
-     *                             The Publisher to show.
      * @param PersonRepository $repo
      *
      * @return array
-     *               Array data for the template processor.
      *
      * @Route("/{id}", name="publisher_show", methods={"GET"})
      *
      * @Template()
      */
     public function showAction(Publisher $publisher, PersonRepository $repo) {
-        return array(
+        return [
             'publisher' => $publisher,
             'people' => $repo->byPublisher($publisher),
-        );
+        ];
     }
 
     /**
      * Displays a form to edit an existing Publisher entity.
      *
      * @param Request $request
-     *                         Dependency injected HTTP request object.
      * @param Publisher $publisher
-     *                             The Publisher to edit.
      *
      * @return array|RedirectResponse
-     *                                Array data for the template processor or a redirect to the Publisher.
      *
-     * @Security("has_role('ROLE_CONTENT_EDITOR')")
+     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Route("/{id}/edit", name="publisher_edit", methods={"GET","POST"})
      *
      * @Template()
@@ -200,27 +199,24 @@ class PublisherController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The publisher has been updated.');
 
-            return $this->redirectToRoute('publisher_show', array('id' => $publisher->getId()));
+            return $this->redirectToRoute('publisher_show', ['id' => $publisher->getId()]);
         }
 
-        return array(
+        return [
             'publisher' => $publisher,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**
      * Deletes a Publisher entity.
      *
-     * @param Request $request
-     *                         Dependency injected HTTP request object.
-     * @param Publisher $publisher
-     *                             The Publisher to delete.
+     * @param Request $request Dependency injected HTTP request object.
+     * @param Publisher $publisher The Publisher to delete.
      *
-     * @return array|RedirectResponse
-     *                                A redirect to the publisher_index.
+     * @return array|RedirectResponse A redirect to the publisher_index.
      *
-     * @Security("has_role('ROLE_CONTENT_ADMIN')")
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Route("/{id}/delete", name="publisher_delete", methods={"GET","POST"})
      */
     public function deleteAction(Request $request, Publisher $publisher) {

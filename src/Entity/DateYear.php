@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -80,7 +88,7 @@ class DateYear extends AbstractEntity {
     public function setValue($value) {
         $this->value = $value;
         $value = strtolower(preg_replace('/\s*/', '', (string) $value));
-        $matches = array();
+        $matches = [];
         if (false === strpos($value, '-')) {
             // not a range
             if (preg_match(YEAR_RE, $value, $matches)) {

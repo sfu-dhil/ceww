@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Repository;
 
 use App\Entity\DateYear;
@@ -21,14 +29,14 @@ class DateYearRepository extends ServiceEntityRepository {
 
     public function getEntity(DateYear $dateYear) {
         $personRepo = $this->_em->getRepository(Person::class);
-        if (($entity = $personRepo->findOneBy(array('birthDate' => $dateYear)))) {
+        if (($entity = $personRepo->findOneBy(['birthDate' => $dateYear]))) {
             return $entity;
         }
-        if (($entity = $personRepo->findOneBy(array('deathDate' => $dateYear)))) {
+        if (($entity = $personRepo->findOneBy(['deathDate' => $dateYear]))) {
             return $entity;
         }
         $publicationRepository = $this->_em->getRepository(Publication::class);
 
-        return $publicationRepository->findOneBy(array('dateYear' => $dateYear));
+        return $publicationRepository->findOneBy(['dateYear' => $dateYear]);
     }
 }

@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Form;
 
 use App\Entity\Person;
@@ -13,13 +21,13 @@ class ContributionType extends AbstractType {
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('role', null, array(
-            'attr' => array(
+    public function buildForm(FormBuilderInterface $builder, array $options) : void {
+        $builder->add('role', null, [
+            'attr' => [
                 'help_block' => 'Role person had in production of work',
-            ),
-        ));
-        $builder->add('person', Select2EntityType::class, array(
+            ],
+        ]);
+        $builder->add('person', Select2EntityType::class, [
             'multiple' => false,
             'required' => true,
             'remote_route' => 'person_typeahead',
@@ -30,18 +38,18 @@ class ContributionType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => array(
+            'attr' => [
                 'help_block' => 'Person\'s full name',
-            ),
-        ));
+            ],
+        ]);
     }
 
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults(array(
+    public function configureOptions(OptionsResolver $resolver) : void {
+        $resolver->setDefaults([
             'data_class' => 'App\Entity\Contribution',
-        ));
+        ]);
     }
 }

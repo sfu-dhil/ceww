@@ -5,9 +5,9 @@ namespace App\Tests\Controller;
 use App\DataFixtures\PublisherFixtures;
 use App\Entity\Publisher;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\ControllerBaseCase;
 
-class PublisherControllerTest extends BaseTestCase {
+class PublisherControllerTest extends ControllerBaseCase {
     protected function fixtures() : array {
         return array(
             UserFixtures::class,
@@ -20,9 +20,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group index
      */
     public function testAnonIndex() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/publisher/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->request('GET', '/publisher/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
 
@@ -31,9 +31,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group index
      */
     public function testUserIndex() {
-        $client = $this->makeClient(LoadUser::USER);
-        $crawler = $client->request('GET', '/publisher/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.user');
+        $crawler = $this->client->request('GET', '/publisher/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
 
@@ -42,9 +42,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group index
      */
     public function testAdminIndex() {
-        $client = $this->makeClient(LoadUser::ADMIN);
-        $crawler = $client->request('GET', '/publisher/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.admin');
+        $crawler = $this->client->request('GET', '/publisher/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('New')->count());
     }
 
@@ -53,9 +53,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group show
      */
     public function testAnonShow() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/publisher/1');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->request('GET', '/publisher/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
@@ -65,9 +65,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group show
      */
     public function testUserShow() {
-        $client = $this->makeClient(LoadUser::USER);
-        $crawler = $client->request('GET', '/publisher/1');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.user');
+        $crawler = $this->client->request('GET', '/publisher/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
@@ -77,9 +77,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group show
      */
     public function testAdminShow() {
-        $client = $this->makeClient(LoadUser::ADMIN);
-        $crawler = $client->request('GET', '/publisher/1');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.admin');
+        $crawler = $this->client->request('GET', '/publisher/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('Edit')->count());
         $this->assertEquals(1, $crawler->selectLink('Delete')->count());
     }
@@ -89,9 +89,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group typeahead
      */
     public function testAnonTypeahead() {
-        $client = $this->makeClient();
-        $client->request('GET', '/publisher/typeahead?q=cueue');
-        $response = $client->getResponse();
+
+        $this->client->request('GET', '/publisher/typeahead?q=cueue');
+        $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('content-type'));
         $json = json_decode($response->getContent());
@@ -103,9 +103,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group typeahead
      */
     public function testUserTypeahead() {
-        $client = $this->makeClient();
-        $client->request('GET', '/publisher/typeahead?q=cueue');
-        $response = $client->getResponse();
+
+        $this->client->request('GET', '/publisher/typeahead?q=cueue');
+        $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('content-type'));
         $json = json_decode($response->getContent());
@@ -117,9 +117,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group typeahead
      */
     public function testAdminTypeahead() {
-        $client = $this->makeClient();
-        $client->request('GET', '/publisher/typeahead?q=cueue');
-        $response = $client->getResponse();
+
+        $this->client->request('GET', '/publisher/typeahead?q=cueue');
+        $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('content-type'));
         $json = json_decode($response->getContent());
@@ -131,10 +131,10 @@ class PublisherControllerTest extends BaseTestCase {
      * @group edit
      */
     public function testAnonEdit() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/publisher/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/publisher/1/edit');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     /**
@@ -142,9 +142,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group edit
      */
     public function testUserEdit() {
-        $client = $this->makeClient(LoadUser::USER);
-        $crawler = $client->request('GET', '/publisher/1/edit');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+$this->login('user.user');
+        $crawler = $this->client->request('GET', '/publisher/1/edit');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -152,18 +152,18 @@ class PublisherControllerTest extends BaseTestCase {
      * @group edit
      */
     public function testAdminEdit() {
-        $client = $this->makeClient(LoadUser::ADMIN);
-        $formCrawler = $client->request('GET', '/publisher/1/edit');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.admin');
+        $formCrawler = $this->client->request('GET', '/publisher/1/edit');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Update')->form(array(
             'publisher[name]' => 'chicanery',
         ));
 
-        $client->submit($form);
-        $this->assertTrue($client->getResponse()->isRedirect('/publisher/1'));
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->client->submit($form);
+        $this->assertTrue($this->client->getResponse()->isRedirect('/publisher/1'));
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("chicanery")')->count());
     }
 
@@ -172,10 +172,10 @@ class PublisherControllerTest extends BaseTestCase {
      * @group new
      */
     public function testAnonNew() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/publisher/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/publisher/new');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     /**
@@ -183,10 +183,10 @@ class PublisherControllerTest extends BaseTestCase {
      * @group new
      */
     public function testAnonNewPopup() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/publisher/new_popup');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/publisher/new_popup');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     /**
@@ -194,9 +194,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group new
      */
     public function testUserNew() {
-        $client = $this->makeClient(LoadUser::USER);
-        $crawler = $client->request('GET', '/publisher/new');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+$this->login('user.user');
+        $crawler = $this->client->request('GET', '/publisher/new');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -204,9 +204,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group new
      */
     public function testUserNewPopup() {
-        $client = $this->makeClient(LoadUser::USER);
-        $crawler = $client->request('GET', '/publisher/new_popup');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+$this->login('user.user');
+        $crawler = $this->client->request('GET', '/publisher/new_popup');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -214,18 +214,18 @@ class PublisherControllerTest extends BaseTestCase {
      * @group new
      */
     public function testAdminNew() {
-        $client = $this->makeClient(LoadUser::ADMIN);
-        $formCrawler = $client->request('GET', '/publisher/new');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.admin');
+        $formCrawler = $this->client->request('GET', '/publisher/new');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Create')->form(array(
             'publisher[name]' => 'chicanery',
         ));
 
-        $client->submit($form);
-        $this->assertTrue($client->getResponse()->isRedirect());
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->client->submit($form);
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("chicanery")')->count());
     }
 
@@ -234,18 +234,18 @@ class PublisherControllerTest extends BaseTestCase {
      * @group new
      */
     public function testAdminNewPopup() {
-        $client = $this->makeClient(LoadUser::ADMIN);
-        $formCrawler = $client->request('GET', '/publisher/new_popup');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.admin');
+        $formCrawler = $this->client->request('GET', '/publisher/new_popup');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Create')->form(array(
             'publisher[name]' => 'chicanery',
         ));
 
-        $client->submit($form);
-        $this->assertTrue($client->getResponse()->isRedirect());
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->client->submit($form);
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("chicanery")')->count());
     }
 
@@ -254,10 +254,10 @@ class PublisherControllerTest extends BaseTestCase {
      * @group delete
      */
     public function testAnonDelete() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/publisher/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/publisher/1/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     /**
@@ -265,9 +265,9 @@ class PublisherControllerTest extends BaseTestCase {
      * @group delete
      */
     public function testUserDelete() {
-        $client = $this->makeClient(LoadUser::USER);
-        $crawler = $client->request('GET', '/publisher/1/delete');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+$this->login('user.user');
+        $crawler = $this->client->request('GET', '/publisher/1/delete');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -276,12 +276,12 @@ class PublisherControllerTest extends BaseTestCase {
      */
     public function testAdminDelete() {
         $preCount = count($this->entityManager->getRepository(Publisher::class)->findAll());
-        $client = $this->makeClient(LoadUser::ADMIN);
-        $crawler = $client->request('GET', '/publisher/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect());
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+$this->login('user.admin');
+        $crawler = $this->client->request('GET', '/publisher/1/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->entityManager->clear();
         $postCount = count($this->entityManager->getRepository(Publisher::class)->findAll());

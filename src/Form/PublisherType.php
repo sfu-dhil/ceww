@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Form;
 
 use App\Entity\Place;
@@ -20,15 +28,15 @@ class PublisherType extends AbstractType {
      * @param array $options
      *                       Options for the form, as defined in configureOptions.
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('name', null, array(
+    public function buildForm(FormBuilderInterface $builder, array $options) : void {
+        $builder->add('name', null, [
             'label' => 'Name',
             'required' => true,
-            'attr' => array(
+            'attr' => [
                 'help_block' => '',
-            ),
-        ));
-        $builder->add('places', Select2EntityType::class, array(
+            ],
+        ]);
+        $builder->add('places', Select2EntityType::class, [
             'multiple' => true,
             'remote_route' => 'place_typeahead',
             'class' => Place::class,
@@ -38,10 +46,10 @@ class PublisherType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => array(
+            'attr' => [
                 'help_block' => 'Geotagged location for place',
-            ),
-        ));
+            ],
+        ]);
     }
 
     /**
@@ -53,9 +61,9 @@ class PublisherType extends AbstractType {
      * @param OptionsResolver $resolver
      *                                  Resolver of options.
      */
-    public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults(array(
+    public function configureOptions(OptionsResolver $resolver) : void {
+        $resolver->setDefaults([
             'data_class' => 'App\Entity\Publisher',
-        ));
+        ]);
     }
 }

@@ -1,25 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
 use App\Services\Merger;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Place controller.
  *
  * @Route("/place")
  */
-class PlaceController extends AbstractController {
+class PlaceController extends AbstractController implements PaginatorAwareInterface {
+    use PaginatorTrait;
+
     /**
      * Lists all Place entities.
      *
@@ -34,12 +46,12 @@ class PlaceController extends AbstractController {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Place::class, 'e')->orderBy('e.sortableName', 'ASC');
         $query = $qb->getQuery();
-        $paginator = $this->get('knp_paginator');
-        $places = $paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
 
-        return array(
+        $places = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+
+        return [
             'places' => $places,
-        );
+        ];
     }
 
     /**
@@ -52,14 +64,14 @@ class PlaceController extends AbstractController {
     public function typeahead(Request $request, PlaceRepository $repo) {
         $q = $request->query->get('q');
         if ( ! $q) {
-            return new JsonResponse(array());
+            return new JsonResponse([]);
         }
-        $data = array();
+        $data = [];
         foreach ($repo->typeaheadQuery($q) as $result) {
-            $data[] = array(
+            $data[] = [
                 'id' => $result->getId(),
                 'text' => $result->getName(),
-            );
+            ];
         }
 
         return new JsonResponse($data);
@@ -77,16 +89,16 @@ class PlaceController extends AbstractController {
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);
-            $paginator = $this->get('knp_paginator');
-            $places = $paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+
+            $places = $this->paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         } else {
-            $places = array();
+            $places = [];
         }
 
-        return array(
+        return [
             'places' => $places,
             'q' => $q,
-        );
+        ];
     }
 
     /**
@@ -111,13 +123,13 @@ class PlaceController extends AbstractController {
 
             $this->addFlash('success', 'The new place was created.');
 
-            return $this->redirectToRoute('place_show', array('id' => $place->getId()));
+            return $this->redirectToRoute('place_show', ['id' => $place->getId()]);
         }
 
-        return array(
+        return [
             'place' => $place,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -147,11 +159,11 @@ class PlaceController extends AbstractController {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Place::class);
 
-        return array(
+        return [
             'place' => $place,
             'next' => $repo->next($place),
             'previous' => $repo->previous($place),
-        );
+        ];
     }
 
     /**
@@ -174,13 +186,13 @@ class PlaceController extends AbstractController {
             $em->flush();
             $this->addFlash('success', 'The place has been updated.');
 
-            return $this->redirectToRoute('place_show', array('id' => $place->getId()));
+            return $this->redirectToRoute('place_show', ['id' => $place->getId()]);
         }
 
-        return array(
+        return [
             'place' => $place,
             'edit_form' => $editForm->createView(),
-        );
+        ];
     }
 
     /**
@@ -198,12 +210,12 @@ class PlaceController extends AbstractController {
      */
     public function mergeAction(Request $request, Place $place, Merger $merger, PlaceRepository $repo) {
         if ('POST' === $request->getMethod()) {
-            $places = $repo->findBy(array('id' => $request->request->get('places')));
+            $places = $repo->findBy(['id' => $request->request->get('places')]);
             $count = count($places);
             $merger->places($place, $places);
             $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
 
-            return $this->redirect($this->generateUrl('place_show', array('id' => $place->getId())));
+            return $this->redirect($this->generateUrl('place_show', ['id' => $place->getId()]));
         }
 
         $q = $request->query->get('q');
@@ -211,14 +223,14 @@ class PlaceController extends AbstractController {
             $query = $repo->searchQuery($q);
             $places = $query->execute();
         } else {
-            $places = array();
+            $places = [];
         }
 
-        return array(
+        return [
             'place' => $place,
             'places' => $places,
             'q' => $q,
-        );
+        ];
     }
 
     /**

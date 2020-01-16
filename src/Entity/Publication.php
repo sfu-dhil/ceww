@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -29,9 +37,9 @@ abstract class Publication extends AbstractEntity {
         HasContributions::__construct as private trait_constructor;
     }
 
-    const BOOK = 'book';
-    const COMPILATION = 'compilation';
-    const PERIODICAL = 'periodical';
+    public const BOOK = 'book';
+    public const COMPILATION = 'compilation';
+    public const PERIODICAL = 'periodical';
 
     /**
      * @var string
@@ -155,7 +163,10 @@ abstract class Publication extends AbstractEntity {
      * @return string
      */
     public function getSortableTitle() {
-        return $this->sortableTitle;
+        if( $this->sortableTitle) {
+            return $this->sortableTitle;
+        }
+        return $this->title;
     }
 
     /**
@@ -313,7 +324,7 @@ abstract class Publication extends AbstractEntity {
      * @param Collection|Genre[] $genres
      */
 //    public function setGenres(Collection $genres) {
-    public function setGenres($genres) {
+    public function setGenres($genres) : void {
         if (is_array($genres)) {
             $this->genres = new ArrayCollection($genres);
         } else {
@@ -341,7 +352,7 @@ abstract class Publication extends AbstractEntity {
      *
      * @param Genre $genre
      */
-    public function removeGenre(Genre $genre) {
+    public function removeGenre(Genre $genre) : void {
         $this->genres->removeElement($genre);
     }
 
@@ -395,7 +406,7 @@ abstract class Publication extends AbstractEntity {
      *
      * @param Publisher $publisher
      */
-    public function removePublisher(Publisher $publisher) {
+    public function removePublisher(Publisher $publisher) : void {
         $this->publishers->removeElement($publisher);
     }
 
@@ -411,7 +422,7 @@ abstract class Publication extends AbstractEntity {
     /**
      * @param array|Collection $publishers
      */
-    public function setPublishers($publishers) {
+    public function setPublishers($publishers) : void {
         if (is_array($publishers)) {
             $this->publishers = new ArrayCollection($publishers);
         } else {

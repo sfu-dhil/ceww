@@ -5,9 +5,10 @@ namespace App\Tests\Controller;
 use App\DataFixtures\CompilationFixtures;
 use App\Entity\Compilation;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\ControllerBaseCase;
 
-class CompilationControllerTest extends BaseTestCase {
+class CompilationControllerTest extends ControllerBaseCase {
+
     protected function fixtures() : array {
         return array(
             UserFixtures::class,
@@ -16,216 +17,182 @@ class CompilationControllerTest extends BaseTestCase {
     }
 
     public function testAnonIndex() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->request('GET', '/compilation/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
 
     public function testUserIndex() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());
     }
 
     public function testAdminIndex() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $crawler = $client->request('GET', '/compilation/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.admin');
+        $crawler = $this->client->request('GET', '/compilation/');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('New')->count());
     }
 
     public function testAnonShow() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/1');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->request('GET', '/compilation/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
 
     public function testUserShow() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('Edit')->count());
         $this->assertEquals(0, $crawler->selectLink('Delete')->count());
     }
 
     public function testAdminShow() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.admin');
+        $crawler = $this->client->request('GET', '/compilation/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('Edit')->count());
         $this->assertEquals(1, $crawler->selectLink('Delete')->count());
     }
 
     public function testAnonEdit() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/compilation/1/edit');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     public function testUserEdit() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1/edit');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/1/edit');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminEdit() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $formCrawler = $client->request('GET', '/compilation/1/edit');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.admin');
+        $formCrawler = $this->client->request('GET', '/compilation/1/edit');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Update')->form(array(
-            'compilation[title]' => 'The Compilation of Cheese.',
+            'compilation[title]'         => 'The Compilation of Cheese.',
             'compilation[sortableTitle]' => 'Compilation of Cheese, The',
-            'compilation[description]' => 'It is a book',
-            'compilation[notes]' => 'A notes about a book',
-            'compilation[dateYear]' => '1934',
-            'compilation[location]' => 1,
-            'compilation[genres]' => 1,
-        ));
+            'compilation[description]'   => 'It is a book',
+            'compilation[notes]'         => 'A notes about a book',
+            'compilation[dateYear]'      => '1934',
+            'compilation[location]'      => 1,
+            'compilation[genres]'        => 1,
+        ))
+        ;
 
         $values = $form->getPhpValues();
 
         $values['compilation']['links'][0] = 'http://example.com/path/to/link';
         $values['compilation']['links'][1] = 'http://example.com/different/url';
 
-        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
-        $this->assertTrue($client->getResponse()->isRedirect('/compilation/1'));
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/compilation/1'));
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
     }
 
     public function testAnonNew() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/compilation/new');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     public function testUserNew() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/new');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/new');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $formCrawler = $client->request('GET', '/compilation/new');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.admin');
+        $formCrawler = $this->client->request('GET', '/compilation/new');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Create')->form(array(
-            'compilation[title]' => 'The Compilation of Cheese.',
+            'compilation[title]'         => 'The Compilation of Cheese.',
             'compilation[sortableTitle]' => 'Compilation of Cheese, The',
-            'compilation[description]' => 'It is a book',
-            'compilation[notes]' => 'A notes about a book',
-            'compilation[dateYear]' => '1934',
-        ));
+            'compilation[description]'   => 'It is a book',
+            'compilation[notes]'         => 'A notes about a book',
+            'compilation[dateYear]'      => '1934',
+        ))
+        ;
 
         $values = $form->getPhpValues();
 
         $values['compilation']['links'][0] = 'http://example.com/path/to/link';
         $values['compilation']['links'][1] = 'http://example.com/different/url';
 
-        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
-        $this->assertTrue($client->getResponse()->isRedirect());
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
         $this->assertEquals(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
     }
 
     public function testAnonDelete() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/compilation/1/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     public function testUserDelete() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1/delete');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/1/delete');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() {
-        self::bootKernel();
-        $em = static::$kernel->getContainer()->get('doctrine')->getManager();
-        $preCount = count($em->getRepository(Compilation::class)->findAll());
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect());
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $em->clear();
-        $postCount = count($em->getRepository(Compilation::class)->findAll());
+
+        $preCount = count($this->entityManager->getRepository(Compilation::class)->findAll());
+        $this->login('user.admin');
+        $crawler = $this->client->request('GET', '/compilation/1/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->entityManager->clear();
+        $postCount = count($this->entityManager->getRepository(Compilation::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);
     }
 
     public function testAnonNewContribution() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/1/contributions/new');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/compilation/1/contributions/new');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     public function testUserNewContribution() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1/contributions/new');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/1/contributions/new');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminNewContribution() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $formCrawler = $client->request('GET', '/compilation/1/contributions/new');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.admin');
+        $formCrawler = $this->client->request('GET', '/compilation/1/contributions/new');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Create')->form(array());
 
@@ -233,63 +200,51 @@ class CompilationControllerTest extends BaseTestCase {
         $values['contribution']['role'] = $this->getReference('role.2')->getId();
         $values['contribution']['person'] = $this->getReference('person.2')->getId();
 
-        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
-        $this->assertTrue($client->getResponse()->isRedirect('/compilation/1/contributions'));
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/compilation/1/contributions'));
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
     }
 
     public function testAnonShowContributions() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/1/contributions');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/compilation/1/contributions');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     public function testUserShowContributions() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1/contributions');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/1/contributions');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminShowContributions() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $crawler = $client->request('GET', '/compilation/1/contributions');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.admin');
+        $crawler = $this->client->request('GET', '/compilation/1/contributions');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $crawler->selectLink('Contribution')->count());
     }
 
     public function testAnonEditContribution() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/contributions/1/edit');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/compilation/contributions/1/edit');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     public function testUserEditContribution() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/contributions/1/edit');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/contributions/1/edit');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminEditContribution() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $formCrawler = $client->request('GET', '/compilation/contributions/1/edit');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->login('user.admin');
+        $formCrawler = $this->client->request('GET', '/compilation/contributions/1/edit');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Update')->form(array());
 
@@ -297,41 +252,35 @@ class CompilationControllerTest extends BaseTestCase {
         $values['contribution']['role'] = $this->getReference('role.2')->getId();
         $values['contribution']['person'] = $this->getReference('person.2')->getId();
 
-        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
-        $this->assertTrue($client->getResponse()->isRedirect('/compilation/1/contributions'));
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/compilation/1/contributions'));
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
     }
 
     public function testAnonDeleteContribution() {
-        $client = $this->makeClient();
-        $crawler = $client->request('GET', '/compilation/contributions/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect('http://localhost/login'));
+
+        $crawler = $this->client->request('GET', '/compilation/contributions/1/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
     }
 
     public function testUserDeleteContribution() {
-        $client = $this->makeClient(array(
-            'username' => 'user@example.com',
-            'password' => 'secret',
-        ));
-        $crawler = $client->request('GET', '/compilation/contributions/1/delete');
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->login('user.user');
+        $crawler = $this->client->request('GET', '/compilation/contributions/1/delete');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteContribution() {
-        $client = $this->makeClient(array(
-            'username' => 'admin@example.com',
-            'password' => 'supersecret',
-        ));
-        $crawler = $client->request('GET', '/compilation/contributions/1/delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertTrue($client->getResponse()->isRedirect());
+        $this->login('user.admin');
+        $crawler = $this->client->request('GET', '/compilation/contributions/1/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $this->assertTrue($this->client->getResponse()->isRedirect());
 
-        $responseCrawler = $client->followRedirect();
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $responseCrawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->assertEquals(0, $responseCrawler->filter('td:contains("Bobby Janesdotter")')->count());
     }

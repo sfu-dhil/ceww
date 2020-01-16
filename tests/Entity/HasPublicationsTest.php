@@ -7,9 +7,9 @@ use App\DataFixtures\CompilationFixtures;
 use App\DataFixtures\PeriodicalFixtures;
 use App\Entity\HasPublications;
 use App\Entity\Publication;
-use Nines\UtilBundle\Tests\Util\BaseTestCase;
+use Nines\UtilBundle\Tests\BaseCase;
 
-class HasPublicationsTest extends BaseTestCase {
+class HasPublicationsTest extends BaseCase {
     protected function fixtures() : array {
         return array(
             BookFixtures::class,

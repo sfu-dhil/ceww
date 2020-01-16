@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -286,7 +294,7 @@ class Place extends AbstractEntity {
      *
      * @param Person $peopleBorn
      */
-    public function removePersonBorn(Person $peopleBorn) {
+    public function removePersonBorn(Person $peopleBorn) : void {
         $this->peopleBorn->removeElement($peopleBorn);
     }
 
@@ -336,7 +344,7 @@ class Place extends AbstractEntity {
      *
      * @param Person $peopleDied
      */
-    public function removePersonDied(Person $peopleDied) {
+    public function removePersonDied(Person $peopleDied) : void {
         $this->peopleDied->removeElement($peopleDied);
     }
 
@@ -386,7 +394,7 @@ class Place extends AbstractEntity {
      *
      * @param Person $resident
      */
-    public function removeResident(Person $resident) {
+    public function removeResident(Person $resident) : void {
         $this->residents->removeElement($resident);
     }
 
@@ -444,7 +452,7 @@ class Place extends AbstractEntity {
      *
      * @param Person $peopleBorn
      */
-    public function removePeopleBorn(Person $peopleBorn) {
+    public function removePeopleBorn(Person $peopleBorn) : void {
         $this->peopleBorn->removeElement($peopleBorn);
     }
 
@@ -466,7 +474,7 @@ class Place extends AbstractEntity {
      *
      * @param Person $peopleDied
      */
-    public function removePeopleDied(Person $peopleDied) {
+    public function removePeopleDied(Person $peopleDied) : void {
         $this->peopleDied->removeElement($peopleDied);
     }
 
@@ -510,7 +518,7 @@ class Place extends AbstractEntity {
      *
      * @param Publisher $publisher
      */
-    public function removePublisher(Publisher $publisher) {
+    public function removePublisher(Publisher $publisher) : void {
         $this->publishers->removeElement($publisher);
     }
 
