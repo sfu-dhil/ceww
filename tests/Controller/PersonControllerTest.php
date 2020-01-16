@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadPerson;
-use AppBundle\Entity\Person;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\PersonFixtures;
+use App\Entity\Person;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class PersonControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadPerson::class,
+            UserFixtures::class,
+            PersonFixtures::class,
         );
     }
 

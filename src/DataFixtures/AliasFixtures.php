@@ -6,18 +6,18 @@
  * and open the template in the editor.
  */
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures;
 
 use App\Entity\Alias;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Description of LoadGenres.
  *
  * @author mjoyce
  */
-class LoadAlias extends Fixture {
+class AliasFixtures extends Fixture {
     public function load(ObjectManager $manager) {
         $alias = new Alias();
         $alias->setDescription('An alias');

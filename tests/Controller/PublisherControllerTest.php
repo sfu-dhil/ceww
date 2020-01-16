@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadPublisher;
-use AppBundle\Entity\Publisher;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\PublisherFixtures;
+use App\Entity\Publisher;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class PublisherControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadPublisher::class,
+            UserFixtures::class,
+            PublisherFixtures::class,
         );
     }
 
@@ -275,7 +275,7 @@ class PublisherControllerTest extends BaseTestCase {
      * @group delete
      */
     public function testAdminDelete() {
-        $preCount = count($this->em->getRepository(Publisher::class)->findAll());
+        $preCount = count($this->entityManager->getRepository(Publisher::class)->findAll());
         $client = $this->makeClient(LoadUser::ADMIN);
         $crawler = $client->request('GET', '/publisher/1/delete');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
@@ -283,8 +283,8 @@ class PublisherControllerTest extends BaseTestCase {
         $responseCrawler = $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->em->clear();
-        $postCount = count($this->em->getRepository(Publisher::class)->findAll());
+        $this->entityManager->clear();
+        $postCount = count($this->entityManager->getRepository(Publisher::class)->findAll());
         $this->assertEquals($preCount - 1, $postCount);
     }
 }

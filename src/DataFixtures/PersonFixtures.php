@@ -6,20 +6,20 @@
  * and open the template in the editor.
  */
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures;
 
 use App\Entity\DateYear;
 use App\Entity\Person;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Description of LoadGenres.
  *
  * @author mjoyce
  */
-class LoadPerson extends Fixture implements DependentFixtureInterface {
+class PersonFixtures extends Fixture implements DependentFixtureInterface {
     public function load(ObjectManager $manager) {
         $female = new Person();
         $female->setFullName('Bobby Janesdotter');
@@ -57,8 +57,8 @@ class LoadPerson extends Fixture implements DependentFixtureInterface {
 
     public function getDependencies() {
         return array(
-            LoadAlias::class,
-            LoadPlace::class,
+            AliasFixtures::class,
+            PlaceFixtures::class,
         );
     }
 }

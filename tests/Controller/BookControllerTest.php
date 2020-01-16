@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadBook;
-use AppBundle\Entity\Book;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\BookFixtures;
+use App\Entity\Book;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class BookControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadBook::class,
+            UserFixtures::class,
+            BookFixtures::class,
         );
     }
 

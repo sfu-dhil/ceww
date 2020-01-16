@@ -13,6 +13,7 @@ use App\Services\Merger;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/periodical")
  */
-class PeriodicalController extends Controller {
+class PeriodicalController extends AbstractController {
     /**
      * Lists all Periodical entities.
      *

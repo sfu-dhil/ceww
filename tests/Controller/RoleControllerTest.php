@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadRole;
-use AppBundle\Entity\Role;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\RoleFixtures;
+use App\Entity\Role;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class RoleControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadRole::class,
+            UserFixtures::class,
+            RoleFixtures::class,
         );
     }
 

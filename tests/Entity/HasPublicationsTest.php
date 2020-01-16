@@ -1,20 +1,20 @@
 <?php
 
-namespace AppBundle\Tests\Entity;
+namespace App\Tests\Entity;
 
-use AppBundle\DataFixtures\ORM\LoadBook;
-use AppBundle\DataFixtures\ORM\LoadCompilation;
-use AppBundle\DataFixtures\ORM\LoadPeriodical;
-use AppBundle\Entity\HasPublications;
-use AppBundle\Entity\Publication;
+use App\DataFixtures\BookFixtures;
+use App\DataFixtures\CompilationFixtures;
+use App\DataFixtures\PeriodicalFixtures;
+use App\Entity\HasPublications;
+use App\Entity\Publication;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class HasPublicationsTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadBook::class,
-            LoadCompilation::class,
-            LoadPeriodical::class,
+            BookFixtures::class,
+            CompilationFixtures::class,
+            PeriodicalFixtures::class,
         );
     }
 

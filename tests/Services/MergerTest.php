@@ -1,18 +1,21 @@
 <?php
 
-namespace AppBundle\Tests\Services;
+namespace App\Tests\Services;
 
-use AppBundle\DataFixtures\ORM\LoadBook;
-use AppBundle\DataFixtures\ORM\LoadCompilation;
-use AppBundle\DataFixtures\ORM\LoadPeriodical;
-use AppBundle\DataFixtures\ORM\LoadPerson;
-use AppBundle\Entity\Periodical;
-use AppBundle\Entity\Place;
-use AppBundle\Repository\PlaceRepository;
-use AppBundle\Services\Merger;
+use App\DataFixtures\BookFixtures;
+use App\DataFixtures\CompilationFixtures;
+use App\DataFixtures\PeriodicalFixtures;
+use App\DataFixtures\PersonFixtures;
+use App\DataFixtures\PlaceFixtures;
+use App\Entity\Periodical;
+use App\Entity\Place;
+use App\Repository\PlaceRepository;
+use App\Services\Merger;
+use Nines\UtilBundle\Tests\ServiceBaseCase;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
-class MergerTest extends BaseTestCase {
+class MergerTest extends ServiceBaseCase {
+
     /**
      * @var Merger
      */
@@ -23,12 +26,13 @@ class MergerTest extends BaseTestCase {
      */
     protected $repo;
 
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadPerson::class,
-            LoadPeriodical::class,
-            LoadBook::class,
-            LoadCompilation::class,
+            PersonFixtures::class,
+            PeriodicalFixtures::class,
+            BookFixtures::class,
+            CompilationFixtures::class,
+            PlaceFixtures::class,
         );
     }
 
@@ -65,6 +69,6 @@ class MergerTest extends BaseTestCase {
 
     public function setUp() : void {
         parent::setUp();
-        $this->merger = $this->getContainer()->get(Merger::class);
+        $this->merger = self::$container->get(Merger::class);
     }
 }

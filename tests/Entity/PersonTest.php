@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Tests\Entity;
+namespace App\Tests\Entity;
 
-use AppBundle\Entity\Book;
-use AppBundle\Entity\Compilation;
-use AppBundle\Entity\Contribution;
-use AppBundle\Entity\Periodical;
-use AppBundle\Entity\Person;
-use AppBundle\Entity\Publication;
+use App\Entity\Book;
+use App\Entity\Compilation;
+use App\Entity\Contribution;
+use App\Entity\Periodical;
+use App\Entity\Person;
+use App\Entity\Publication;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class PersonTest extends BaseTestCase {

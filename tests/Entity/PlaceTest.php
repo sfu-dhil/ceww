@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Tests\Entity;
+namespace App\Tests\Entity;
 
-use AppBundle\Entity\Book;
-use AppBundle\Entity\DateYear;
-use AppBundle\Entity\Periodical;
-use AppBundle\Entity\Person;
-use AppBundle\Entity\Place;
+use App\Entity\Book;
+use App\Entity\DateYear;
+use App\Entity\Periodical;
+use App\Entity\Person;
+use App\Entity\Place;
 use PHPUnit\Framework\TestCase;
 
 class PlaceTest extends TestCase {

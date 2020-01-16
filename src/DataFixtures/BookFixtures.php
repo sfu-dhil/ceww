@@ -6,21 +6,21 @@
  * and open the template in the editor.
  */
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures;
 
 use App\Entity\Book;
 use App\Entity\Contribution;
 use App\Entity\DateYear;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Description of LoadGenres.
  *
  * @author mjoyce
  */
-class LoadBook extends Fixture implements DependentFixtureInterface {
+class BookFixtures extends Fixture implements DependentFixtureInterface {
     public function load(ObjectManager $manager) {
         $book = new Book();
         $book->setTitle('A Book Title');
@@ -50,11 +50,11 @@ class LoadBook extends Fixture implements DependentFixtureInterface {
 
     public function getDependencies() {
         return array(
-            LoadPlace::class,
-            LoadPerson::class,
-            LoadGenre::class,
-            LoadRole::class,
-            LoadPublisher::class,
+            PlaceFixtures::class,
+            PersonFixtures::class,
+            GenreFixtures::class,
+            RoleFixtures::class,
+            PublisherFixtures::class,
         );
     }
 }

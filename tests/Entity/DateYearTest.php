@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Tests\Entity;
+namespace App\Tests\Entity;
 
-use AppBundle\Entity\DateYear;
+use App\Entity\DateYear;
 use Exception;
 use PHPUnit\Framework\TestCase;
 

@@ -6,19 +6,19 @@
  * and open the template in the editor.
  */
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures;
 
 use App\Entity\Publisher;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Description of LoadGenres.
  *
  * @author mjoyce
  */
-class LoadPublisher extends Fixture implements DependentFixtureInterface {
+class PublisherFixtures extends Fixture implements DependentFixtureInterface {
     public function load(ObjectManager $manager) {
         $publisher1 = new Publisher();
         $publisher1->setName('Cueue Stuff');
@@ -40,7 +40,7 @@ class LoadPublisher extends Fixture implements DependentFixtureInterface {
 
     public function getDependencies() {
         return array(
-            LoadPlace::class,
+            PlaceFixtures::class,
         );
     }
 }

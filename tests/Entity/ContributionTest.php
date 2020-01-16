@@ -1,19 +1,19 @@
 <?php
 
-namespace AppBundle\Tests\Entity;
+namespace App\Tests\Entity;
 
-use AppBundle\DataFixtures\ORM\LoadPeriodical;
-use AppBundle\DataFixtures\ORM\LoadPerson;
-use AppBundle\DataFixtures\ORM\LoadRole;
-use AppBundle\Entity\Contribution;
+use App\DataFixtures\PeriodicalFixtures;
+use App\DataFixtures\PersonFixtures;
+use App\DataFixtures\RoleFixtures;
+use App\Entity\Contribution;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class ContributionTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadPeriodical::class,
-            LoadPerson::class,
-            LoadRole::class,
+            PeriodicalFixtures::class,
+            PersonFixtures::class,
+            RoleFixtures::class,
         );
     }
 

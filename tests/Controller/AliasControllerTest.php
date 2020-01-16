@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadAlias;
-use AppBundle\Entity\Alias;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\AliasFixtures;
+use App\Entity\Alias;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class AliasControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadAlias::class,
+            UserFixtures::class,
+            AliasFixtures::class,
         );
     }
 

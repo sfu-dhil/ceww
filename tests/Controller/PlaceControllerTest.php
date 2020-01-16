@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadPlace;
-use AppBundle\Entity\Place;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\PlaceFixtures;
+use App\Entity\Place;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class PlaceControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadPlace::class,
+            UserFixtures::class,
+            PlaceFixtures::class,
         );
     }
 

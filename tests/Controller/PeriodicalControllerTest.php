@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadPeriodical;
-use AppBundle\Entity\Periodical;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\PeriodicalFixtures;
+use App\Entity\Periodical;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class PeriodicalControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadPeriodical::class,
+            UserFixtures::class,
+            PeriodicalFixtures::class,
         );
     }
 

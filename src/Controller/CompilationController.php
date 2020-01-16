@@ -10,6 +10,7 @@ use App\Form\ContributionType;
 use App\Repository\PublicationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/compilation")
  */
-class CompilationController extends Controller {
+class CompilationController extends AbstractController {
     /**
      * Lists all Compilation entities.
      *

@@ -1,17 +1,17 @@
 <?php
 
-namespace AppBundle\Tests\Controller;
+namespace App\Tests\Controller;
 
-use AppBundle\DataFixtures\ORM\LoadGenre;
-use AppBundle\Entity\Genre;
-use Nines\UserBundle\DataFixtures\ORM\LoadUser;
+use App\DataFixtures\GenreFixtures;
+use App\Entity\Genre;
+use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\Util\BaseTestCase;
 
 class GenreControllerTest extends BaseTestCase {
-    protected function getFixtures() {
+    protected function fixtures() : array {
         return array(
-            LoadUser::class,
-            LoadGenre::class,
+            UserFixtures::class,
+            GenreFixtures::class,
         );
     }
 

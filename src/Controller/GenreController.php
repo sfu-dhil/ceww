@@ -7,6 +7,7 @@ use App\Form\GenreType;
 use App\Repository\GenreRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/genre")
  */
-class GenreController extends Controller {
+class GenreController extends AbstractController {
     /**
      * Lists all Genre entities.
      *

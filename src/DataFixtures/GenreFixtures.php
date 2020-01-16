@@ -6,18 +6,18 @@
  * and open the template in the editor.
  */
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures;
 
 use App\Entity\Genre;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Description of LoadGenres.
  *
  * @author mjoyce
  */
-class LoadGenre extends Fixture {
+class GenreFixtures extends Fixture {
     public function load(ObjectManager $manager) {
         $genre1 = new Genre();
         $genre1->setName('fiction');

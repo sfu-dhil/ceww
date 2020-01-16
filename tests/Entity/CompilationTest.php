@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Tests\Entity;
+namespace App\Tests\Entity;
 
-use AppBundle\Entity\Compilation;
-use AppBundle\Entity\Contribution;
-use AppBundle\Entity\Genre;
-use AppBundle\Entity\Publication;
+use App\Entity\Compilation;
+use App\Entity\Contribution;
+use App\Entity\Genre;
+use App\Entity\Publication;
 use PHPUnit\Framework\TestCase;
 
 class CompilationTest extends TestCase {

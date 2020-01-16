@@ -6,18 +6,18 @@
  * and open the template in the editor.
  */
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures;
 
 use App\Entity\Place;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Description of LoadGenres.
  *
  * @author mjoyce
  */
-class LoadPlace extends Fixture {
+class PlaceFixtures extends Fixture {
     public function load(ObjectManager $manager) {
         $place1 = new Place();
         $place1->setName('Lockside');
