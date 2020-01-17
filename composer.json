@@ -5,6 +5,7 @@
         "php": "^7.2.24",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "aternus/geonames-client": "^1.0",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "4.4.*",
         "symfony/console": "4.4.*",
@@ -27,7 +28,7 @@
         "symfony/web-link": "4.4.*",
         "symfony/yaml": "4.4.*",
         "tetranz/select2entity-bundle": "^3.0",
-        "ubermichael/nines": "3.x-dev"
+        "ubermichael/nines": "4.x-dev"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
@@ -39,8 +40,8 @@
     },
     "repositories": [
         {
-            "type": "git",
-            "url": "file:///Users/michael/Sites/nines-v4/src/lib/Nines/"
+            "type": "github",
+            "url": "https://github.com/ubermichael/nines-bundles.git"
         }
     ],
     "config": {

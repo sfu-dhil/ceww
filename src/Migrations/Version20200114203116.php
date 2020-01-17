@@ -40,11 +40,11 @@ ALTER TABLE nines_user
 
 	CHANGE fullname fullname varchar(64) NOT NULL,
 	CHANGE enabled active TINYINT NOT NULL DEFAULT 0,
- 	RENAME COLUMN username TO email,
-    RENAME COLUMN confirmation_token TO reset_token,
-    RENAME COLUMN password_requested_at TO reset_expiry,
-    RENAME COLUMN institution TO affiliation,
-    RENAME COLUMN last_login TO login,
+ 	CHANGE COLUMN username email VARCHAR(180) NOT NULL,
+    CHANGE COLUMN confirmation_token reset_token VARCHAR(180) DEFAULT NULL,
+    CHANGE COLUMN password_requested_at reset_expiry DATETIME DEFAULT NULL,
+    CHANGE COLUMN institution affiliation VARCHAR(255) DEFAULT NULL,
+    CHANGE COLUMN last_login login DATETIME DEFAULT NULL,
     
     ADD created DATETIME NOT NULL DEFAULT NOW() COMMENT '(DC2Type:datetime_immutable)', 
     ADD updated DATETIME NOT NULL DEFAULT NOW() COMMENT '(DC2Type:datetime_immutable)'    
