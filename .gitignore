@@ -27,3 +27,4 @@
 .yarn-integrity
 public/yarn
 config/deploy.yml
+*.sql

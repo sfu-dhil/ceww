@@ -27,9 +27,10 @@ select2@^4.0.12:
   resolved "https://registry.yarnpkg.com/select2/-/select2-4.0.12.tgz#9c0492d4d06948f2bd079f6e14718a41c7eaa60e"
   integrity sha512-mbXC05AvjCboZcRlgJqN4mlI2qmqshpRC76sKNAdxS1lPLOh2m/NTyfL6xsvGoY6eIhjaya4dbumN99MudVQ2w==
 
-symfony-collection@ninsuo/symfony-collection:
+symfony-collection@^2.1.30:
   version "2.1.30"
-  resolved "https://codeload.github.com/ninsuo/symfony-collection/tar.gz/231f790eee9ea2c3301ac45f5fe4fbb09ec4289c"
+  resolved "https://registry.yarnpkg.com/symfony-collection/-/symfony-collection-2.1.30.tgz#c9b50abec1a080a6694973d91975d1acf14efb31"
+  integrity sha512-IkTiqKbfDkR6kZD1Fg6JkZFErMSx8wyu/PQt87UPGkcjeDrVxMmuGviLZys0FSdCReYc6oa94uuIOZS10OBzDw==
   dependencies:
     jquery ">=1.7"
     jquery-ui ">=1.0"
