@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Entity;
 
 use App\Entity\DateYear;
@@ -13,43 +21,43 @@ class DateYearTest extends TestCase {
      * @param mixed $expected
      * @param mixed $value
      */
-    public function testSetValue($expected, $value) {
+    public function testSetValue($expected, $value) : void {
         $date = new DateYear();
         $date->setValue($value);
-        $this->assertEquals($expected, $date->getValue());
+        $this->assertSame($expected, $date->getValue());
     }
 
     public function setValueData() {
-        return array(
-            array('1800', '1800'),
-            array('c1800', 'c1800'),
-            array('c1800', 'C1800'),
-            array('c1800', ' c 1800 '),
+        return [
+            ['1800', '1800'],
+            ['c1800', 'c1800'],
+            ['c1800', 'C1800'],
+            ['c1800', ' c 1800 '],
 
-            array('1800-', '1800-'),
-            array('1800-', '1800 - '),
-            array('c1800-', 'c1800-'),
-            array('c1800-', 'C1800-'),
-            array('c1800-', ' c 1800 - '),
+            ['1800-', '1800-'],
+            ['1800-', '1800 - '],
+            ['c1800-', 'c1800-'],
+            ['c1800-', 'C1800-'],
+            ['c1800-', ' c 1800 - '],
 
-            array('-1800', '-1800'),
-            array('-1800', ' - 1800'),
-            array('-c1800', '-c1800'),
-            array('-c1800', '-C1800'),
-            array('-c1800', ' - c1800'),
+            ['-1800', '-1800'],
+            ['-1800', ' - 1800'],
+            ['-c1800', '-c1800'],
+            ['-c1800', '-C1800'],
+            ['-c1800', ' - c1800'],
 
-            array('1800-1801', '1800-1801'),
-            array('c1800-1801', 'c1800-1801'),
-            array('1800-c1801', '1800-c1801'),
-            array('c1800-c1801', 'c1800-c1801'),
-            array('c1800-c1801', 'C1800-C1801'),
+            ['1800-1801', '1800-1801'],
+            ['c1800-1801', 'c1800-1801'],
+            ['1800-c1801', '1800-c1801'],
+            ['c1800-c1801', 'c1800-c1801'],
+            ['c1800-c1801', 'C1800-C1801'],
 
-            array('1800-1801', ' 1800 - 1801 '),
-            array('c1800-1801', ' c 1800 - 1801 '),
-            array('1800-c1801', ' 1800 - c 1801 '),
-            array('c1800-c1801', ' c 1800 - c 1801 '),
-            array('c1800-c1801', ' C 1800 - C 1801 '),
-        );
+            ['1800-1801', ' 1800 - 1801 '],
+            ['c1800-1801', ' c 1800 - 1801 '],
+            ['1800-c1801', ' 1800 - c 1801 '],
+            ['c1800-c1801', ' c 1800 - c 1801 '],
+            ['c1800-c1801', ' C 1800 - C 1801 '],
+        ];
     }
 
     /**
@@ -57,7 +65,7 @@ class DateYearTest extends TestCase {
      *
      * @param mixed $value
      */
-    public function testSetBadValue($value) {
+    public function testSetBadValue($value) : void {
         $this->expectException(Exception::class);
         $date = new DateYear();
         $date->setValue($value);
@@ -65,19 +73,19 @@ class DateYearTest extends TestCase {
     }
 
     public function setBadValueData() {
-        return array(
-            array(null),
-            array(false),
-            array(true),
-            array('cheese'),
-            array('180'),
-            array('c180'),
-            array('-180'),
-            array('-19999'),
-            array(''),
-            array('1990-1991-1992'),
-            array('x1989'),
-        );
+        return [
+            [null],
+            [false],
+            [true],
+            ['cheese'],
+            ['180'],
+            ['c180'],
+            ['-180'],
+            ['-19999'],
+            [''],
+            ['1990-1991-1992'],
+            ['x1989'],
+        ];
     }
 
     /**
@@ -86,37 +94,37 @@ class DateYearTest extends TestCase {
      * @param mixed $expected
      * @param mixed $value
      */
-    public function testIsRange($expected, $value) {
+    public function testIsRange($expected, $value) : void {
         $date = new DateYear();
         $date->setValue($value);
-        $this->assertEquals($expected, $date->isRange());
+        $this->assertSame($expected, $date->isRange());
     }
 
     public function rangeData() {
-        return array(
-            array(false, 1800),
-            array(false, '1800'),
-            array(false, 'c1800'),
-            array(false, 'C1799'),
+        return [
+            [false, 1800],
+            [false, '1800'],
+            [false, 'c1800'],
+            [false, 'C1799'],
 
-            array(true, -1800),
-            array(true, '-1800'),
-            array(true, '-c1800'),
-            array(true, '-C1800'),
+            [true, -1800],
+            [true, '-1800'],
+            [true, '-c1800'],
+            [true, '-C1800'],
 
-            array(true, '1800-'),
-            array(true, 'c1800-'),
-            array(true, 'C1800-'),
+            [true, '1800-'],
+            [true, 'c1800-'],
+            [true, 'C1800-'],
 
-            array(true, '1800-1805'),
-            array(true, 'c1800-1805'),
-            array(true, '1800-c1805'),
-            array(true, 'c1800-c1805'),
-            array(true, '1800-1805'),
-            array(true, 'C1800-1805'),
-            array(true, '1800-C1805'),
-            array(true, 'C1800-C1805'),
-        );
+            [true, '1800-1805'],
+            [true, 'c1800-1805'],
+            [true, '1800-c1805'],
+            [true, 'c1800-c1805'],
+            [true, '1800-1805'],
+            [true, 'C1800-1805'],
+            [true, '1800-C1805'],
+            [true, 'C1800-C1805'],
+        ];
     }
 
     /**
@@ -125,37 +133,37 @@ class DateYearTest extends TestCase {
      * @param mixed $expected
      * @param mixed $value
      */
-    public function testHasStart($expected, $value) {
+    public function testHasStart($expected, $value) : void {
         $date = new DateYear();
         $date->setValue($value);
-        $this->assertEquals($expected, $date->hasStart());
+        $this->assertSame($expected, $date->hasStart());
     }
 
     public function hasStartData() {
-        return array(
-            array(true, 1800),
-            array(true, '1800'),
-            array(true, 'c1800'),
-            array(true, 'C1799'),
+        return [
+            [true, 1800],
+            [true, '1800'],
+            [true, 'c1800'],
+            [true, 'C1799'],
 
-            array(false, -1800),
-            array(false, '-1800'),
-            array(false, '-c1800'),
-            array(false, '-C1800'),
+            [false, -1800],
+            [false, '-1800'],
+            [false, '-c1800'],
+            [false, '-C1800'],
 
-            array(true, '1800-'),
-            array(true, 'c1800-'),
-            array(true, 'C1800-'),
+            [true, '1800-'],
+            [true, 'c1800-'],
+            [true, 'C1800-'],
 
-            array(true, '1800-1805'),
-            array(true, 'c1800-1805'),
-            array(true, '1800-c1805'),
-            array(true, 'c1800-c1805'),
-            array(true, '1800-1805'),
-            array(true, 'C1800-1805'),
-            array(true, '1800-C1805'),
-            array(true, 'C1800-C1805'),
-        );
+            [true, '1800-1805'],
+            [true, 'c1800-1805'],
+            [true, '1800-c1805'],
+            [true, 'c1800-c1805'],
+            [true, '1800-1805'],
+            [true, 'C1800-1805'],
+            [true, '1800-C1805'],
+            [true, 'C1800-C1805'],
+        ];
     }
 
     /**
@@ -203,37 +211,37 @@ class DateYearTest extends TestCase {
      * @param mixed $expected
      * @param mixed $value
      */
-    public function testHasEnd($expected, $value) {
+    public function testHasEnd($expected, $value) : void {
         $date = new DateYear();
         $date->setValue($value);
-        $this->assertEquals($expected, $date->hasEnd());
+        $this->assertSame($expected, $date->hasEnd());
     }
 
     public function hasEndData() {
-        return array(
-            array(true, 1800),
-            array(true, '1800'),
-            array(true, 'c1800'),
-            array(true, 'C1799'),
+        return [
+            [true, 1800],
+            [true, '1800'],
+            [true, 'c1800'],
+            [true, 'C1799'],
 
-            array(true, -1800),
-            array(true, '-1800'),
-            array(true, '-c1800'),
-            array(true, '-C1800'),
+            [true, -1800],
+            [true, '-1800'],
+            [true, '-c1800'],
+            [true, '-C1800'],
 
-            array(false, '1800-'),
-            array(false, 'c1800-'),
-            array(false, 'C1800-'),
+            [false, '1800-'],
+            [false, 'c1800-'],
+            [false, 'C1800-'],
 
-            array(true, '1800-1805'),
-            array(true, 'c1800-1805'),
-            array(true, '1800-c1805'),
-            array(true, 'c1800-c1805'),
-            array(true, '1800-1805'),
-            array(true, 'C1800-1805'),
-            array(true, '1800-C1805'),
-            array(true, 'C1800-C1805'),
-        );
+            [true, '1800-1805'],
+            [true, 'c1800-1805'],
+            [true, '1800-c1805'],
+            [true, 'c1800-c1805'],
+            [true, '1800-1805'],
+            [true, 'C1800-1805'],
+            [true, '1800-C1805'],
+            [true, 'C1800-C1805'],
+        ];
     }
 
     /**
