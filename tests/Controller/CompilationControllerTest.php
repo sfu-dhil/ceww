@@ -17,7 +17,6 @@ class CompilationControllerTest extends ControllerBaseCase {
     }
 
     public function testAnonIndex() {
-
         $crawler = $this->client->request('GET', '/compilation/');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, $crawler->selectLink('New')->count());

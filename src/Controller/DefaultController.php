@@ -27,6 +27,8 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      * @Template()
      *
      * @param Request $request
+     *
+     * @return array
      */
     public function indexAction(Request $request) {
         return [];
@@ -41,6 +43,8 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
      *
      * @param Request $request
      * @param PublicationRepository $repo
+     *
+     * @return array
      */
     public function searchAction(Request $request, PublicationRepository $repo) {
         $q = $request->query->get('q');
