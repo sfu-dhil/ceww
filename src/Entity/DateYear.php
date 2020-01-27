@@ -138,7 +138,7 @@ class DateYear extends AbstractEntity {
             return 'c' . $this->start;
         }
 
-        return $this->start;
+        return $this->start ?? '';
     }
 
     public function hasEnd() {
@@ -157,7 +157,7 @@ class DateYear extends AbstractEntity {
             return 'c' . $this->end;
         }
 
-        return $this->end;
+        return $this->end ?? '';
     }
 
     /**

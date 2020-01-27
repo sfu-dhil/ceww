@@ -172,37 +172,37 @@ class DateYearTest extends TestCase {
      * @param mixed $expected
      * @param mixed $value
      */
-    public function testGetStart($expected, $value) {
+    public function testGetStart($expected, $value) : void {
         $date = new DateYear();
         $date->setValue($value);
-        $this->assertEquals($expected, $date->getStart());
+        $this->assertSame($expected, $date->getStart());
     }
 
     public function getStartData() {
-        return array(
-            array('1800', 1800),
-            array('1800', '1800'),
-            array('c1800', 'c1800'),
-            array('c1799', 'C1799'),
+        return [
+            ['1800', 1800],
+            ['1800', '1800'],
+            ['c1800', 'c1800'],
+            ['c1799', 'C1799'],
 
-            array(null, -1800),
-            array(null, '-1800'),
-            array(null, '-c1800'),
-            array(null, '-C1800'),
+            ['', -1800],
+            ['', '-1800'],
+            ['', '-c1800'],
+            ['', '-C1800'],
 
-            array('1800', '1800-'),
-            array('c1800', 'c1800-'),
-            array('c1800', 'C1800-'),
+            ['1800', '1800-'],
+            ['c1800', 'c1800-'],
+            ['c1800', 'C1800-'],
 
-            array('1800', '1800-1805'),
-            array('c1800', 'c1800-1805'),
-            array('1800', '1800-c1805'),
-            array('c1800', 'c1800-c1805'),
-            array('1800', '1800-1805'),
-            array('c1800', 'C1800-1805'),
-            array('1800', '1800-C1805'),
-            array('c1800', 'C1800-C1805'),
-        );
+            ['1800', '1800-1805'],
+            ['c1800', 'c1800-1805'],
+            ['1800', '1800-c1805'],
+            ['c1800', 'c1800-c1805'],
+            ['1800', '1800-1805'],
+            ['c1800', 'C1800-1805'],
+            ['1800', '1800-C1805'],
+            ['c1800', 'C1800-C1805'],
+        ];
     }
 
     /**
@@ -250,36 +250,36 @@ class DateYearTest extends TestCase {
      * @param mixed $expected
      * @param mixed $value
      */
-    public function testGetEnd($expected, $value) {
+    public function testGetEnd($expected, $value) : void {
         $date = new DateYear();
         $date->setValue($value);
-        $this->assertEquals($expected, $date->getEnd());
+        $this->assertSame($expected, $date->getEnd());
     }
 
     public function getEndData() {
-        return array(
-            array('1800', 1800),
-            array('1800', '1800'),
-            array('c1800', 'c1800'),
-            array('c1799', 'C1799'),
+        return [
+            ['1800', 1800],
+            ['1800', '1800'],
+            ['c1800', 'c1800'],
+            ['c1799', 'C1799'],
 
-            array('1800', -1800),
-            array('1800', '-1800'),
-            array('c1800', '-c1800'),
-            array('c1800', '-C1800'),
+            ['1800', -1800],
+            ['1800', '-1800'],
+            ['c1800', '-c1800'],
+            ['c1800', '-C1800'],
 
-            array('', '1800-'),
-            array('', 'c1800-'),
-            array('', 'C1800-'),
+            ['', '1800-'],
+            ['', 'c1800-'],
+            ['', 'C1800-'],
 
-            array('1805', '1800-1805'),
-            array('1805', 'c1800-1805'),
-            array('c1805', '1800-c1805'),
-            array('c1805', 'c1800-c1805'),
-            array('1805', '1800-1805'),
-            array('1805', 'C1800-1805'),
-            array('c1805', '1800-C1805'),
-            array('c1805', 'C1800-C1805'),
-        );
+            ['1805', '1800-1805'],
+            ['1805', 'c1800-1805'],
+            ['c1805', '1800-c1805'],
+            ['c1805', 'c1800-c1805'],
+            ['1805', '1800-1805'],
+            ['1805', 'C1800-1805'],
+            ['c1805', '1800-C1805'],
+            ['c1805', 'C1800-C1805'],
+        ];
     }
 }
