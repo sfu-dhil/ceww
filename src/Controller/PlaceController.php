@@ -38,8 +38,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      * @Route("/", name="place_index", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Request $request
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -55,8 +53,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
     }
 
     /**
-     * @param Request $request
-     * @param PlaceRepository $repo
      * @Route("/typeahead", name="place_typeahead", methods={"GET"})
      *
      * @return JsonResponse
@@ -81,9 +77,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      * @Route("/search", name="place_search", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Request $request
-     * @param PlaceRepository $repo
      */
     public function searchAction(Request $request, PlaceRepository $repo) {
         $q = $request->query->get('q');
@@ -108,8 +101,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newAction(Request $request) {
         $place = new Place();
@@ -139,8 +130,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newPopupAction(Request $request) {
         return $this->newAction($request);
@@ -152,8 +141,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      * @Route("/{id}", name="place_show", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Place $place
      */
     public function showAction(Place $place) {
         $em = $this->getDoctrine()->getManager();
@@ -173,9 +160,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Place $place
      */
     public function editAction(Request $request, Place $place) {
         $editForm = $this->createForm(PlaceType::class, $place);
@@ -202,11 +186,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Template()
-     *
-     * @param Place $place
-     * @param Request $request
-     * @param Merger $merger
-     * @param PlaceRepository $repo
      */
     public function mergeAction(Request $request, Place $place, Merger $merger, PlaceRepository $repo) {
         if ('POST' === $request->getMethod()) {
@@ -239,9 +218,6 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      * @Route("/{id}/delete", name="place_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Request $request
-     * @param Place $place
      */
     public function deleteAction(Request $request, Place $place) {
         if ( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {

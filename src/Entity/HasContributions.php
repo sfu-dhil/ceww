@@ -26,8 +26,6 @@ trait HasContributions {
     /**
      * Add contribution.
      *
-     * @param Contribution $contribution
-     *
      * @return Publication
      */
     public function addContribution(Contribution $contribution) {
@@ -40,8 +38,6 @@ trait HasContributions {
 
     /**
      * Remove contribution.
-     *
-     * @param Contribution $contribution
      */
     public function removeContribution(Contribution $contribution) : void {
         $this->contributions->removeElement($contribution);

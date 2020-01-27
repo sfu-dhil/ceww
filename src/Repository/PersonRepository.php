@@ -107,8 +107,6 @@ class PersonRepository extends ServiceEntityRepository {
     }
 
     /**
-     * @param Role $role
-     *
      * @return Query
      */
     public function byRoleQuery(Role $role) {

@@ -37,8 +37,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      * @Route("/", name="alias_index", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Request $request
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -60,9 +58,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @Template()
      *
-     * @param Request $request
-     * @param AliasRepository $repo
-     *
      * @return array
      */
     public function searchAction(Request $request, AliasRepository $repo) {
@@ -82,8 +77,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
     }
 
     /**
-     * @param Request $request
-     * @param AliasRepository $repo
      * @Route("/typeahead", name="alias_typeahead", methods={"GET"})
      *
      * @return JsonResponse
@@ -111,8 +104,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newAction(Request $request) {
         $alias = new Alias();
@@ -142,8 +133,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newPopupAction(Request $request) {
         return $this->newAction($request);
@@ -155,8 +144,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      * @Route("/{id}", name="alias_show", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Alias $alias
      */
     public function showAction(Alias $alias) {
         return [
@@ -171,9 +158,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Alias $alias
      */
     public function editAction(Request $request, Alias $alias) {
         $editForm = $this->createForm(AliasType::class, $alias);
@@ -199,9 +183,6 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      * @Route("/{id}/delete", name="alias_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Request $request
-     * @param Alias $alias
      */
     public function deleteAction(Request $request, Alias $alias) {
         $em = $this->getDoctrine()->getManager();

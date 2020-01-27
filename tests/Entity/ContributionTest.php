@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Entity;
 
 use App\DataFixtures\PeriodicalFixtures;
@@ -10,19 +18,19 @@ use Nines\UtilBundle\Tests\BaseCase;
 
 class ContributionTest extends BaseCase {
     protected function fixtures() : array {
-        return array(
+        return [
             PeriodicalFixtures::class,
             PersonFixtures::class,
             RoleFixtures::class,
-        );
+        ];
     }
 
-    public function testGetPublicationId() {
+    public function testGetPublicationId() : void {
         $contribution = new Contribution();
         $contribution->setPerson($this->getReference('person.1'));
         $contribution->setRole($this->getReference('role.1'));
         $contribution->setPublication($this->getReference('periodical.1'));
 
-        $this->assertEquals($this->getReference('periodical.1')->getId(), $contribution->getPublicationId());
+        $this->assertSame($this->getReference('periodical.1')->getId(), $contribution->getPublicationId());
     }
 }

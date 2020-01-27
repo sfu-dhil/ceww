@@ -52,8 +52,6 @@ class Merger {
 
     /**
      * @required
-     *
-     * @param PlaceRepository $placeRepository
      */
     public function setPlaceRepository(PlaceRepository $placeRepository) : void {
         $this->placeRepository = $placeRepository;
@@ -68,7 +66,6 @@ class Merger {
     }
 
     /**
-     * @param Place $destination
      * @param Place[] $places
      */
     public function places(Place $destination, $places) : void {
@@ -105,7 +102,6 @@ class Merger {
      * @todo this is generic enough that it can apply to publications, not just
      * periodicals.
      *
-     * @param Periodical $destination
      * @param Periodical[] $publications
      */
     public function periodicals(Periodical $destination, array $publications) : void {

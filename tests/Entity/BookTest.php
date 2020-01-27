@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Entity;
 
 use App\Entity\Book;
@@ -9,36 +17,36 @@ use App\Entity\Publication;
 use PHPUnit\Framework\TestCase;
 
 class BookTest extends TestCase {
-    public function testGetCategory() {
+    public function testGetCategory() : void {
         $book = new Book();
-        $this->assertEquals(Publication::BOOK, $book->getCategory());
+        $this->assertSame(Publication::BOOK, $book->getCategory());
     }
 
-    public function testAppendNote() {
+    public function testAppendNote() : void {
         $publication = new Book();
         $testNote = 'This is a note to append. ';
 
         $publication->appendNote($testNote);
 
-        $this->assertEquals($testNote, $publication->getNotes());
+        $this->assertSame($testNote, $publication->getNotes());
     }
 
-    public function testAddGenre() {
+    public function testAddGenre() : void {
         $publication = new Book();
         $genre = new Genre();
 
         $publication->addGenre($genre);
 
-        $this->assertEquals(1, count($publication->getGenres()));
+        $this->assertSame(1, count($publication->getGenres()));
     }
 
-    public function testAddContribution() {
+    public function testAddContribution() : void {
         $publication = new Book();
         $contribution = new Contribution();
 
         $publication->addContribution($contribution);
 
-        $this->assertEquals(1, count($publication->getContributions()));
+        $this->assertSame(1, count($publication->getContributions()));
     }
 
     /**
@@ -46,7 +54,7 @@ class BookTest extends TestCase {
      *
      * @param mixed $testDate
      */
-    public function testSetDateYear($testDate) {
+    public function testSetDateYear($testDate) : void {
         $publication = new Book();
         $publication->setDateYear($testDate);
 
@@ -54,22 +62,22 @@ class BookTest extends TestCase {
     }
 
     public function SetDateYearData() {
-        return array(
-            array(1800),
-            array('1800'),
-            array('c1800'),
-            array(-1800),
+        return [
+            [1800],
+            ['1800'],
+            ['c1800'],
+            [-1800],
 
-            array('1800-'),
-            array('c1800-'),
+            ['1800-'],
+            ['c1800-'],
 
-            array('-1800'),
-            array('-c1800'),
+            ['-1800'],
+            ['-c1800'],
 
-            array('1800-1801'),
-            array('c1800-1801'),
-            array('1800-c1801'),
-            array('c1800-c1801'),
-        );
+            ['1800-1801'],
+            ['c1800-1801'],
+            ['1800-c1801'],
+            ['c1800-c1801'],
+        ];
     }
 }

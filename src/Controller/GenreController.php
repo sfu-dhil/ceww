@@ -37,8 +37,6 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      * @Route("/", name="genre_index", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Request $request
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -54,8 +52,6 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
     }
 
     /**
-     * @param Request $request
-     * @param GenreRepository $repo
      * @Route("/typeahead", name="genre_typeahead", methods={"GET"})
      *
      * @return JsonResponse
@@ -83,8 +79,6 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newAction(Request $request) {
         $genre = new Genre();
@@ -113,8 +107,6 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      * @Route("/{id}", name="genre_show", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Genre $genre
      */
     public function showAction(Genre $genre) {
         return [
@@ -129,9 +121,6 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Genre $genre
      */
     public function editAction(Request $request, Genre $genre) {
         $editForm = $this->createForm(GenreType::class, $genre);
@@ -156,9 +145,6 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Route("/{id}/delete", name="genre_delete", methods={"GET","POST"})
-     *
-     * @param Request $request
-     * @param Genre $genre
      */
     public function deleteAction(Request $request, Genre $genre) {
         $em = $this->getDoctrine()->getManager();

@@ -56,8 +56,6 @@ class Builder implements ContainerAwareInterface {
     /**
      * Build a menu for navigation.
      *
-     * @param array $options
-     *
      * @return ItemInterface
      */
     public function mainMenu(array $options) {

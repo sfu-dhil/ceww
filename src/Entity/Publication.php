@@ -163,9 +163,10 @@ abstract class Publication extends AbstractEntity {
      * @return string
      */
     public function getSortableTitle() {
-        if( $this->sortableTitle) {
+        if ($this->sortableTitle) {
             return $this->sortableTitle;
         }
+
         return $this->title;
     }
 
@@ -335,8 +336,6 @@ abstract class Publication extends AbstractEntity {
     /**
      * Add genre.
      *
-     * @param Genre $genre
-     *
      * @return Publication
      */
     public function addGenre(Genre $genre) {
@@ -349,8 +348,6 @@ abstract class Publication extends AbstractEntity {
 
     /**
      * Remove genre.
-     *
-     * @param Genre $genre
      */
     public function removeGenre(Genre $genre) : void {
         $this->genres->removeElement($genre);
@@ -391,8 +388,6 @@ abstract class Publication extends AbstractEntity {
     /**
      * Add publisher.
      *
-     * @param Publisher $publisher
-     *
      * @return Publication
      */
     public function addPublisher(Publisher $publisher) {
@@ -403,8 +398,6 @@ abstract class Publication extends AbstractEntity {
 
     /**
      * Remove publisher.
-     *
-     * @param Publisher $publisher
      */
     public function removePublisher(Publisher $publisher) : void {
         $this->publishers->removeElement($publisher);

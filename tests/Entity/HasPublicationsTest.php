@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Entity;
 
 use App\DataFixtures\BookFixtures;
@@ -11,37 +19,37 @@ use Nines\UtilBundle\Tests\BaseCase;
 
 class HasPublicationsTest extends BaseCase {
     protected function fixtures() : array {
-        return array(
+        return [
             BookFixtures::class,
             CompilationFixtures::class,
             PeriodicalFixtures::class,
-        );
+        ];
     }
 
-    public function testAddPublication() {
+    public function testAddPublication() : void {
         $mock = $this->getMockForTrait(HasPublications::class);
         $mock->addPublication($this->references->getReference('book.1'));
-        $this->assertEquals(1, count($mock->getPublications()));
+        $this->assertSame(1, count($mock->getPublications()));
     }
 
-    public function testDuplicatePublication() {
+    public function testDuplicatePublication() : void {
         $mock = $this->getMockForTrait(HasPublications::class);
         $mock->addPublication($this->references->getReference('book.1'));
         $mock->addPublication($this->references->getReference('book.1'));
-        $this->assertEquals(1, count($mock->getPublications()));
+        $this->assertSame(1, count($mock->getPublications()));
     }
 
-    public function testGetPublications() {
-        $mock = $this->getMockForTrait(HasPublications::class);
-        $mock->addPublication($this->references->getReference('book.1'));
-        $mock->addPublication($this->references->getReference('compilation.1'));
-        $this->assertEquals(2, count($mock->getPublications()));
-    }
-
-    public function testGetPublicationsCategory() {
+    public function testGetPublications() : void {
         $mock = $this->getMockForTrait(HasPublications::class);
         $mock->addPublication($this->references->getReference('book.1'));
         $mock->addPublication($this->references->getReference('compilation.1'));
-        $this->assertEquals(1, count($mock->getPublications(Publication::BOOK)));
+        $this->assertSame(2, count($mock->getPublications()));
+    }
+
+    public function testGetPublicationsCategory() : void {
+        $mock = $this->getMockForTrait(HasPublications::class);
+        $mock->addPublication($this->references->getReference('book.1'));
+        $mock->addPublication($this->references->getReference('compilation.1'));
+        $this->assertSame(1, count($mock->getPublications(Publication::BOOK)));
     }
 }

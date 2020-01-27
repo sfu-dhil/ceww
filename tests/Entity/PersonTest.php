@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Entity;
 
 use App\Entity\Book;
@@ -16,7 +24,7 @@ class PersonTest extends BaseCase {
      *
      * @param mixed $testDate
      */
-    public function testSetBirthDate($testDate) {
+    public function testSetBirthDate($testDate) : void {
         $person = new Person();
 
         $person->setBirthDate($testDate);
@@ -26,23 +34,23 @@ class PersonTest extends BaseCase {
 
     // dataProvider function name should not begin with 'test'
     public function SetBirthDateData() {
-        return array(
-            array(1800),
-            array('1800'),
-            array('c1800'),
-            array(-1800),
+        return [
+            [1800],
+            ['1800'],
+            ['c1800'],
+            [-1800],
 
-            array('1800-'),
-            array('c1800-'),
+            ['1800-'],
+            ['c1800-'],
 
-            array('-1800'),
-            array('-c1800'),
+            ['-1800'],
+            ['-c1800'],
 
-            array('1800-1801'),
-            array('c1800-1801'),
-            array('1800-c1801'),
-            array('c1800-c1801'),
-        );
+            ['1800-1801'],
+            ['c1800-1801'],
+            ['1800-c1801'],
+            ['c1800-c1801'],
+        ];
     }
 
     /**
@@ -50,7 +58,7 @@ class PersonTest extends BaseCase {
      *
      * @param mixed $testDate
      */
-    public function testSetDeathDate($testDate) {
+    public function testSetDeathDate($testDate) : void {
         $person = new Person();
 
         $person->setDeathDate($testDate);
@@ -60,29 +68,29 @@ class PersonTest extends BaseCase {
 
     // dataProvider function name should not begin with 'test'
     public function SetDeathDateData() {
-        return array(
-            array(1800),
-            array('1800'),
-            array('c1800'),
-            array(-1800),
+        return [
+            [1800],
+            ['1800'],
+            ['c1800'],
+            [-1800],
 
-            array('1800-'),
-            array('c1800-'),
+            ['1800-'],
+            ['c1800-'],
 
-            array('-1800'),
-            array('-c1800'),
+            ['-1800'],
+            ['-c1800'],
 
-            array('1800-1801'),
-            array('c1800-1801'),
-            array('1800-c1801'),
-            array('c1800-c1801'),
-        );
+            ['1800-1801'],
+            ['c1800-1801'],
+            ['1800-c1801'],
+            ['c1800-c1801'],
+        ];
     }
 
-    public function testGetContributions() {
+    public function testGetContributions() : void {
         $person = new Person();
 
-        foreach (array(1, 2, 3) as $n) {
+        foreach ([1, 2, 3] as $n) {
             $book = new Book();
             $book->setTitle("Book {$n}");
             $contribution = new Contribution();
@@ -90,7 +98,7 @@ class PersonTest extends BaseCase {
             $contribution->setPublication($book);
             $person->addContribution($contribution);
         }
-        foreach (array(4, 5) as $n) {
+        foreach ([4, 5] as $n) {
             $compilation = new Compilation();
             $compilation->setTitle("Compilation {$n}");
             $contribution = new Contribution();
@@ -99,7 +107,7 @@ class PersonTest extends BaseCase {
             $person->addContribution($contribution);
         }
 
-        foreach (array(6, 7) as $n) {
+        foreach ([6, 7] as $n) {
             $periodical = new Periodical();
             $periodical->setTitle("Publication {$n}");
             $contribution = new Contribution();
@@ -107,37 +115,37 @@ class PersonTest extends BaseCase {
             $contribution->setPublication($periodical);
             $person->addContribution($contribution);
         }
-        $this->assertEquals(3, count($person->getContributions(Publication::BOOK)));
-        $this->assertEquals(2, count($person->getContributions(Publication::COMPILATION)));
-        $this->assertEquals(2, count($person->getContributions(Publication::PERIODICAL)));
+        $this->assertSame(3, count($person->getContributions(Publication::BOOK)));
+        $this->assertSame(2, count($person->getContributions(Publication::COMPILATION)));
+        $this->assertSame(2, count($person->getContributions(Publication::PERIODICAL)));
     }
 
-    public function testAddUrlLink() {
+    public function testAddUrlLink() : void {
         $person = new Person();
         $urlLink = 'http://www.example.com';
 
         $person->addUrlLink($urlLink);
 
-        $this->assertEquals(1, count($person->getUrlLinks()));
+        $this->assertSame(1, count($person->getUrlLinks()));
     }
 
-    public function testRemoveUrlLink() {
+    public function testRemoveUrlLink() : void {
         $person = new Person();
         $urlLink = 'http://www.example.com';
 
         $person->addUrlLink($urlLink);
         $person->removeUrlLink($urlLink);
 
-        $this->assertEquals(0, count($person->getUrlLinks()));
+        $this->assertSame(0, count($person->getUrlLinks()));
     }
 
-    public function testGetUrlLinks() {
+    public function testGetUrlLinks() : void {
         $person = new Person();
-        $urlLinks = array('http://www.example.com', 'http://www.sfu.ca');
+        $urlLinks = ['http://www.example.com', 'http://www.sfu.ca'];
 
         $person->setUrlLinks($urlLinks);
 
-        $this->assertEquals(2, count($person->getUrlLinks()));
+        $this->assertSame(2, count($person->getUrlLinks()));
         $this->assertContains('http://www.example.com', $person->getUrlLinks());
     }
 
@@ -146,7 +154,7 @@ class PersonTest extends BaseCase {
      *
      * @param mixed $testUrlLinks
      */
-    public function testSetUrlLinks($testUrlLinks) {
+    public function testSetUrlLinks($testUrlLinks) : void {
         $person = new Person();
 
         $person->setUrlLinks($testUrlLinks);
@@ -155,9 +163,9 @@ class PersonTest extends BaseCase {
     }
 
     public function SetUrlLinkData() {
-        return array(
-            array(array('http://www.example.com', 'http://www.sfu.ca')),
-            array(array('http://www.sfu.ca')),
-        );
+        return [
+            [['http://www.example.com', 'http://www.sfu.ca']],
+            [['http://www.sfu.ca']],
+        ];
     }
 }

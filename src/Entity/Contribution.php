@@ -52,8 +52,6 @@ class Contribution extends AbstractEntity {
     /**
      * Set role.
      *
-     * @param Role $role
-     *
      * @return Contribution
      */
     public function setRole(Role $role) {
@@ -74,8 +72,6 @@ class Contribution extends AbstractEntity {
     /**
      * Set person.
      *
-     * @param Person $person
-     *
      * @return Contribution
      */
     public function setPerson(Person $person) {
@@ -95,8 +91,6 @@ class Contribution extends AbstractEntity {
 
     /**
      * Set publication.
-     *
-     * @param Publication $publication
      *
      * @return Contribution
      */

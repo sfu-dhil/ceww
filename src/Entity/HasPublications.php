@@ -26,8 +26,6 @@ trait HasPublications {
     /**
      * Add publication.
      *
-     * @param Publication $publication
-     *
      * @return Place
      */
     public function addPublication(Publication $publication) {
@@ -40,8 +38,6 @@ trait HasPublications {
 
     /**
      * Remove publication.
-     *
-     * @param Publication $publication
      */
     public function removePublication(Publication $publication) : void {
         $this->publications->removeElement($publication);

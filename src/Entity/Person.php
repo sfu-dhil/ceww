@@ -334,8 +334,6 @@ class Person extends AbstractEntity {
     /**
      * Add residence.
      *
-     * @param Place $residence
-     *
      * @return Person
      */
     public function addResidence(Place $residence) {
@@ -348,8 +346,6 @@ class Person extends AbstractEntity {
 
     /**
      * Remove residence.
-     *
-     * @param Place $residence
      */
     public function removeResidence(Place $residence) : void {
         $this->residences->removeElement($residence);
@@ -367,8 +363,6 @@ class Person extends AbstractEntity {
     /**
      * Add alias.
      *
-     * @param Alias $alias
-     *
      * @return Person
      */
     public function addAlias(Alias $alias) {
@@ -381,8 +375,6 @@ class Person extends AbstractEntity {
 
     /**
      * Remove alias.
-     *
-     * @param Alias $alias
      */
     public function removeAlias(Alias $alias) : void {
         $this->aliases->removeElement($alias);

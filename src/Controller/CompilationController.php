@@ -41,7 +41,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Template()
      *
-     * @param Request $request
      * @param PublicationRepository $repo
      */
     public function indexAction(Request $request, CompilationRepository $repo) {
@@ -82,8 +81,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newAction(Request $request) {
         $compilation = new Compilation();
@@ -115,8 +112,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      * @Route("/{id}", name="compilation_show", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Compilation $compilation
      */
     public function showAction(Compilation $compilation) {
         $em = $this->getDoctrine()->getManager();
@@ -136,9 +131,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Compilation $compilation
      */
     public function editAction(Request $request, Compilation $compilation) {
         $editForm = $this->createForm(CompilationType::class, $compilation);
@@ -167,9 +159,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      * @Route("/{id}/delete", name="compilation_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Request $request
-     * @param Compilation $compilation
      */
     public function deleteAction(Request $request, Compilation $compilation) {
         $em = $this->getDoctrine()->getManager();
@@ -187,9 +176,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Compilation $compilation
      */
     public function newContribution(Request $request, Compilation $compilation) {
         $contribution = new Contribution();
@@ -221,8 +207,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Compilation $compilation
      */
     public function showContributions(Compilation $compilation) {
         return [
@@ -237,9 +221,6 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Contribution $contribution
      */
     public function editContribution(Request $request, Contribution $contribution) {
         $editForm = $this->createForm(ContributionType::class, $contribution);
@@ -264,10 +245,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Route("/contributions/{id}/delete", name="compilation_delete_contributions")
      *
-     * @param Request $request
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Contribution $contribution
      */
     public function deleteContribution(Request $request, Contribution $contribution) {
         $em = $this->getDoctrine()->getManager();

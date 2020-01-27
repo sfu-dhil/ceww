@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Entity;
 
 use App\Entity\Contribution;
@@ -7,21 +15,21 @@ use App\Entity\Role;
 use PHPUnit\Framework\TestCase;
 
 class RoleTest extends TestCase {
-    public function testAddContribution() {
+    public function testAddContribution() : void {
         $role = new Role();
         $contribution = new Contribution();
 
         $role->addContribution($contribution);
-        $this->assertEquals(1, count($role->getContributions()));
+        $this->assertSame(1, count($role->getContributions()));
     }
 
-    public function testRemoveContribution() {
+    public function testRemoveContribution() : void {
         $role = new Role();
         $contribution = new Contribution();
 
         $role->addContribution($contribution);
         $role->removeContribution($contribution);
 
-        $this->assertEquals(0, count($role->getContributions()));
+        $this->assertSame(0, count($role->getContributions()));
     }
 }

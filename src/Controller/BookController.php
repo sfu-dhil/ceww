@@ -41,7 +41,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Template()
      *
-     * @param Request $request
      * @param PublicationRepository $repo
      *
      * @return array|RedirectResponse
@@ -81,8 +80,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newAction(Request $request) {
         $book = new Book();
@@ -114,8 +111,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      * @Route("/{id}", name="book_show", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Book $book
      */
     public function showAction(Book $book) {
         $em = $this->getDoctrine()->getManager();
@@ -135,9 +130,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Book $book
      */
     public function editAction(Request $request, Book $book) {
         if ( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
@@ -171,9 +163,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      * @Route("/{id}/delete", name="book_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Request $request
-     * @param Book $book
      */
     public function deleteAction(Request $request, Book $book) {
         $em = $this->getDoctrine()->getManager();
@@ -191,9 +180,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Template()
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     *
-     * @param Request $request
-     * @param Book $book
      */
     public function newContribution(Request $request, Book $book) {
         $contribution = new Contribution();
@@ -225,8 +211,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Book $book
      */
     public function showContributions(Book $book) {
         return [
@@ -241,9 +225,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Contribution $contribution
      */
     public function editContribution(Request $request, Contribution $contribution) {
         $editForm = $this->createForm(ContributionType::class, $contribution);
@@ -269,9 +250,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      * @Route("/contributions/{id}/delete", name="book_delete_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Request $request
-     * @param Contribution $contribution
      */
     public function deleteContribution(Request $request, Contribution $contribution) {
         $em = $this->getDoctrine()->getManager();

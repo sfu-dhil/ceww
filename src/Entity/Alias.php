@@ -184,8 +184,6 @@ class Alias extends AbstractEntity {
     /**
      * Add person.
      *
-     * @param Person $person
-     *
      * @return Alias
      */
     public function addPerson(Person $person) {
@@ -196,8 +194,6 @@ class Alias extends AbstractEntity {
 
     /**
      * Remove person.
-     *
-     * @param Person $person
      */
     public function removePerson(Person $person) : void {
         $this->people->removeElement($person);

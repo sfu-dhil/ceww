@@ -36,8 +36,6 @@ class Role extends AbstractTerm {
     /**
      * Add contribution.
      *
-     * @param Contribution $contribution
-     *
      * @return Role
      */
     public function addContribution(Contribution $contribution) {
@@ -50,8 +48,6 @@ class Role extends AbstractTerm {
 
     /**
      * Remove contribution.
-     *
-     * @param Contribution $contribution
      */
     public function removeContribution(Contribution $contribution) : void {
         $this->contributions->removeElement($contribution);

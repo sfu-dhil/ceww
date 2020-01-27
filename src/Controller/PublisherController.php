@@ -35,8 +35,6 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
     /**
      * Lists all Publisher entities.
      *
-     * @param Request $request
-     *
      * @return array
      *
      * @Route("/", name="publisher_index", methods={"GET"})
@@ -58,9 +56,6 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
 
     /**
      * Typeahead API endpoint for Publisher entities.
-     *
-     * @param Request $request
-     * @param PublisherRepository $repo
      *
      * @Route("/typeahead", name="publisher_typeahead", methods={"GET"})
      *
@@ -84,8 +79,6 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
 
     /**
      * Search for Publisher entities.
-     *
-     * @param Request $request
      *
      * @Route("/search", name="publisher_search", methods={"GET"})
      *
@@ -111,8 +104,6 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
 
     /**
      * Creates a new Publisher entity.
-     *
-     * @param Request $request
      *
      * @return array|RedirectResponse
      *
@@ -145,8 +136,6 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
     /**
      * Creates a new Publisher entity in a popup.
      *
-     * @param Request $request
-     *
      * @return array|RedirectResponse
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
@@ -160,9 +149,6 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
 
     /**
      * Finds and displays a Publisher entity.
-     *
-     * @param Publisher $publisher
-     * @param PersonRepository $repo
      *
      * @return array
      *
@@ -179,9 +165,6 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
 
     /**
      * Displays a form to edit an existing Publisher entity.
-     *
-     * @param Request $request
-     * @param Publisher $publisher
      *
      * @return array|RedirectResponse
      *

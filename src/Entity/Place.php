@@ -277,8 +277,6 @@ class Place extends AbstractEntity {
     /**
      * Add peopleBorn.
      *
-     * @param Person $peopleBorn
-     *
      * @return Place
      */
     public function addPersonBorn(Person $peopleBorn) {
@@ -291,8 +289,6 @@ class Place extends AbstractEntity {
 
     /**
      * Remove peopleBorn.
-     *
-     * @param Person $peopleBorn
      */
     public function removePersonBorn(Person $peopleBorn) : void {
         $this->peopleBorn->removeElement($peopleBorn);
@@ -327,8 +323,6 @@ class Place extends AbstractEntity {
     /**
      * Add peopleDied.
      *
-     * @param Person $peopleDied
-     *
      * @return Place
      */
     public function addPersonDied(Person $peopleDied) {
@@ -341,8 +335,6 @@ class Place extends AbstractEntity {
 
     /**
      * Remove peopleDied.
-     *
-     * @param Person $peopleDied
      */
     public function removePersonDied(Person $peopleDied) : void {
         $this->peopleDied->removeElement($peopleDied);
@@ -377,8 +369,6 @@ class Place extends AbstractEntity {
     /**
      * Add resident.
      *
-     * @param Person $resident
-     *
      * @return Place
      */
     public function addResident(Person $resident) {
@@ -391,8 +381,6 @@ class Place extends AbstractEntity {
 
     /**
      * Remove resident.
-     *
-     * @param Person $resident
      */
     public function removeResident(Person $resident) : void {
         $this->residents->removeElement($resident);
@@ -437,8 +425,6 @@ class Place extends AbstractEntity {
     /**
      * Add peopleBorn.
      *
-     * @param Person $peopleBorn
-     *
      * @return Place
      */
     public function addPeopleBorn(Person $peopleBorn) {
@@ -449,8 +435,6 @@ class Place extends AbstractEntity {
 
     /**
      * Remove peopleBorn.
-     *
-     * @param Person $peopleBorn
      */
     public function removePeopleBorn(Person $peopleBorn) : void {
         $this->peopleBorn->removeElement($peopleBorn);
@@ -458,8 +442,6 @@ class Place extends AbstractEntity {
 
     /**
      * Add peopleDied.
-     *
-     * @param Person $peopleDied
      *
      * @return Place
      */
@@ -471,8 +453,6 @@ class Place extends AbstractEntity {
 
     /**
      * Remove peopleDied.
-     *
-     * @param Person $peopleDied
      */
     public function removePeopleDied(Person $peopleDied) : void {
         $this->peopleDied->removeElement($peopleDied);
@@ -503,8 +483,6 @@ class Place extends AbstractEntity {
     /**
      * Add publisher.
      *
-     * @param Publisher $publisher
-     *
      * @return Place
      */
     public function addPublisher(Publisher $publisher) {
@@ -515,8 +493,6 @@ class Place extends AbstractEntity {
 
     /**
      * Remove publisher.
-     *
-     * @param Publisher $publisher
      */
     public function removePublisher(Publisher $publisher) : void {
         $this->publishers->removeElement($publisher);

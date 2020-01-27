@@ -84,8 +84,6 @@ class Publisher extends AbstractEntity {
     /**
      * Add place.
      *
-     * @param Place $place
-     *
      * @return Publisher
      */
     public function addPlace(Place $place) {
@@ -98,8 +96,6 @@ class Publisher extends AbstractEntity {
 
     /**
      * Remove place.
-     *
-     * @param Place $place
      */
     public function removePlace(Place $place) : void {
         $this->places->removeElement($place);

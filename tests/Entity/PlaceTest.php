@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * This source file is subject to the GPL v2, bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Entity;
 
 use App\Entity\Book;
@@ -16,37 +24,37 @@ class PlaceTest extends TestCase {
      * @param mixed $testPlace
      * @param mixed $expectedName
      */
-    public function testGetName($testPlace, $expectedName) {
+    public function testGetName($testPlace, $expectedName) : void {
         $place = new Place();
         $place->setName($testPlace);
-        $this->assertEquals($expectedName, $place->getName());
+        $this->assertSame($expectedName, $place->getName());
     }
 
     public function getNameData() {
-        return array(
-            array('/Vancouver', '/Vancouver'),
-            array('[Vancouver', '[Vancouver'),
-            array(']Vancouver', ']Vancouver'),
-            array('Va?ncouver', 'Va?ncouver'),
-            array('**Vancouver', '**Vancouver'),
-            array('^Vancouver', '^Vancouver'),
-            array('?Vancouver', 'Vancouver'),
-            array(',Vancouver', 'Vancouver'),
-            array(' Vancouver', 'Vancouver'),
-        );
+        return [
+            ['/Vancouver', '/Vancouver'],
+            ['[Vancouver', '[Vancouver'],
+            [']Vancouver', ']Vancouver'],
+            ['Va?ncouver', 'Va?ncouver'],
+            ['**Vancouver', '**Vancouver'],
+            ['^Vancouver', '^Vancouver'],
+            ['?Vancouver', 'Vancouver'],
+            [',Vancouver', 'Vancouver'],
+            [' Vancouver', 'Vancouver'],
+        ];
     }
 
-    public function testAppendNote() {
+    public function testAppendNote() : void {
         $testNote = 'This is a note to append.';
 
         $place = new Place();
 
         $place->appendNote($testNote);
 
-        $this->assertEquals($testNote, $place->getNotes());
+        $this->assertSame($testNote, $place->getNotes());
     }
 
-    public function testAddPeopleBorn() {
+    public function testAddPeopleBorn() : void {
         $place = new Place();
         $person = new Person();
 
@@ -55,7 +63,7 @@ class PlaceTest extends TestCase {
         $this->assertCount(1, $place->getPeopleBorn());
     }
 
-    public function testAddPeopleDied() {
+    public function testAddPeopleDied() : void {
         $place = new Place();
         $person = new Person();
 
@@ -64,9 +72,9 @@ class PlaceTest extends TestCase {
         $this->assertCount(1, $place->getPeopleDied());
     }
 
-    public function testGetPeopleBorn() {
+    public function testGetPeopleBorn() : void {
         $place = new Place();
-        foreach (array('a' => 1950, 'b' => 1930, 'c' => 1970, 'd' => null, 'e' => 1960, 'f' => null) as $name => $year) {
+        foreach (['a' => 1950, 'b' => 1930, 'c' => 1970, 'd' => null, 'e' => 1960, 'f' => null] as $name => $year) {
             $person = new Person();
             $person->setFullName($name);
             if (null !== $year) {
@@ -78,17 +86,17 @@ class PlaceTest extends TestCase {
         }
         $people = $place->getPeopleBorn();
         $this->assertCount(6, $people);
-        $this->assertEquals('d', $people[0]->getFullName());
-        $this->assertEquals('f', $people[1]->getFullName());
-        $this->assertEquals('b', $people[2]->getFullName());
-        $this->assertEquals('a', $people[3]->getFullName());
-        $this->assertEquals('e', $people[4]->getFullName());
-        $this->assertEquals('c', $people[5]->getFullName());
+        $this->assertSame('d', $people[0]->getFullName());
+        $this->assertSame('f', $people[1]->getFullName());
+        $this->assertSame('b', $people[2]->getFullName());
+        $this->assertSame('a', $people[3]->getFullName());
+        $this->assertSame('e', $people[4]->getFullName());
+        $this->assertSame('c', $people[5]->getFullName());
     }
 
-    public function testGetPeopleDied() {
+    public function testGetPeopleDied() : void {
         $place = new Place();
-        foreach (array('a' => 1950, 'b' => 1930, 'c' => 1970, 'd' => null, 'e' => 1960, 'f' => null) as $name => $year) {
+        foreach (['a' => 1950, 'b' => 1930, 'c' => 1970, 'd' => null, 'e' => 1960, 'f' => null] as $name => $year) {
             $person = new Person();
             $person->setFullName($name);
             if (null !== $year) {
@@ -100,15 +108,15 @@ class PlaceTest extends TestCase {
         }
         $people = $place->getPeopleDied();
         $this->assertCount(6, $people);
-        $this->assertEquals('d', $people[0]->getFullName());
-        $this->assertEquals('f', $people[1]->getFullName());
-        $this->assertEquals('b', $people[2]->getFullName());
-        $this->assertEquals('a', $people[3]->getFullName());
-        $this->assertEquals('e', $people[4]->getFullName());
-        $this->assertEquals('c', $people[5]->getFullName());
+        $this->assertSame('d', $people[0]->getFullName());
+        $this->assertSame('f', $people[1]->getFullName());
+        $this->assertSame('b', $people[2]->getFullName());
+        $this->assertSame('a', $people[3]->getFullName());
+        $this->assertSame('e', $people[4]->getFullName());
+        $this->assertSame('c', $people[5]->getFullName());
     }
 
-    public function testAddResident() {
+    public function testAddResident() : void {
         $place = new Place();
         $person = new Person();
 
@@ -117,9 +125,9 @@ class PlaceTest extends TestCase {
         $this->assertCount(1, $place->getResidents());
     }
 
-    public function testGetResidents() {
+    public function testGetResidents() : void {
         $place = new Place();
-        foreach (array('b', 'd', 'a', 'c') as $name) {
+        foreach (['b', 'd', 'a', 'c'] as $name) {
             $person = new Person();
             $person->setFullName($name);
             $person->setSortableName($name);
@@ -127,13 +135,13 @@ class PlaceTest extends TestCase {
         }
         $people = $place->getResidents();
         $this->assertCount(4, $people);
-        $this->assertEquals('a', $people[0]->getFullName());
-        $this->assertEquals('b', $people[1]->getFullName());
-        $this->assertEquals('c', $people[2]->getFullName());
-        $this->assertEquals('d', $people[3]->getFullName());
+        $this->assertSame('a', $people[0]->getFullName());
+        $this->assertSame('b', $people[1]->getFullName());
+        $this->assertSame('c', $people[2]->getFullName());
+        $this->assertSame('d', $people[3]->getFullName());
     }
 
-    public function testAddPublication() {
+    public function testAddPublication() : void {
         $place = new Place();
         $publication = new Book();
 
@@ -142,9 +150,9 @@ class PlaceTest extends TestCase {
         $this->assertCount(1, $place->getPublications());
     }
 
-    public function testGetPublications() {
+    public function testGetPublications() : void {
         $place = new Place();
-        foreach (array('b', 'd', 'a', 'c') as $name) {
+        foreach (['b', 'd', 'a', 'c'] as $name) {
             $publication = new Periodical();
             $publication->setTitle($name);
             $publication->setSortableTitle($name);
@@ -152,9 +160,9 @@ class PlaceTest extends TestCase {
         }
         $publications = $place->getPublications();
         $this->assertCount(4, $publications);
-        $this->assertEquals('a', $publications[0]->getTitle());
-        $this->assertEquals('b', $publications[1]->getTitle());
-        $this->assertEquals('c', $publications[2]->getTitle());
-        $this->assertEquals('d', $publications[3]->getTitle());
+        $this->assertSame('a', $publications[0]->getTitle());
+        $this->assertSame('b', $publications[1]->getTitle());
+        $this->assertSame('c', $publications[2]->getTitle());
+        $this->assertSame('d', $publications[3]->getTitle());
     }
 }

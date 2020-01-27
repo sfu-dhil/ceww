@@ -43,7 +43,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Template()
      *
-     * @param Request $request
      * @param PublicationRepository $repo
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
@@ -84,8 +83,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
      */
     public function newAction(Request $request) {
         $periodical = new Periodical();
@@ -117,8 +114,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Route("/{id}", name="periodical_show", methods={"GET"})
      *
      * @Template()
-     *
-     * @param Periodical $periodical
      */
     public function showAction(Periodical $periodical) {
         $em = $this->getDoctrine()->getManager();
@@ -138,9 +133,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Periodical $periodical
      */
     public function editAction(Request $request, Periodical $periodical) {
         $editForm = $this->createForm(PeriodicalType::class, $periodical);
@@ -165,12 +157,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
 
     /**
      * Finds and merges periodicals.
-     *
-     * @param Request $request
-     * @param Periodical $periodical
-     * @param EntityManagerInterface $em
-     * @param Merger $merger
-     * @param PeriodicalRepository $repo
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
@@ -209,9 +195,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Route("/{id}/delete", name="periodical_delete", methods={"GET","POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Request $request
-     * @param Periodical $periodical
      */
     public function deleteAction(Request $request, Periodical $periodical) {
         $em = $this->getDoctrine()->getManager();
@@ -229,9 +212,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Periodical $periodical
      */
     public function newContribution(Request $request, Periodical $periodical) {
         $contribution = new Contribution();
@@ -263,8 +243,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Periodical $periodical
      */
     public function showContributions(Periodical $periodical) {
         return [
@@ -279,9 +257,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template()
-     *
-     * @param Request $request
-     * @param Contribution $contribution
      */
     public function editContribution(Request $request, Contribution $contribution) {
         $editForm = $this->createForm(ContributionType::class, $contribution);
@@ -307,9 +282,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Route("/contributions/{id}/delete", name="periodical_delete_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     *
-     * @param Request $request
-     * @param Contribution $contribution
      */
     public function deleteContribution(Request $request, Contribution $contribution) {
         $em = $this->getDoctrine()->getManager();

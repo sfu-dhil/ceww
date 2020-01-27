@@ -24,10 +24,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class PersonType extends AbstractType {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options) : void {
         $builder->add('fullName', null, [
             'label' => 'Full Name',
@@ -186,9 +182,6 @@ class PersonType extends AbstractType {
         ]);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver) : void {
         $resolver->setDefaults([
             'data_class' => 'App\Entity\Person',
