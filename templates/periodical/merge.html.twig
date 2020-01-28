@@ -37,7 +37,7 @@
 
     {% if periodicals|length %}
         <form method="post" action="{{ path('periodical_merge', {'id': periodical.id}) }}" class="form-horizontal">
-            {% for p in periodicals if p.id != periodical.id %}
+            {% for p in periodicals|filter(p => p.id != periodical.id) %}
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="periodicals[]" value="{{p.id}}"> {{ p }}

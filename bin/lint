@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# debugging settings
+# set -o xtrace
+# set -o verbose
+
+trap "echo 'Exit due to error on line $LINENO.'; exit;" ERR
+
+php-cs-fixer fix --diff --dry-run
+./bin/console lint:yaml --quiet config --parse-tags
+./bin/console lint:twig --quiet templates
+./bin/console lint:container --quiet
+./bin/console doctrine:schema:validate --quiet --skip-sync -vvv --no-interaction
+composer validate

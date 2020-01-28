@@ -36,7 +36,7 @@
 
     {% if places|length %}
         <form method="post" action="{{ path('place_merge', {'id': place.id}) }}" class="form-horizontal">
-            {% for p in places if p.id != place.id %}
+            {% for p in places|filter(p => p.id != place.id) %}
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="places[]" value="{{p.id}}"> {{ p.name }}

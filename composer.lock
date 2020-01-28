@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f2b18cc1f39efeee38909c9d16f7b0e",
+    "content-hash": "3fa1399098e872d5fe296d60d4978e8a",
     "packages": [
         {
             "name": "aternus/geonames-client",
@@ -3429,16 +3429,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "952f45d1c5077e658cb16a61d11603bee873f968"
+                "reference": "c497c0c77cb9018cccd9c092832ebf9826612f92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/952f45d1c5077e658cb16a61d11603bee873f968",
-                "reference": "952f45d1c5077e658cb16a61d11603bee873f968",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/c497c0c77cb9018cccd9c092832ebf9826612f92",
+                "reference": "c497c0c77cb9018cccd9c092832ebf9826612f92",
                 "shasum": ""
             },
             "require": {
@@ -3474,7 +3474,7 @@
                 }
             ],
             "description": "Composer plugin for Symfony",
-            "time": "2019-12-13T18:05:11+00:00"
+            "time": "2020-01-27T15:38:49+00:00"
         },
         {
             "name": "symfony/form",
@@ -6674,12 +6674,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ubermichael/nines-bundles.git",
-                "reference": "68317e84109c1bd55341e35eb4ca344cd2387937"
+                "reference": "f962ab6fa6781a00ea9a72b6a51800a954885d83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/68317e84109c1bd55341e35eb4ca344cd2387937",
-                "reference": "68317e84109c1bd55341e35eb4ca344cd2387937",
+                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/f962ab6fa6781a00ea9a72b6a51800a954885d83",
+                "reference": "f962ab6fa6781a00ea9a72b6a51800a954885d83",
                 "shasum": ""
             },
             "require": {
@@ -6722,7 +6722,7 @@
                 "source": "https://github.com/ubermichael/nines-bundles/tree/4.x",
                 "issues": "https://github.com/ubermichael/nines-bundles/issues"
             },
-            "time": "2020-01-27T21:13:15+00:00"
+            "time": "2020-01-27T23:45:02+00:00"
         },
         {
             "name": "webmozart/assert",

@@ -169,7 +169,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
             $periodicals = $repo->findBy(['id' => $request->request->get('periodicals')]);
             $count = count($periodicals);
             $merger->periodicals($periodical, $periodicals);
-            $this->addFlash('success', "Merged {$count} places into {$periodical->getTitle()}.");
+            $this->addFlash('success', "Merged {$count} periodicals into {$periodical->getTitle()}.");
 
             return $this->redirect($this->generateUrl('periodical_show', ['id' => $periodical->getId()]));
         }
