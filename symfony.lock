@@ -141,6 +141,9 @@
     "nikic/php-parser": {
         "version": "v4.3.0"
     },
+    "ninsuo/symfony-collection": {
+        "version": "2.1.33"
+    },
     "ocramius/package-versions": {
         "version": "1.4.2"
     },

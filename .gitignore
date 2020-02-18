@@ -28,3 +28,6 @@
 public/yarn
 config/deploy.yml
 *.sql
+templates/jquery.collection.html.twig
+public/docs
+config/deploy.yaml

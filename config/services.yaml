@@ -14,6 +14,13 @@ parameters:
     app.geonames.username: '%env(GEONAMES_USERNAME)%'
     page_size: 50
 
+    dhil.piwik_enabled: '%env(bool:PIWIK_ENABLED)%'
+    dhil.piwik_url: //piwik.lib.sfu.ca/piwik/
+    dhil.piwik_siteid: 37
+    dhil.piwik_domain: dhil.lib.sfu.ca/doceww
+
+    nines_feedback.recipients: '%env(json:FEEDBACK_RECIPIENTS)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
