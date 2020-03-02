@@ -31,3 +31,4 @@ config/deploy.yml
 templates/jquery.collection.html.twig
 public/docs
 config/deploy.yaml
+public/js/jquery.collection.js
