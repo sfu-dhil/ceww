@@ -28,7 +28,7 @@ class PublicationRepository extends ServiceEntityRepository {
     public function letterPage($letter, $category, $pageSize) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('count(1)');
-        $qb->from('AppBundle:Publication', 'p');
+        $qb->from(Publication::class, 'p');
         $qb->where('p INSTANCE OF :category');
         $qb->setParameter('category', $category);
         $qb->andWhere('p.sortableTitle < :letter');

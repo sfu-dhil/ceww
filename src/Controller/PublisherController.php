@@ -86,7 +86,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      */
     public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Publisher');
+        $repo = $em->getRepository(Person::class);
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);

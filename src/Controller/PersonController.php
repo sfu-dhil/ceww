@@ -96,7 +96,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
             return new JsonResponse([]);
         }
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('AppBundle:Person');
+        $repo = $em->getRepository(Person::class);
         $data = [];
         foreach ($repo->typeaheadQuery($q) as $result) {
             $name = $result->getFullname();
