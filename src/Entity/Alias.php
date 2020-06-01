@@ -79,7 +79,7 @@ class Alias extends AbstractEntity {
         $this->notes = '';
     }
 
-    public function __toString() {
+    public function __toString() : string {
         return $this->name;
     }
 

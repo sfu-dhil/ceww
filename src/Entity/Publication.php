@@ -116,7 +116,7 @@ abstract class Publication extends AbstractEntity {
         $this->publishers = new ArrayCollection();
     }
 
-    public function __toString() {
+    public function __toString() : string {
         return $this->title;
     }
 

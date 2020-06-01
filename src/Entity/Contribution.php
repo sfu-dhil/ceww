@@ -45,7 +45,7 @@ class Contribution extends AbstractEntity {
         parent::__construct();
     }
 
-    public function __toString() {
+    public function __toString() : string {
         return "{$this->role->getName()}:{$this->person->getFullName()}:{$this->publication->getTitle()}";
     }
 

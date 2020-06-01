@@ -133,7 +133,7 @@ class Person extends AbstractEntity {
         $this->urlLinks = [];
     }
 
-    public function __toString() {
+    public function __toString() : string {
         if ($this->fullName) {
             return $this->fullName;
         }

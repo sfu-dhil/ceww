@@ -128,7 +128,7 @@ class Place extends AbstractEntity {
         $this->notes = '';
     }
 
-    public function __toString() {
+    public function __toString() : string {
         return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
