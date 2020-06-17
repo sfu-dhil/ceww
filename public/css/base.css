@@ -63,6 +63,10 @@ ul.columnated li:before {
     left: -1em;
 }
 
+tbody tr th {
+    width: 20%;
+}
+
 @media (max-width: 480px) {
     ul.columnated {
         -moz-column-count: 1;
