@@ -12,6 +12,7 @@ namespace App\Form;
 
 use App\Entity\Place;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
@@ -49,6 +50,13 @@ class PublisherType extends AbstractType {
             'attr' => [
                 'help_block' => 'Geotagged location for place',
             ],
+        ]);
+        $builder->add('notes', TextareaType::class, [
+            'label' => 'Notes',
+            'attr' => [
+                'class' => 'tinymce',
+                'help_block' => 'Public notes about the publisher.'
+            ]
         ]);
     }
 

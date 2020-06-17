@@ -36,6 +36,12 @@ class Publisher extends AbstractEntity {
     private $name;
 
     /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $notes;
+
+    /**
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
      * @ORM\OrderBy({"sortableName" = "ASC"})
@@ -53,6 +59,7 @@ class Publisher extends AbstractEntity {
         $this->trait_constructor();
         parent::__construct();
         $this->places = new ArrayCollection();
+        $this->publications = new ArrayCollection();
     }
 
     public function __toString() : string {
@@ -112,5 +119,45 @@ class Publisher extends AbstractEntity {
 
     public function setPlaces($places) : void {
         $this->places = $places;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): self
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Publication[]
+     */
+    public function getPublications(): Collection
+    {
+        return $this->publications;
+    }
+
+    public function addPublication(Publication $publication): self
+    {
+        if (!$this->publications->contains($publication)) {
+            $this->publications[] = $publication;
+            $publication->addPublisher($this);
+        }
+
+        return $this;
+    }
+
+    public function removePublication(Publication $publication): self
+    {
+        if ($this->publications->contains($publication)) {
+            $this->publications->removeElement($publication);
+            $publication->removePublisher($this);
+        }
+
+        return $this;
     }
 }

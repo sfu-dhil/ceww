@@ -29,6 +29,10 @@
                 <td>{{ publisher.name }}</td>
             </tr>
             <tr>
+                <th>Notes</th>
+                <td>{{ publisher.notes|raw }}</td>
+            </tr>
+            <tr>
                 <th>Created</th>
                 <td>{% if publisher.created %}{{ publisher.created|date }}{% endif %}</td>
             </tr>
