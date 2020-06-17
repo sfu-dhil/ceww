@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Person;
 use App\Entity\Publisher;
 use App\Form\PublisherType;
 use App\Repository\PersonRepository;
@@ -19,9 +20,9 @@ use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -86,7 +87,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      */
     public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Person::class);
+        $repo = $em->getRepository(Publisher::class);
         $q = $request->query->get('q');
         if ($q) {
             $query = $repo->searchQuery($q);
@@ -105,7 +106,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
     /**
      * Creates a new Publisher entity.
      *
-     * @return array|RedirectResponse
+     * @return array|Response
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Route("/new", name="publisher_new", methods={"GET","POST"})
@@ -136,7 +137,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
     /**
      * Creates a new Publisher entity in a popup.
      *
-     * @return array|RedirectResponse
+     * @return array|Response
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Route("/new_popup", name="publisher_new_popup", methods={"GET","POST"})
@@ -166,7 +167,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
     /**
      * Displays a form to edit an existing Publisher entity.
      *
-     * @return array|RedirectResponse
+     * @return array|Response
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Route("/{id}/edit", name="publisher_edit", methods={"GET","POST"})
@@ -197,7 +198,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      * @param Request $request Dependency injected HTTP request object.
      * @param Publisher $publisher The Publisher to delete.
      *
-     * @return array|RedirectResponse A redirect to the publisher_index.
+     * @return array|Response A redirect to the publisher_index.
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Route("/{id}/delete", name="publisher_delete", methods={"GET","POST"})
