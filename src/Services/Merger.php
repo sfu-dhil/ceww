@@ -13,6 +13,7 @@ namespace App\Services;
 use App\Entity\Contribution;
 use App\Entity\Periodical;
 use App\Entity\Place;
+use App\Entity\Publisher;
 use App\Repository\PlaceRepository;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\ORM\EntityManager;
@@ -126,6 +127,25 @@ class Merger {
                 $destination->addPublisher($publisher);
             }
             $this->em->remove($publication);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @param Publisher $destination
+     * @param Publisher[] $publishers
+     */
+    public function publishers(Publisher $destination, array $publishers) : void {
+        foreach($publishers as $publisher) {
+            foreach($publisher->getPlaces() as $place) {
+                $destination->addPlace($place);
+            }
+            foreach($publisher->getPublications() as $publication) {
+                $destination->addPublication($publication);
+            }
+            $notes = trim($destination->getNotes() . "\n" . $publisher->getNotes());
+            $destination->setNotes(nl2br($notes));
+            $this->em->remove($publisher);
         }
         $this->em->flush();
     }

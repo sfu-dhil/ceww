@@ -15,8 +15,10 @@ use App\DataFixtures\CompilationFixtures;
 use App\DataFixtures\PeriodicalFixtures;
 use App\DataFixtures\PersonFixtures;
 use App\DataFixtures\PlaceFixtures;
+use App\DataFixtures\PublisherFixtures;
 use App\Entity\Periodical;
 use App\Entity\Place;
+use App\Entity\Publisher;
 use App\Repository\PlaceRepository;
 use App\Services\Merger;
 use Nines\UtilBundle\Tests\ServiceBaseCase;
@@ -39,6 +41,7 @@ class MergerTest extends ServiceBaseCase {
             BookFixtures::class,
             CompilationFixtures::class,
             PlaceFixtures::class,
+            PublisherFixtures::class,
         ];
     }
 
@@ -70,6 +73,17 @@ class MergerTest extends ServiceBaseCase {
         $this->assertSame("note 1\n\nnote 2", $periodicals[0]->getNotes());
         $this->assertCount(2, $periodicals[0]->getContributions());
         $this->assertCount(2, $periodicals[0]->getPublishers());
+    }
+
+    public function testPublisherMerge() : void {
+        $repo = $this->entityManager->getRepository(Publisher::class);
+        $this->merger->publishers($this->getReference('publisher.1', true), [
+            $this->getReference('publisher.2', true),
+        ]);
+        $publishers = $repo->findAll();
+        $this->assertCount(1, $publishers);
+        $this->assertCount(3, $publishers[0]->getPlaces());
+        $this->assertCount(2, $publishers[0]->getPublications());
     }
 
     public function setUp() : void {

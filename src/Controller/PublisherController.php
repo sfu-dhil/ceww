@@ -11,10 +11,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\Entity\Place;
 use App\Entity\Publisher;
 use App\Form\PublisherType;
 use App\Repository\PersonRepository;
+use App\Repository\PlaceRepository;
 use App\Repository\PublisherRepository;
+use App\Services\Merger;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -189,6 +192,39 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
         return [
             'publisher' => $publisher,
             'edit_form' => $editForm->createView(),
+        ];
+    }
+
+    /**
+     * Finds and displays a Place entity.
+     *
+     * @Route("/{id}/merge", name="publisher_merge")
+     *
+     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
+     * @Template()
+     */
+    public function mergeAction(Request $request, Publisher $publisher, Merger $merger, PublisherRepository $repo) {
+        if ('POST' === $request->getMethod()) {
+            $publishers = $repo->findBy(['id' => $request->request->get('publishers')]);
+            $count = count($publishers);
+            $merger->publishers($publisher, $publishers);
+            $this->addFlash('success', "Merged {$count} publishers into {$publisher->getName()}.");
+
+            return $this->redirect($this->generateUrl('publisher_show', ['id' => $publisher->getId()]));
+        }
+
+        $q = $request->query->get('q');
+        if ($q) {
+            $query = $repo->searchQuery($q);
+            $publishers = $query->execute();
+        } else {
+            $publishers = [];
+        }
+
+        return [
+            'publisher' => $publisher,
+            'publishers' => $publishers,
+            'q' => $q,
         ];
     }
 
