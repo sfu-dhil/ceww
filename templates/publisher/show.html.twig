@@ -16,6 +16,9 @@
                 <a href="{{ path('publisher_edit', { 'id': publisher.id }) }}" class="btn btn-default">
                     <span class='glyphicon glyphicon-edit'></span> Edit
                 </a>
+                <a href="{{ path('publisher_merge', { 'id': publisher.id }) }}" class="btn btn-default">
+                    <span class='glyphicon glyphicon-resize-small'></span> Merge
+                </a>
                 <a href="{{ path('publisher_delete', { 'id': publisher.id }) }}" class="btn btn-default" data-confirm="Are you sure you want to delete this Publisher?">
                     <span class='glyphicon glyphicon-remove'></span> Delete
                 </a>
