@@ -20,16 +20,16 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *
  * @ORM\Entity(repositoryClass="App\Repository\PublicationRepository")
  * @ORM\Table(name="publication", indexes={
- *  @ORM\Index(columns={"title"}, flags={"fulltext"}),
- *  @ORM\Index(columns={"sortable_title"}, flags={"fulltext"}),
- *  @ORM\Index(columns={"category"}),
+ *     @ORM\Index(columns={"title"}, flags={"fulltext"}),
+ *     @ORM\Index(columns={"sortable_title"}, flags={"fulltext"}),
+ *     @ORM\Index(columns={"category"}),
  * })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="category", type="string")
  * @ORM\DiscriminatorMap({
- *  "book" = "Book",
- *  "compilation" = "Compilation",
- *  "periodical" = "Periodical"
+ *     "book": "Book",
+ *     "compilation": "Compilation",
+ *     "periodical": "Periodical"
  * })
  */
 abstract class Publication extends AbstractEntity {
@@ -38,7 +38,9 @@ abstract class Publication extends AbstractEntity {
     }
 
     public const BOOK = 'book';
+
     public const COMPILATION = 'compilation';
+
     public const PERIODICAL = 'periodical';
 
     /**
@@ -91,7 +93,7 @@ abstract class Publication extends AbstractEntity {
      * @var Collection|Genre[]
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publications_genres")
-     * @ORM\OrderBy({"label" = "ASC"})
+     * @ORM\OrderBy({"label": "ASC"})
      */
     private $genres;
 
@@ -104,7 +106,7 @@ abstract class Publication extends AbstractEntity {
     /**
      * @var Collection|Publisher
      * @ORM\ManyToMany(targetEntity="Publisher", inversedBy="publications")
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @ORM\OrderBy({"name": "ASC"})
      */
     private $publishers;
 
@@ -209,7 +211,7 @@ abstract class Publication extends AbstractEntity {
             $data = $this->links->toArray();
         }
         usort($data, function ($a, $b) {
-            return substr($a, strpos($a, '//') + 1) <=> substr($b, strpos($b, '//') + 1);
+            return mb_substr($a, mb_strpos($a, '//') + 1) <=> mb_substr($b, mb_strpos($b, '//') + 1);
         });
 
         return $data;
@@ -304,7 +306,7 @@ abstract class Publication extends AbstractEntity {
      *
      * @return Publication
      */
-    public function setLocation(Place $location = null) {
+    public function setLocation(?Place $location = null) {
         $this->location = $location;
 
         return $this;

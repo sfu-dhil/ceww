@@ -36,7 +36,7 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @Route("/", name="alias_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -56,7 +56,7 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @Route("/search", name="alias_search", methods={"GET"})
      *
-     * @Template()
+     * @Template
      *
      * @return array
      */
@@ -87,6 +87,7 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
             return new JsonResponse([]);
         }
         $data = [];
+
         foreach ($repo->typeaheadQuery($q) as $result) {
             $data[] = [
                 'id' => $result->getId(),
@@ -100,10 +101,10 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
     /**
      * Creates a new Alias entity.
      *
-     * @Route("/new", name="alias_new", methods={"GET","POST"})
+     * @Route("/new", name="alias_new", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $alias = new Alias();
@@ -129,10 +130,10 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
     /**
      * Creates a new Alias entity.
      *
-     * @Route("/new", name="alias_new_popup", methods={"GET","POST"})
+     * @Route("/new", name="alias_new_popup", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newPopupAction(Request $request) {
         return $this->newAction($request);
@@ -143,7 +144,7 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @Route("/{id}", name="alias_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Alias $alias) {
         return [
@@ -154,10 +155,10 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
     /**
      * Displays a form to edit an existing Alias entity.
      *
-     * @Route("/{id}/edit", name="alias_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="alias_edit", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editAction(Request $request, Alias $alias) {
         $editForm = $this->createForm(AliasType::class, $alias);
@@ -180,7 +181,7 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
     /**
      * Deletes a Alias entity.
      *
-     * @Route("/{id}/delete", name="alias_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="alias_delete", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      */

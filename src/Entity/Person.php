@@ -19,8 +19,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * Person.
  *
  * @ORM\Table(name="person", indexes={
- *  @ORM\Index(columns={"full_name"}, flags={"fulltext"}),
- *  @ORM\Index(columns={"sortable_name"})
+ *     @ORM\Index(columns={"full_name"}, flags={"fulltext"}),
+ *     @ORM\Index(columns={"sortable_name"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  */
@@ -107,14 +107,14 @@ class Person extends AbstractEntity {
     /**
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $residences;
 
     /**
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Alias", inversedBy="people")
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $aliases;
 
@@ -268,7 +268,7 @@ class Person extends AbstractEntity {
      *
      * @return Person
      */
-    public function setBirthPlace(Place $birthPlace = null) {
+    public function setBirthPlace(?Place $birthPlace = null) {
         $this->birthPlace = $birthPlace;
 
         return $this;
@@ -316,7 +316,7 @@ class Person extends AbstractEntity {
      *
      * @return Person
      */
-    public function setDeathPlace(Place $deathPlace = null) {
+    public function setDeathPlace(?Place $deathPlace = null) {
         $this->deathPlace = $deathPlace;
 
         return $this;

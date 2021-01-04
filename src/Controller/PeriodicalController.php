@@ -41,7 +41,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Route("/", name="periodical_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      *
      * @param PublicationRepository $repo
      *
@@ -62,6 +62,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
 
         $periodicals = $this->paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
         $letterIndex = [];
+
         foreach ($periodicals as $periodical) {
             $title = $periodical->getSortableTitle();
             if ( ! $title) {
@@ -79,10 +80,10 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
     /**
      * Creates a new Periodical entity.
      *
-     * @Route("/new", name="periodical_new", methods={"GET","POST"})
+     * @Route("/new", name="periodical_new", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $periodical = new Periodical();
@@ -113,7 +114,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      *
      * @Route("/{id}", name="periodical_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Periodical $periodical) {
         $em = $this->getDoctrine()->getManager();
@@ -129,10 +130,10 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
     /**
      * Displays a form to edit an existing Periodical entity.
      *
-     * @Route("/{id}/edit", name="periodical_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="periodical_edit", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editAction(Request $request, Periodical $periodical) {
         $editForm = $this->createForm(PeriodicalType::class, $periodical);
@@ -162,7 +163,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      * @Route("/{id}/merge", name="periodical_merge")
      *
-     * @Template()
+     * @Template
      */
     public function mergeAction(Request $request, Periodical $periodical, EntityManagerInterface $em, Merger $merger, PeriodicalRepository $repo) {
         if ('POST' === $request->getMethod()) {
@@ -192,7 +193,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
     /**
      * Deletes a Periodical entity.
      *
-     * @Route("/{id}/delete", name="periodical_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="periodical_delete", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      */
@@ -211,7 +212,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Route("/{id}/contributions/new", name="periodical_new_contribution")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newContribution(Request $request, Periodical $periodical) {
         $contribution = new Contribution();
@@ -242,7 +243,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Route("/{id}/contributions", name="periodical_show_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function showContributions(Periodical $periodical) {
         return [
@@ -256,7 +257,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Route("/contributions/{id}/edit", name="periodical_edit_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editContribution(Request $request, Contribution $contribution) {
         $editForm = $this->createForm(ContributionType::class, $contribution);

@@ -74,6 +74,7 @@ class PlaceTest extends TestCase {
 
     public function testGetPeopleBorn() : void {
         $place = new Place();
+
         foreach (['a' => 1950, 'b' => 1930, 'c' => 1970, 'd' => null, 'e' => 1960, 'f' => null] as $name => $year) {
             $person = new Person();
             $person->setFullName($name);
@@ -96,6 +97,7 @@ class PlaceTest extends TestCase {
 
     public function testGetPeopleDied() : void {
         $place = new Place();
+
         foreach (['a' => 1950, 'b' => 1930, 'c' => 1970, 'd' => null, 'e' => 1960, 'f' => null] as $name => $year) {
             $person = new Person();
             $person->setFullName($name);
@@ -127,6 +129,7 @@ class PlaceTest extends TestCase {
 
     public function testGetResidents() : void {
         $place = new Place();
+
         foreach (['b', 'd', 'a', 'c'] as $name) {
             $person = new Person();
             $person->setFullName($name);
@@ -152,6 +155,7 @@ class PlaceTest extends TestCase {
 
     public function testGetPublications() : void {
         $place = new Place();
+
         foreach (['b', 'd', 'a', 'c'] as $name) {
             $publication = new Periodical();
             $publication->setTitle($name);

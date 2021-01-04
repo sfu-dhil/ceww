@@ -53,13 +53,13 @@ class MergerTest extends ServiceBaseCase {
 
         $repo = $this->entityManager->getRepository(Place::class);
         $mergedPlaces = $repo->findAll();
-        $this->assertSame(1, count($mergedPlaces));
+        $this->assertCount(1, $mergedPlaces);
 
         $place = $this->getReference('place.3');
-        $this->assertSame(1, count($place->getPeopleBorn()));
-        $this->assertSame(1, count($place->getPeopleDied()));
-        $this->assertSame(0, count($place->getResidents()));
-        $this->assertSame(4, count($place->getPublications()));
+        $this->assertCount(1, $place->getPeopleBorn());
+        $this->assertCount(1, $place->getPeopleDied());
+        $this->assertCount(0, $place->getResidents());
+        $this->assertCount(4, $place->getPublications());
     }
 
     public function testPeriodicalMerge() : void {

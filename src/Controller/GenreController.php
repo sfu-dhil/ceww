@@ -36,7 +36,7 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      *
      * @Route("/", name="genre_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -62,6 +62,7 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
             return new JsonResponse([]);
         }
         $data = [];
+
         foreach ($repo->typeaheadQuery($q) as $result) {
             $data[] = [
                 'id' => $result->getId(),
@@ -75,10 +76,10 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
     /**
      * Creates a new Genre entity.
      *
-     * @Route("/new", name="genre_new", methods={"GET","POST"})
+     * @Route("/new", name="genre_new", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $genre = new Genre();
@@ -106,7 +107,7 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      *
      * @Route("/{id}", name="genre_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Genre $genre) {
         return [
@@ -117,10 +118,10 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
     /**
      * Displays a form to edit an existing Genre entity.
      *
-     * @Route("/{id}/edit", name="genre_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="genre_edit", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editAction(Request $request, Genre $genre) {
         $editForm = $this->createForm(GenreType::class, $genre);
@@ -144,7 +145,7 @@ class GenreController extends AbstractController implements PaginatorAwareInterf
      * Deletes a Genre entity.
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     * @Route("/{id}/delete", name="genre_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="genre_delete", methods={"GET", "POST"})
      */
     public function deleteAction(Request $request, Genre $genre) {
         $em = $this->getDoctrine()->getManager();

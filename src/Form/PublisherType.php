@@ -55,8 +55,8 @@ class PublisherType extends AbstractType {
             'label' => 'Notes',
             'attr' => [
                 'class' => 'tinymce',
-                'help_block' => 'Public notes about the publisher.'
-            ]
+                'help_block' => 'Public notes about the publisher.',
+            ],
         ]);
     }
 

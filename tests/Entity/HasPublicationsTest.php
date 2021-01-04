@@ -29,27 +29,27 @@ class HasPublicationsTest extends BaseCase {
     public function testAddPublication() : void {
         $mock = $this->getMockForTrait(HasPublications::class);
         $mock->addPublication($this->references->getReference('book.1'));
-        $this->assertSame(1, count($mock->getPublications()));
+        $this->assertCount(1, $mock->getPublications());
     }
 
     public function testDuplicatePublication() : void {
         $mock = $this->getMockForTrait(HasPublications::class);
         $mock->addPublication($this->references->getReference('book.1'));
         $mock->addPublication($this->references->getReference('book.1'));
-        $this->assertSame(1, count($mock->getPublications()));
+        $this->assertCount(1, $mock->getPublications());
     }
 
     public function testGetPublications() : void {
         $mock = $this->getMockForTrait(HasPublications::class);
         $mock->addPublication($this->references->getReference('book.1'));
         $mock->addPublication($this->references->getReference('compilation.1'));
-        $this->assertSame(2, count($mock->getPublications()));
+        $this->assertCount(2, $mock->getPublications());
     }
 
     public function testGetPublicationsCategory() : void {
         $mock = $this->getMockForTrait(HasPublications::class);
         $mock->addPublication($this->references->getReference('book.1'));
         $mock->addPublication($this->references->getReference('compilation.1'));
-        $this->assertSame(1, count($mock->getPublications(Publication::BOOK)));
+        $this->assertCount(1, $mock->getPublications(Publication::BOOK));
     }
 }

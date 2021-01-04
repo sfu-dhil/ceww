@@ -10,12 +10,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Person;
 use App\Entity\Place;
 use App\Entity\Publisher;
 use App\Form\PublisherType;
 use App\Repository\PersonRepository;
-use App\Repository\PlaceRepository;
 use App\Repository\PublisherRepository;
 use App\Services\Merger;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
@@ -43,7 +41,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      *
      * @Route("/", name="publisher_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -71,6 +69,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
             return new JsonResponse([]);
         }
         $data = [];
+
         foreach ($repo->typeaheadQuery($q) as $result) {
             $data[] = [
                 'id' => $result->getId(),
@@ -86,7 +85,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      *
      * @Route("/search", name="publisher_search", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function searchAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -112,9 +111,9 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      * @return array|Response
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Route("/new", name="publisher_new", methods={"GET","POST"})
+     * @Route("/new", name="publisher_new", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $publisher = new Publisher();
@@ -143,9 +142,9 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      * @return array|Response
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Route("/new_popup", name="publisher_new_popup", methods={"GET","POST"})
+     * @Route("/new_popup", name="publisher_new_popup", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      */
     public function newPopupAction(Request $request) {
         return $this->newAction($request);
@@ -158,7 +157,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      *
      * @Route("/{id}", name="publisher_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Publisher $publisher, PersonRepository $repo) {
         return [
@@ -173,9 +172,9 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      * @return array|Response
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Route("/{id}/edit", name="publisher_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="publisher_edit", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      */
     public function editAction(Request $request, Publisher $publisher) {
         $editForm = $this->createForm(PublisherType::class, $publisher);
@@ -201,7 +200,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      * @Route("/{id}/merge", name="publisher_merge")
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     * @Template()
+     * @Template
      */
     public function mergeAction(Request $request, Publisher $publisher, Merger $merger, PublisherRepository $repo) {
         if ('POST' === $request->getMethod()) {
@@ -237,7 +236,7 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
      * @return array|Response A redirect to the publisher_index.
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     * @Route("/{id}/delete", name="publisher_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="publisher_delete", methods={"GET", "POST"})
      */
     public function deleteAction(Request $request, Publisher $publisher) {
         $em = $this->getDoctrine()->getManager();

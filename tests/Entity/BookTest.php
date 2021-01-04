@@ -37,7 +37,7 @@ class BookTest extends TestCase {
 
         $publication->addGenre($genre);
 
-        $this->assertSame(1, count($publication->getGenres()));
+        $this->assertCount(1, $publication->getGenres());
     }
 
     public function testAddContribution() : void {
@@ -46,7 +46,7 @@ class BookTest extends TestCase {
 
         $publication->addContribution($contribution);
 
-        $this->assertSame(1, count($publication->getContributions()));
+        $this->assertCount(1, $publication->getContributions());
     }
 
     /**

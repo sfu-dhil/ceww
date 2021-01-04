@@ -19,7 +19,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * Publisher.
  *
  * @ORM\Table(name="publisher", indexes={
- *  @ORM\Index(columns="name", flags={"fulltext"})
+ *     @ORM\Index(columns="name", flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PublisherRepository")
  */
@@ -31,7 +31,7 @@ class Publisher extends AbstractEntity {
     /**
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $name;
 
@@ -44,14 +44,14 @@ class Publisher extends AbstractEntity {
     /**
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $places;
 
     /**
      * @var Collection|Publication[]
      * @ORM\ManyToMany(targetEntity="Publication", mappedBy="publishers")
-     * @ORM\OrderBy({"sortableTitle" = "ASC"})
+     * @ORM\OrderBy({"sortableTitle": "ASC"})
      */
     private $publications;
 
@@ -121,13 +121,11 @@ class Publisher extends AbstractEntity {
         $this->places = $places;
     }
 
-    public function getNotes(): ?string
-    {
+    public function getNotes() : ?string {
         return $this->notes;
     }
 
-    public function setNotes(?string $notes): self
-    {
+    public function setNotes(?string $notes) : self {
         $this->notes = $notes;
 
         return $this;
@@ -136,14 +134,12 @@ class Publisher extends AbstractEntity {
     /**
      * @return Collection|Publication[]
      */
-    public function getPublications(): Collection
-    {
+    public function getPublications() : Collection {
         return $this->publications;
     }
 
-    public function addPublication(Publication $publication): self
-    {
-        if (!$this->publications->contains($publication)) {
+    public function addPublication(Publication $publication) : self {
+        if ( ! $this->publications->contains($publication)) {
             $this->publications[] = $publication;
             $publication->addPublisher($this);
         }
@@ -151,8 +147,7 @@ class Publisher extends AbstractEntity {
         return $this;
     }
 
-    public function removePublication(Publication $publication): self
-    {
+    public function removePublication(Publication $publication) : self {
         if ($this->publications->contains($publication)) {
             $this->publications->removeElement($publication);
             $publication->removePublisher($this);

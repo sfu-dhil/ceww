@@ -19,8 +19,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * Place.
  *
  * @ORM\Table(name="place", indexes={
- *  @ORM\Index(columns={"name", "country_name"}, flags={"fulltext"}),
- *  @ORM\Index(columns={"sortable_name"}, flags={"fulltext"})
+ *     @ORM\Index(columns={"name", "country_name"}, flags={"fulltext"}),
+ *     @ORM\Index(columns={"sortable_name"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
  */
@@ -86,35 +86,35 @@ class Place extends AbstractEntity {
     /**
      * @var Collection|Person[]
      * @ORM\OneToMany(targetEntity="Person", mappedBy="birthPlace")
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $peopleBorn;
 
     /**
      * @var Collection|Person[]
      * @ORM\OneToMany(targetEntity="Person", mappedBy="deathPlace")
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $peopleDied;
 
     /**
      * @var Collection|Person[]
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="residences")
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $residents;
 
     /**
      * @var Collection|Publication[]
      * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
-     * @ORM\OrderBy({"title" = "ASC"})
+     * @ORM\OrderBy({"title": "ASC"})
      */
     private $publications;
 
     /**
      * @var Collection|Publisher[]
      * @ORM\ManyToMany(targetEntity="Publisher", mappedBy="places")
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @ORM\OrderBy({"name": "ASC"})
      */
     private $publishers;
 
