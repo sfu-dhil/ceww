@@ -39,7 +39,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Route("/", name="book_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      *
      * @param PublicationRepository $repo
      *
@@ -59,6 +59,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
         $query = $qb->getQuery();
         $books = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
         $letterIndex = [];
+
         foreach ($books as $book) {
             $title = $book->getSortableTitle();
             if ( ! $title) {
@@ -76,10 +77,10 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
     /**
      * Creates a new Book entity.
      *
-     * @Route("/new", name="book_new", methods={"GET","POST"})
+     * @Route("/new", name="book_new", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $book = new Book();
@@ -110,7 +111,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Route("/{id}", name="book_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Book $book) {
         $em = $this->getDoctrine()->getManager();
@@ -126,10 +127,10 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
     /**
      * Displays a form to edit an existing Book entity.
      *
-     * @Route("/{id}/edit", name="book_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="book_edit", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editAction(Request $request, Book $book) {
         if ( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
@@ -160,7 +161,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
     /**
      * Deletes a Book entity.
      *
-     * @Route("/{id}/delete", name="book_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="book_delete", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      */
@@ -178,7 +179,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Route("/{id}/contributions/new", name="book_new_contribution")
      *
-     * @Template()
+     * @Template
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      */
     public function newContribution(Request $request, Book $book) {
@@ -210,7 +211,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      * @Route("/{id}/contributions", name="book_show_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function showContributions(Book $book) {
         return [
@@ -224,7 +225,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      * @Route("/contributions/{id}/edit", name="book_edit_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editContribution(Request $request, Contribution $contribution) {
         $editForm = $this->createForm(ContributionType::class, $contribution);

@@ -100,7 +100,7 @@ class PublisherControllerTest extends ControllerBaseCase {
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('application/json', $response->headers->get('content-type'));
         $json = json_decode($response->getContent());
-        $this->assertSame(1, count($json));
+        $this->assertCount(1, $json);
     }
 
     /**
@@ -113,7 +113,7 @@ class PublisherControllerTest extends ControllerBaseCase {
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('application/json', $response->headers->get('content-type'));
         $json = json_decode($response->getContent());
-        $this->assertSame(1, count($json));
+        $this->assertCount(1, $json);
     }
 
     /**
@@ -126,7 +126,7 @@ class PublisherControllerTest extends ControllerBaseCase {
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('application/json', $response->headers->get('content-type'));
         $json = json_decode($response->getContent());
-        $this->assertSame(1, count($json));
+        $this->assertCount(1, $json);
     }
 
     /**

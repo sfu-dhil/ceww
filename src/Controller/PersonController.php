@@ -39,7 +39,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
      *
      * @Route("/", name="person_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -98,6 +98,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Person::class);
         $data = [];
+
         foreach ($repo->typeaheadQuery($q) as $result) {
             $name = $result->getFullname();
             if (count($result->getAliases())) {
@@ -117,7 +118,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
      *
      * @Route("/search", name="person_search", methods={"GET"})
      *
-     * @Template()
+     * @Template
      *
      * @return array
      */
@@ -145,10 +146,10 @@ class PersonController extends AbstractController implements PaginatorAwareInter
     /**
      * Creates a new Person entity.
      *
-     * @Route("/new", name="person_new", methods={"GET","POST"})
+     * @Route("/new", name="person_new", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $person = new Person();
@@ -174,10 +175,10 @@ class PersonController extends AbstractController implements PaginatorAwareInter
     /**
      * Creates a new Person entity in a popup.
      *
-     * @Route("/new_popup", name="person_new_popup", methods={"GET","POST"})
+     * @Route("/new_popup", name="person_new_popup", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newPopupAction(Request $request) {
         return $this->newAction($request);
@@ -188,7 +189,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
      *
      * @Route("/{id}", name="person_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Person $person, PersonRepository $repo, PublisherRepository $publisherRepo) {
         if ( ! $this->isGranted('ROLE_USER') && Person::FEMALE !== $person->getGender()) {
@@ -206,10 +207,10 @@ class PersonController extends AbstractController implements PaginatorAwareInter
     /**
      * Displays a form to edit an existing Person entity.
      *
-     * @Route("/{id}/edit", name="person_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="person_edit", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editAction(Request $request, Person $person) {
         $editForm = $this->createForm(PersonType::class, $person);
@@ -233,7 +234,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
     /**
      * Deletes a Person entity.
      *
-     * @Route("/{id}/delete", name="person_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="person_delete", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      */

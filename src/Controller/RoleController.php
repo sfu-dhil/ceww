@@ -35,7 +35,7 @@ class RoleController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Route("/", name="role_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function indexAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
@@ -53,10 +53,10 @@ class RoleController extends AbstractController implements PaginatorAwareInterfa
     /**
      * Creates a new Role entity.
      *
-     * @Route("/new", name="role_new", methods={"GET","POST"})
+     * @Route("/new", name="role_new", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $role = new Role();
@@ -84,7 +84,7 @@ class RoleController extends AbstractController implements PaginatorAwareInterfa
      *
      * @Route("/{id}", name="role_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Request $request, Role $role, PersonRepository $repo) {
         $query = $repo->byRoleQuery($role);
@@ -100,9 +100,9 @@ class RoleController extends AbstractController implements PaginatorAwareInterfa
     /**
      * Displays a form to edit an existing Role entity.
      *
-     * @Route("/{id}/edit", name="role_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="role_edit", methods={"GET", "POST"})
      *
-     * @Template()
+     * @Template
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      */
     public function editAction(Request $request, Role $role) {
@@ -126,7 +126,7 @@ class RoleController extends AbstractController implements PaginatorAwareInterfa
     /**
      * Deletes a Role entity.
      *
-     * @Route("/{id}/delete", name="role_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="role_delete", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      */

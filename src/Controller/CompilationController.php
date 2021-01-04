@@ -39,7 +39,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Route("/", name="compilation_index", methods={"GET"})
      *
-     * @Template()
+     * @Template
      *
      * @param PublicationRepository $repo
      */
@@ -60,6 +60,7 @@ class CompilationController extends AbstractController implements PaginatorAware
         $compilations = $this->paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
 
         $letterIndex = [];
+
         foreach ($compilations as $compilation) {
             $title = $compilation->getSortableTitle();
             if ( ! $title) {
@@ -77,10 +78,10 @@ class CompilationController extends AbstractController implements PaginatorAware
     /**
      * Creates a new Compilation entity.
      *
-     * @Route("/new", name="compilation_new", methods={"GET","POST"})
+     * @Route("/new", name="compilation_new", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newAction(Request $request) {
         $compilation = new Compilation();
@@ -111,7 +112,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      *
      * @Route("/{id}", name="compilation_show", methods={"GET"})
      *
-     * @Template()
+     * @Template
      */
     public function showAction(Compilation $compilation) {
         $em = $this->getDoctrine()->getManager();
@@ -127,10 +128,10 @@ class CompilationController extends AbstractController implements PaginatorAware
     /**
      * Displays a form to edit an existing Compilation entity.
      *
-     * @Route("/{id}/edit", name="compilation_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="compilation_edit", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editAction(Request $request, Compilation $compilation) {
         $editForm = $this->createForm(CompilationType::class, $compilation);
@@ -156,7 +157,7 @@ class CompilationController extends AbstractController implements PaginatorAware
     /**
      * Deletes a Compilation entity.
      *
-     * @Route("/{id}/delete", name="compilation_delete", methods={"GET","POST"})
+     * @Route("/{id}/delete", name="compilation_delete", methods={"GET", "POST"})
      *
      * @Security("is_granted('ROLE_CONTENT_ADMIN')")
      */
@@ -175,7 +176,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      * @Route("/{id}/contributions/new", name="compilation_new_contribution")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function newContribution(Request $request, Compilation $compilation) {
         $contribution = new Contribution();
@@ -206,7 +207,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      * @Route("/{id}/contributions", name="compilation_show_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function showContributions(Compilation $compilation) {
         return [
@@ -220,7 +221,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      * @Route("/contributions/{id}/edit", name="compilation_edit_contributions")
      *
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template()
+     * @Template
      */
     public function editContribution(Request $request, Contribution $contribution) {
         $editForm = $this->createForm(ContributionType::class, $contribution);

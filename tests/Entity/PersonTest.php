@@ -98,6 +98,7 @@ class PersonTest extends BaseCase {
             $contribution->setPublication($book);
             $person->addContribution($contribution);
         }
+
         foreach ([4, 5] as $n) {
             $compilation = new Compilation();
             $compilation->setTitle("Compilation {$n}");
@@ -115,9 +116,9 @@ class PersonTest extends BaseCase {
             $contribution->setPublication($periodical);
             $person->addContribution($contribution);
         }
-        $this->assertSame(3, count($person->getContributions(Publication::BOOK)));
-        $this->assertSame(2, count($person->getContributions(Publication::COMPILATION)));
-        $this->assertSame(2, count($person->getContributions(Publication::PERIODICAL)));
+        $this->assertCount(3, $person->getContributions(Publication::BOOK));
+        $this->assertCount(2, $person->getContributions(Publication::COMPILATION));
+        $this->assertCount(2, $person->getContributions(Publication::PERIODICAL));
     }
 
     public function testAddUrlLink() : void {
@@ -126,7 +127,7 @@ class PersonTest extends BaseCase {
 
         $person->addUrlLink($urlLink);
 
-        $this->assertSame(1, count($person->getUrlLinks()));
+        $this->assertCount(1, $person->getUrlLinks());
     }
 
     public function testRemoveUrlLink() : void {
@@ -136,7 +137,7 @@ class PersonTest extends BaseCase {
         $person->addUrlLink($urlLink);
         $person->removeUrlLink($urlLink);
 
-        $this->assertSame(0, count($person->getUrlLinks()));
+        $this->assertCount(0, $person->getUrlLinks());
     }
 
     public function testGetUrlLinks() : void {
@@ -145,7 +146,7 @@ class PersonTest extends BaseCase {
 
         $person->setUrlLinks($urlLinks);
 
-        $this->assertSame(2, count($person->getUrlLinks()));
+        $this->assertCount(2, $person->getUrlLinks());
         $this->assertContains('http://www.example.com', $person->getUrlLinks());
     }
 

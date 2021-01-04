@@ -19,7 +19,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * Alias.
  *
  * @ORM\Table(name="alias", indexes={
- *  @ORM\Index(columns="name", flags={"fulltext"})
+ *     @ORM\Index(columns="name", flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\AliasRepository")
  */
@@ -69,7 +69,7 @@ class Alias extends AbstractEntity {
     /**
      * @var Collection|Person[]
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="aliases")
-     * @ORM\OrderBy({"sortableName" = "ASC"})
+     * @ORM\OrderBy({"sortableName": "ASC"})
      */
     private $people;
 

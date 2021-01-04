@@ -20,7 +20,7 @@ class RoleTest extends TestCase {
         $contribution = new Contribution();
 
         $role->addContribution($contribution);
-        $this->assertSame(1, count($role->getContributions()));
+        $this->assertCount(1, $role->getContributions());
     }
 
     public function testRemoveContribution() : void {
@@ -30,6 +30,6 @@ class RoleTest extends TestCase {
         $role->addContribution($contribution);
         $role->removeContribution($contribution);
 
-        $this->assertSame(0, count($role->getContributions()));
+        $this->assertCount(0, $role->getContributions());
     }
 }

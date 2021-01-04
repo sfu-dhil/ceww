@@ -27,7 +27,7 @@ class Genre extends AbstractTerm {
     /**
      * @var Collection|Publication[]
      * @ORM\ManyToMany(targetEntity="Publication", mappedBy="genres")
-     * @ORM\OrderBy({"title" = "ASC"})
+     * @ORM\OrderBy({"title": "ASC"})
      */
     private $publications;
 
