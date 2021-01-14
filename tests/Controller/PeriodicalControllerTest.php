@@ -103,8 +103,7 @@ class PeriodicalControllerTest extends ControllerBaseCase {
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonNew() : void {
@@ -144,8 +143,7 @@ class PeriodicalControllerTest extends ControllerBaseCase {
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonDelete() : void {

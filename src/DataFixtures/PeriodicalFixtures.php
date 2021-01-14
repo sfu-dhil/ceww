@@ -31,7 +31,6 @@ class PeriodicalFixtures extends Fixture implements DependentFixtureInterface {
             $periodical->addGenre($this->getReference("genre.{$i}"));
             $periodical->setLocation($this->getReference("place.{$i}"));
             $periodical->setRunDates("190{$i}-");
-            $periodical->addLink("http://example.com/{$i}");
             $periodical->addPublisher($this->getReference("publisher.{$i}"));
             $periodical->setNotes("note {$i}");
 
