@@ -13,6 +13,7 @@ namespace App\Form;
 use App\Entity\Genre;
 use App\Entity\Place;
 use App\Entity\Publisher;
+use Nines\MediaBundle\Form\LinkableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -38,22 +39,7 @@ class PublicationType extends AbstractType {
                 'help_block' => 'Name sorting (lowercase). Sortable name will not be displayed to the public.',
             ],
         ]);
-        $builder->add('links', CollectionType::class, [
-            'label' => 'Links',
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'delete_empty' => true,
-            'entry_type' => UrlType::class,
-            'entry_options' => [
-                'label' => false,
-            ],
-            'by_reference' => false,
-            'attr' => [
-                'class' => 'collection collection-simple',
-                'help_block' => 'A URL link to the specificed publication',
-            ],
-        ]);
+        LinkableType::add($builder, $options);
         $builder->add('description', TextareaType::class, [
             'label' => 'Notes (for the public)',
             'required' => false,

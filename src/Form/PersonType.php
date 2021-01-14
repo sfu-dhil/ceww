@@ -13,6 +13,7 @@ namespace App\Form;
 use App\Entity\Alias;
 use App\Entity\Person;
 use App\Entity\Place;
+use Nines\MediaBundle\Form\LinkableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -155,22 +156,7 @@ class PersonType extends AbstractType {
             ],
         ]);
 
-        $builder->add('urlLinks', CollectionType::class, [
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'delete_empty' => true,
-            'entry_type' => UrlType::class,
-            'entry_options' => [
-                'label' => false,
-            ],
-            'label' => 'Links',
-            'required' => false,
-            'attr' => [
-                'class' => 'collection collection-simple',
-                'help_block' => 'List of URLs associated with the person',
-            ],
-        ]);
+        LinkableType::add($builder, $options);
 
         $builder->add('notes', TextType::class, [
             'label' => 'Research Notes (for editors/admins)',
