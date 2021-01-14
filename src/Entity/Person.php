@@ -118,12 +118,6 @@ class Person extends AbstractEntity {
      */
     private $aliases;
 
-    /**
-     * @var Collection|Contribution[]
-     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="person", orphanRemoval=true)
-     */
-    private $contributions;
-
     public function __construct() {
         parent::__construct();
         $this->trait_constructor();
