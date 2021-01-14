@@ -98,6 +98,12 @@ abstract class Publication extends AbstractEntity {
     private $genres;
 
     /**
+     * @var Collection|Contribution[]
+     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="publication", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $contributions;
+
+    /**
      * @var Collection|Publisher
      * @ORM\ManyToMany(targetEntity="Publisher", inversedBy="publications")
      * @ORM\OrderBy({"name": "ASC"})

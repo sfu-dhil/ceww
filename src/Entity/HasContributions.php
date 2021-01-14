@@ -12,7 +12,6 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Description of PublicationTrait.
@@ -20,12 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @author mjoyce
  */
 trait HasContributions {
-    /**
-     * @var ArrayCollection|Contribution[]
-     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="publication", cascade={"persist"}, orphanRemoval=true)
-     */
-    private $contributions;
-
     public function __construct() {
         $this->contributions = new ArrayCollection();
     }
