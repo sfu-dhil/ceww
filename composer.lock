@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4aee56b91936e8583661040a09cd7d0e",
+    "content-hash": "f3fa08739ee6ea155bcdf28d67661530",
     "packages": [
         {
             "name": "aternus/geonames-client",
@@ -8368,16 +8368,16 @@
         },
         {
             "name": "ubermichael/nines",
-            "version": "dev-4.x-media",
+            "version": "4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ubermichael/nines-bundles.git",
-                "reference": "5006daf996378e72543436aff288d1229a56a1f5"
+                "reference": "c7634b366edd92ab0fbc357b9520b0de26ffe853"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/5006daf996378e72543436aff288d1229a56a1f5",
-                "reference": "5006daf996378e72543436aff288d1229a56a1f5",
+                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/c7634b366edd92ab0fbc357b9520b0de26ffe853",
+                "reference": "c7634b366edd92ab0fbc357b9520b0de26ffe853",
                 "shasum": ""
             },
             "require": {
@@ -8421,10 +8421,10 @@
             ],
             "description": "Some useful bundles.",
             "support": {
-                "source": "https://github.com/ubermichael/nines-bundles/tree/4.x-media",
+                "source": "https://github.com/ubermichael/nines-bundles/tree/4.x",
                 "issues": "https://github.com/ubermichael/nines-bundles/issues"
             },
-            "time": "2021-01-14T19:18:32+00:00"
+            "time": "2021-01-18T19:24:10+00:00"
         },
         {
             "name": "webmozart/assert",
