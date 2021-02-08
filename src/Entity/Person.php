@@ -13,6 +13,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nines\MediaBundle\Entity\LinkableInterface;
+use Nines\MediaBundle\Entity\LinkableTrait;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
@@ -24,10 +26,14 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  */
-class Person extends AbstractEntity {
+class Person extends AbstractEntity implements LinkableInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
         getContributions as private traitContributions;
+    }
+
+    use LinkableTrait {
+        LinkableTrait::__construct as private link_constructor;
     }
 
     public const MALE = 'm';
@@ -127,6 +133,7 @@ class Person extends AbstractEntity {
     public function __construct() {
         parent::__construct();
         $this->trait_constructor();
+        $this->link_constructor();
         $this->canadian = true;
         $this->residences = new ArrayCollection();
         $this->aliases = new ArrayCollection();

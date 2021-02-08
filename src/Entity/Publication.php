@@ -13,6 +13,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nines\MediaBundle\Entity\LinkableInterface;
+use Nines\MediaBundle\Entity\LinkableTrait;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
@@ -32,9 +34,13 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *     "periodical": "Periodical"
  * })
  */
-abstract class Publication extends AbstractEntity {
+abstract class Publication extends AbstractEntity implements LinkableInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
+    }
+
+    use LinkableTrait {
+        LinkableTrait::__construct as private link_constructor;
     }
 
     public const BOOK = 'book';
@@ -57,9 +63,9 @@ abstract class Publication extends AbstractEntity {
 
     /**
      * @var string[]
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="array", name="links")
      */
-    private $links;
+    private $oldLinks;
 
     /**
      * public research notes.
@@ -113,7 +119,8 @@ abstract class Publication extends AbstractEntity {
     public function __construct() {
         parent::__construct();
         $this->trait_constructor();
-        $this->links = new ArrayCollection();
+        $this->link_constructor();
+        $this->oldLinks = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->publishers = new ArrayCollection();
     }
@@ -179,22 +186,22 @@ abstract class Publication extends AbstractEntity {
      *
      * @return Publication
      */
-    public function setLinks($links) {
+    public function setOldLinks($links) {
         if ( ! $links instanceof ArrayCollection) {
-            $this->links = new ArrayCollection($links);
+            $this->oldLinks = new ArrayCollection($links);
         } else {
-            $this->links = $links;
+            $this->oldLinks = $links;
         }
 
         return $this;
     }
 
-    public function addLink($link) {
-        if ( ! $this->links instanceof ArrayCollection) {
-            $this->links = new ArrayCollection($this->links);
+    public function addOldLink($link) {
+        if ( ! $this->oldLinks instanceof ArrayCollection) {
+            $this->oldLinks = new ArrayCollection($this->oldLinks);
         }
-        if ( ! $this->links->contains($link)) {
-            $this->links->add($link);
+        if ( ! $this->oldLinks->contains($link)) {
+            $this->oldLinks->add($link);
         }
 
         return $this;
@@ -205,10 +212,10 @@ abstract class Publication extends AbstractEntity {
      *
      * @return array
      */
-    public function getLinks() {
-        $data = $this->links;
-        if ($this->links instanceof ArrayCollection) {
-            $data = $this->links->toArray();
+    public function getOldLinks() {
+        $data = $this->oldLinks;
+        if ($this->oldLinks instanceof ArrayCollection) {
+            $data = $this->oldLinks->toArray();
         }
         usort($data, function ($a, $b) {
             return mb_substr($a, mb_strpos($a, '//') + 1) <=> mb_substr($b, mb_strpos($b, '//') + 1);

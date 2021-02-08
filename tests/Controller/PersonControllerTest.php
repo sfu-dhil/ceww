@@ -125,8 +125,8 @@ class PersonControllerTest extends ControllerBaseCase {
 
         $values = $form->getPhpValues();
 
-        $values['person']['urlLinks'][0] = 'http://example.com/path/to/link';
-        $values['person']['urlLinks'][1] = 'http://example.com/different/url';
+        $values['person']['links'][0] = 'http://example.com/path/to/link';
+        $values['person']['links'][1] = 'http://example.com/different/url';
         $values['person']['birthPlace'] = $this->getReference('place.1')->getId();
         $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
         $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
@@ -138,8 +138,7 @@ class PersonControllerTest extends ControllerBaseCase {
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Testy McUser.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockside")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockchester")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Colchester")')->count());
@@ -175,8 +174,8 @@ class PersonControllerTest extends ControllerBaseCase {
 
         $values = $form->getPhpValues();
 
-        $values['person']['urlLinks'][0] = 'http://example.com/path/to/link';
-        $values['person']['urlLinks'][1] = 'http://example.com/different/url';
+        $values['person']['links'][0] = 'http://example.com/path/to/link';
+        $values['person']['links'][1] = 'http://example.com/different/url';
         $values['person']['birthPlace'] = $this->getReference('place.1')->getId();
         $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
         $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
@@ -188,8 +187,7 @@ class PersonControllerTest extends ControllerBaseCase {
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Testy McUser.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/path/to/link")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("http://example.com/different/url")')->count());
+        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockside")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockchester")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Colchester")')->count());

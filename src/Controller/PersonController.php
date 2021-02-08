@@ -16,6 +16,7 @@ use App\Repository\AliasRepository;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\MediaBundle\Service\LinkManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -151,7 +152,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function newAction(Request $request) {
+    public function newAction(Request $request, LinkManager $linkManager) {
         $person = new Person();
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
@@ -159,6 +160,9 @@ class PersonController extends AbstractController implements PaginatorAwareInter
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($person);
+            $em->flush();
+
+            $linkManager->setLinks($person, $form->get('links')->getData());
             $em->flush();
 
             $this->addFlash('success', 'The new person was created.');
@@ -212,12 +216,13 @@ class PersonController extends AbstractController implements PaginatorAwareInter
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function editAction(Request $request, Person $person) {
+    public function editAction(Request $request, Person $person, LinkManager $linkManager) {
         $editForm = $this->createForm(PersonType::class, $person);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $linkManager->setLinks($person, $editForm->get('links')->getData());
 
             $em->flush();
             $this->addFlash('success', 'The person has been updated.');

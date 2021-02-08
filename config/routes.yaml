@@ -21,3 +21,8 @@ nines_feedback:
   type: annotation
   prefix: /feedback
   resource: '@NinesFeedbackBundle/Controller'
+
+nines_link:
+  type: annotation
+  prefix: /media
+  resource: '@NinesMediaBundle/Controller'

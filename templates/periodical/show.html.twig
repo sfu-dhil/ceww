@@ -44,19 +44,29 @@
                 </tr>
             {% endif %}
             <tr>
-                <th><span data-toggle="popover" data-content="URL link to specified publication" data-trigger="hover" data-placement="bottom">Links</span></th>
+                <th>Links</th>
                 <td>
-                    {% if periodical.links | length > 0 %}
+                    {% include '@NinesMedia/link/partial/list.html.twig' with {'entity': periodical} %}
+                </td>
+            </tr>
+
+            {% if is_granted('ROLE_USER') %}
+            <tr>
+                <th><span data-toggle="popover" data-content="URL link to specified publication" data-trigger="hover" data-placement="bottom">Old Links</span></th>
+                <td>
+                    {% if periodical.oldLinks | length > 0 %}
                         <ul>
-                            {% for link in periodical.links %}
+                            {% for link in periodical.oldLinks %}
                                 <li>
                                     <a href="{{ link }}">{{ link }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
+                    <p><i>Only shown to users who have logged in.</i></p>
                 </td>
             </tr>
+            {% endif %}
             <tr>
                 <th><span data-toggle="popover" data-content="Notes about the entry" data-trigger="hover" data-placement="bottom">Notes</span></th>
                 <td>{{ periodical.description|raw }}</td>

@@ -143,7 +143,14 @@
                 </td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="List of URLs associated with the person" data-trigger="hover" data-placement="bottom">Links</span></th>
+                <th>Links</th>
+                <td>
+                    {% include '@NinesMedia/link/partial/list.html.twig' with {'entity': person} %}
+                </td>
+            </tr>
+            {% if is_granted('ROLE_USER') %}
+            <tr>
+                <th><span data-toggle="popover" data-content="List of URLs associated with the person" data-trigger="hover" data-placement="bottom">Old Links</span></th>
                 <td>
                     {% if person.urlLinks | length > 0 %}
                         <ul>
@@ -152,8 +159,10 @@
                                 {% endfor %}
                         </ul>
                     {% endif %}
+                    <p><i>Only shown to users who have logged in.</i></p>
                 </td>
             </tr>
+            {% endif %}
         </tbody>
     </table>
 
