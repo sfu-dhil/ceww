@@ -95,15 +95,14 @@ class PeriodicalControllerTest extends ControllerBaseCase {
 
         $values = $form->getPhpValues();
 
-        $values['periodical']['links'][0] = 'http://example.com/path/to/link';
-        $values['periodical']['links'][1] = 'http://example.com/different/url';
+        $values['periodical']['links'][0]['url'] = 'http://example.com/path/to/link';
 
         $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertTrue($this->client->getResponse()->isRedirect('/periodical/1'));
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonNew() : void {
@@ -134,16 +133,14 @@ class PeriodicalControllerTest extends ControllerBaseCase {
         ]);
 
         $values = $form->getPhpValues();
-
-        $values['periodical']['links'][0] = 'http://example.com/path/to/link';
-        $values['periodical']['links'][1] = 'http://example.com/different/url';
+        $values['periodical']['links'][0]['url'] = 'http://example.com/path/to/link';
 
         $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonDelete() : void {
