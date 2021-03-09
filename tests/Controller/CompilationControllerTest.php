@@ -91,13 +91,10 @@ class CompilationControllerTest extends ControllerBaseCase {
             'compilation[dateYear]' => '1934',
             'compilation[location]' => 1,
             'compilation[genres]' => 1,
-        ])
-        ;
+        ]);
 
         $values = $form->getPhpValues();
-
-        $values['compilation']['links'][0] = 'http://example.com/path/to/link';
-        $values['compilation']['links'][1] = 'http://example.com/different/url';
+        $values['compilation']['links'][0]['url'] = 'http://example.com/path/to/link';
 
         $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
@@ -105,7 +102,7 @@ class CompilationControllerTest extends ControllerBaseCase {
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonNew() : void {
@@ -131,13 +128,10 @@ class CompilationControllerTest extends ControllerBaseCase {
             'compilation[description]' => 'It is a book',
             'compilation[notes]' => 'A notes about a book',
             'compilation[dateYear]' => '1934',
-        ])
-        ;
+        ]);
 
         $values = $form->getPhpValues();
-
-        $values['compilation']['links'][0] = 'http://example.com/path/to/link';
-        $values['compilation']['links'][1] = 'http://example.com/different/url';
+        $values['compilation']['links'][0]['url'] = 'http://example.com/path/to/link';
 
         $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
@@ -145,7 +139,7 @@ class CompilationControllerTest extends ControllerBaseCase {
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonDelete() : void {

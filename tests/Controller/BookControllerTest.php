@@ -78,6 +78,9 @@ class BookControllerTest extends ControllerBaseCase {
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * @group foo
+     */
     public function testAdminEdit() : void {
         $this->login('user.admin');
         $formCrawler = $this->client->request('GET', '/book/1/edit');
@@ -94,8 +97,7 @@ class BookControllerTest extends ControllerBaseCase {
         ]);
 
         $values = $form->getPhpValues();
-        $values['book']['links'][0] = 'http://example.com/path/to/link';
-        $values['book']['links'][1] = 'http://example.com/different/url';
+        $values['book']['links'][0]['url'] = 'http://example.com/path/to/link';
 
         $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
@@ -104,7 +106,7 @@ class BookControllerTest extends ControllerBaseCase {
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
 
-        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonNew() : void {
@@ -133,8 +135,7 @@ class BookControllerTest extends ControllerBaseCase {
         ]);
 
         $values = $form->getPhpValues();
-        $values['book']['links'][0] = 'http://example.com/path/to/link';
-        $values['book']['links'][1] = 'http://example.com/different/url';
+        $values['book']['links'][0]['url'] = 'http://example.com/path/to/link';
 
         $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
@@ -142,7 +143,7 @@ class BookControllerTest extends ControllerBaseCase {
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Book of Cheese.")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
     }
 
     public function testAnonDelete() : void {
