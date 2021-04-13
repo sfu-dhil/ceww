@@ -15,7 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DateYearType extends AbstractType {
+class DateYearType extends AbstractType
+{
     public function buildForm(FormBuilderInterface $builder, array $options) : void {
         $builder->add('value', null, [
             'label' => 'Value',

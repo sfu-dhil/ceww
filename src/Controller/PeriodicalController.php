@@ -34,7 +34,8 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/periodical")
  */
-class PeriodicalController extends AbstractController implements PaginatorAwareInterface {
+class PeriodicalController extends AbstractController implements PaginatorAwareInterface
+{
     use PaginatorTrait;
 
     /**

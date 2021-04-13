@@ -19,7 +19,8 @@ use Nines\UtilBundle\Entity\AbstractTerm;
  * @ORM\Table(name="genre")
  * @ORM\Entity(repositoryClass="App\Repository\GenreRepository")
  */
-class Genre extends AbstractTerm {
+class Genre extends AbstractTerm
+{
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }

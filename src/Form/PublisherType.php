@@ -20,7 +20,8 @@ use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 /**
  * PublisherType form.
  */
-class PublisherType extends AbstractType {
+class PublisherType extends AbstractType
+{
     /**
      * Add form fields to $builder.
      *

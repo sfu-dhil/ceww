@@ -22,7 +22,8 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PeriodicalFixtures extends Fixture implements DependentFixtureInterface {
+class PeriodicalFixtures extends Fixture implements DependentFixtureInterface
+{
     public function load(ObjectManager $manager) : void {
         for ($i = 1; $i <= 2; $i++) {
             $periodical = new Periodical();

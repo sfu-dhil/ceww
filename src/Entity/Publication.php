@@ -34,7 +34,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *     "periodical": "Periodical"
  * })
  */
-abstract class Publication extends AbstractEntity implements LinkableInterface {
+abstract class Publication extends AbstractEntity implements LinkableInterface
+{
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
     }

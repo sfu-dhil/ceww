@@ -22,7 +22,8 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class BookFixtures extends Fixture implements DependentFixtureInterface {
+class BookFixtures extends Fixture implements DependentFixtureInterface
+{
     public function load(ObjectManager $manager) : void {
         $book = new Book();
         $book->setTitle('A Book Title');

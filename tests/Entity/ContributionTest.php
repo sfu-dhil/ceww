@@ -16,7 +16,8 @@ use App\DataFixtures\RoleFixtures;
 use App\Entity\Contribution;
 use Nines\UtilBundle\Tests\BaseCase;
 
-class ContributionTest extends BaseCase {
+class ContributionTest extends BaseCase
+{
     protected function fixtures() : array {
         return [
             PeriodicalFixtures::class,

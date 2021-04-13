@@ -18,7 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="periodical")
  * @ORM\Entity(repositoryClass="App\Repository\PeriodicalRepository")
  */
-class Periodical extends Publication {
+class Periodical extends Publication
+{
     /**
      * @var string
      * @ORM\Column(type="string", length=48, nullable=true)

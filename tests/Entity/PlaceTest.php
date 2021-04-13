@@ -17,7 +17,8 @@ use App\Entity\Person;
 use App\Entity\Place;
 use PHPUnit\Framework\TestCase;
 
-class PlaceTest extends TestCase {
+class PlaceTest extends TestCase
+{
     /**
      * @dataProvider GetNameData
      *

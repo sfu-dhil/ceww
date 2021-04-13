@@ -18,7 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="collection")
  * @ORM\Entity(repositoryClass="App\Repository\CompilationRepository")
  */
-class Compilation extends Publication {
+class Compilation extends Publication
+{
     public function getCategory() {
         return self::COMPILATION;
     }

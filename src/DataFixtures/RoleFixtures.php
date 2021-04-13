@@ -19,7 +19,8 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class RoleFixtures extends Fixture {
+class RoleFixtures extends Fixture
+{
     public function load(ObjectManager $manager) : void {
         $role = new Role();
         $role->setName('author');

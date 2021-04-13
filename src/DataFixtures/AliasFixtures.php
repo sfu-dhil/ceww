@@ -19,7 +19,8 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class AliasFixtures extends Fixture {
+class AliasFixtures extends Fixture
+{
     public function load(ObjectManager $manager) : void {
         $alias = new Alias();
         $alias->setDescription('An alias');

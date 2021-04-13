@@ -14,7 +14,8 @@ use App\Entity\Contribution;
 use App\Entity\Role;
 use PHPUnit\Framework\TestCase;
 
-class RoleTest extends TestCase {
+class RoleTest extends TestCase
+{
     public function testAddContribution() : void {
         $role = new Role();
         $contribution = new Contribution();
