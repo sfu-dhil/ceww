@@ -19,7 +19,8 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class GenreFixtures extends Fixture {
+class GenreFixtures extends Fixture
+{
     public function load(ObjectManager $manager) : void {
         $genre1 = new Genre();
         $genre1->setName('fiction');

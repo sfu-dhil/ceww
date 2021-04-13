@@ -23,7 +23,8 @@ use App\Repository\PlaceRepository;
 use App\Services\Merger;
 use Nines\UtilBundle\Tests\ServiceBaseCase;
 
-class MergerTest extends ServiceBaseCase {
+class MergerTest extends ServiceBaseCase
+{
     /**
      * @var Merger
      */

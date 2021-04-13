@@ -21,7 +21,8 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PersonFixtures extends Fixture implements DependentFixtureInterface {
+class PersonFixtures extends Fixture implements DependentFixtureInterface
+{
     public function load(ObjectManager $manager) : void {
         $female = new Person();
         $female->setFullName('Bobby Janesdotter');

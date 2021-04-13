@@ -18,7 +18,8 @@ use App\Entity\Person;
 use App\Entity\Publication;
 use Nines\UtilBundle\Tests\BaseCase;
 
-class PersonTest extends BaseCase {
+class PersonTest extends BaseCase
+{
     /**
      * @dataProvider SetBirthDateData
      *

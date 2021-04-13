@@ -23,7 +23,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PublisherRepository")
  */
-class Publisher extends AbstractEntity {
+class Publisher extends AbstractEntity
+{
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }

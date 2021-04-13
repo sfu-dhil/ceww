@@ -26,7 +26,8 @@ use Psr\Log\LoggerInterface;
  *
  * @author mjoyce
  */
-class Merger {
+class Merger
+{
     /**
      * ORM entity manager.
      *
