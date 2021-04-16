@@ -2,9 +2,9 @@
 
 {% block title %}{{ genre.label }}{% endblock %}
 
-{% block pageheader %} 
+{% block pageheader %}
     <h1>{{ genre.label }}</h1>
-{% endblock %} 
+{% endblock %}
 
 {% block body %}
     <div class="btn-toolbar">
@@ -33,22 +33,22 @@
             <li role="presentation"><a href="#compilation" aria-controls="messages" role="tab" data-toggle="tab">Collection</a></li>
             <li role="presentation"><a href="#periodical" aria-controls="messages" role="tab" data-toggle="tab">Periodicals</a></li>
         </ul>
-        
+
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane" id="book">
+            <div role="tabpanel" class="tab-pane active" id="book">
                 {% embed 'publication/partial/list.html.twig' with {'publications': genre.publications(constant('App\\Entity\\Publication::BOOK'), 'year') } %}
                 {% endembed %}
-            </div>            
+            </div>
 
             <div role="tabpanel" class="tab-pane" id="compilation">
                 {% embed 'publication/partial/list.html.twig' with {'publications': genre.publications(constant('App\\Entity\\Publication::COMPILATION'), 'year') } %}
                 {% endembed %}
-            </div>            
+            </div>
 
             <div role="tabpanel" class="tab-pane" id="periodical">
                 {% embed 'publication/partial/list.html.twig' with {'publications': genre.publications(constant('App\\Entity\\Publication::PERIODICAL')) } %}
                 {% endembed %}
-            </div>            
+            </div>
         </div>
     </div>
 
