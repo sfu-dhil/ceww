@@ -349,8 +349,8 @@ class Place extends AbstractEntity
     public function getPeopleDied() {
         $deaths = $this->peopleDied->toArray();
         usort($deaths, function ($a, $b) {
-            $aDate = $a->getBirthDate();
-            $bDate = $b->getBirthDate();
+            $aDate = $a->getDeathDate();
+            $bDate = $b->getDeathDate();
             if (( ! $aDate) && ( ! $bDate)) {
                 return 0;
             }

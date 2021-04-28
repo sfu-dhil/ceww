@@ -105,7 +105,7 @@ class PlaceTest extends TestCase
             if (null !== $year) {
                 $deathDate = new DateYear();
                 $deathDate->setValue($year);
-                $person->setBirthDate($deathDate);
+                $person->setDeathDate($deathDate);
             }
             $place->addPersonDied($person);
         }
