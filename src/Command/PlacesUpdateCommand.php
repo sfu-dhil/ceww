@@ -23,8 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * DocewwPlacesUpdateCommand command.
  */
-class PlacesUpdateCommand extends Command
-{
+class PlacesUpdateCommand extends Command {
     use LoggerAwareTrait;
 
     public const BATCH_SIZE = 100;

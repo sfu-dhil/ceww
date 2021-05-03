@@ -24,8 +24,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
  */
-class Place extends AbstractEntity
-{
+class Place extends AbstractEntity {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }

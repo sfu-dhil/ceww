@@ -28,8 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/alias")
  */
-class AliasController extends AbstractController implements PaginatorAwareInterface
-{
+class AliasController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
 
     /**

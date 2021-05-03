@@ -17,8 +17,7 @@ use App\Entity\HasPublications;
 use App\Entity\Publication;
 use Nines\UtilBundle\Tests\BaseCase;
 
-class HasPublicationsTest extends BaseCase
-{
+class HasPublicationsTest extends BaseCase {
     protected function fixtures() : array {
         return [
             BookFixtures::class,

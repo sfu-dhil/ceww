@@ -16,8 +16,7 @@ use App\Entity\Periodical;
 use App\Entity\Publication;
 use PHPUnit\Framework\TestCase;
 
-class PeriodicalTest extends TestCase
-{
+class PeriodicalTest extends TestCase {
     public function testGetCategory() : void {
         $compilation = new Periodical();
         $this->assertSame(Publication::PERIODICAL, $compilation->getCategory());

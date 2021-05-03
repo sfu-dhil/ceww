@@ -23,8 +23,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * })
  * @ORM\Entity(repositoryClass="App\Repository\AliasRepository")
  */
-class Alias extends AbstractEntity
-{
+class Alias extends AbstractEntity {
     /**
      * Name of the alias.
      *

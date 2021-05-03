@@ -32,8 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/compilation")
  */
-class CompilationController extends AbstractController implements PaginatorAwareInterface
-{
+class CompilationController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
 
     /**

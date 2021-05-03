@@ -22,8 +22,7 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class CompilationFixtures extends Fixture implements DependentFixtureInterface
-{
+class CompilationFixtures extends Fixture implements DependentFixtureInterface {
     public function load(ObjectManager $manager) : void {
         $compilation = new Compilation();
         $compilation->setTitle('A Compilation Title');
