@@ -15,8 +15,7 @@ use App\Entity\Periodical;
 use Nines\UserBundle\DataFixtures\UserFixtures;
 use Nines\UtilBundle\Tests\ControllerBaseCase;
 
-class PeriodicalControllerTest extends ControllerBaseCase
-{
+class PeriodicalControllerTest extends ControllerBaseCase {
     protected function fixtures() : array {
         return [
             UserFixtures::class,

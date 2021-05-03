@@ -19,8 +19,7 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PlaceFixtures extends Fixture
-{
+class PlaceFixtures extends Fixture {
     public function load(ObjectManager $manager) : void {
         $place1 = new Place();
         $place1->setName('Lockside');

@@ -16,8 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
-class ContributionType extends AbstractType
-{
+class ContributionType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) : void {
         $builder->add('role', null, [
             'attr' => [

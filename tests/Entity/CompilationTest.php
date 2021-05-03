@@ -16,8 +16,7 @@ use App\Entity\Genre;
 use App\Entity\Publication;
 use PHPUnit\Framework\TestCase;
 
-class CompilationTest extends TestCase
-{
+class CompilationTest extends TestCase {
     public function testGetCategory() : void {
         $compilation = new Compilation();
         $this->assertSame(Publication::COMPILATION, $compilation->getCategory());

@@ -28,8 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/genre")
  */
-class GenreController extends AbstractController implements PaginatorAwareInterface
-{
+class GenreController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
 
     /**

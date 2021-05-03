@@ -14,8 +14,7 @@ use Nines\UtilBundle\Form\TermType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RoleType extends TermType
-{
+class RoleType extends TermType {
     public function buildForm(FormBuilderInterface $builder, array $options) : void {
         parent::buildForm($builder, $options);
     }

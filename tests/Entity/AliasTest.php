@@ -15,8 +15,7 @@ use App\Entity\Alias;
 use App\Entity\Person;
 use Nines\UtilBundle\Tests\BaseCase;
 
-class AliasTest extends BaseCase
-{
+class AliasTest extends BaseCase {
     protected function fixtures() : array {
         return [
             AliasFixtures::class,

@@ -18,8 +18,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @author mjoyce
  */
-trait HasContributions
-{
+trait HasContributions {
     public function __construct() {
         $this->contributions = new ArrayCollection();
     }

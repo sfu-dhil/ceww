@@ -20,8 +20,7 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PublisherFixtures extends Fixture implements DependentFixtureInterface
-{
+class PublisherFixtures extends Fixture implements DependentFixtureInterface {
     public function load(ObjectManager $manager) : void {
         $publisher1 = new Publisher();
         $publisher1->setName('Cueue Stuff');

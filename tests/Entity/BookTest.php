@@ -16,8 +16,7 @@ use App\Entity\Genre;
 use App\Entity\Publication;
 use PHPUnit\Framework\TestCase;
 
-class BookTest extends TestCase
-{
+class BookTest extends TestCase {
     public function testGetCategory() : void {
         $book = new Book();
         $this->assertSame(Publication::BOOK, $book->getCategory());
