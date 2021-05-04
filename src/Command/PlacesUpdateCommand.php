@@ -26,12 +26,43 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PlacesUpdateCommand extends Command {
     use LoggerAwareTrait;
 
-    public const BATCH_SIZE = 100;
+    public const BATCH_SIZE = 1;
 
     public const PROVINCES = [
         'AB' => '01', 'BC' => '02', 'MB' => '03', 'NB' => '04', 'NL' => '05', 'NS' => '07',
         'NT' => '14', 'ON' => '08', 'PE' => '09', 'QC' => '10', 'SK' => '11', 'YT' => '12',
         'PQ' => '10',
+    ];
+
+    public const COUNTRIES = [
+        'Australia' => 'AU',
+        'Canada' => 'CA',
+        'Dominican Republic' => 'DO',
+        'Egypt' => 'EG',
+        'England' => 'GB',
+        'France' => 'FR',
+        'Germany' => 'DE',
+        'Holland' => 'NL',
+        'India' => 'IN',
+        'Ireland' => 'IE',
+        'Italy' => 'IT',
+        'Mexico' => 'MX',
+        'New Zealand' => 'NZ',
+        'Northern Ireland' => 'GB',
+        'Poland' => 'PL',
+        'Romania' => 'RO',
+        'Scotland' => 'GB',
+        'South Africa' => 'ZA',
+        'Sri Lanka' => 'LK',
+        'Switzerland' => 'CH',
+        'Turkey' => 'TR',
+        'Uganda' => 'UG',
+        'UK' => 'GB',
+        'Ukraine' => 'UA',
+        'United States' => 'US',
+        'USA' => 'US',
+        'Wales' => 'GB',
+        'Zambia' => 'ZM',
     ];
 
     /**
@@ -90,55 +121,54 @@ class PlacesUpdateCommand extends Command {
      * Execute the command.
      *
      * @param InputInterface $input
-     *                              Command input, as defined in the configure() method.
      * @param OutputInterface $output
-     *                                Output destination.
      */
     protected function execute(InputInterface $input, OutputInterface $output) : void {
         $iterator = $this->getPlaces($input->getOption('limit'), $input->getOption('start'));
         $sleep = $input->getOption('sleep');
         while ($row = $iterator->next()) {
             $this->doUpdate($row[0], $sleep);
-            if (0 === $iterator->key() % self::BATCH_SIZE) {
-                $this->em->flush();
-                $this->em->clear();
-                $this->logger->warning('Count: ' . $iterator->key());
-            }
+            $this->em->flush();
+            $this->em->clear();
+            $output->writeln("Count: " . $iterator->key());
+            sleep((int)$sleep);
         }
         $this->em->flush();
         $this->em->clear();
-        $this->logger->warning('Finished. ' . $iterator->key());
+        $output->writeln('Finished. ' . $iterator->key());
     }
 
     public function doUpdate(Place $place, $sleep) : void {
-        if ($place->getCountryName()) {
-            // only canadian places for now.
-            return;
-        }
+        $this->logger->warning("Place: " . $place->getName() . " #" . $place->getId());
 
         $data = preg_split('/,\s*/u', $place->getName());
-        if (2 !== count($data)) {
-            $this->logger->warning('Malformed Canadian place name.', ['id' => $place->getId(), 'name' => $place->getName()]);
-
-            return;
-        }
+//        if (2 !== count($data)) {
+//            $this->logger->warning('Malformed Canadian place name: ' . $place->getName() . " #" . $place->getId());
+//
+//            return;
+//        }
         list($name, $province) = $data;
 
-        if ( ! array_key_exists($province, self::PROVINCES)) {
-            $this->logger->warning('Not a Canadian province.', ['id' => $place->getId(), 'name' => $place->getName()]);
+//        if ( ! array_key_exists($province, self::PROVINCES)) {
+//            $this->logger->warning('Not a Canadian province: ' . $place->getName() . " #" . $place->getId());
+//
+//            return;
+//        }
+
+        if( ! array_key_exists($place->getCountryName(), self::COUNTRIES)) {
+            $this->logger->warning('Unknown country: ' . $place->getName() . " #" . $place->getId());
 
             return;
         }
 
         $results = $this->client->search([
             'name_equals' => $name,
-            'country' => 'CA',
+            'country' => self::COUNTRIES[$place->getCountryName()],
             'lang' => 'en',
             'style' => 'long',
             'featureClass' => 'P',
-            'adminCode1' => self::PROVINCES[$province],
+            'adminCode1' => self::PROVINCES[$province] ?? $province,
         ]);
-        sleep($sleep);
 
         if (0 === count($results)) {
             $this->logger->warning('No results found.', ['id' => $place->getId(), 'name' => $place->getName()]);
