@@ -227,4 +227,11 @@ class DateYear extends AbstractEntity {
     public function getEndCirca() {
         return $this->endCirca;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getYear() {
+        return $this->start ?? $this->end ?? null;
+    }
 }

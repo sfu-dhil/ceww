@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
 use Nines\UtilBundle\Entity\AbstractEntity;
+use Nines\SolrBundle\Annotation as Solr;
 
 /**
  * Person.
@@ -25,6 +26,10 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *     @ORM\Index(columns={"sortable_name"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ *
+ * @Solr\Document(
+ *     @Solr\CopyField(from={"fullName", "description", "birthPlace", "residences", "aliases", "deathPlace"}, to="content", type="texts")
+ * )
  */
 class Person extends AbstractEntity implements LinkableInterface {
     use HasContributions {
@@ -43,24 +48,28 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * @var string
      * @ORM\Column(type="string", length=200, nullable=false)
+     * @Solr\Field(type="text", boost=2.5)
      */
     private $fullName;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=200, nullable=false)
+     * @Solr\Field(name="sortable", type="string", boost=0.2)
      */
     private $sortableName;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=1, nullable=true)
+     * @Solr\Field(type="string")
      */
     private $gender;
 
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=true, options={"default": true})
+     * @Solr\Field(type="boolean")
      */
     private $canadian;
 
@@ -69,6 +78,9 @@ class Person extends AbstractEntity implements LinkableInterface {
      *
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     *
+     * Note that ENT_QUOTES | ENT_HTML5 === 51
+     * @Solr\Field(type="text", boost=0.5, filters={"strip_tags", "html_entity_decode(51, 'UTF-8')"})
      */
     private $description;
 
@@ -89,31 +101,38 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Solr\Field(type="integer", getter="getBirthYear")
      */
     private $birthDate;
 
     /**
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleBorn")
+     * @Solr\Field(type="string", boost=0.4, mutator="getName")
      */
     private $birthPlace;
 
     /**
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Solr\Field(type="integer", getter="getDeathYear")
      */
     private $deathDate;
 
     /**
      * @var Place;
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleDied")
+     * @Solr\Field(type="string", boost=0.4, mutator="getName")
      */
     private $deathPlace;
 
     /**
      * @var Collection|Place[]
+     *
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
      * @ORM\OrderBy({"sortableName": "ASC"})
+     *
+     * @Solr\Field(type="texts", boost=0.3, getter="getResidences(true)")
      */
     private $residences;
 
@@ -121,6 +140,8 @@ class Person extends AbstractEntity implements LinkableInterface {
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Alias", inversedBy="people")
      * @ORM\OrderBy({"sortableName": "ASC"})
+     *
+     * @Solr\Field(type="texts", boost=1.3, getter="getAliases(true)")
      */
     private $aliases;
 
@@ -268,6 +289,12 @@ class Person extends AbstractEntity implements LinkableInterface {
         return $this->birthDate;
     }
 
+    public function getBirthYear() {
+        if ($this->birthDate) {
+            return $this->birthDate->getStart(false);
+        }
+    }
+
     /**
      * Set birthPlace.
      *
@@ -316,6 +343,13 @@ class Person extends AbstractEntity implements LinkableInterface {
         return $this->deathDate;
     }
 
+    public function getDeathYear() {
+        if ($this->deathDate) {
+            return $this->deathDate->getStart(false);
+        }
+    }
+
+
     /**
      * Set deathPlace.
      *
@@ -363,7 +397,10 @@ class Person extends AbstractEntity implements LinkableInterface {
      *
      * @return Collection
      */
-    public function getResidences() {
+    public function getResidences(?bool $flat = false) {
+        if ($flat) {
+            return array_map(function (Place $p) {return $p->getName(); }, $this->residences->toArray());
+        }
         return $this->residences;
     }
 
@@ -392,7 +429,10 @@ class Person extends AbstractEntity implements LinkableInterface {
      *
      * @return Collection
      */
-    public function getAliases() {
+    public function getAliases(?bool $flat = false) {
+        if ($flat) {
+            return array_map(function (Alias $a) {return $a->getName(); }, $this->aliases->toArray());
+        }
         return $this->aliases;
     }
 
