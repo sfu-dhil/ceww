@@ -12,16 +12,17 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use App\Form\PersonType;
+use App\Index\PersonIndex;
 use App\Repository\AliasRepository;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\MediaBundle\Service\LinkManager;
+use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -143,6 +144,37 @@ class PersonController extends AbstractController implements PaginatorAwareInter
             'page' => $request->query->getInt('page', 1),
         ];
     }
+
+    /**
+     * @Route("/solr", name="person_solr")
+     * @Template
+     */
+    public function solrAction(Request $request, PersonIndex $repo, SolrManager $solr) {
+        $q = $request->query->get('q');
+        $result = null;
+        if($q) {
+            $filters = $request->query->get('filter', []);
+            $rangeFilters = $request->query->get('filter_range', []);
+
+            $order = null;
+            $m = [];
+            if(preg_match("/^(\w+).(asc|desc)$/", $request->query->get('order', 'score.desc'), $m)) {
+                $order = [$m[1] => $m[2]];
+            }
+
+            $query = $repo->searchQuery($q, $filters, $rangeFilters, $order);
+            $result = $solr->execute($query, $this->paginator, [
+                'page' => (int) $request->query->get('page', 1),
+                'pageSize' => (int) $this->getParameter('page_size'),
+            ]);
+        }
+
+        return [
+            'q' => $q,
+            'result' => $result,
+        ];
+    }
+
 
     /**
      * Creates a new Person entity.

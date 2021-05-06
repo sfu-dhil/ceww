@@ -143,6 +143,11 @@ div.checkbox, div.radio {
     float: left;
 }
 
+div.facet div.checkbox, div.facet div.radio {
+    width: auto;
+    float: none;
+}
+
 div.collection-complex > div:not(:last-child) {
     padding-top: 15px;
     border: 1px solid rgba(128, 128, 128, 0.31);

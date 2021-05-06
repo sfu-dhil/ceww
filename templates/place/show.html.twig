@@ -73,6 +73,23 @@
                 <th><span data-toggle="popover" data-content="GeoNames ID for this place." data-trigger="hover" data-placement="bottom">GeoNames ID</span></th>
                 <td>{{ place.geoNamesId }}</td>
             </tr>
+            <tr>
+                <th><span data-toggle="popover" data-content="Places within 50km of this place." data-trigger="hover" data-placement="bottom">Nearby Places</span></th>
+                <td>
+                    {% if nearby and nearby.count > 1 %}
+                        <ul>
+                            {% for i in 1..(nearby.count-1) %}
+                            {% set document = nearby.getDocument(i) %}
+                            {% set entity = nearby.entity(i) %}
+                            <li>
+                                <a href='{{ path('place_show', {'id': entity.id}) }}'>
+                                    {{ entity }}
+                                </a> {{ document.distance|number_format(1) }} km<br/>
+                                {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
                     <th><span data-toggle="popover" data-content="These notes are only available to logged-in users." data-trigger="hover" data-placement="bottom">Research Notes</span></th>
