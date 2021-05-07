@@ -52,8 +52,23 @@
                     {% embed '@NinesSolr/search/partial/header.html.twig' with {'pagination': pagination} %}
                     {% endembed %}
 
-                    {% embed '@NinesSolr/search/partial/result.html.twig' with {'result': result} %}
-                    {% endembed %}
+                    <div class='list-group'>
+                        {% for i in 0..(result.count-1) %}
+                            {% set document = result.getDocument(i) %}
+                            {% set entity = result.entity(i) %}
+                            <a href='{{ entity_linker.link(entity) }}' class='list-group-item'>
+                                <b>{{ document.type_s -}}: {{ entity }}</b><br />
+
+                                {% for field, highlight in result.getHighlighting(i) %}
+                                    {{ field|split('_')|slice(0, -1)|join(' ')|title }}: {{ highlight|join('...')|raw }}<br/>
+                                {% endfor %}
+
+                                {% if is_granted('ROLE_USER') %}
+                                    <span class='pull-right text-muted'>{{ document.score }}</span><br/>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
 
                     {% if pagination %}
                         <div class="navigation">

@@ -45,7 +45,8 @@ class PersonIndex extends AbstractIndex
         $qb->addFacetRange('birthDate', 1750, $year, 50);
         $qb->addFacetRange('deathDate', 1750, $year, 50);
 
-        $qb->setHighlightFields('content');
+        $qb->setHighlightFields(['fullName', 'description',
+            'birthPlace', 'deathPlace', 'residences', 'aliases']);
 
         if($order) {
             $qb->setSorting($order);
