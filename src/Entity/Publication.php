@@ -94,7 +94,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
      *
-     * @Solr\Field(type="string", mutator="getYear")
+     * @Solr\Field(type="integer", mutator="getYear")
      */
     private $dateYear;
 
@@ -102,7 +102,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="publications")
      *
-     * @Solr\Field(type="text", boost=0.5, mutator="getName")
+     * @Solr\Field(type="string", boost=0.5, mutator="getName")
      */
     private $location;
 

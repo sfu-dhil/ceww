@@ -12,6 +12,7 @@ namespace App\Controller;
 
 use App\Entity\Publication;
 use App\Index\DefaultIndex;
+use App\Index\PublicationIndex;
 use App\Repository\PublicationRepository;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\SolrBundle\Services\SolrManager;
@@ -77,6 +78,38 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
             }
 
             $query = $repo->searchQuery($q, $filters, $order);
+            $result = $solr->execute($query, $this->paginator, [
+                'page' => (int) $request->query->get('page', 1),
+                'pageSize' => (int) $this->getParameter('page_size'),
+            ]);
+        }
+
+        return [
+            'q' => $q,
+            'result' => $result,
+        ];
+    }
+
+    /**
+     * @Route("/solr_title", name="solr_title")
+     * @Template
+     */
+    public function solrTitleAction(Request $request, PublicationIndex $index, SolrManager $solr) {
+        $q = $request->query->get('q');
+        $result = null;
+        if($q) {
+            $order = null;
+            $filters = $request->query->get('filter', []);
+            $rangeFilters = $request->query->get('filter_range', []);
+
+            $m = [];
+            if(preg_match("/^(\w+).(asc|desc)$/", $request->query->get('order', 'score.desc'), $m)) {
+                $order = [$m[1] => $m[2]];
+            } else {
+                $order = ['score' => 'desc'];
+            }
+
+            $query = $index->searchQuery($q, $filters, $rangeFilters, $order);
             $result = $solr->execute($query, $this->paginator, [
                 'page' => (int) $request->query->get('page', 1),
                 'pageSize' => (int) $this->getParameter('page_size'),
