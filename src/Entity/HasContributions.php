@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -54,6 +54,7 @@ trait HasContributions {
         $data = $this->contributions->toArray();
 
         $cmp = null;
+
         switch ($sort) {
             case 'year':
                 $cmp = function (Contribution $a, Contribution $b) {
@@ -79,17 +80,15 @@ trait HasContributions {
                 };
 
                 break;
+
             case 'title':
-                $cmp = function (Contribution $a, Contribution $b) {
-                    return strcasecmp($a->getPublication()->getSortableTitle(), $b->getPublication()->getSortableTitle());
-                };
+                $cmp = fn (Contribution $a, Contribution $b) => strcasecmp($a->getPublication()->getSortableTitle(), $b->getPublication()->getSortableTitle());
 
                 break;
+
             case 'person':
             default:
-                $cmp = function (Contribution $a, Contribution $b) {
-                    return strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
-                };
+                $cmp = fn (Contribution $a, Contribution $b) => strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
 
                 break;
         }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -119,9 +119,6 @@ class PlacesUpdateCommand extends Command {
 
     /**
      * Execute the command.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output) : void {
         $iterator = $this->getPlaces($input->getOption('limit'), $input->getOption('start'));
@@ -130,8 +127,8 @@ class PlacesUpdateCommand extends Command {
             $this->doUpdate($row[0], $sleep);
             $this->em->flush();
             $this->em->clear();
-            $output->writeln("Count: " . $iterator->key());
-            sleep((int)$sleep);
+            $output->writeln('Count: ' . $iterator->key());
+            sleep((int) $sleep);
         }
         $this->em->flush();
         $this->em->clear();
@@ -139,7 +136,7 @@ class PlacesUpdateCommand extends Command {
     }
 
     public function doUpdate(Place $place, $sleep) : void {
-        $this->logger->warning("Place: " . $place->getName() . " #" . $place->getId());
+        $this->logger->warning('Place: ' . $place->getName() . ' #' . $place->getId());
 
         $data = preg_split('/,\s*/u', $place->getName());
 //        if (2 !== count($data)) {
@@ -155,8 +152,8 @@ class PlacesUpdateCommand extends Command {
 //            return;
 //        }
 
-        if( ! array_key_exists($place->getCountryName(), self::COUNTRIES)) {
-            $this->logger->warning('Unknown country: ' . $place->getName() . " #" . $place->getId());
+        if ( ! array_key_exists($place->getCountryName(), self::COUNTRIES)) {
+            $this->logger->warning('Unknown country: ' . $place->getName() . ' #' . $place->getId());
 
             return;
         }
