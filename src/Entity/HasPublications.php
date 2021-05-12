@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -54,18 +54,16 @@ trait HasPublications {
     public function getPublications($category = null, $order = 'title') {
         $publications = $this->publications->toArray();
         if (null !== $category) {
-            $publications = array_filter($publications, function (Publication $publication) use ($category) {
-                return $publication->getCategory() === $category;
-            });
+            $publications = array_filter($publications, fn (Publication $publication) => $publication->getCategory() === $category);
         }
         $cmp = null;
+
         switch ($order) {
             case 'title':
-                $cmp = function (Publication $a, Publication $b) {
-                    return strcmp($a->getSortableTitle(), $b->getSortableTitle());
-                };
+                $cmp = fn (Publication $a, Publication $b) => strcmp($a->getSortableTitle(), $b->getSortableTitle());
 
                 break;
+
             case 'year':
                 $cmp = function (Publication $a, Publication $b) {
                     $ad = $a->getDateYear();

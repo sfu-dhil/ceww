@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -393,9 +393,7 @@ class Place extends AbstractEntity {
      */
     public function getResidents() {
         $residents = $this->residents->toArray();
-        usort($residents, function ($a, $b) {
-            return strcmp($a->getSortableName(), $b->getSortableName());
-        });
+        usort($residents, fn ($a, $b) => strcmp($a->getSortableName(), $b->getSortableName()));
 
         return $residents;
     }

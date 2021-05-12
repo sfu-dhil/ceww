@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -60,9 +60,7 @@ class Role extends AbstractTerm {
      */
     public function getContributions() {
         $contributions = $this->contributions->toArray();
-        usort($contributions, function (Contribution $a, Contribution $b) {
-            return strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName());
-        });
+        usort($contributions, fn (Contribution $a, Contribution $b) => strcasecmp($a->getPerson()->getSortableName(), $b->getPerson()->getSortableName()));
 
         return $contributions;
     }

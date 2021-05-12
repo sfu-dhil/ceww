@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -217,9 +217,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         if ($this->oldLinks instanceof ArrayCollection) {
             $data = $this->oldLinks->toArray();
         }
-        usort($data, function ($a, $b) {
-            return mb_substr($a, mb_strpos($a, '//') + 1) <=> mb_substr($b, mb_strpos($b, '//') + 1);
-        });
+        usort($data, fn ($a, $b) => mb_substr($a, mb_strpos($a, '//') + 1) <=> mb_substr($b, mb_strpos($b, '//') + 1));
 
         return $data;
     }

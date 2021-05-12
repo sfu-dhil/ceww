@@ -2,7 +2,13 @@
     <thead>
         <tr>
             <th>Name</th>
+            {% if is_granted('ROLE_USER') %}
+            <th>Province/State</th>
+            {% endif %}
             <th>Country Name</th>
+            {% if is_granted('ROLE_USER') %}
+            <th>Location</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -13,7 +19,20 @@
                         {{ place.name }}
                     </a>
                 </td>
+                {% if is_granted('ROLE_USER') %}
+                    <td>{{ place.regionName }}</td>
+                {% endif %}
                 <td>{{ place.countryName }}</td>
+                {% if is_granted('ROLE_USER') %}
+                <td>
+                    {% if place.latitude %}
+                        <a href="https://maps.google.com/?q={{ place.latitude }},{{ place.longitude }}">Google Maps</a>
+                        <br>
+                        <a href='https://www.openstreetmap.org/?mlat={{ place.latitude }}&mlon={{ place.longitude }}&zoom=15'>Open
+                            Street Map</a>
+                    {% endif %}
+                </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </tbody>

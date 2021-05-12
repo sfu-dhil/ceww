@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2020 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -402,9 +402,7 @@ class Person extends AbstractEntity implements LinkableInterface {
             return $data;
         }
 
-        return array_filter($data, function (Contribution $contribution) use ($category) {
-            return $contribution->getPublication()->getCategory() === $category;
-        });
+        return array_filter($data, fn (Contribution $contribution) => $contribution->getPublication()->getCategory() === $category);
     }
 
     /**
