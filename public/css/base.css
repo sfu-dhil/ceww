@@ -22,8 +22,14 @@ body > .container {
     padding-top: 70px;
 }
 
-/* Custom app styles */
+/* Menu bar styling */
+a.dropdown-toggle::after {
+    content: "▾";
+    padding-left: 0.3em;
+    font-size: small;
+}
 
+/* Custom app styles */
 label.required::after {
     content: ' *';
     color: red;

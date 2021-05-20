@@ -22,8 +22,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class Builder implements ContainerAwareInterface {
     use ContainerAwareTrait;
 
-    public const CARET = ' ▾'; // U+25BE, black down-pointing small triangle.
-
     /**
      * @var FactoryInterface
      */
@@ -71,7 +69,7 @@ class Builder implements ContainerAwareInterface {
 
         $search = $menu->addChild('search', [
             'uri' => '#',
-            'label' => 'Search ' . self::CARET,
+            'label' => 'Search',
         ]);
         $search->setAttribute('dropdown', true);
         $search->setLinkAttribute('class', 'dropdown-toggle');
@@ -96,7 +94,7 @@ class Builder implements ContainerAwareInterface {
 
         $browse = $menu->addChild('browse', [
             'uri' => '#',
-            'label' => 'Browse ' . self::CARET,
+            'label' => 'Browse',
         ]);
         $browse->setAttribute('dropdown', true);
         $browse->setLinkAttribute('class', 'dropdown-toggle');
