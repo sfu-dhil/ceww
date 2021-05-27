@@ -20,7 +20,7 @@ use Nines\SolrBundle\Annotation as Solr;
  * @ORM\Entity(repositoryClass="App\Repository\CompilationRepository")
  *
  * @Solr\Document(
- *     @Solr\CopyField(from={"title", "description", "dateYear", "location", "genres"}, to="content", type="texts")
+ *     @Solr\CopyField(from={"title", "description", "dateYear", "location", "genres", "contributions", "publishers"}, to="content", type="texts")
  * )
  */
 class Compilation extends Publication {

@@ -177,7 +177,7 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      */
     public function showAction(Place $place, PlaceIndex $index, SolrManager $manager) {
         $nearby = null;
-        if(false && $manager->enabled()) {
+        if($manager->enabled()) {
             $query = $index->nearByQuery($place, 50);
             if($query) {
                 $nearby = $manager->execute($query);

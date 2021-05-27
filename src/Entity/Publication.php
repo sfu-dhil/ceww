@@ -119,6 +119,8 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * @var Collection|Contribution[]
      * @ORM\OneToMany(targetEntity="Contribution", mappedBy="publication", cascade={"persist"}, orphanRemoval=true)
+     *
+     * @Solr\Field(type="texts", boost=0.5, getter="getContributors()")
      */
     private $contributions;
 
@@ -126,6 +128,8 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var Collection|Publisher
      * @ORM\ManyToMany(targetEntity="Publisher", inversedBy="publications")
      * @ORM\OrderBy({"name": "ASC"})
+     *
+     * @Solr\Field(type="texts", boost=0.5, getter="getPublishers(true)")
      */
     private $publishers;
 
@@ -409,6 +413,12 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this->contributions->first();
     }
 
+    public function getContributors() {
+        return array_map(function (Contribution $c) {
+            return $c->getPerson()->getFullName(); }, $this->contributions->toArray()
+        );
+    }
+
     /**
      * Add publisher.
      *
@@ -430,9 +440,14 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * Get publishers.
      *
-     * @return Collection
+     * @return Collection|array
      */
-    public function getPublishers() {
+    public function getPublishers($flatten = false) {
+        if($flatten) {
+            return array_map(function (Publisher $p) {
+                return $p->getName(); }, $this->publishers->toArray()
+            );
+        }
         return $this->publishers;
     }
 
