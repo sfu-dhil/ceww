@@ -1,3 +1,3 @@
 nines_solr:
-    enabled: true
+    enabled: '%env(resolve:SOLR_ENABLED)%'
     url: '%env(resolve:SOLR_URL)%'
