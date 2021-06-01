@@ -53,8 +53,9 @@ class PlaceIndex extends AbstractIndex
         $qb = $this->createQueryBuilder();
         $qb->addGeographicFilter('coordinates', $place->getLatitude(), $place->getLongitude(), "$distance");
         $qb->addDistanceField('coordinates', $place->getLatitude(), $place->getLongitude());
-        $qb->setSorting();
-        $qb->addDistanceSorting('coordinates', $place->getLatitude(), $place->getLongitude(), 'asc');
+        // https://github.com/solariumphp/solarium/pull/453 might do.
+//        $qb->setSorting();
+//        $qb->addDistanceSorting('coordinates', $place->getLatitude(), $place->getLongitude(), 'asc');
 
         return $qb->getQuery();
     }

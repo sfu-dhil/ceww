@@ -180,7 +180,11 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
         if($manager->enabled()) {
             $query = $index->nearByQuery($place, 50);
             if($query) {
-                $nearby = $manager->execute($query);
+                try {
+                    $nearby = $manager->execute($query);
+                } catch (\Exception $e) {
+                    $manager->log('error', $e->getMessage());
+                }
             }
         }
 
