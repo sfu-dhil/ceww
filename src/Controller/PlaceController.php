@@ -12,9 +12,12 @@ namespace App\Controller;
 
 use App\Entity\Place;
 use App\Form\PlaceType;
+use App\Index\PlaceIndex;
 use App\Repository\PlaceRepository;
 use App\Services\Merger;
+use Exception;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -96,6 +99,35 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
     }
 
     /**
+     * @Route("/solr", name="place_solr")
+     * @Template
+     */
+    public function solrAction(Request $request, PlaceIndex $repo, SolrManager $solr) {
+        $q = $request->query->get('q');
+        $result = null;
+        if ($q) {
+            $filters = $request->query->get('filter', []);
+
+            $order = null;
+            $m = [];
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
+                $order = [$m[1] => $m[2]];
+            }
+
+            $query = $repo->searchQuery($q, $filters, $order);
+            $result = $solr->execute($query, $this->paginator, [
+                'page' => (int) $request->query->get('page', 1),
+                'pageSize' => (int) $this->getParameter('page_size'),
+            ]);
+        }
+
+        return [
+            'q' => $q,
+            'result' => $result,
+        ];
+    }
+
+    /**
      * Creates a new Place entity.
      *
      * @Route("/new", name="place_new", methods={"GET", "POST"})
@@ -143,12 +175,25 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      *
      * @Template
      */
-    public function showAction(Place $place) {
+    public function showAction(Place $place, PlaceIndex $index, SolrManager $manager) {
+        $nearby = null;
+        if ($manager->enabled()) {
+            $query = $index->nearByQuery($place, 50);
+            if ($query) {
+                try {
+                    $nearby = $manager->execute($query);
+                } catch (Exception $e) {
+                    $manager->log('error', $e->getMessage());
+                }
+            }
+        }
+
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Place::class);
 
         return [
             'place' => $place,
+            'nearby' => $nearby,
             'next' => $repo->next($place),
             'previous' => $repo->previous($place),
         ];

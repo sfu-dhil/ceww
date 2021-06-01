@@ -22,8 +22,14 @@ body > .container {
     padding-top: 70px;
 }
 
-/* Custom app styles */
+/* Menu bar styling */
+a.dropdown-toggle::after {
+    content: "▾";
+    padding-left: 0.3em;
+    font-size: small;
+}
 
+/* Custom app styles */
 label.required::after {
     content: ' *';
     color: red;
@@ -135,6 +141,11 @@ div.homepage img {
 div.checkbox, div.radio {
     width: 30%;
     float: left;
+}
+
+div.facet div.checkbox, div.facet div.radio {
+    width: auto;
+    float: none;
 }
 
 div.collection-complex > div:not(:last-child) {

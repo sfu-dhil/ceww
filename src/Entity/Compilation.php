@@ -11,12 +11,17 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Nines\SolrBundle\Annotation as Solr;
 
 /**
  * Collection.
  *
  * @ORM\Table(name="collection")
  * @ORM\Entity(repositoryClass="App\Repository\CompilationRepository")
+ *
+ * @Solr\Document(
+ *     @Solr\CopyField(from={"title", "description", "dateYear", "location", "genres", "contributions", "publishers"}, to="content", type="texts")
+ * )
  */
 class Compilation extends Publication {
     public function getCategory() {

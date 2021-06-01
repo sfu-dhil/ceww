@@ -13,10 +13,12 @@ namespace App\Controller;
 use App\Entity\Place;
 use App\Entity\Publisher;
 use App\Form\PublisherType;
+use App\Index\PublisherIndex;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
 use App\Services\Merger;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -102,6 +104,35 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
         return [
             'publishers' => $publishers,
             'q' => $q,
+        ];
+    }
+
+    /**
+     * @Route("/solr", name="publisher_solr")
+     * @Template
+     */
+    public function solrAction(Request $request, PublisherIndex $repo, SolrManager $solr) {
+        $q = $request->query->get('q');
+        $result = null;
+        if ($q) {
+            $filters = $request->query->get('filter', []);
+
+            $order = null;
+            $m = [];
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
+                $order = [$m[1] => $m[2]];
+            }
+
+            $query = $repo->searchQuery($q, $filters, $order);
+            $result = $solr->execute($query, $this->paginator, [
+                'page' => (int) $request->query->get('page', 1),
+                'pageSize' => (int) $this->getParameter('page_size'),
+            ]);
+        }
+
+        return [
+            'q' => $q,
+            'result' => $result,
         ];
     }
 

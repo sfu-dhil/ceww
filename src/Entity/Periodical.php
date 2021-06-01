@@ -11,12 +11,17 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Nines\SolrBundle\Annotation as Solr;
 
 /**
  * Periodical.
  *
  * @ORM\Table(name="periodical")
  * @ORM\Entity(repositoryClass="App\Repository\PeriodicalRepository")
+ *
+ * @Solr\Document(
+ *     @Solr\CopyField(from={"title", "description", "dateYear", "location", "genres", "continuedFrom", "continuedBy", "contributions", "publishers"}, to="content", type="texts")
+ * )
  */
 class Periodical extends Publication {
     /**
@@ -28,12 +33,16 @@ class Periodical extends Publication {
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @Solr\Field(type="text", boost=0.6)
      */
     private $continuedFrom;
 
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @Solr\Field(type="text", boost=0.6)
      */
     private $continuedBy;
 

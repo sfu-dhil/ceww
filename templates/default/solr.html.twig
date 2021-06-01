@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block pageheader %}
+    <h1>Search</h1>
+{% endblock %}
+
+{% block styles %}
+    <link href='{{ asset('bundles/ninessolr/css/search.css') }}' rel='stylesheet'/>
+{% endblock %}
+
+{% block body %}
+
+    <form method="get" action="{{ path('solr') }}" class="form-horizontal">
+        <div class='row'>
+            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'solr'} %}
+            {% endembed %}
+        </div>
+
+        <div class='row'>
+            <div class='col-sm-3'>
+                {% if result %}
+
+                    {% include '@NinesSolr/search/partial/order.html.twig' with {
+                        'header': 'Result Order',
+                        'options': {
+                            'score.desc': 'Relevance',
+                            'sortable.asc': 'Name (A to Z)',
+                            'sortable.desc': 'Name (Z to A)'
+                        }
+                    } %}
+
+                    {% include '@NinesSolr/search/partial/facet.html.twig' with {
+                        'facet': result.getFacet('type'),
+                        'filter': 'type',
+                        'header': 'Record Type'
+                    } %}
+                {% endif %}
+            </div>
+
+            <div class='col-sm-9'>
+                {% if result and result.count > 0 %}
+                    {% set pagination = result.paginator %}
+
+                    {% embed '@NinesSolr/search/partial/header.html.twig' with {'pagination': pagination} %}
+                    {% endembed %}
+
+                    {% embed '@NinesSolr/search/partial/result.html.twig' with {'result': result} %}
+                    {% endembed %}
+
+                    {% if pagination %}
+                        <div class="navigation">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
+                    {% endif %}
+
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

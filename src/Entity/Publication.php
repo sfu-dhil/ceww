@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
+use Nines\SolrBundle\Annotation as Solr;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
@@ -52,12 +53,16 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * @var string
      * @ORM\Column(type="text", nullable=false)
+     *
+     * @Solr\Field(type="text", boost=2.0)
      */
     private $title;
 
     /**
      * @var string
      * @ORM\Column(type="text", nullable=false)
+     *
+     * @Solr\Field(name="sortable", type="string", boost=0.2)
      */
     private $sortableTitle;
 
@@ -72,6 +77,8 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      *
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @Solr\Field(type="text", boost=0.5)
      */
     private $description;
 
@@ -86,12 +93,16 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * @var DateYear
      * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
+     *
+     * @Solr\Field(type="integer", mutator="getYear")
      */
     private $dateYear;
 
     /**
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="publications")
+     *
+     * @Solr\Field(type="string", boost=0.5, mutator="getName")
      */
     private $location;
 
@@ -100,12 +111,16 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
      * @ORM\JoinTable(name="publications_genres")
      * @ORM\OrderBy({"label": "ASC"})
+     *
+     * @Solr\Field(type="strings", boost=0.5, getter="getGenres(true)")
      */
     private $genres;
 
     /**
      * @var Collection|Contribution[]
      * @ORM\OneToMany(targetEntity="Contribution", mappedBy="publication", cascade={"persist"}, orphanRemoval=true)
+     *
+     * @Solr\Field(type="texts", boost=0.5, getter="getContributors()")
      */
     private $contributions;
 
@@ -113,6 +128,8 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var Collection|Publisher
      * @ORM\ManyToMany(targetEntity="Publisher", inversedBy="publications")
      * @ORM\OrderBy({"name": "ASC"})
+     *
+     * @Solr\Field(type="texts", boost=0.5, getter="getPublishers(true)")
      */
     private $publishers;
 
@@ -363,9 +380,15 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * Get genres.
      *
+     * @param ?bool $flat
+     *
      * @return Collection
      */
-    public function getGenres() {
+    public function getGenres(?bool $flat = false) {
+        if ($flat) {
+            return array_map(fn (Genre $p) => $p->getLabel(), $this->genres->toArray());
+        }
+
         return $this->genres;
     }
 
@@ -392,6 +415,13 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this->contributions->first();
     }
 
+    public function getContributors() {
+        return array_map(
+            fn (Contribution $c) => $c->getPerson()->getFullName(),
+            $this->contributions->toArray()
+        );
+    }
+
     /**
      * Add publisher.
      *
@@ -413,9 +443,18 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * Get publishers.
      *
-     * @return Collection
+     * @param mixed $flatten
+     *
+     * @return array|Collection
      */
-    public function getPublishers() {
+    public function getPublishers($flatten = false) {
+        if ($flatten) {
+            return array_map(
+                fn (Publisher $p) => $p->getName(),
+                $this->publishers->toArray()
+            );
+        }
+
         return $this->publishers;
     }
 

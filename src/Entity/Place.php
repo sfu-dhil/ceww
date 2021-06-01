@@ -13,6 +13,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nines\SolrBundle\Annotation as Solr;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
@@ -23,6 +24,11 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *     @ORM\Index(columns={"sortable_name"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
+ *
+ * @Solr\Document(
+ *     copyField=@Solr\CopyField(from={"name", "regionName", "description", "countryName"}, to="content", type="texts"),
+ *     computedFields=@Solr\ComputedField(name="coordinates", type="location", getter="getCoordinates")
+ * )
  */
 class Place extends AbstractEntity {
     use HasPublications {
@@ -31,11 +37,14 @@ class Place extends AbstractEntity {
 
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
+     *
+     * @Solr\Field(type="text", boost=2.0)
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=false)
+     * @Solr\Field(name="sortable", boost=0.2, type="string")
      */
     private $sortableName;
 
@@ -49,11 +58,13 @@ class Place extends AbstractEntity {
      * A province, state, territory or other sub-national entity.
      *
      * @ORM\Column(type="string", length=250, nullable=true)
+     * @Solr\Field(type="string", boost=0.5)
      */
     private $regionName;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
+     * @Solr\Field(type="string", boost=0.2)
      */
     private $countryName;
 
@@ -72,6 +83,8 @@ class Place extends AbstractEntity {
      *
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @Solr\Field(type="text", boost=0.5)
      */
     private $description;
 
@@ -525,5 +538,13 @@ class Place extends AbstractEntity {
      */
     public function getGeoNamesId() {
         return $this->geoNamesId;
+    }
+
+    public function getCoordinates() : ?string {
+        if ($this->latitude && $this->longitude) {
+            return $this->latitude . ',' . $this->longitude;
+        }
+
+        return null;
     }
 }

@@ -13,6 +13,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nines\SolrBundle\Annotation as Solr;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
@@ -22,6 +23,11 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *     @ORM\Index(columns="name", flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\PublisherRepository")
+ *
+ * @Solr\Document(
+ *     @Solr\CopyField(from={"name", "places"}, to="content", type="texts"),
+ *     @Solr\CopyField(from={"name"}, to="sortable", type="string")
+ * )
  */
 class Publisher extends AbstractEntity {
     use HasPublications {
@@ -32,6 +38,8 @@ class Publisher extends AbstractEntity {
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
      * @ORM\OrderBy({"sortableName": "ASC"})
+     *
+     * @Solr\Field(type="text", boost=2.0)
      */
     private $name;
 
@@ -45,6 +53,8 @@ class Publisher extends AbstractEntity {
      * @var Collection|Place[]
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
      * @ORM\OrderBy({"sortableName": "ASC"})
+     *
+     * @Solr\Field(type="strings", boost=0.6, getter="getPlaces(true)")
      */
     private $places;
 
@@ -111,9 +121,15 @@ class Publisher extends AbstractEntity {
     /**
      * Get places.
      *
+     * @param ?bool $flat
+     *
      * @return Collection
      */
-    public function getPlaces() {
+    public function getPlaces(?bool $flat = false) {
+        if ($flat) {
+            return array_map(fn (Place $p) => $p->getName(), $this->places->toArray());
+        }
+
         return $this->places;
     }
 
@@ -132,9 +148,15 @@ class Publisher extends AbstractEntity {
     }
 
     /**
-     * @return Collection|Publication[]
+     * @param ?bool $flat
+     *
+     * @return mixed
      */
-    public function getPublications() : Collection {
+    public function getPublications(?bool $flat = false) {
+        if ($flat) {
+            return array_map(fn (Publication $p) => $p->getTitle(), $this->publications->toArray());
+        }
+
         return $this->publications;
     }
 
