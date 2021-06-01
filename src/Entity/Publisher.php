@@ -13,8 +13,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Nines\UtilBundle\Entity\AbstractEntity;
 use Nines\SolrBundle\Annotation as Solr;
+use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * Publisher.
@@ -121,11 +121,13 @@ class Publisher extends AbstractEntity {
     /**
      * Get places.
      *
+     * @param ?bool $flat
+     *
      * @return Collection
      */
     public function getPlaces(?bool $flat = false) {
         if ($flat) {
-            return array_map(function (Place $p) {return $p->getName(); }, $this->places->toArray());
+            return array_map(fn (Place $p) => $p->getName(), $this->places->toArray());
         }
 
         return $this->places;
@@ -146,12 +148,15 @@ class Publisher extends AbstractEntity {
     }
 
     /**
+     * @param ?bool $flat
+     *
      * @return mixed
      */
     public function getPublications(?bool $flat = false) {
         if ($flat) {
-            return array_map(function (Publication $p) {return $p->getTitle(); }, $this->publications->toArray());
+            return array_map(fn (Publication $p) => $p->getTitle(), $this->publications->toArray());
         }
+
         return $this->publications;
     }
 

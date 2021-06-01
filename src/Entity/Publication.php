@@ -15,8 +15,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
-use Nines\UtilBundle\Entity\AbstractEntity;
 use Nines\SolrBundle\Annotation as Solr;
+use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * Publication.
@@ -380,11 +380,13 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * Get genres.
      *
+     * @param ?bool $flat
+     *
      * @return Collection
      */
     public function getGenres(?bool $flat = false) {
         if ($flat) {
-            return array_map(function (Genre $p) {return $p->getLabel(); }, $this->genres->toArray());
+            return array_map(fn (Genre $p) => $p->getLabel(), $this->genres->toArray());
         }
 
         return $this->genres;
@@ -414,8 +416,9 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     }
 
     public function getContributors() {
-        return array_map(function (Contribution $c) {
-            return $c->getPerson()->getFullName(); }, $this->contributions->toArray()
+        return array_map(
+            fn (Contribution $c) => $c->getPerson()->getFullName(),
+            $this->contributions->toArray()
         );
     }
 
@@ -440,14 +443,18 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
     /**
      * Get publishers.
      *
-     * @return Collection|array
+     * @param mixed $flatten
+     *
+     * @return array|Collection
      */
     public function getPublishers($flatten = false) {
-        if($flatten) {
-            return array_map(function (Publisher $p) {
-                return $p->getName(); }, $this->publishers->toArray()
+        if ($flatten) {
+            return array_map(
+                fn (Publisher $p) => $p->getName(),
+                $this->publishers->toArray()
             );
         }
+
         return $this->publishers;
     }
 

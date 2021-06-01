@@ -13,7 +13,6 @@ namespace App\Controller;
 use App\Entity\Place;
 use App\Entity\Publisher;
 use App\Form\PublisherType;
-use App\Index\PersonIndex;
 use App\Index\PublisherIndex;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
@@ -115,12 +114,12 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
     public function solrAction(Request $request, PublisherIndex $repo, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
-        if($q) {
+        if ($q) {
             $filters = $request->query->get('filter', []);
 
             $order = null;
             $m = [];
-            if(preg_match("/^(\w+).(asc|desc)$/", $request->query->get('order', 'score.desc'), $m)) {
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
                 $order = [$m[1] => $m[2]];
             }
 

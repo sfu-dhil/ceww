@@ -13,9 +13,9 @@ namespace App\Controller;
 use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Index\PlaceIndex;
-use App\Index\PublisherIndex;
 use App\Repository\PlaceRepository;
 use App\Services\Merger;
+use Exception;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
@@ -105,12 +105,12 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
     public function solrAction(Request $request, PlaceIndex $repo, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
-        if($q) {
+        if ($q) {
             $filters = $request->query->get('filter', []);
 
             $order = null;
             $m = [];
-            if(preg_match("/^(\w+).(asc|desc)$/", $request->query->get('order', 'score.desc'), $m)) {
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
                 $order = [$m[1] => $m[2]];
             }
 
@@ -177,12 +177,12 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
      */
     public function showAction(Place $place, PlaceIndex $index, SolrManager $manager) {
         $nearby = null;
-        if($manager->enabled()) {
+        if ($manager->enabled()) {
             $query = $index->nearByQuery($place, 50);
-            if($query) {
+            if ($query) {
                 try {
                     $nearby = $manager->execute($query);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $manager->log('error', $e->getMessage());
                 }
             }

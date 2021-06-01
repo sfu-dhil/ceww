@@ -10,13 +10,10 @@ declare(strict_types=1);
 
 namespace App\Index;
 
-use App\Entity\Person;
 use Nines\SolrBundle\Index\AbstractIndex;
 use Solarium\QueryType\Select\Query\Query;
 
-class PublisherIndex extends AbstractIndex
-{
-
+class PublisherIndex extends AbstractIndex {
     /**
      * @param $q
      * @param array $filters
@@ -38,7 +35,7 @@ class PublisherIndex extends AbstractIndex
 
         $qb->setHighlightFields('content');
 
-        if($order) {
+        if ($order) {
             $qb->setSorting($order);
         }
 

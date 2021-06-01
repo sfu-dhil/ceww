@@ -229,7 +229,7 @@ class DateYear extends AbstractEntity {
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getYear() {
         return $this->start ?? $this->end ?? null;

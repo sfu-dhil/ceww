@@ -15,8 +15,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
-use Nines\UtilBundle\Entity\AbstractEntity;
 use Nines\SolrBundle\Annotation as Solr;
+use Nines\UtilBundle\Entity\AbstractEntity;
 
 /**
  * Person.
@@ -349,7 +349,6 @@ class Person extends AbstractEntity implements LinkableInterface {
         }
     }
 
-
     /**
      * Set deathPlace.
      *
@@ -395,12 +394,15 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * Get residences.
      *
+     * @param ?bool $flat
+     *
      * @return Collection
      */
     public function getResidences(?bool $flat = false) {
         if ($flat) {
-            return array_map(function (Place $p) {return $p->getName(); }, $this->residences->toArray());
+            return array_map(fn (Place $p) => $p->getName(), $this->residences->toArray());
         }
+
         return $this->residences;
     }
 
@@ -427,12 +429,15 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * Get aliases.
      *
+     * @param ?bool $flat
+     *
      * @return Collection
      */
     public function getAliases(?bool $flat = false) {
         if ($flat) {
-            return array_map(function (Alias $a) {return $a->getName(); }, $this->aliases->toArray());
+            return array_map(fn (Alias $a) => $a->getName(), $this->aliases->toArray());
         }
+
         return $this->aliases;
     }
 

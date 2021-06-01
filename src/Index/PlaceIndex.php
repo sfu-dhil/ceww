@@ -14,9 +14,7 @@ use App\Entity\Place;
 use Nines\SolrBundle\Index\AbstractIndex;
 use Solarium\QueryType\Select\Query\Query;
 
-class PlaceIndex extends AbstractIndex
-{
-
+class PlaceIndex extends AbstractIndex {
     /**
      * @param $q
      * @param array $filters
@@ -39,7 +37,7 @@ class PlaceIndex extends AbstractIndex
 
         $qb->setHighlightFields('content');
 
-        if($order) {
+        if ($order) {
             $qb->setSorting($order);
         }
 
@@ -47,11 +45,11 @@ class PlaceIndex extends AbstractIndex
     }
 
     public function nearbyQuery(Place $place, $distance) {
-        if( ! $place->getCoordinates()) {
-            return null;
+        if ( ! $place->getCoordinates()) {
+            return;
         }
         $qb = $this->createQueryBuilder();
-        $qb->addGeographicFilter('coordinates', $place->getLatitude(), $place->getLongitude(), "$distance");
+        $qb->addGeographicFilter('coordinates', $place->getLatitude(), $place->getLongitude(), "{$distance}");
         $qb->addDistanceField('coordinates', $place->getLatitude(), $place->getLongitude());
         // https://github.com/solariumphp/solarium/pull/453 might do.
 //        $qb->setSorting();

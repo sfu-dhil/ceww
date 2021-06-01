@@ -10,13 +10,10 @@ declare(strict_types=1);
 
 namespace App\Index;
 
-use App\Entity\Person;
 use Nines\SolrBundle\Index\AbstractIndex;
 use Solarium\QueryType\Select\Query\Query;
 
-class PublicationIndex extends AbstractIndex
-{
-
+class PublicationIndex extends AbstractIndex {
     /**
      * @param $q
      * @param array $filters
@@ -34,9 +31,9 @@ class PublicationIndex extends AbstractIndex
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        foreach($rangeFilters as $key => $values) {
-            foreach($values as $v) {
-                list($start, $end) = explode(" ", $v);
+        foreach ($rangeFilters as $key => $values) {
+            foreach ($values as $v) {
+                list($start, $end) = explode(' ', $v);
                 $qb->addFilterRange($key, $start, $end);
             }
         }
@@ -47,7 +44,7 @@ class PublicationIndex extends AbstractIndex
 
         $qb->setHighlightFields('content');
 
-        if($order) {
+        if ($order) {
             $qb->setSorting($order);
         }
 

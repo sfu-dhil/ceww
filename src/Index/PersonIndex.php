@@ -10,13 +10,10 @@ declare(strict_types=1);
 
 namespace App\Index;
 
-use App\Entity\Person;
 use Nines\SolrBundle\Index\AbstractIndex;
 use Solarium\QueryType\Select\Query\Query;
 
-class PersonIndex extends AbstractIndex
-{
-
+class PersonIndex extends AbstractIndex {
     /**
      * @param $q
      * @param array $filters
@@ -35,9 +32,9 @@ class PersonIndex extends AbstractIndex
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        foreach($rangeFilters as $key => $values) {
-            foreach($values as $v) {
-                list($start, $end) = explode(" ", $v);
+        foreach ($rangeFilters as $key => $values) {
+            foreach ($values as $v) {
+                list($start, $end) = explode(' ', $v);
                 $qb->addFilterRange($key, $start, $end);
             }
         }
@@ -46,9 +43,9 @@ class PersonIndex extends AbstractIndex
         $qb->addFacetRange('deathDate', 1750, $year, 50);
 
         $qb->setHighlightFields(['fullName', 'description',
-            'birthPlace', 'deathPlace', 'residences', 'aliases']);
+            'birthPlace', 'deathPlace', 'residences', 'aliases', ]);
 
-        if($order) {
+        if ($order) {
             $qb->setSorting($order);
         }
 

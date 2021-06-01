@@ -152,13 +152,13 @@ class PersonController extends AbstractController implements PaginatorAwareInter
     public function solrAction(Request $request, PersonIndex $repo, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
-        if($q) {
+        if ($q) {
             $filters = $request->query->get('filter', []);
             $rangeFilters = $request->query->get('filter_range', []);
 
             $order = null;
             $m = [];
-            if(preg_match("/^(\w+).(asc|desc)$/", $request->query->get('order', 'score.desc'), $m)) {
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
                 $order = [$m[1] => $m[2]];
             }
 
@@ -174,7 +174,6 @@ class PersonController extends AbstractController implements PaginatorAwareInter
             'result' => $result,
         ];
     }
-
 
     /**
      * Creates a new Person entity.

@@ -67,11 +67,11 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
     public function solrAction(Request $request, DefaultIndex $repo, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
-        if($q) {
+        if ($q) {
             $order = null;
             $filters = $request->query->get('filter', []);
             $m = [];
-            if(preg_match("/^(\w+).(asc|desc)$/", $request->query->get('order', 'score.desc'), $m)) {
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
                 $order = [$m[1] => $m[2]];
             } else {
                 $order = ['score' => 'desc'];
@@ -97,13 +97,13 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
     public function solrTitleAction(Request $request, PublicationIndex $index, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
-        if($q) {
+        if ($q) {
             $order = null;
             $filters = $request->query->get('filter', []);
             $rangeFilters = $request->query->get('filter_range', []);
 
             $m = [];
-            if(preg_match("/^(\w+).(asc|desc)$/", $request->query->get('order', 'score.desc'), $m)) {
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
                 $order = [$m[1] => $m[2]];
             } else {
                 $order = ['score' => 'desc'];
