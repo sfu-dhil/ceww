@@ -8915,12 +8915,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ubermichael/nines-bundles.git",
-                "reference": "646b06793924c64524e79fe7ef3f40fd3c8b7f70"
+                "reference": "3b3d66b5e086203712f3f4a12dfd87b45141102a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/646b06793924c64524e79fe7ef3f40fd3c8b7f70",
-                "reference": "646b06793924c64524e79fe7ef3f40fd3c8b7f70",
+                "url": "https://api.github.com/repos/ubermichael/nines-bundles/zipball/3b3d66b5e086203712f3f4a12dfd87b45141102a",
+                "reference": "3b3d66b5e086203712f3f4a12dfd87b45141102a",
                 "shasum": ""
             },
             "require": {
@@ -8971,7 +8971,7 @@
                 "source": "https://github.com/ubermichael/nines-bundles/tree/4.x-solr",
                 "issues": "https://github.com/ubermichael/nines-bundles/issues"
             },
-            "time": "2021-06-01T19:16:06+00:00"
+            "time": "2021-06-10T16:26:40+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -11751,5 +11751,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
