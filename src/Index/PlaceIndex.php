@@ -45,14 +45,13 @@ class PlaceIndex extends AbstractIndex {
     }
 
     /**
-     * @param Place $place
      * @param $distance
      *
-     * @return Query|null
+     * @return null|Query
      */
     public function nearbyQuery(Place $place, $distance) {
         if ( ! $place->getCoordinates()) {
-            return null;
+            return;
         }
         $qb = $this->createQueryBuilder();
         $qb->addGeographicFilter('coordinates', $place->getLatitude(), $place->getLongitude(), "{$distance}");
