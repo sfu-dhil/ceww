@@ -44,6 +44,11 @@ class PlaceIndex extends AbstractIndex {
         return $qb->getQuery();
     }
 
+    /**
+     * @param $distance
+     *
+     * @return null|Query
+     */
     public function nearbyQuery(Place $place, $distance) {
         if ( ! $place->getCoordinates()) {
             return;
@@ -51,9 +56,8 @@ class PlaceIndex extends AbstractIndex {
         $qb = $this->createQueryBuilder();
         $qb->addGeographicFilter('coordinates', $place->getLatitude(), $place->getLongitude(), "{$distance}");
         $qb->addDistanceField('coordinates', $place->getLatitude(), $place->getLongitude());
-        // https://github.com/solariumphp/solarium/pull/453 might do.
-//        $qb->setSorting();
-//        $qb->addDistanceSorting('coordinates', $place->getLatitude(), $place->getLongitude(), 'asc');
+        $qb->setSorting();
+        $qb->addDistanceSorting('coordinates', $place->getLatitude(), $place->getLongitude(), 'asc');
 
         return $qb->getQuery();
     }
