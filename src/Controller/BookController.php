@@ -83,7 +83,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function newAction(Request $request, LinkManager $linkManager) {
+    public function newAction(Request $request) {
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
@@ -95,9 +95,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($book);
-            $em->flush();
-
-            $linkManager->setLinks($book, $form->get('links')->getData());
             $em->flush();
 
             $this->addFlash('success', 'The new book was created.');
@@ -137,7 +134,7 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function editAction(Request $request, Book $book, LinkManager $linkManager) {
+    public function editAction(Request $request, Book $book) {
         if ( ! $this->isGranted('ROLE_CONTENT_EDITOR')) {
             $this->addFlash('danger', 'You must login to access this page.');
 
@@ -150,7 +147,6 @@ class BookController extends AbstractController implements PaginatorAwareInterfa
             foreach ($book->getContributions() as $contribution) {
                 $contribution->setPublication($book);
             }
-            $linkManager->setLinks($book, $editForm->get('links')->getData());
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();

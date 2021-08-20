@@ -86,7 +86,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function newAction(Request $request, LinkManager $linkManager) {
+    public function newAction(Request $request) {
         $periodical = new Periodical();
         $form = $this->createForm(PeriodicalType::class, $periodical);
         $form->handleRequest($request);
@@ -97,9 +97,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
             }
             $em = $this->getDoctrine()->getManager();
             $em->persist($periodical);
-            $em->flush();
-
-            $linkManager->setLinks($periodical, $form->get('links')->getData());
             $em->flush();
 
             $this->addFlash('success', 'The new periodical was created.');
@@ -139,7 +136,7 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function editAction(Request $request, Periodical $periodical, LinkManager $linkManager) {
+    public function editAction(Request $request, Periodical $periodical) {
         $editForm = $this->createForm(PeriodicalType::class, $periodical);
         $editForm->handleRequest($request);
 
@@ -147,7 +144,6 @@ class PeriodicalController extends AbstractController implements PaginatorAwareI
             foreach ($periodical->getContributions() as $contribution) {
                 $contribution->setPublication($periodical);
             }
-            $linkManager->setLinks($periodical, $editForm->get('links')->getData());
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
