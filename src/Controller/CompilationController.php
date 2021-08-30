@@ -18,7 +18,6 @@ use App\Form\ContributionType;
 use App\Repository\CompilationRepository;
 use App\Repository\PublicationRepository;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
-use Nines\MediaBundle\Service\LinkManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -84,7 +83,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function newAction(Request $request, LinkManager $linkManager) {
+    public function newAction(Request $request) {
         $compilation = new Compilation();
         $form = $this->createForm(CompilationType::class, $compilation);
         $form->handleRequest($request);
@@ -95,9 +94,6 @@ class CompilationController extends AbstractController implements PaginatorAware
             }
             $em = $this->getDoctrine()->getManager();
             $em->persist($compilation);
-            $em->flush();
-
-            $linkManager->setLinks($compilation, $form->get('links')->getData());
             $em->flush();
 
             $this->addFlash('success', 'The new collection was created.');
@@ -137,7 +133,7 @@ class CompilationController extends AbstractController implements PaginatorAware
      * @Security("is_granted('ROLE_CONTENT_EDITOR')")
      * @Template
      */
-    public function editAction(Request $request, Compilation $compilation, LinkManager $linkManager) {
+    public function editAction(Request $request, Compilation $compilation) {
         $editForm = $this->createForm(CompilationType::class, $compilation);
         $editForm->handleRequest($request);
 
@@ -145,7 +141,6 @@ class CompilationController extends AbstractController implements PaginatorAware
             foreach ($compilation->getContributions() as $contribution) {
                 $contribution->setPublication($compilation);
             }
-            $linkManager->setLinks($compilation, $editForm->get('links')->getData());
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();

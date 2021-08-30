@@ -33,6 +33,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 class Place extends AbstractEntity {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
+
     }
 
     /**

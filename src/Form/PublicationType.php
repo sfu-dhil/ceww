@@ -14,6 +14,7 @@ use App\Entity\Genre;
 use App\Entity\Place;
 use App\Entity\Publisher;
 use Nines\MediaBundle\Form\LinkableType;
+use Nines\MediaBundle\Form\Mapper\LinkableMapper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,6 +23,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tetranz\Select2EntityBundle\Form\Type\Select2EntityType;
 
 class PublicationType extends AbstractType {
+    private LinkableMapper $mapper;
+
     public function buildForm(FormBuilderInterface $builder, array $options) : void {
         $builder->add('title', null, [
             'label' => 'Title',
@@ -105,6 +108,14 @@ class PublicationType extends AbstractType {
                 'help_block' => 'Publisher(s) of the work',
             ],
         ]);
+        $builder->setDataMapper($this->mapper);
+    }
+
+    /**
+     * @required
+     */
+    public function setMapper(LinkableMapper $mapper) : void {
+        $this->mapper = $mapper;
     }
 
     public function configureOptions(OptionsResolver $resolver) : void {
