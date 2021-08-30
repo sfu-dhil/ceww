@@ -32,6 +32,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 class Publisher extends AbstractEntity {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
+
     }
 
     /**

@@ -38,10 +38,12 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 abstract class Publication extends AbstractEntity implements LinkableInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
+
     }
 
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
+
     }
 
     public const BOOK = 'book';

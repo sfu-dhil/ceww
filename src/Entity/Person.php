@@ -34,11 +34,13 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 class Person extends AbstractEntity implements LinkableInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
+
         getContributions as private traitContributions;
     }
 
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
+
     }
 
     public const MALE = 'm';

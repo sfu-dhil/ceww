@@ -17,7 +17,6 @@ use App\Repository\AliasRepository;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
-use Nines\MediaBundle\Service\LinkManager;
 use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
