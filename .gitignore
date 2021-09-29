@@ -33,3 +33,8 @@ public/docs
 config/deploy.yaml
 public/js/jquery.collection.js
 src/.preload.php
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
