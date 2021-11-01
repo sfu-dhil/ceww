@@ -40,7 +40,6 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         HasContributions::__construct as private trait_constructor;
 
     }
-
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
 
