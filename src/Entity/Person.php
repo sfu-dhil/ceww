@@ -37,7 +37,6 @@ class Person extends AbstractEntity implements LinkableInterface {
 
         getContributions as private traitContributions;
     }
-
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
 
