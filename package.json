@@ -1,9 +1,9 @@
 {
   "name": "doceww",
   "version": "1.0.0",
-  "repository": "git@github.com:ubermichael/ceww.git",
+  "repository": "https://github.com/sfu-dhil/ceww.git",
   "author": "Michael Joyce <ubermichael@gmail.com>",
-  "license": "GPL3",
+  "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
     "bootstrap3": "^3.3.5",
