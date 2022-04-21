@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -8,15 +7,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-###> symfony/phpunit-bridge ###
-.phpunit
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
-
-# Temporary while doing the upgrade.
-/old
 
 # documentation
 /docs/src/build
@@ -30,7 +20,6 @@ config/deploy.yml
 *.sql
 templates/jquery.collection.html.twig
 public/docs
-config/deploy.yaml
 public/js/jquery.collection.js
 src/.preload.php
 
@@ -38,3 +27,6 @@ src/.preload.php
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+# Data directories
+/data
