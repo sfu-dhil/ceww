@@ -2,6 +2,18 @@
     "aternus/geonames-client": {
         "version": "1.0.9"
     },
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99.5"
+    },
+    "composer/pcre": {
+        "version": "1.0.1"
+    },
+    "composer/semver": {
+        "version": "3.3.2"
+    },
+    "composer/xdebug-handler": {
+        "version": "2.0.5"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -102,8 +114,23 @@
     "egulias/email-validator": {
         "version": "2.1.14"
     },
+    "friendsofphp/php-cs-fixer": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "be2103eb4a20942e28a6dd87736669b757132435"
+        },
+        "files": [
+            ".php-cs-fixer.dist.php"
+        ]
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.2"
+    },
+    "friendsoftwig/twigcs": {
+        "version": "v5.1.0"
     },
     "guzzlehttp/guzzle": {
         "version": "6.5.2"
@@ -159,20 +186,14 @@
             "config/packages/nyholm_psr7.yaml"
         ]
     },
-    "ocramius/package-versions": {
-        "version": "1.4.2"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.2.3"
-    },
     "phar-io/manifest": {
         "version": "2.0.3"
     },
     "phar-io/version": {
         "version": "3.1.0"
     },
-    "php": {
-        "version": "7.2"
+    "php-cs-fixer/diff": {
+        "version": "v2.0.2"
     },
     "php-http/message-factory": {
         "version": "v1.0.2"
@@ -188,6 +209,9 @@
     },
     "phpspec/prophecy": {
         "version": "1.14.0"
+    },
+    "phpstan/phpstan": {
+        "version": "1.6.2"
     },
     "phpunit/php-code-coverage": {
         "version": "9.2.7"
@@ -684,11 +708,5 @@
     },
     "webmozart/assert": {
         "version": "1.6.0"
-    },
-    "zendframework/zend-code": {
-        "version": "3.4.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }
