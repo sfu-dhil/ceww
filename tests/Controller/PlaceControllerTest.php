@@ -29,7 +29,7 @@ class PlaceControllerTest extends ControllerTestCase {
     }
 
     public function testAdminIndex() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/place/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -51,7 +51,7 @@ class PlaceControllerTest extends ControllerTestCase {
     }
 
     public function testAdminShow() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/place/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -61,7 +61,7 @@ class PlaceControllerTest extends ControllerTestCase {
     public function testAnonEdit() : void {
         $crawler = $this->client->request('GET', '/place/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserEdit() : void {
@@ -71,7 +71,7 @@ class PlaceControllerTest extends ControllerTestCase {
     }
 
     public function testAdminEdit() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/place/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -85,7 +85,7 @@ class PlaceControllerTest extends ControllerTestCase {
             'place[notes]' => 'Something about a place',
         ]);
         $this->client->submit($form);
-        $this->assertTrue($this->client->getResponse()->isRedirect('/place/1'));
+        $this->assertResponseRedirects('/place/1');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("London")')->count());
@@ -94,7 +94,7 @@ class PlaceControllerTest extends ControllerTestCase {
     public function testAnonNew() : void {
         $crawler = $this->client->request('GET', '/place/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserNew() : void {
@@ -104,7 +104,7 @@ class PlaceControllerTest extends ControllerTestCase {
     }
 
     public function testAdminNew() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/place/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -129,7 +129,7 @@ class PlaceControllerTest extends ControllerTestCase {
     public function testAnonDelete() : void {
         $crawler = $this->client->request('GET', '/place/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserDelete() : void {
@@ -139,8 +139,27 @@ class PlaceControllerTest extends ControllerTestCase {
     }
 
     public function testAdminDelete() : void {
+        $place = $this->em->find(Place::class, 1);
+        foreach($place->getPublications() as $p) {
+            $this->em->remove($p);
+        }
+        foreach($place->getPublishers() as $p) {
+            $this->em->remove($p);
+        }
+        foreach($place->getResidents() as $r) {
+            $this->em->remove($r);
+        }
+        foreach($place->getPeopleBorn() as $p) {
+            $this->em->remove($p);
+        }
+        foreach($place->getPeopleDied() as $p) {
+            $this->em->remove($p);
+        }
+        $this->em->flush();
+        $this->em->clear();
+
         $preCount = count($this->em->getRepository(Place::class)->findAll());
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/place/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());

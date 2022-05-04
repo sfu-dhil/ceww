@@ -29,7 +29,7 @@ class RoleControllerTest extends ControllerTestCase {
     }
 
     public function testAdminIndex() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/role/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -51,7 +51,7 @@ class RoleControllerTest extends ControllerTestCase {
     }
 
     public function testAdminShow() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/role/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -61,7 +61,7 @@ class RoleControllerTest extends ControllerTestCase {
     public function testAnonEdit() : void {
         $crawler = $this->client->request('GET', '/role/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserEdit() : void {
@@ -71,7 +71,7 @@ class RoleControllerTest extends ControllerTestCase {
     }
 
     public function testAdminEdit() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/role/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -81,7 +81,7 @@ class RoleControllerTest extends ControllerTestCase {
         ]);
 
         $this->client->submit($form);
-        $this->assertTrue($this->client->getResponse()->isRedirect('/role/1'));
+        $this->assertResponseRedirects('/role/1');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Cheese")')->count());
@@ -90,7 +90,7 @@ class RoleControllerTest extends ControllerTestCase {
     public function testAnonNew() : void {
         $crawler = $this->client->request('GET', '/role/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserNew() : void {
@@ -100,7 +100,7 @@ class RoleControllerTest extends ControllerTestCase {
     }
 
     public function testAdminNew() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/role/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -119,7 +119,7 @@ class RoleControllerTest extends ControllerTestCase {
     public function testAnonDelete() : void {
         $crawler = $this->client->request('GET', '/role/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserDelete() : void {
@@ -129,8 +129,15 @@ class RoleControllerTest extends ControllerTestCase {
     }
 
     public function testAdminDelete() : void {
+        $role = $this->em->find(Role::class, 1);
+        foreach($role->getContributions() as $c) {
+            $this->em->remove($c);
+        }
+        $this->em->flush();
+        $this->em->clear();
+
         $preCount = count($this->em->getRepository(Role::class)->findAll());
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/role/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());

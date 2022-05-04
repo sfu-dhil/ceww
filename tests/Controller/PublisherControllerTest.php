@@ -41,7 +41,7 @@ class PublisherControllerTest extends ControllerTestCase {
      * @group index
      */
     public function testAdminIndex() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/publisher/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -75,7 +75,7 @@ class PublisherControllerTest extends ControllerTestCase {
      * @group show
      */
     public function testAdminShow() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/publisher/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -128,7 +128,7 @@ class PublisherControllerTest extends ControllerTestCase {
     public function testAnonEdit() : void {
         $crawler = $this->client->request('GET', '/publisher/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     /**
@@ -146,7 +146,7 @@ class PublisherControllerTest extends ControllerTestCase {
      * @group edit
      */
     public function testAdminEdit() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/publisher/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -155,7 +155,7 @@ class PublisherControllerTest extends ControllerTestCase {
         ]);
 
         $this->client->submit($form);
-        $this->assertTrue($this->client->getResponse()->isRedirect('/publisher/1'));
+        $this->assertResponseRedirects('/publisher/1');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("chicanery")')->count());
@@ -168,7 +168,7 @@ class PublisherControllerTest extends ControllerTestCase {
     public function testAnonNew() : void {
         $crawler = $this->client->request('GET', '/publisher/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     /**
@@ -178,7 +178,7 @@ class PublisherControllerTest extends ControllerTestCase {
     public function testAnonNewPopup() : void {
         $crawler = $this->client->request('GET', '/publisher/new_popup');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     /**
@@ -206,7 +206,7 @@ class PublisherControllerTest extends ControllerTestCase {
      * @group new
      */
     public function testAdminNew() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/publisher/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -226,7 +226,7 @@ class PublisherControllerTest extends ControllerTestCase {
      * @group new
      */
     public function testAdminNewPopup() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/publisher/new_popup');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -248,7 +248,7 @@ class PublisherControllerTest extends ControllerTestCase {
     public function testAnonDelete() : void {
         $crawler = $this->client->request('GET', '/publisher/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     /**
@@ -267,7 +267,7 @@ class PublisherControllerTest extends ControllerTestCase {
      */
     public function testAdminDelete() : void {
         $preCount = count($this->em->getRepository(Publisher::class)->findAll());
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/publisher/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());

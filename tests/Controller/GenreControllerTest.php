@@ -29,7 +29,7 @@ class GenreControllerTest extends ControllerTestCase {
     }
 
     public function testAdminIndex() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/genre/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -51,7 +51,7 @@ class GenreControllerTest extends ControllerTestCase {
     }
 
     public function testAdminShow() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/genre/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -61,7 +61,7 @@ class GenreControllerTest extends ControllerTestCase {
     public function testAnonEdit() : void {
         $crawler = $this->client->request('GET', '/genre/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserEdit() : void {
@@ -71,7 +71,7 @@ class GenreControllerTest extends ControllerTestCase {
     }
 
     public function testAdminEdit() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/genre/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -82,7 +82,7 @@ class GenreControllerTest extends ControllerTestCase {
         ;
 
         $this->client->submit($form);
-        $this->assertTrue($this->client->getResponse()->isRedirect('/genre/1'));
+        $this->assertResponseRedirects('/genre/1');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Cheese")')->count());
@@ -91,7 +91,7 @@ class GenreControllerTest extends ControllerTestCase {
     public function testAnonNew() : void {
         $crawler = $this->client->request('GET', '/genre/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserNew() : void {
@@ -101,7 +101,7 @@ class GenreControllerTest extends ControllerTestCase {
     }
 
     public function testAdminNew() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/genre/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -121,7 +121,7 @@ class GenreControllerTest extends ControllerTestCase {
     public function testAnonDelete() : void {
         $crawler = $this->client->request('GET', '/genre/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserDelete() : void {
@@ -132,7 +132,7 @@ class GenreControllerTest extends ControllerTestCase {
 
     public function testAdminDelete() : void {
         $preCount = count($this->em->getRepository(Genre::class)->findAll());
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/genre/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());

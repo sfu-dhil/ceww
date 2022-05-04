@@ -29,7 +29,7 @@ class AliasControllerTest extends ControllerTestCase {
     }
 
     public function testAdminIndex() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/alias/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -51,7 +51,7 @@ class AliasControllerTest extends ControllerTestCase {
     }
 
     public function testAdminShow() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/alias/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -61,7 +61,7 @@ class AliasControllerTest extends ControllerTestCase {
     public function testAnonEdit() : void {
         $crawler = $this->client->request('GET', '/alias/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserEdit() : void {
@@ -71,7 +71,7 @@ class AliasControllerTest extends ControllerTestCase {
     }
 
     public function testAdminEdit() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/alias/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -85,7 +85,7 @@ class AliasControllerTest extends ControllerTestCase {
         ;
 
         $this->client->submit($form);
-        $this->assertTrue($this->client->getResponse()->isRedirect('/alias/1'));
+        $this->assertResponseRedirects('/alias/1');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Testy McUser.")')->count());
@@ -94,7 +94,7 @@ class AliasControllerTest extends ControllerTestCase {
     public function testAnonNew() : void {
         $crawler = $this->client->request('GET', '/alias/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserNew() : void {
@@ -104,7 +104,7 @@ class AliasControllerTest extends ControllerTestCase {
     }
 
     public function testAdminNew() : void {
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/alias/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -127,7 +127,7 @@ class AliasControllerTest extends ControllerTestCase {
     public function testAnonDelete() : void {
         $crawler = $this->client->request('GET', '/alias/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserDelete() : void {
@@ -138,7 +138,7 @@ class AliasControllerTest extends ControllerTestCase {
 
     public function testAdminDelete() : void {
         $preCount = count($this->em->getRepository(Alias::class)->findAll());
-        $this->login(UserFixtures::USER);
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/alias/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());

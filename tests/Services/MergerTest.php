@@ -64,8 +64,8 @@ class MergerTest extends ServiceTestCase {
 
     public function testPeriodicalMerge() : void {
         $repo = $this->em->getRepository(Periodical::class);
-        $this->merger->periodicals($this->em->find(Periodical::class, 3), [
-            $this->em->find(Periodical::class, 2),
+        $this->merger->periodicals($this->em->find(Periodical::class, 2), [
+            $this->em->find(Periodical::class, 3),
         ]);
         $periodicals = $repo->findAll();
         $this->assertCount(1, $periodicals);
