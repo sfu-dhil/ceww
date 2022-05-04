@@ -12,6 +12,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Publisher;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
@@ -20,7 +21,11 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PublisherFixtures extends Fixture implements DependentFixtureInterface {
+class PublisherFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface {
+    public static function getGroups() : array {
+        return ['dev', 'test'];
+    }
+
     public function load(ObjectManager $manager) : void {
         $publisher1 = new Publisher();
         $publisher1->setName('Cueue Stuff');

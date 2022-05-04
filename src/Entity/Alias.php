@@ -19,7 +19,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * Alias.
  *
  * @ORM\Table(name="alias", indexes={
- *     @ORM\Index(columns="name", flags={"fulltext"})
+ *     @ORM\Index(columns={"name"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\AliasRepository")
  */

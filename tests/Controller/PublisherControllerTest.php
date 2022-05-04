@@ -10,19 +10,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\DataFixtures\PublisherFixtures;
 use App\Entity\Publisher;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use Nines\UtilBundle\TestCase\ControllerTestCase;
 
-class PublisherControllerTest extends ControllerBaseCase {
-    protected function fixtures() : array {
-        return [
-            UserFixtures::class,
-            PublisherFixtures::class,
-        ];
-    }
-
+class PublisherControllerTest extends ControllerTestCase {
     /**
      * @group anon
      * @group index
@@ -38,7 +30,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group index
      */
     public function testUserIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
@@ -49,7 +41,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group index
      */
     public function testAdminIndex() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -71,7 +63,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group show
      */
     public function testUserShow() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
@@ -83,7 +75,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group show
      */
     public function testAdminShow() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -144,7 +136,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group edit
      */
     public function testUserEdit() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -154,7 +146,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group edit
      */
     public function testAdminEdit() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/publisher/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -194,7 +186,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group new
      */
     public function testUserNew() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -204,7 +196,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group new
      */
     public function testUserNewPopup() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/new_popup');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -214,7 +206,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group new
      */
     public function testAdminNew() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/publisher/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -234,7 +226,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group new
      */
     public function testAdminNewPopup() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::USER);
         $formCrawler = $this->client->request('GET', '/publisher/new_popup');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -264,7 +256,7 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group delete
      */
     public function testUserDelete() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
@@ -274,16 +266,16 @@ class PublisherControllerTest extends ControllerBaseCase {
      * @group delete
      */
     public function testAdminDelete() : void {
-        $preCount = count($this->entityManager->getRepository(Publisher::class)->findAll());
-        $this->login('user.admin');
+        $preCount = count($this->em->getRepository(Publisher::class)->findAll());
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/publisher/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->entityManager->clear();
-        $postCount = count($this->entityManager->getRepository(Publisher::class)->findAll());
+        $this->em->clear();
+        $postCount = count($this->em->getRepository(Publisher::class)->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

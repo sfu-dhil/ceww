@@ -12,6 +12,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Genre;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -19,7 +20,11 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class GenreFixtures extends Fixture {
+class GenreFixtures extends Fixture implements FixtureGroupInterface {
+    public static function getGroups() : array {
+        return ['dev', 'test'];
+    }
+
     public function load(ObjectManager $manager) : void {
         $genre1 = new Genre();
         $genre1->setName('fiction');

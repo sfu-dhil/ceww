@@ -12,6 +12,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Alias;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -19,7 +20,11 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class AliasFixtures extends Fixture {
+class AliasFixtures extends Fixture implements FixtureGroupInterface {
+    public static function getGroups() : array {
+        return ['dev', 'test'];
+    }
+
     public function load(ObjectManager $manager) : void {
         $alias = new Alias();
         $alias->setDescription('An alias');
