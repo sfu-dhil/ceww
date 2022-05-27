@@ -21,9 +21,9 @@ use App\Entity\Place;
 use App\Entity\Publisher;
 use App\Repository\PlaceRepository;
 use App\Services\Merger;
-use Nines\UtilBundle\Tests\ServiceBaseCase;
+use Nines\UtilBundle\TestCase\ServiceTestCase;
 
-class MergerTest extends ServiceBaseCase {
+class MergerTest extends ServiceTestCase {
     /**
      * @var Merger
      */
@@ -46,16 +46,16 @@ class MergerTest extends ServiceBaseCase {
     }
 
     public function testPlaceMerge() : void {
-        $this->merger->places($this->getReference('place.3', true), [
-            $this->getReference('place.2', true),
-            $this->getReference('place.1', true),
+        $this->merger->places($this->em->find(Place::class, 3), [
+            $this->em->find(Place::class, 2),
+            $this->em->find(Place::class, 1),
         ]);
 
-        $repo = $this->entityManager->getRepository(Place::class);
+        $repo = $this->em->getRepository(Place::class);
         $mergedPlaces = $repo->findAll();
         $this->assertCount(1, $mergedPlaces);
 
-        $place = $this->getReference('place.3');
+        $place = $this->em->find(Place::class, 3);
         $this->assertCount(1, $place->getPeopleBorn());
         $this->assertCount(1, $place->getPeopleDied());
         $this->assertCount(0, $place->getResidents());
@@ -63,9 +63,9 @@ class MergerTest extends ServiceBaseCase {
     }
 
     public function testPeriodicalMerge() : void {
-        $repo = $this->entityManager->getRepository(Periodical::class);
-        $this->merger->periodicals($this->getReference('periodical.1', true), [
-            $this->getReference('periodical.2', true),
+        $repo = $this->em->getRepository(Periodical::class);
+        $this->merger->periodicals($this->em->find(Periodical::class, 2), [
+            $this->em->find(Periodical::class, 3),
         ]);
         $periodicals = $repo->findAll();
         $this->assertCount(1, $periodicals);
@@ -76,9 +76,9 @@ class MergerTest extends ServiceBaseCase {
     }
 
     public function testPublisherMerge() : void {
-        $repo = $this->entityManager->getRepository(Publisher::class);
-        $this->merger->publishers($this->getReference('publisher.1', true), [
-            $this->getReference('publisher.2', true),
+        $repo = $this->em->getRepository(Publisher::class);
+        $this->merger->publishers($this->em->find(Publisher::class, 1), [
+            $this->em->find(Publisher::class, 2),
         ]);
         $publishers = $repo->findAll();
         $this->assertCount(1, $publishers);

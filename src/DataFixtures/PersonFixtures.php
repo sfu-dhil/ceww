@@ -13,6 +13,7 @@ namespace App\DataFixtures;
 use App\Entity\DateYear;
 use App\Entity\Person;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
@@ -21,7 +22,11 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PersonFixtures extends Fixture implements DependentFixtureInterface {
+class PersonFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface {
+    public static function getGroups() : array {
+        return ['dev', 'test'];
+    }
+
     public function load(ObjectManager $manager) : void {
         $female = new Person();
         $female->setFullName('Bobby Janesdotter');

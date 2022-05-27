@@ -55,7 +55,7 @@ class Person extends AbstractEntity implements LinkableInterface {
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=200, nullable=false)
+     * @ORM\Column(type="string", length=191, nullable=false)
      * @Solr\Field(name="sortable", type="string", boost=0.2)
      */
     private $sortableName;

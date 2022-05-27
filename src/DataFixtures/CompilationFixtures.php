@@ -14,6 +14,7 @@ use App\Entity\Compilation;
 use App\Entity\Contribution;
 use App\Entity\DateYear;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
@@ -22,7 +23,11 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class CompilationFixtures extends Fixture implements DependentFixtureInterface {
+class CompilationFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface {
+    public static function getGroups() : array {
+        return ['dev', 'test'];
+    }
+
     public function load(ObjectManager $manager) : void {
         $compilation = new Compilation();
         $compilation->setTitle('A Compilation Title');

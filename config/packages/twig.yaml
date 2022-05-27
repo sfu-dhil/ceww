@@ -19,4 +19,4 @@ twig:
         matomo_domain: '%dhil.matomo_domain%'
         comment_service: '@Nines\FeedbackBundle\Services\CommentService'
         nines_editor_config: js/editor-config.js
-        entity_linker: '@Nines\UtilBundle\Services\EntityLinker'
+        linker: '@Nines\UtilBundle\Services\EntityLinker'

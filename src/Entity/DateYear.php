@@ -22,8 +22,8 @@ define('RANGE_RE', '/^(?:' . CIRCA_RE . ')?-(?:' . CIRCA_RE . ')?$/');
  * Date.
  *
  * @ORM\Table(name="date_year", indexes={
- *     @ORM\Index(columns="start"),
- *     @ORM\Index(columns="end")
+ *     @ORM\Index(columns={"start"}),
+ *     @ORM\Index(columns={"end"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\DateYearRepository")
  */

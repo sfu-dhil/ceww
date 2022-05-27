@@ -10,19 +10,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\DataFixtures\CompilationFixtures;
 use App\Entity\Compilation;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use Nines\UtilBundle\TestCase\ControllerTestCase;
 
-class CompilationControllerTest extends ControllerBaseCase {
-    protected function fixtures() : array {
-        return [
-            UserFixtures::class,
-            CompilationFixtures::class,
-        ];
-    }
-
+class CompilationControllerTest extends ControllerTestCase {
     public function testAnonIndex() : void {
         $crawler = $this->client->request('GET', '/compilation/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -30,14 +22,14 @@ class CompilationControllerTest extends ControllerBaseCase {
     }
 
     public function testUserIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
     }
 
     public function testAdminIndex() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/compilation/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -51,7 +43,7 @@ class CompilationControllerTest extends ControllerBaseCase {
     }
 
     public function testUserShow() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
@@ -59,7 +51,7 @@ class CompilationControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminShow() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/compilation/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -69,17 +61,17 @@ class CompilationControllerTest extends ControllerBaseCase {
     public function testAnonEdit() : void {
         $crawler = $this->client->request('GET', '/compilation/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserEdit() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminEdit() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/compilation/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -98,7 +90,7 @@ class CompilationControllerTest extends ControllerBaseCase {
 
         $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
 
-        $this->assertTrue($this->client->getResponse()->isRedirect('/compilation/1'));
+        $this->assertResponseRedirects('/compilation/1');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("The Compilation of Cheese.")')->count());
@@ -108,17 +100,17 @@ class CompilationControllerTest extends ControllerBaseCase {
     public function testAnonNew() : void {
         $crawler = $this->client->request('GET', '/compilation/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserNew() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/compilation/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -145,55 +137,52 @@ class CompilationControllerTest extends ControllerBaseCase {
     public function testAnonDelete() : void {
         $crawler = $this->client->request('GET', '/compilation/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserDelete() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() : void {
-        $preCount = count($this->entityManager->getRepository(Compilation::class)->findAll());
-        $this->login('user.admin');
+        $preCount = count($this->em->getRepository(Compilation::class)->findAll());
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/compilation/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->entityManager->clear();
-        $postCount = count($this->entityManager->getRepository(Compilation::class)->findAll());
+        $this->em->clear();
+        $postCount = count($this->em->getRepository(Compilation::class)->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 
     public function testAnonNewContribution() : void {
         $crawler = $this->client->request('GET', '/compilation/1/contributions/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserNewContribution() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/1/contributions/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminNewContribution() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/compilation/1/contributions/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Create')->form([]);
+        $this->overrideField($form, 'contribution[role]', 2);
+        $this->overrideField($form, 'contribution[person]', 2);
+        $this->client->submit($form);
 
-        $values = $form->getPhpValues();
-        $values['contribution']['role'] = $this->getReference('role.2')->getId();
-        $values['contribution']['person'] = $this->getReference('person.2')->getId();
-
-        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
-
-        $this->assertTrue($this->client->getResponse()->isRedirect('/compilation/1/contributions'));
+        $this->assertResponseRedirects('/compilation/1/contributions');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
@@ -202,17 +191,17 @@ class CompilationControllerTest extends ControllerBaseCase {
     public function testAnonShowContributions() : void {
         $crawler = $this->client->request('GET', '/compilation/1/contributions');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserShowContributions() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/1/contributions');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminShowContributions() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/compilation/1/contributions');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Contribution')->count());
@@ -221,29 +210,26 @@ class CompilationControllerTest extends ControllerBaseCase {
     public function testAnonEditContribution() : void {
         $crawler = $this->client->request('GET', '/compilation/contributions/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserEditContribution() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/contributions/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminEditContribution() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/compilation/contributions/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
         $form = $formCrawler->selectButton('Update')->form([]);
+        $this->overrideField($form, 'contribution[role]', 2);
+        $this->overrideField($form, 'contribution[person]', 2);
+        $this->client->submit($form);
 
-        $values = $form->getPhpValues();
-        $values['contribution']['role'] = $this->getReference('role.2')->getId();
-        $values['contribution']['person'] = $this->getReference('person.2')->getId();
-
-        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
-
-        $this->assertTrue($this->client->getResponse()->isRedirect('/compilation/1/contributions'));
+        $this->assertResponseRedirects('/compilation/1/contributions');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Bobby Fatale")')->count());
@@ -252,17 +238,17 @@ class CompilationControllerTest extends ControllerBaseCase {
     public function testAnonDeleteContribution() : void {
         $crawler = $this->client->request('GET', '/compilation/contributions/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserDeleteContribution() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/compilation/contributions/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDeleteContribution() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/compilation/contributions/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());

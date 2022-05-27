@@ -4,7 +4,7 @@
 DB := dhil_doceww
 PROJECT := doceww
 
-include etc/Makefile.legacy
+include etc/Makefile
 
 ## Local make file
 

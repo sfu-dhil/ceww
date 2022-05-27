@@ -12,6 +12,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Place;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -19,7 +20,11 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PlaceFixtures extends Fixture {
+class PlaceFixtures extends Fixture implements FixtureGroupInterface {
+    public static function getGroups() : array {
+        return ['dev', 'test'];
+    }
+
     public function load(ObjectManager $manager) : void {
         $place1 = new Place();
         $place1->setName('Lockside');

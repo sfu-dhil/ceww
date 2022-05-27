@@ -10,19 +10,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\DataFixtures\PersonFixtures;
 use App\Entity\Person;
 use Nines\UserBundle\DataFixtures\UserFixtures;
-use Nines\UtilBundle\Tests\ControllerBaseCase;
+use Nines\UtilBundle\TestCase\ControllerTestCase;
 
-class PersonControllerTest extends ControllerBaseCase {
-    protected function fixtures() : array {
-        return [
-            UserFixtures::class,
-            PersonFixtures::class,
-        ];
-    }
-
+class PersonControllerTest extends ControllerTestCase {
     public function testAnonIndex() : void {
         $crawler = $this->client->request('GET', '/person/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
@@ -32,7 +24,7 @@ class PersonControllerTest extends ControllerBaseCase {
     }
 
     public function testUserIndex() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/person/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('New')->count());
@@ -40,7 +32,7 @@ class PersonControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminIndex() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/person/');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('New')->count());
@@ -65,7 +57,7 @@ class PersonControllerTest extends ControllerBaseCase {
     }
 
     public function testUserShowFemale() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/person/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
@@ -73,7 +65,7 @@ class PersonControllerTest extends ControllerBaseCase {
     }
 
     public function testUserShowMale() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/person/2');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
@@ -81,7 +73,7 @@ class PersonControllerTest extends ControllerBaseCase {
     }
 
     public function testUserShowUnknown() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/person/3');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(0, $crawler->selectLink('Edit')->count());
@@ -89,7 +81,7 @@ class PersonControllerTest extends ControllerBaseCase {
     }
 
     public function testAdminShow() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/person/1');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->selectLink('Edit')->count());
@@ -99,17 +91,17 @@ class PersonControllerTest extends ControllerBaseCase {
     public function testAnonEdit() : void {
         $crawler = $this->client->request('GET', '/person/1/edit');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserEdit() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/person/1/edit');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminEdit() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/person/1/edit');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -123,41 +115,38 @@ class PersonControllerTest extends ControllerBaseCase {
             'person[notes]' => 'It is a note',
         ]);
 
-        $values = $form->getPhpValues();
+        $this->addField($formCrawler, 'person', 'person[links][0][url]', 'http://example.com/path/to/link');
+        $this->addField($formCrawler, 'person', 'person[residences][0]', '1');
+        $this->addField($formCrawler, 'person', 'person[aliases][0]', '1');
+        $this->overrideField($form, 'person[birthPlace]', 1);
+        $this->overrideField($form, 'person[deathPlace]', 2);
+        $this->client->submit($form);
 
-        $values['person']['links'][0]['url'] = 'http://example.com/path/to/link';
-        $values['person']['birthPlace'] = $this->getReference('place.1')->getId();
-        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
-        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
-        $values['person']['residences'][0] = $this->getReference('place.3')->getId();
-        $values['person']['aliases'][0] = $this->getReference('alias.1')->getId();
-
-        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/person/1'));
+        $this->assertResponseRedirects('/person/1');
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Testy McUser.")')->count());
-        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockside")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockchester")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("Colchester")')->count());
+        $this->assertSame(0, $responseCrawler->filter('a:contains("Colchester")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Nee Mariston")')->count());
     }
 
     public function testAnonNew() : void {
         $crawler = $this->client->request('GET', '/person/new');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserNew() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/person/new');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminNew() : void {
-        $this->login('user.admin');
+        $this->login(UserFixtures::ADMIN);
         $formCrawler = $this->client->request('GET', '/person/new');
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
@@ -171,50 +160,47 @@ class PersonControllerTest extends ControllerBaseCase {
             'person[notes]' => 'It is a note',
         ]);
 
-        $values = $form->getPhpValues();
+        $this->addField($formCrawler, 'person', 'person[links][0][url]', 'http://example.com/path/to/link');
+        $this->addField($formCrawler, 'person', 'person[residences][0]', '1');
+        $this->addField($formCrawler, 'person', 'person[aliases][0]', '1');
+        $this->overrideField($form, 'person[birthPlace]', 1);
+        $this->overrideField($form, 'person[deathPlace]', 2);
+        $this->client->submit($form);
 
-        $values['person']['links'][0]['url'] = 'http://example.com/path/to/link';
-        $values['person']['birthPlace'] = $this->getReference('place.1')->getId();
-        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
-        $values['person']['deathPlace'] = $this->getReference('place.2')->getId();
-        $values['person']['residences'][0] = $this->getReference('place.3')->getId();
-        $values['person']['aliases'][0] = $this->getReference('alias.1')->getId();
-
-        $this->client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $responseCrawler->filter('td:contains("Testy McUser.")')->count());
-        $this->assertSame(2, $responseCrawler->filter('a:contains("example.com")')->count());
+        $this->assertSame(1, $responseCrawler->filter('a:contains("example.com")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockside")')->count());
         $this->assertSame(1, $responseCrawler->filter('a:contains("Lockchester")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("Colchester")')->count());
-        $this->assertSame(1, $responseCrawler->filter('a:contains("Nee Mariston")')->count());
+        $this->assertSame(0, $responseCrawler->filter('a:contains("Colchester")')->count());
+        $this->assertSame(0, $responseCrawler->filter('a:contains("Nee Mariston")')->count());
     }
 
     public function testAnonDelete() : void {
         $crawler = $this->client->request('GET', '/person/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'));
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserDelete() : void {
-        $this->login('user.user');
+        $this->login(UserFixtures::USER);
         $crawler = $this->client->request('GET', '/person/1/delete');
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdminDelete() : void {
-        $preCount = count($this->entityManager->getRepository(Person::class)->findAll());
-        $this->login('user.admin');
+        $preCount = count($this->em->getRepository(Person::class)->findAll());
+        $this->login(UserFixtures::ADMIN);
         $crawler = $this->client->request('GET', '/person/1/delete');
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $responseCrawler = $this->client->followRedirect();
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->entityManager->clear();
-        $postCount = count($this->entityManager->getRepository(Person::class)->findAll());
+        $this->em->clear();
+        $postCount = count($this->em->getRepository(Person::class)->findAll());
         $this->assertSame($preCount - 1, $postCount);
     }
 }

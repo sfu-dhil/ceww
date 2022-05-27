@@ -14,6 +14,7 @@ use App\Entity\Contribution;
 use App\Entity\DateYear;
 use App\Entity\Periodical;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
@@ -22,7 +23,11 @@ use Doctrine\Persistence\ObjectManager;
  *
  * @author mjoyce
  */
-class PeriodicalFixtures extends Fixture implements DependentFixtureInterface {
+class PeriodicalFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface {
+    public static function getGroups() : array {
+        return ['dev', 'test'];
+    }
+
     public function load(ObjectManager $manager) : void {
         for ($i = 1; $i <= 2; $i++) {
             $periodical = new Periodical();

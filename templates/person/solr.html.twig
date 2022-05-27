@@ -56,7 +56,7 @@
                         {% for i in 0..(result.count-1) %}
                             {% set document = result.getDocument(i) %}
                             {% set entity = result.entity(i) %}
-                            <a href='{{ entity_linker.link(entity) }}' class='list-group-item'>
+                            <a href='{{ linker.link(entity) }}' class='list-group-item'>
                                 <b>{{ document.type_s -}}: {{ entity }}</b><br />
 
                                 {% for field, highlight in result.getHighlighting(i) %}
