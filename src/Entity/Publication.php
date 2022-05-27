@@ -28,7 +28,7 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *     @ORM\Index(columns={"category"}),
  * })
  * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="category", type="string")
+ * @ORM\DiscriminatorColumn(name="category", type="string", length=64)
  * @ORM\DiscriminatorMap({
  *     "book": "Book",
  *     "compilation": "Compilation",
