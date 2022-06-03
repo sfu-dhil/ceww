@@ -57,7 +57,7 @@
                     {% embed '@NinesSolr/search/partial/header.html.twig' with {'pagination': pagination} %}
                     {% endembed %}
 
-                    {% embed '@NinesSolr/search/partial/result.html.twig' with {'result': result} %}
+                    {% embed 'partial/solr/result.html.twig' with {'result': result} %}
                     {% endembed %}
 
                     {% if pagination %}
