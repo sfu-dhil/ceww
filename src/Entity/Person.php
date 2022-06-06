@@ -28,7 +28,9 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  *
  * @Solr\Document(
- *     @Solr\CopyField(from={"fullName", "description", "birthPlace", "residences", "aliases", "deathPlace"}, to="content", type="texts")
+ *     @Solr\CopyField(from={"fullName", "description", "birthPlace", "residences", "aliases", "deathPlace"}, to="content", type="texts"),
+ *     @Solr\CopyField(from={"birthPlace"}, to="birth_place_fct", type="string"),
+ *     @Solr\CopyField(from={"deathPlace"}, to="death_place_fct", type="string")
  * )
  */
 class Person extends AbstractEntity implements LinkableInterface {
@@ -109,7 +111,7 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleBorn")
-     * @Solr\Field(type="string", boost=0.4, mutator="getName")
+     * @Solr\Field(type="text", boost=0.4, mutator="getName")
      */
     private $birthPlace;
 
@@ -123,7 +125,7 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * @var Place;
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleDied")
-     * @Solr\Field(type="string", boost=0.4, mutator="getName")
+     * @Solr\Field(type="text", boost=0.4, mutator="getName")
      */
     private $deathPlace;
 

@@ -32,10 +32,10 @@ class PlaceIndex extends AbstractIndex {
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        $qb->addFacetField('countryName');
-        $qb->addFacetField('regionName');
+        $qb->addFacetField('region_name_fct');
+        $qb->addFacetField('country_name_fct');
 
-        $qb->setHighlightFields('content');
+        $qb->setHighlightFields(['name', 'regionName', 'countryName', 'description']);
 
         if ($order) {
             $qb->setSorting($order);

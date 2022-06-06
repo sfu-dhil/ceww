@@ -103,7 +103,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="publications")
      *
-     * @Solr\Field(type="string", boost=0.5, mutator="getName")
+     * @Solr\Field(type="text", boost=0.5, mutator="getName")
      */
     private $location;
 
@@ -113,7 +113,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @ORM\JoinTable(name="publications_genres")
      * @ORM\OrderBy({"label": "ASC"})
      *
-     * @Solr\Field(type="strings", boost=0.5, getter="getGenres(true)")
+     * @Solr\Field(type="texts", boost=0.5, getter="getGenres(true)")
      */
     private $genres;
 

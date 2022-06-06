@@ -39,10 +39,10 @@ class PublicationIndex extends AbstractIndex {
         }
 
         $qb->addFacetField('type');
-        $qb->addFacetField('location');
+        $qb->addFacetField('location_fct');
         $qb->addFacetRange('dateYear', 1700, $year, 50);
 
-        $qb->setHighlightFields('content');
+        $qb->setHighlightFields(['title', 'description', 'location', 'genres']);
 
         if ($order) {
             $qb->setSorting($order);

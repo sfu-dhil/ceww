@@ -42,7 +42,7 @@
                         'header': 'Date of Publication'
                     } %}
                     {% include '@NinesSolr/search/partial/facet.html.twig' with {
-                        'facet': result.getFacet('location'),
+                        'facet': result.getFacet('location_fct'),
                         'filter': 'location',
                         'header': 'Place of Publication',
                         'limit': 10

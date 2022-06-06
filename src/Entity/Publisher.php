@@ -26,7 +26,8 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *
  * @Solr\Document(
  *     @Solr\CopyField(from={"name", "places"}, to="content", type="texts"),
- *     @Solr\CopyField(from={"name"}, to="sortable", type="string")
+ *     @Solr\CopyField(from={"name"}, to="sortable", type="string"),
+ *     @Solr\CopyField(from={"places"}, to="places_fct", type="strings")
  * )
  */
 class Publisher extends AbstractEntity {
@@ -55,7 +56,7 @@ class Publisher extends AbstractEntity {
      * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
      * @ORM\OrderBy({"sortableName": "ASC"})
      *
-     * @Solr\Field(type="strings", boost=0.6, getter="getPlaces(true)")
+     * @Solr\Field(type="texts", boost=0.6, getter="getPlaces(true)")
      */
     private $places;
 

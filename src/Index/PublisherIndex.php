@@ -31,9 +31,9 @@ class PublisherIndex extends AbstractIndex {
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        $qb->addFacetField('places');
+        $qb->addFacetField('places_fct');
 
-        $qb->setHighlightFields('content');
+        $qb->setHighlightFields(['name', 'places']);
 
         if ($order) {
             $qb->setSorting($order);

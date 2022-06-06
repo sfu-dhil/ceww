@@ -19,7 +19,9 @@ use Nines\SolrBundle\Annotation as Solr;
  * @ORM\Table(name="book")
  * @ORM\Entity(repositoryClass="App\Repository\BookRepository")
  * @Solr\Document(
- *     @Solr\CopyField(from={"title", "description", "dateYear", "location", "genres", "contributions", "publishers"}, to="content", type="texts")
+ *     @Solr\CopyField(from={"title", "description", "dateYear", "location", "genres", "contributions", "publishers"}, to="content", type="texts"),
+ *     @Solr\CopyField(from={"genres"}, to="genres_fct", type="strings"),
+ *     @Solr\CopyField(from={"location"}, to="location_fct", type="string")
  * )
  */
 class Book extends Publication {

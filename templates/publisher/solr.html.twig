@@ -32,7 +32,7 @@
                     } %}
 
                     {% include '@NinesSolr/search/partial/facet.html.twig' with {
-                        'facet': result.getFacet('places'),
+                        'facet': result.getFacet('places_fct'),
                         'filter': 'places',
                         'header': 'Place',
                         'limit': 10,

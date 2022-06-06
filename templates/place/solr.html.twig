@@ -32,13 +32,13 @@
                     } %}
 
                     {% include '@NinesSolr/search/partial/facet.html.twig' with {
-                        'facet': result.getFacet('countryName'),
+                        'facet': result.getFacet('country_name_fct'),
                         'filter': 'countryName',
                         'header': 'Country',
                         'limit': 10,
                     } %}
                     {% include '@NinesSolr/search/partial/facet.html.twig' with {
-                        'facet': result.getFacet('regionName'),
+                        'facet': result.getFacet('region_name_fct'),
                         'filter': 'regionName',
                         'header': 'Region',
                         'limit': 10,

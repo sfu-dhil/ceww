@@ -130,7 +130,7 @@ class RoleControllerTest extends ControllerTestCase {
 
     public function testAdminDelete() : void {
         $role = $this->em->find(Role::class, 1);
-        foreach($role->getContributions() as $c) {
+        foreach ($role->getContributions() as $c) {
             $this->em->remove($c);
         }
         $this->em->flush();

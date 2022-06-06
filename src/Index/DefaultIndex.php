@@ -36,6 +36,10 @@ class DefaultIndex extends AbstractIndex {
             $qb->setSorting($order);
         }
 
+        $qb->setHighlightFields(['name', 'fullName', 'aliases', 'title', 'description',
+            'genres', 'location',  'places', 'regionName', 'countryName', 'contributions',
+            'residences', 'birthPlace', 'deathPlace', ]);
+
         return $qb->getQuery();
     }
 }
