@@ -29,7 +29,6 @@ class DefaultIndex extends AbstractIndex {
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        $qb->setHighlightFields('content');
         $qb->addFacetField('type');
 
         if ($order) {
