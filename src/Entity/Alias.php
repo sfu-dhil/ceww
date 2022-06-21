@@ -47,14 +47,12 @@ class Alias extends AbstractEntity {
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
-     * @Solr\Field(type="string", getter="getMaiden(true)")
      */
     private $maiden;
 
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
-     * @Solr\Field(type="string", getter="getMarried(true)")
      */
     private $married;
 
