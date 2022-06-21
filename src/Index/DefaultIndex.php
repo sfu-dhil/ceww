@@ -36,7 +36,7 @@ class DefaultIndex extends AbstractIndex {
         }
 
         $qb->setHighlightFields(['name', 'fullName', 'aliases', 'title', 'description',
-            'genres', 'location',  'places', 'regionName', 'countryName', 'contributions',
+            'genres', 'location',  'places', 'people', 'regionName', 'countryName', 'contributions',
             'residences', 'birthPlace', 'deathPlace', 'continuedFrom', 'continuedBy']);
 
         return $qb->getQuery();
