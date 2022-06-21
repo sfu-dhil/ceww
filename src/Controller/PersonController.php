@@ -115,40 +115,10 @@ class PersonController extends AbstractController implements PaginatorAwareInter
     }
 
     /**
-     * Search for Person entities.
-     *
-     * @Route("/search", name="person_search", methods={"GET"})
-     *
-     * @Template
-     *
-     * @return array
-     */
-    public function searchAction(Request $request, PersonRepository $personRepo, AliasRepository $aliasRepo) {
-        $q = $request->query->get('q');
-        if ($q) {
-            $personQuery = $personRepo->searchQuery($q);
-            $aliasQuery = $aliasRepo->searchQuery($q);
-
-            $people = $this->paginator->paginate($personQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
-            $aliases = $this->paginator->paginate($aliasQuery, $request->query->getInt('page', 1), $this->getParameter('page_size'));
-        } else {
-            $people = [];
-            $aliases = [];
-        }
-
-        return [
-            'people' => $people,
-            'aliases' => $aliases,
-            'q' => $q,
-            'page' => $request->query->getInt('page', 1),
-        ];
-    }
-
-    /**
-     * @Route("/solr", name="person_solr")
+     * @Route("/search", name="person_search")
      * @Template
      */
-    public function solrAction(Request $request, PersonIndex $repo, SolrManager $solr) {
+    public function searchAction(Request $request, PersonIndex $index, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
         if ($q) {
@@ -161,7 +131,7 @@ class PersonController extends AbstractController implements PaginatorAwareInter
                 $order = [$m[1] => $m[2]];
             }
 
-            $query = $repo->searchQuery($q, $filters, $rangeFilters, $order);
+            $query = $index->searchQuery($q, $filters, $rangeFilters, $order);
             $result = $solr->execute($query, $this->paginator, [
                 'page' => (int) $request->query->get('page', 1),
                 'pageSize' => (int) $this->getParameter('page_size'),

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Menu;
 
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -68,28 +69,8 @@ class Builder implements ContainerAwareInterface {
         ]);
 
         $search = $menu->addChild('search', [
-            'uri' => '#',
-            'label' => 'Search',
-        ]);
-        $search->setAttribute('dropdown', true);
-        $search->setLinkAttribute('class', 'dropdown-toggle');
-        $search->setLinkAttribute('data-toggle', 'dropdown');
-        $search->setChildrenAttribute('class', 'dropdown-menu');
-        $search->addChild('Titles', [
             'route' => 'search',
-        ]);
-
-        $search->addChild('People', [
-            'route' => 'person_search',
-        ]);
-        $search->addChild('Alternate Names', [
-            'route' => 'alias_search',
-        ]);
-        $search->addChild('Places', [
-            'route' => 'place_search',
-        ]);
-        $search->addChild('Publishers', [
-            'route' => 'publisher_search',
+            'label' => 'Search',
         ]);
 
         $browse = $menu->addChild('browse', [

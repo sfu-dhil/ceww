@@ -79,7 +79,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var string
      * @ORM\Column(type="text", nullable=true)
      *
-     * @Solr\Field(type="text", boost=0.5)
+     * @Solr\Field(type="text", boost=0.5, filters={"strip_tags", "html_entity_decode(51, 'UTF-8')"})
      */
     private $description;
 

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Search{% endblock %}
+{% block title %}Search Titles{% endblock %}
 
 {% block pageheader %}
-    <h1>Search</h1>
+    <h1>Search Titles</h1>
 {% endblock %}
 
 {% block styles %}
@@ -12,9 +12,9 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('solr') }}" class="form-horizontal">
+    <form method="get" action="{{ path('search_title') }}" class="form-horizontal">
         <div class='row'>
-            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'solr'} %}
+            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search_title'} %}
             {% endembed %}
         </div>
 
@@ -35,6 +35,17 @@
                         'facet': result.getFacet('type'),
                         'filter': 'type',
                         'header': 'Record Type'
+                    } %}
+                    {% include '@NinesSolr/search/partial/facet_range.html.twig' with {
+                        'facet': result.getFacet('dateYear'),
+                        'filter': 'dateYear',
+                        'header': 'Date of Publication'
+                    } %}
+                    {% include '@NinesSolr/search/partial/facet.html.twig' with {
+                        'facet': result.getFacet('location_fct'),
+                        'filter': 'location',
+                        'header': 'Place of Publication',
+                        'limit': 10
                     } %}
                 {% endif %}
             </div>

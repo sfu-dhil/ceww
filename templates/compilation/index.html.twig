@@ -7,7 +7,7 @@
     <p class="count">
         Displaying {{ compilations|length }} collections of {{ compilations.getTotalItemCount }} total.
     </p>
-{% endblock %} 
+{% endblock %}
 
 {% block body %}
 
@@ -21,6 +21,13 @@
         </div>
     {% endif %}
 
+    <form method="get" action="{{ path('search_title') }}" class="form-horizontal">
+        <input type='hidden' value='Compilation' name='filter[type][]'/>
+        <div class='row'>
+            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search_title'} %}
+            {% endembed %}
+        </div>
+    </form>
     {% include 'compilation/partial/table.html.twig' %}
 
     <div class="navigation">

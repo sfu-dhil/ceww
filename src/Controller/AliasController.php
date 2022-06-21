@@ -12,8 +12,10 @@ namespace App\Controller;
 
 use App\Entity\Alias;
 use App\Form\AliasType;
+use App\Index\AliasIndex;
 use App\Repository\AliasRepository;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
+use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -60,19 +62,28 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
      *
      * @return array
      */
-    public function searchAction(Request $request, AliasRepository $repo) {
+    public function searchAction(Request $request, AliasIndex $index, SolrManager $solr) {
         $q = $request->query->get('q');
+        $result = null;
         if ($q) {
-            $query = $repo->searchQuery($q);
+            $filters = $request->query->get('filter', []);
 
-            $aliases = $this->paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
-        } else {
-            $aliases = [];
+            $order = null;
+            $m = [];
+            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
+                $order = [$m[1] => $m[2]];
+            }
+
+            $query = $index->searchQuery($q, $filters, $order);
+            $result = $solr->execute($query, $this->paginator, [
+                'page' => (int) $request->query->get('page', 1),
+                'pageSize' => (int) $this->getParameter('page_size'),
+            ]);
         }
 
         return [
-            'aliases' => $aliases,
             'q' => $q,
+            'result' => $result,
         ];
     }
 

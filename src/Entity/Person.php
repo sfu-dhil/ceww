@@ -434,7 +434,7 @@ class Person extends AbstractEntity implements LinkableInterface {
      *
      * @param ?bool $flat
      *
-     * @return Collection
+     * @return Collection|array<string>
      */
     public function getAliases(?bool $flat = false) {
         if ($flat) {
