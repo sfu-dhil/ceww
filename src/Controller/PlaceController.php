@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -78,31 +78,10 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
     }
 
     /**
-     * @Route("/search", name="place_search", methods={"GET"})
-     *
+     * @Route("/search", name="place_search")
      * @Template
      */
-    public function searchAction(Request $request, PlaceRepository $repo) {
-        $q = $request->query->get('q');
-        if ($q) {
-            $query = $repo->searchQuery($q);
-
-            $places = $this->paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
-        } else {
-            $places = [];
-        }
-
-        return [
-            'places' => $places,
-            'q' => $q,
-        ];
-    }
-
-    /**
-     * @Route("/solr", name="place_solr")
-     * @Template
-     */
-    public function solrAction(Request $request, PlaceIndex $repo, SolrManager $solr) {
+    public function searchAction(Request $request, PlaceIndex $repo, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
         if ($q) {

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractEntity;
+use Nines\SolrBundle\Annotation as Solr;
 
 /**
  * Alias.
@@ -22,6 +23,9 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  *     @ORM\Index(columns={"name"}, flags={"fulltext"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\AliasRepository")
+ * @Solr\Document(
+ *      @Solr\CopyField(from={"name","description","people"}, to="content", type="texts")
+ * )
  */
 class Alias extends AbstractEntity {
     /**
@@ -29,24 +33,28 @@ class Alias extends AbstractEntity {
      *
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
+     * @Solr\Field(type="text", boost=2.5)
      */
     private $name;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
+     * @Solr\Field(name="sortable", type="string", boost=0.2)
      */
     private $sortableName;
 
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
+     * @Solr\Field(type="string", getter="getMaiden(true)")
      */
     private $maiden;
 
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
+     * @Solr\Field(type="string", getter="getMarried(true)")
      */
     private $married;
 
@@ -55,6 +63,7 @@ class Alias extends AbstractEntity {
      *
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     * @Solr\Field(type="text", boost=0.5, filters={"strip_tags", "html_entity_decode(51, 'UTF-8')"})
      */
     private $description;
 
@@ -70,6 +79,7 @@ class Alias extends AbstractEntity {
      * @var Collection|Person[]
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="aliases")
      * @ORM\OrderBy({"sortableName": "ASC"})
+     * @Solr\Field(type="texts", boost=1.3, getter="getPeople(true)")
      */
     private $people;
 
@@ -123,7 +133,13 @@ class Alias extends AbstractEntity {
      *
      * @return bool
      */
-    public function getMaiden() {
+    public function getMaiden(?bool $yesNo = false) {
+        if($yesNo) {
+            if(isset($this->maiden)) {
+                return $this->maiden ? 'Yes' : 'No';
+            }
+            return false;
+        }
         return $this->maiden;
     }
 
@@ -202,9 +218,12 @@ class Alias extends AbstractEntity {
     /**
      * Get people.
      *
-     * @return Collection
+     * @return Collection|array<string>
      */
-    public function getPeople() {
+    public function getPeople(?bool $flatten = false) {
+        if($flatten) {
+            return array_map(fn (Person $p) => $p->getFullName(), $this->people->toArray());
+        }
         return $this->people;
     }
 
@@ -248,7 +267,13 @@ class Alias extends AbstractEntity {
      *
      * @return null|bool
      */
-    public function getMarried() {
+    public function getMarried(?bool $yesNo = false) {
+        if($yesNo) {
+            if(isset($this->married)) {
+                return $this->married ? 'Yes' : 'No';
+            }
+            return null;
+        }
         return $this->married;
     }
 }

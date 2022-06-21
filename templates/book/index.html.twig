@@ -7,7 +7,7 @@
     <p class="count">
         Displaying {{ books|length }} books of {{ books.getTotalItemCount }} total.
     </p>
-{% endblock %} 
+{% endblock %}
 
 {% block body %}
 
@@ -20,6 +20,14 @@
             </div>
         </div>
     {% endif %}
+
+    <form method="get" action="{{ path('search_title') }}" class="form-horizontal">
+        <input type='hidden' value='Book' name='filter[type][]'/>
+        <div class='row'>
+            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search_title'} %}
+            {% endembed %}
+        </div>
+    </form>
 
     {% include 'book/partial/table.html.twig' %}
 

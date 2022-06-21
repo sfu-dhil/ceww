@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -32,10 +32,10 @@ class PlaceIndex extends AbstractIndex {
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        $qb->addFacetField('countryName');
-        $qb->addFacetField('regionName');
+        $qb->addFacetField('region_name_fct');
+        $qb->addFacetField('country_name_fct');
 
-        $qb->setHighlightFields('content');
+        $qb->setHighlightFields(['name', 'regionName', 'countryName', 'description']);
 
         if ($order) {
             $qb->setSorting($order);

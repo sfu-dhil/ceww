@@ -80,7 +80,7 @@
 
     $(document).ready(function () {
         $(window).bind('beforeunload', windowBeforeUnload);
-        $('form').each(formDirty);
+        $('form[method="post"]').each(formDirty);
         $("a.popup").click(formPopup);
         $("a").each(link);
         $("*[data-confirm]").each(confirm);

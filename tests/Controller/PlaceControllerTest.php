@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -140,19 +140,19 @@ class PlaceControllerTest extends ControllerTestCase {
 
     public function testAdminDelete() : void {
         $place = $this->em->find(Place::class, 1);
-        foreach($place->getPublications() as $p) {
+        foreach ($place->getPublications() as $p) {
             $this->em->remove($p);
         }
-        foreach($place->getPublishers() as $p) {
+        foreach ($place->getPublishers() as $p) {
             $this->em->remove($p);
         }
-        foreach($place->getResidents() as $r) {
+        foreach ($place->getResidents() as $r) {
             $this->em->remove($r);
         }
-        foreach($place->getPeopleBorn() as $p) {
+        foreach ($place->getPeopleBorn() as $p) {
             $this->em->remove($p);
         }
-        foreach($place->getPeopleDied() as $p) {
+        foreach ($place->getPeopleDied() as $p) {
             $this->em->remove($p);
         }
         $this->em->flush();

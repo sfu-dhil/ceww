@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -79,7 +79,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var string
      * @ORM\Column(type="text", nullable=true)
      *
-     * @Solr\Field(type="text", boost=0.5)
+     * @Solr\Field(type="text", boost=0.5, filters={"strip_tags", "html_entity_decode(51, 'UTF-8')"})
      */
     private $description;
 
@@ -103,7 +103,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="publications")
      *
-     * @Solr\Field(type="string", boost=0.5, mutator="getName")
+     * @Solr\Field(type="text", boost=0.5, mutator="getName")
      */
     private $location;
 
@@ -113,7 +113,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
      * @ORM\JoinTable(name="publications_genres")
      * @ORM\OrderBy({"label": "ASC"})
      *
-     * @Solr\Field(type="strings", boost=0.5, getter="getGenres(true)")
+     * @Solr\Field(type="texts", boost=0.5, getter="getGenres(true)")
      */
     private $genres;
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -31,9 +31,9 @@ class PublisherIndex extends AbstractIndex {
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        $qb->addFacetField('places');
+        $qb->addFacetField('places_fct');
 
-        $qb->setHighlightFields('content');
+        $qb->setHighlightFields(['name', 'places']);
 
         if ($order) {
             $qb->setSorting($order);

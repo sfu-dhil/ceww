@@ -9,7 +9,7 @@
     </p>
     <p>The data in our periodicals list has been accumulated from a number of sources, some more reliable than
         others. Data provided here should not therefore be used for statistical purposes.</p>
-{% endblock %} 
+{% endblock %}
 
 {% block body %}
 
@@ -23,6 +23,13 @@
         </div>
     </div>
 
+    <form method="get" action="{{ path('search_title') }}" class="form-horizontal">
+        <input type='hidden' value='Periodical' name='filter[type][]'/>
+        <div class='row'>
+            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search_title'} %}
+            {% endembed %}
+        </div>
+    </form>
     {% include 'periodical/partial/table.html.twig' %}
 
     <div class="navigation">

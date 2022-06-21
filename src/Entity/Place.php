@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -26,8 +26,14 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
  *
  * @Solr\Document(
- *     copyField=@Solr\CopyField(from={"name", "regionName", "description", "countryName"}, to="content", type="texts"),
- *     computedFields=@Solr\ComputedField(name="coordinates", type="location", getter="getCoordinates")
+ *     copyField={
+ *         @Solr\CopyField(from={"name", "regionName", "description", "countryName"}, to="content", type="texts"),
+ *         @Solr\CopyField(from={"regionName"}, to="region_name_fct", type="string"),
+ *         @Solr\CopyField(from={"countryName"}, to="country_name_fct", type="string")
+ *     },
+ *     computedFields={
+ *         @Solr\ComputedField(name="coordinates", type="location", getter="getCoordinates")
+ *     }
  * )
  */
 class Place extends AbstractEntity {
@@ -59,13 +65,13 @@ class Place extends AbstractEntity {
      * A province, state, territory or other sub-national entity.
      *
      * @ORM\Column(type="string", length=250, nullable=true)
-     * @Solr\Field(type="string", boost=0.5)
+     * @Solr\Field(type="text", boost=0.5)
      */
     private $regionName;
 
     /**
      * @ORM\Column(type="string", length=250, nullable=true)
-     * @Solr\Field(type="string", boost=0.2)
+     * @Solr\Field(type="text", boost=0.2)
      */
     private $countryName;
 

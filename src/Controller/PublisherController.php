@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -83,35 +83,10 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
     }
 
     /**
-     * Search for Publisher entities.
-     *
-     * @Route("/search", name="publisher_search", methods={"GET"})
-     *
+     * @Route("/search", name="publisher_search")
      * @Template
      */
-    public function searchAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Publisher::class);
-        $q = $request->query->get('q');
-        if ($q) {
-            $query = $repo->searchQuery($q);
-
-            $publishers = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
-        } else {
-            $publishers = [];
-        }
-
-        return [
-            'publishers' => $publishers,
-            'q' => $q,
-        ];
-    }
-
-    /**
-     * @Route("/solr", name="publisher_solr")
-     * @Template
-     */
-    public function solrAction(Request $request, PublisherIndex $repo, SolrManager $solr) {
+    public function searchAction(Request $request, PublisherIndex $repo, SolrManager $solr) {
         $q = $request->query->get('q');
         $result = null;
         if ($q) {

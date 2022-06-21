@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -28,7 +28,9 @@ use Nines\UtilBundle\Entity\AbstractEntity;
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  *
  * @Solr\Document(
- *     @Solr\CopyField(from={"fullName", "description", "birthPlace", "residences", "aliases", "deathPlace"}, to="content", type="texts")
+ *     @Solr\CopyField(from={"fullName", "description", "birthPlace", "residences", "aliases", "deathPlace"}, to="content", type="texts"),
+ *     @Solr\CopyField(from={"birthPlace"}, to="birth_place_fct", type="string"),
+ *     @Solr\CopyField(from={"deathPlace"}, to="death_place_fct", type="string")
  * )
  */
 class Person extends AbstractEntity implements LinkableInterface {
@@ -109,7 +111,7 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * @var Place
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleBorn")
-     * @Solr\Field(type="string", boost=0.4, mutator="getName")
+     * @Solr\Field(type="text", boost=0.4, mutator="getName")
      */
     private $birthPlace;
 
@@ -123,7 +125,7 @@ class Person extends AbstractEntity implements LinkableInterface {
     /**
      * @var Place;
      * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleDied")
-     * @Solr\Field(type="string", boost=0.4, mutator="getName")
+     * @Solr\Field(type="text", boost=0.4, mutator="getName")
      */
     private $deathPlace;
 
@@ -432,7 +434,7 @@ class Person extends AbstractEntity implements LinkableInterface {
      *
      * @param ?bool $flat
      *
-     * @return Collection
+     * @return Collection|array<string>
      */
     public function getAliases(?bool $flat = false) {
         if ($flat) {

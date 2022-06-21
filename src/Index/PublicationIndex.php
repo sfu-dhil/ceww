@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * (c) 2021 Michael Joyce <mjoyce@sfu.ca>
+ * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
  * This source file is subject to the GPL v2, bundled
  * with this source code in the file LICENSE.
  */
@@ -39,10 +39,10 @@ class PublicationIndex extends AbstractIndex {
         }
 
         $qb->addFacetField('type');
-        $qb->addFacetField('location');
+        $qb->addFacetField('location_fct');
         $qb->addFacetRange('dateYear', 1700, $year, 50);
 
-        $qb->setHighlightFields('content');
+        $qb->setHighlightFields(['title', 'description', 'location', 'genres','continuedBy', 'continuedFrom']);
 
         if ($order) {
             $qb->setSorting($order);

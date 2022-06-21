@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Publisher Search{% endblock %}
+{% block title %}Search Titles{% endblock %}
 
 {% block pageheader %}
-    <h1>Publisher Search</h1>
+    <h1>Search Titles</h1>
 {% endblock %}
 
 {% block styles %}
@@ -12,9 +12,9 @@
 
 {% block body %}
 
-    <form method="get" action="{{ path('publisher_solr') }}" class="form-horizontal">
+    <form method="get" action="{{ path('search_title') }}" class="form-horizontal">
         <div class='row'>
-            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'publisher_solr'} %}
+            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search_title'} %}
             {% endembed %}
         </div>
 
@@ -32,10 +32,20 @@
                     } %}
 
                     {% include '@NinesSolr/search/partial/facet.html.twig' with {
-                        'facet': result.getFacet('places'),
-                        'filter': 'place',
-                        'header': 'Place',
-                        'limit': 10,
+                        'facet': result.getFacet('type'),
+                        'filter': 'type',
+                        'header': 'Record Type'
+                    } %}
+                    {% include '@NinesSolr/search/partial/facet_range.html.twig' with {
+                        'facet': result.getFacet('dateYear'),
+                        'filter': 'dateYear',
+                        'header': 'Date of Publication'
+                    } %}
+                    {% include '@NinesSolr/search/partial/facet.html.twig' with {
+                        'facet': result.getFacet('location_fct'),
+                        'filter': 'location',
+                        'header': 'Place of Publication',
+                        'limit': 10
                     } %}
                 {% endif %}
             </div>
@@ -47,7 +57,7 @@
                     {% embed '@NinesSolr/search/partial/header.html.twig' with {'pagination': pagination} %}
                     {% endembed %}
 
-                    {% embed '@NinesSolr/search/partial/result.html.twig' with {'result': result} %}
+                    {% embed 'partial/solr/result.html.twig' with {'result': result} %}
                     {% endembed %}
 
                     {% if pagination %}
