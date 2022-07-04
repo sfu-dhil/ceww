@@ -30,7 +30,6 @@ class AliasIndex extends AbstractIndex {
         foreach ($filters as $key => $values) {
             $qb->addFilter($key, $values);
         }
-        $qb->addFacetField('maiden');
         $qb->setHighlightFields(['name', 'description', 'people']);
 
         if ($order) {

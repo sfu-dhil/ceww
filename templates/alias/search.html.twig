@@ -30,11 +30,6 @@
                             'sortable.desc': 'Name (Z to A)'
                         }
                     } %}
-                    {% include '@NinesSolr/search/partial/facet.html.twig' with {
-                        'facet': result.getFacet('maiden'),
-                        'filter': 'maiden',
-                        'header': 'Birth Name'
-                    } %}
                 {% endif %}
             </div>
 
