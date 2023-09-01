@@ -2,119 +2,55 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
+use App\Repository\PeriodicalRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Nines\SolrBundle\Annotation as Solr;
 
-/**
- * Periodical.
- *
- * @ORM\Table(name="periodical")
- * @ORM\Entity(repositoryClass="App\Repository\PeriodicalRepository")
- *
- * @Solr\Document(
- *     @Solr\CopyField(from={"title", "description", "dateYear", "location", "genres", "continuedFrom", "continuedBy", "contributions", "publishers"}, to="content", type="texts"),
- *     @Solr\CopyField(from={"genres"}, to="genres_fct", type="strings"),
- *     @Solr\CopyField(from={"location"}, to="location_fct", type="string")
- * )
- */
+#[ORM\Table(name: 'periodical')]
+#[ORM\Entity(repositoryClass: PeriodicalRepository::class)]
 class Periodical extends Publication {
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=48, nullable=true)
-     */
-    private $runDates;
+    #[ORM\Column(type: Types::STRING, length: 48, nullable: true)]
+    private ?string $runDates = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @Solr\Field(type="text", boost=0.6)
-     */
-    private $continuedFrom;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $continuedFrom = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @Solr\Field(type="text", boost=0.6)
-     */
-    private $continuedBy;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $continuedBy = null;
 
-    /**
-     * Set runDates.
-     *
-     * @param string $runDates
-     *
-     * @return Periodical
-     */
-    public function setRunDates($runDates) {
+    public function setRunDates(?string $runDates) : self {
         $this->runDates = $runDates;
 
         return $this;
     }
 
-    /**
-     * Get runDates.
-     *
-     * @return string
-     */
-    public function getRunDates() {
+    public function getRunDates() : ?string {
         return $this->runDates;
     }
 
-    /**
-     * Set continuedFrom.
-     *
-     * @param string $continuedFrom
-     *
-     * @return Periodical
-     */
-    public function setContinuedFrom($continuedFrom) {
+    public function setContinuedFrom(?string $continuedFrom) : self {
         $this->continuedFrom = $continuedFrom;
 
         return $this;
     }
 
-    /**
-     * Get continuedFrom.
-     *
-     * @return string
-     */
-    public function getContinuedFrom() {
+    public function getContinuedFrom() : ?string {
         return $this->continuedFrom;
     }
 
-    /**
-     * Set continuedBy.
-     *
-     * @param string $continuedBy
-     *
-     * @return Periodical
-     */
-    public function setContinuedBy($continuedBy) {
+    public function setContinuedBy(?string $continuedBy) : self {
         $this->continuedBy = $continuedBy;
 
         return $this;
     }
 
-    /**
-     * Get continuedBy.
-     *
-     * @return string
-     */
-    public function getContinuedBy() {
+    public function getContinuedBy() : ?string {
         return $this->continuedBy;
     }
 
-    public function getCategory() {
+    public function getCategory() : string {
         return self::PERIODICAL;
     }
 }

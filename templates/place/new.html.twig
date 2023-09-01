@@ -21,11 +21,4 @@
 
 {% block javascripts %}
     {% include '@NinesEditor/editor/widget.html.twig' %}
-    <script>
-        $(".popup").click(function (e) {
-            e.preventDefault();
-            var url = $(this).prop('href');
-            window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600")
-        });
-    </script>
 {% endblock %}

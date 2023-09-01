@@ -2,15 +2,10 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Form;
 
 use App\Entity\Place;
+use App\Entity\Publisher;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,11 +28,9 @@ class PublisherType extends AbstractType {
         $builder->add('name', null, [
             'label' => 'Name',
             'required' => true,
-            'attr' => [
-                'help_block' => '',
-            ],
         ]);
         $builder->add('places', Select2EntityType::class, [
+            'label' => 'Places',
             'multiple' => true,
             'remote_route' => 'place_typeahead',
             'class' => Place::class,
@@ -47,15 +40,14 @@ class PublisherType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'Geotagged location for place',
-            ],
+            'help' => 'Geotagged location for place',
+            'placeholder' => 'Search for an existing place by name',
         ]);
         $builder->add('notes', TextareaType::class, [
             'label' => 'Notes',
+            'help' => 'Public notes about the publisher.',
             'attr' => [
                 'class' => 'tinymce',
-                'help_block' => 'Public notes about the publisher.',
             ],
         ]);
     }
@@ -71,7 +63,7 @@ class PublisherType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) : void {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Publisher',
+            'data_class' => Publisher::class,
         ]);
     }
 }

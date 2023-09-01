@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Form;
 
 use App\Entity\Alias;
@@ -30,20 +24,17 @@ class PersonType extends AbstractType {
         $builder->add('fullName', null, [
             'label' => 'Full Name',
             'required' => true,
-            'attr' => [
-                'help_block' => 'Person\'s full name',
-            ],
+            'help' => 'Person\'s full name',
         ]);
 
         $builder->add('sortableName', null, [
             'label' => 'Sortable Name',
             'required' => true,
-            'attr' => [
-                'help_block' => 'Name listed last name, first name (lowercase). Sortable name will not be displayed to the public.',
-            ],
+            'help' => 'Name listed last name, first name (lowercase). Sortable name will not be displayed to the public.',
         ]);
 
         $builder->add('gender', ChoiceType::class, [
+            'label' => 'Gender',
             'expanded' => true,
             'multiple' => false,
             'choices' => [
@@ -64,9 +55,7 @@ class PersonType extends AbstractType {
             ],
             'required' => true,
             'placeholder' => false,
-            'attr' => [
-                'help_block' => 'Is the person a Canadian?',
-            ],
+            'help' => 'Is the person a Canadian?',
         ]);
 
         $builder->add('aliases', Select2EntityType::class, [
@@ -80,16 +69,15 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'Alternate names or aliases including birth name or married names',
-            ],
+            'help' => 'Alternate names or aliases including birth name or married names',
+            'placeholder' => 'Search for an existing alias by name',
         ]);
 
         $builder->add('description', TextareaType::class, [
             'label' => 'Notes (for the public)',
             'required' => false,
+            'help' => 'This description is public',
             'attr' => [
-                'help_block' => 'This description is public',
                 'class' => 'tinymce',
             ],
         ]);
@@ -97,13 +85,12 @@ class PersonType extends AbstractType {
         $builder->add('birthDate', TextType::class, [
             'label' => 'Birth Year',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here',
-            ],
+            'help' => 'Date ranges (1901-1903) and circas (c1902) are supported here',
         ]);
 
         // birthPlace is a typeahead thing.
         $builder->add('birthPlace', Select2EntityType::class, [
+            'label' => 'Birth Place',
             'multiple' => false,
             'remote_route' => 'place_typeahead',
             'class' => Place::class,
@@ -113,21 +100,19 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'Geotagged location for birth place',
-            ],
+            'help' => 'Geotagged location for birth place',
+            'placeholder' => 'Search for an existing place by name',
         ]);
 
         $builder->add('deathDate', TextType::class, [
             'label' => 'Death Year',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Date ranges (1901-1903) and circas (c1902) are supported here',
-            ],
+            'help' => 'Date ranges (1901-1903) and circas (c1902) are supported here',
         ]);
 
         // deathPlace is a typeahead thing.
         $builder->add('deathPlace', Select2EntityType::class, [
+            'label' => 'Death Place',
             'multiple' => false,
             'remote_route' => 'place_typeahead',
             'class' => Place::class,
@@ -137,12 +122,12 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'Geotagged location for death place',
-            ],
+            'help' => 'Geotagged location for death place',
+            'placeholder' => 'Search for an existing place by name',
         ]);
 
         $builder->add('residences', Select2EntityType::class, [
+            'label' => 'Residences',
             'multiple' => true,
             'remote_route' => 'place_typeahead',
             'class' => Place::class,
@@ -152,9 +137,8 @@ class PersonType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'List of known residences',
-            ],
+            'help' => 'List of known residences',
+            'placeholder' => 'Search for an existing place by name',
         ]);
 
         LinkableType::add($builder, $options);
@@ -162,24 +146,22 @@ class PersonType extends AbstractType {
         $builder->add('notes', TextType::class, [
             'label' => 'Research Notes (for editors/admins)',
             'required' => false,
+            'help' => 'Notes are only available to logged-in users',
             'attr' => [
-                'help_block' => 'Notes are only available to logged-in users',
                 'class' => 'tinymce',
             ],
         ]);
         $builder->setDataMapper($this->mapper);
     }
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setMapper(LinkableMapper $mapper) : void {
         $this->mapper = $mapper;
     }
 
     public function configureOptions(OptionsResolver $resolver) : void {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Person',
+            'data_class' => Person::class,
         ]);
     }
 }

@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Menu;
 
 use Knp\Menu\FactoryInterface;
@@ -23,28 +17,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class Builder implements ContainerAwareInterface {
     use ContainerAwareTrait;
 
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
+    public function __construct(private FactoryInterface $factory, private AuthorizationCheckerInterface $authChecker, private TokenStorageInterface $tokenStorage) {}
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authChecker;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage) {
-        $this->factory = $factory;
-        $this->authChecker = $authChecker;
-        $this->tokenStorage = $tokenStorage;
-    }
-
-    private function hasRole($role) {
+    private function hasRole($role) : bool {
         if ( ! $this->tokenStorage->getToken()) {
             return false;
         }
@@ -66,63 +41,111 @@ class Builder implements ContainerAwareInterface {
         $menu->addChild('home', [
             'label' => 'Home',
             'route' => 'homepage',
+            'attributes' => [
+                'class' => 'nav-item',
+            ],
+            'linkAttributes' => [
+                'class' => 'nav-link',
+                'role' => 'button',
+            ],
         ]);
 
-        $search = $menu->addChild('search', [
+        $menu->addChild('search', [
             'route' => 'search',
             'label' => 'Search',
+            'attributes' => [
+                'class' => 'nav-item',
+            ],
+            'linkAttributes' => [
+                'class' => 'nav-link',
+                'role' => 'button',
+            ],
         ]);
 
         $browse = $menu->addChild('browse', [
             'uri' => '#',
             'label' => 'Browse',
+            'attributes' => [
+                'class' => 'nav-item dropdown',
+            ],
+            'linkAttributes' => [
+                'class' => 'nav-link dropdown-toggle',
+                'role' => 'button',
+                'data-bs-toggle' => 'dropdown',
+                'id' => 'browse-dropdown',
+            ],
+            'childrenAttributes' => [
+                'class' => 'dropdown-menu text-small shadow',
+                'aria-labelledby' => 'browse-dropdown',
+            ],
         ]);
-        $browse->setAttribute('dropdown', true);
-        $browse->setLinkAttribute('class', 'dropdown-toggle');
-        $browse->setLinkAttribute('data-toggle', 'dropdown');
-        $browse->setChildrenAttribute('class', 'dropdown-menu');
         $browse->addChild('Books', [
             'route' => 'book_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
         $browse->addChild('Collections', [
             'route' => 'compilation_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
         $browse->addChild('Periodicals', [
             'route' => 'periodical_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
         $browse->addChild('divider1', [
-            'label' => '',
-        ]);
-        $browse['divider1']->setAttributes([
-            'role' => 'separator',
-            'class' => 'divider',
+            'label' => '<hr class="dropdown-divider">',
+            'extras' => [
+                'safe_label' => true,
+            ],
         ]);
         $browse->addChild('Alternate Names', [
             'route' => 'alias_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
         $browse->addChild('Genres', [
             'route' => 'genre_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
         $browse->addChild('People', [
             'route' => 'person_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
         $browse->addChild('Places', [
             'route' => 'place_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
         $browse->addChild('Publishers', [
             'route' => 'publisher_index',
+            'linkAttributes' => [
+                'class' => 'dropdown-item link-dark',
+            ],
         ]);
 
         if ($this->hasRole('ROLE_CONTENT_ADMIN')) {
             $browse->addChild('divider2', [
-                'label' => '',
-            ]);
-            $browse['divider2']->setAttributes([
-                'role' => 'separator',
-                'class' => 'divider',
+                'label' => '<hr class="dropdown-divider">',
+                'extras' => [
+                    'safe_label' => true,
+                ],
             ]);
             $browse->addChild('Roles', [
                 'route' => 'role_index',
+                'linkAttributes' => [
+                    'class' => 'dropdown-item link-dark',
+                ],
             ]);
         }
 

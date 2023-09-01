@@ -2,14 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Form;
 
+use App\Entity\DateYear;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,16 +15,12 @@ class DateYearType extends AbstractType {
         $builder->add('value', null, [
             'label' => 'Value',
             'required' => true,
-            'attr' => [
-                'help_block' => 'Publication date.',
-            ],
+            'help' => 'Publication date.',
         ]);
         $builder->add('start', null, [
             'label' => 'Start',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Publication start date as YYYY.',
-            ],
+            'help' => 'Publication start date as YYYY.',
         ]);
         $builder->add('startCirca', ChoiceType::class, [
             'label' => 'Start Circa',
@@ -41,16 +32,12 @@ class DateYearType extends AbstractType {
             ],
             'required' => true,
             'placeholder' => false,
-            'attr' => [
-                'help_block' => 'Approximate publication start date.',
-            ],
+            'help' => 'Approximate publication start date.',
         ]);
         $builder->add('end', null, [
             'label' => 'End',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Publication end date as YYYY.',
-            ],
+            'help' => 'Publication end date as YYYY.',
         ]);
         $builder->add('endCirca', ChoiceType::class, [
             'label' => 'End Circa',
@@ -62,15 +49,13 @@ class DateYearType extends AbstractType {
             ],
             'required' => true,
             'placeholder' => false,
-            'attr' => [
-                'help_block' => 'Approximate publication end date.',
-            ],
+            'help' => 'Approximate publication end date.',
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver) : void {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\DateYear',
+            'data_class' => DateYear::class,
         ]);
     }
 }

@@ -5,12 +5,12 @@
 {% block pageheader %}
     <h1>{{ place.name }}</h1>
     <div class="row">
-        <div class="col-sm-6 text-left">
+        <div class="col-sm-6 text-start">
             {% if previous %}
                 Previous place: <a href="{{ path('place_show', {'id': previous.id}) }}">{{ previous }}</a>
             {% endif %}
         </div>
-        <div class="col-sm-6 text-right">
+        <div class="col-sm-6 text-end">
             {% if next %}
                 Next place: <a href="{{ path('place_show', {'id': next.id}) }}">{{ next }}</a>
             {% endif %}
@@ -19,21 +19,21 @@
 {% endblock %}
 
 {% block body %}
-    <div class="btn-toolbar">
-        <div class="btn-group pull-right">
-            <a href="{{ path('place_index') }}" class="btn btn-default">
-                <span class="glyphicon glyphicon-arrow-left"></span> Back
+    <div class="btn-toolbar pb-1">
+        <div class="btn-group ms-auto">
+            <a href="{{ path('place_index') }}" class="btn btn-light">
+                <span class="bi bi-arrow-left"></span> Back
             </a>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
-                <a href="{{ path('place_edit', { 'id': place.id }) }}" class="btn btn-default">
-                    <span class='glyphicon glyphicon-edit'></span> Edit
+                <a href="{{ path('place_edit', { 'id': place.id }) }}" class="btn btn-light">
+                    <span class='bi bi-pencil-square'></span> Edit
                 </a>
                 {% if is_granted('ROLE_CONTENT_ADMIN') %}
-                    <a href="{{ path('place_merge', {'id': place.id}) }}" class='btn btn-default'>
-                        <span class=' glyphicon glyphicon-resize-small'></span> Merge
+                    <a href="{{ path('place_merge', {'id': place.id}) }}" class='btn btn-light'>
+                        <span class=' bi bi-arrows-angle-contract'></span> Merge
                     </a>
-                    <a href="{{ path('place_delete', { 'id': place.id }) }}" class="btn btn-default" data-confirm="Are you sure you want to delete this Place?">
-                        <span class='glyphicon glyphicon-remove'></span> Delete
+                    <a href="{{ path('place_delete', { 'id': place.id }) }}" class="btn btn-light" data-confirm="Are you sure you want to delete this Place?">
+                        <span class='bi bi-x'></span> Delete
                     </a>
                 {% endif %}
             {% endif %}
@@ -42,7 +42,7 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <tbody>
             <tr>
-                <th><span data-toggle="popover" data-content="Place name" data-trigger="hover" data-placement="bottom">Name</span></th>
+                <th><span data-bs-toggle="popover" data-content="Place name" data-trigger="hover" data-placement="bottom">Name</span></th>
                 <td>{{ place.name }}</td>
             </tr>
             <tr>
@@ -50,49 +50,54 @@
                 <td>{{ place.sortableName }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="State, province, territory or other sub-national entity" data-trigger="hover" data-placement="bottom">Region Name</span></th>
+                <th><span data-bs-toggle="popover" data-content="State, province, territory or other sub-national entity" data-trigger="hover" data-placement="bottom">Region Name</span></th>
                 <td>{{ place.regionName }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Country name" data-trigger="hover" data-placement="bottom">Country Name</span></th>
+                <th><span data-bs-toggle="popover" data-content="Country name" data-trigger="hover" data-placement="bottom">Country Name</span></th>
                 <td>{{ place.countryName }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Location's latitude" data-trigger="hover" data-placement="bottom">Latitude</span></th>
+                <th><span data-bs-toggle="popover" data-content="Location's latitude" data-trigger="hover" data-placement="bottom">Latitude</span></th>
                 <td>{{ place.latitude }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Location's longitude" data-trigger="hover" data-placement="bottom">Longitude</span></th>
+                <th><span data-bs-toggle="popover" data-content="Location's longitude" data-trigger="hover" data-placement="bottom">Longitude</span></th>
                 <td>{{ place.longitude }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Notes about the entry." data-trigger="hover" data-placement="bottom">Notes</span></th>
+                <th><span data-bs-toggle="popover" data-content="Notes about the entry." data-trigger="hover" data-placement="bottom">Notes</span></th>
                 <td>{{ place.description|raw }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="GeoNames ID for this place." data-trigger="hover" data-placement="bottom">GeoNames ID</span></th>
+                <th><span data-bs-toggle="popover" data-content="GeoNames ID for this place." data-trigger="hover" data-placement="bottom">GeoNames ID</span></th>
                 <td>{{ place.geoNamesId }}</td>
             </tr>
             <tr>
-                <th><span data-toggle="popover" data-content="Places within 50km of this place." data-trigger="hover" data-placement="bottom">Nearby Places</span></th>
+                <th><span data-bs-toggle="popover" data-content="Places within 50km of this place." data-trigger="hover" data-placement="bottom">Nearby Places</span></th>
                 <td>
-                    {% if nearby and nearby.count > 1 %}
+                    {% if nearbyResults %}
                         <ul>
-                            {% for i in 1..(nearby.count-1) %}
-                            {% set document = nearby.getDocument(i) %}
-                            {% set entity = nearby.entity(i) %}
+                        {% for hybridResult in nearbyResults %}
+                            {% set result = hybridResult.result %}
+                            {% set entity = hybridResult.transformed %}
                             <li>
                                 <a href='{{ path('place_show', {'id': entity.id}) }}'>
                                     {{ entity }}
-                                </a> {{ document.distance|number_format(1) }} km<br/>
-                                {% endfor %}
+                                </a>
+                                {{ result.sort|first|number_format(1) }} km
+                            </li>
+                        {% endfor %}
                         </ul>
+                        <div class="navigation">
+                            {{ knp_pagination_render(nearbyResults) }}
+                        </div>
                     {% endif %}
                 </td>
             </tr>
             {% if is_granted('ROLE_CONTENT_EDITOR') %}
                 <tr>
-                    <th><span data-toggle="popover" data-content="These notes are only available to logged-in users." data-trigger="hover" data-placement="bottom">Research Notes</span></th>
+                    <th><span data-bs-toggle="popover" data-content="These notes are only available to logged-in users." data-trigger="hover" data-placement="bottom">Research Notes</span></th>
                     <td>{{ place.notes|raw }}</td>
                 </tr>
             {% endif %}
@@ -101,13 +106,13 @@
 
     <div>
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#born" aria-controls="home" role="tab" data-toggle="tab">Births</a></li>
-            <li role="presentation"><a href="#died" aria-controls="profile" role="tab" data-toggle="tab">Deaths</a></li>
-            <li role="presentation"><a href="#resident" aria-controls="messages" role="tab" data-toggle="tab">Residents</a></li>
-            <li role="presentation"><a href="#publisher" aria-controls="messages" role="tab" data-toggle="tab">Publishers</a></li>
-            <li role="presentation"><a href="#book" aria-controls="messages" role="tab" data-toggle="tab">Books</a></li>
-            <li role="presentation"><a href="#compilation" aria-controls="messages" role="tab" data-toggle="tab">Collections</a></li>
-            <li role="presentation"><a href="#periodical" aria-controls="messages" role="tab" data-toggle="tab">Periodicals</a></li>
+            <li role="presentation" class="nav-item"><a href="#born" class="nav-link active" aria-controls="home" role="tab" data-bs-toggle="tab">Births</a></li>
+            <li role="presentation" class="nav-item"><a href="#died" class="nav-link" aria-controls="profile" role="tab" data-bs-toggle="tab">Deaths</a></li>
+            <li role="presentation" class="nav-item"><a href="#resident" class="nav-link" aria-controls="messages" role="tab" data-bs-toggle="tab">Residents</a></li>
+            <li role="presentation" class="nav-item"><a href="#publisher" class="nav-link" aria-controls="messages" role="tab" data-bs-toggle="tab">Publishers</a></li>
+            <li role="presentation" class="nav-item"><a href="#book" class="nav-link" aria-controls="messages" role="tab" data-bs-toggle="tab">Books</a></li>
+            <li role="presentation" class="nav-item"><a href="#compilation" class="nav-link" aria-controls="messages" role="tab" data-bs-toggle="tab">Collections</a></li>
+            <li role="presentation" class="nav-item"><a href="#periodical" class="nav-link" aria-controls="messages" role="tab" data-bs-toggle="tab">Periodicals</a></li>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="born">

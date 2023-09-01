@@ -2,16 +2,11 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Form;
 
 use App\Entity\Genre;
 use App\Entity\Place;
+use App\Entity\Publication;
 use App\Entity\Publisher;
 use Nines\MediaBundle\Form\LinkableType;
 use Nines\MediaBundle\Form\Mapper\LinkableMapper;
@@ -29,42 +24,38 @@ class PublicationType extends AbstractType {
         $builder->add('title', null, [
             'label' => 'Title',
             'required' => true,
-            'attr' => [
-                'help_block' => 'Full title of the work',
-            ],
+            'help' => 'Full title of the work',
         ]);
         $builder->add('sortableTitle', null, [
             'label' => 'Sortable Title',
             'required' => true,
-            'attr' => [
-                'help_block' => 'Name sorting (lowercase). Sortable name will not be displayed to the public.',
-            ],
+            'help' => 'Name sorting (lowercase). Sortable name will not be displayed to the public.',
         ]);
         LinkableType::add($builder, $options);
         $builder->add('description', TextareaType::class, [
             'label' => 'Notes (for the public)',
             'required' => false,
+            'help' => 'This description is public',
             'attr' => [
-                'help_block' => 'This description is public',
                 'class' => 'tinymce',
             ],
         ]);
         $builder->add('notes', TextareaType::class, [
             'label' => 'Research Notes (for editors/admins)',
             'required' => false,
+            'help' => 'Notes are only available to logged-in users',
             'attr' => [
-                'help_block' => 'Notes are only available to logged-in users',
                 'class' => 'tinymce',
             ],
         ]);
         $builder->add('dateYear', TextType::class, [
+            'label' => 'Date Year',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Year work published',
-            ],
+            'help' => 'Year work published',
         ]);
 
         $builder->add('location', Select2EntityType::class, [
+            'label' => 'Location',
             'multiple' => false,
             'remote_route' => 'place_typeahead',
             'class' => Place::class,
@@ -74,12 +65,12 @@ class PublicationType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'Geotagged location for place of publication',
-            ],
+            'help' => 'Geotagged location for place of publication',
+            'placeholder' => 'Search for an existing place by name',
         ]);
 
         $builder->add('genres', Select2EntityType::class, [
+            'label' => 'Genres',
             'multiple' => true,
             'remote_route' => 'genre_typeahead',
             'class' => Genre::class,
@@ -89,12 +80,12 @@ class PublicationType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'Category of the work',
-            ],
+            'help' => 'Category of the work',
+            'placeholder' => 'Search for an existing genre by name',
         ]);
 
         $builder->add('publishers', Select2EntityType::class, [
+            'label' => 'Publishers',
             'multiple' => true,
             'remote_route' => 'publisher_typeahead',
             'class' => Publisher::class,
@@ -104,23 +95,20 @@ class PublicationType extends AbstractType {
             'allow_clear' => true,
             'delay' => 250,
             'language' => 'en',
-            'attr' => [
-                'help_block' => 'Publisher(s) of the work',
-            ],
+            'help' => 'Publisher(s) of the work',
+            'placeholder' => 'Search for an existing publisher by name',
         ]);
         $builder->setDataMapper($this->mapper);
     }
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setMapper(LinkableMapper $mapper) : void {
         $this->mapper = $mapper;
     }
 
     public function configureOptions(OptionsResolver $resolver) : void {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Publication',
+            'data_class' => Publication::class,
         ]);
     }
 }

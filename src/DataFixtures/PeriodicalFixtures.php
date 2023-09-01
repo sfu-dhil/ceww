@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\DataFixtures;
 
 use App\Entity\Contribution;
@@ -48,7 +42,7 @@ class PeriodicalFixtures extends Fixture implements DependentFixtureInterface, F
             $periodical->addContribution($contribution);
 
             $dateYear = new DateYear();
-            $dateYear->setValue(1900 + $i);
+            $dateYear->setValue((string) (1900 + $i));
             $manager->persist($dateYear);
             $this->setReference("periodical.{$i}.dateyear", $dateYear);
             $periodical->setDateYear($dateYear);

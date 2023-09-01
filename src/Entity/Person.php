@@ -2,159 +2,100 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
+use App\Repository\PersonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
-use Nines\SolrBundle\Annotation as Solr;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
-/**
- * Person.
- *
- * @ORM\Table(name="person", indexes={
- *     @ORM\Index(columns={"full_name"}, flags={"fulltext"}),
- *     @ORM\Index(columns={"sortable_name"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
- *
- * @Solr\Document(
- *     @Solr\CopyField(from={"fullName", "description", "birthPlace", "residences", "aliases", "deathPlace"}, to="content", type="texts"),
- *     @Solr\CopyField(from={"birthPlace"}, to="birth_place_fct", type="string"),
- *     @Solr\CopyField(from={"deathPlace"}, to="death_place_fct", type="string")
- * )
- */
-class Person extends AbstractEntity implements LinkableInterface {
+#[ORM\Table(name: 'person')]
+#[ORM\Index(columns: ['full_name'], flags: ['fulltext'])]
+#[ORM\Index(columns: ['sortable_name'])]
+#[ORM\Entity(repositoryClass: PersonRepository::class)]
+class Person extends AbstractEntity implements LinkableInterface, HighlightableModelInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
-
         getContributions as private traitContributions;
     }
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
-
     }
+    use HasHighlights;
 
     public const MALE = 'm';
 
     public const FEMALE = 'f';
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=200, nullable=false)
-     * @Solr\Field(type="text", boost=2.5)
-     */
-    private $fullName;
+    #[ORM\Column(type: Types::STRING, length: 200, nullable: false)]
+    private ?string $fullName = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=191, nullable=false)
-     * @Solr\Field(name="sortable", type="string", boost=0.2)
-     */
-    private $sortableName;
+    #[ORM\Column(type: Types::STRING, length: 191, nullable: false)]
+    private ?string $sortableName = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=1, nullable=true)
-     * @Solr\Field(type="string")
-     */
-    private $gender;
+    #[ORM\Column(type: Types::STRING, length: 1, nullable: true)]
+    private ?string $gender = null;
 
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true, options={"default": true})
-     * @Solr\Field(type="boolean")
-     */
-    private $canadian;
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['default' => true])]
+    private ?bool $canadian = null;
 
     /**
      * public research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * Note that ENT_QUOTES | ENT_HTML5 === 51
-     * @Solr\Field(type="text", boost=0.5, filters={"strip_tags", "html_entity_decode(51, 'UTF-8')"})
      */
-    private $description;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
     /**
      * private research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
-    private $notes;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $notes = null;
 
     /**
      * @var string[]
-     * @ORM\Column(type="array")
      */
-    private $urlLinks;
+    #[ORM\Column(type: Types::ARRAY)]
+    private array $urlLinks;
+
+    #[ORM\OneToOne(targetEntity: DateYear::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?DateYear $birthDate = null;
+
+    #[ORM\ManyToOne(targetEntity: Place::class, inversedBy: 'peopleBorn')]
+    private ?Place $birthPlace = null;
+
+    #[ORM\OneToOne(targetEntity: DateYear::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?DateYear $deathDate = null;
+
+    #[ORM\ManyToOne(targetEntity: Place::class, inversedBy: 'peopleDied')]
+    private ?Place $deathPlace = null;
 
     /**
-     * @var DateYear
-     * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @Solr\Field(type="integer", getter="getBirthYear")
+     * @var Collection<Place>
      */
-    private $birthDate;
+    #[ORM\ManyToMany(targetEntity: Place::class, inversedBy: 'residents')]
+    #[ORM\OrderBy(['sortableName' => 'asc'])]
+    private Collection $residences;
 
     /**
-     * @var Place
-     * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleBorn")
-     * @Solr\Field(type="text", boost=0.4, mutator="getName")
+     * @var Collection<Alias>
      */
-    private $birthPlace;
+    #[ORM\ManyToMany(targetEntity: Alias::class, inversedBy: 'people')]
+    #[ORM\OrderBy(['sortableName' => 'asc'])]
+    private Collection $aliases;
 
     /**
-     * @var DateYear
-     * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @Solr\Field(type="integer", getter="getDeathYear")
+     * @var Collection<Contribution>
      */
-    private $deathDate;
-
-    /**
-     * @var Place;
-     * @ORM\ManyToOne(targetEntity="Place", inversedBy="peopleDied")
-     * @Solr\Field(type="text", boost=0.4, mutator="getName")
-     */
-    private $deathPlace;
-
-    /**
-     * @var Collection|Place[]
-     *
-     * @ORM\ManyToMany(targetEntity="Place", inversedBy="residents")
-     * @ORM\OrderBy({"sortableName": "ASC"})
-     *
-     * @Solr\Field(type="texts", boost=0.3, getter="getResidences(true)")
-     */
-    private $residences;
-
-    /**
-     * @var Collection|Place[]
-     * @ORM\ManyToMany(targetEntity="Alias", inversedBy="people")
-     * @ORM\OrderBy({"sortableName": "ASC"})
-     *
-     * @Solr\Field(type="texts", boost=1.3, getter="getAliases(true)")
-     */
-    private $aliases;
-
-    /**
-     * @var Collection|Contribution[]
-     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="person", orphanRemoval=true)
-     */
-    private $contributions;
+    #[ORM\OneToMany(targetEntity: Contribution::class, mappedBy: 'person', orphanRemoval: true)]
+    private Collection $contributions;
 
     public function __construct() {
+        $this->contributions = new ArrayCollection();
         parent::__construct();
         $this->trait_constructor();
         $this->link_constructor();
@@ -165,32 +106,16 @@ class Person extends AbstractEntity implements LinkableInterface {
     }
 
     public function __toString() : string {
-        if ($this->fullName) {
-            return $this->fullName;
-        }
-
-        return '(unknown)';
+        return $this->getFullName();
     }
 
-    /**
-     * Set fullName.
-     *
-     * @param string $fullName
-     *
-     * @return Person
-     */
-    public function setFullName($fullName) {
+    public function setFullName(?string $fullName) : self {
         $this->fullName = $fullName;
 
         return $this;
     }
 
-    /**
-     * Get fullName.
-     *
-     * @return string
-     */
-    public function getFullName() {
+    public function getFullName() : string {
         if ($this->fullName) {
             return $this->fullName;
         }
@@ -198,80 +123,41 @@ class Person extends AbstractEntity implements LinkableInterface {
         return '(unknown)';
     }
 
-    /**
-     * Set sortableName.
-     *
-     * @param string $sortableName
-     *
-     * @return Person
-     */
-    public function setSortableName($sortableName) {
+    public function setSortableName(?string $sortableName) : self {
         $this->sortableName = $sortableName;
 
         return $this;
     }
 
-    /**
-     * Get sortableName.
-     *
-     * @return string
-     */
-    public function getSortableName() {
+    public function getSortableName() : ?string {
         return $this->sortableName;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Person
-     */
-    public function setDescription($description) {
+    public function setDescription(?string $description) : self {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription() {
+    public function getDescription() : ?string {
         return $this->description;
     }
 
-    /**
-     * Set notes.
-     *
-     * @param string $notes
-     *
-     * @return Person
-     */
-    public function setNotes($notes) {
+    public function getDescriptionSanitized() : ?string {
+        return strip_tags(html_entity_decode($this->description ?? ''));
+    }
+
+    public function setNotes(?string $notes) : self {
         $this->notes = $notes;
 
         return $this;
     }
 
-    /**
-     * Get notes.
-     *
-     * @return string
-     */
-    public function getNotes() {
+    public function getNotes() : ?string {
         return $this->notes;
     }
 
-    /**
-     * Set birthDate.
-     *
-     * @param DateYear|string $birthDate
-     *
-     * @return Person
-     */
-    public function setBirthDate($birthDate = null) {
+    public function setBirthDate(DateYear|string|null $birthDate = null) : self {
         if (is_string($birthDate) || is_numeric($birthDate)) {
             $dateYear = new DateYear();
             $dateYear->setValue($birthDate);
@@ -283,51 +169,21 @@ class Person extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Get birthDate.
-     *
-     * @return DateYear
-     */
-    public function getBirthDate() {
+    public function getBirthDate() : ?DateYear {
         return $this->birthDate;
     }
 
-    public function getBirthYear() {
-        if ($this->birthDate) {
-            return $this->birthDate->getStart(false);
-        }
-    }
-
-    /**
-     * Set birthPlace.
-     *
-     * @param Place $birthPlace
-     *
-     * @return Person
-     */
-    public function setBirthPlace(?Place $birthPlace = null) {
+    public function setBirthPlace(?Place $birthPlace = null) : self {
         $this->birthPlace = $birthPlace;
 
         return $this;
     }
 
-    /**
-     * Get birthPlace.
-     *
-     * @return Place
-     */
-    public function getBirthPlace() {
+    public function getBirthPlace() : ?Place {
         return $this->birthPlace;
     }
 
-    /**
-     * Set deathDate.
-     *
-     * @param DateYear|string $deathDate
-     *
-     * @return Person
-     */
-    public function setDeathDate($deathDate = null) {
+    public function setDeathDate(DateYear|string|null $deathDate = null) : self {
         if (is_string($deathDate) || is_numeric($deathDate)) {
             $dateYear = new DateYear();
             $dateYear->setValue($deathDate);
@@ -335,51 +191,33 @@ class Person extends AbstractEntity implements LinkableInterface {
         } else {
             $this->deathDate = $deathDate;
         }
+
+        return $this;
     }
 
-    /**
-     * Get deathDate.
-     *
-     * @return DateYear
-     */
-    public function getDeathDate() {
+    public function getDeathDate() : ?DateYear {
         return $this->deathDate;
     }
 
-    public function getDeathYear() {
+    public function getDeathYear() : mixed {
         if ($this->deathDate) {
             return $this->deathDate->getStart(false);
         }
+
+        return null;
     }
 
-    /**
-     * Set deathPlace.
-     *
-     * @param Place $deathPlace
-     *
-     * @return Person
-     */
-    public function setDeathPlace(?Place $deathPlace = null) {
+    public function setDeathPlace(?Place $deathPlace = null) : self {
         $this->deathPlace = $deathPlace;
 
         return $this;
     }
 
-    /**
-     * Get deathPlace.
-     *
-     * @return Place
-     */
-    public function getDeathPlace() {
+    public function getDeathPlace() : ?Place {
         return $this->deathPlace;
     }
 
-    /**
-     * Add residence.
-     *
-     * @return Person
-     */
-    public function addResidence(Place $residence) {
+    public function addResidence(Place $residence) : self {
         if ( ! $this->residences->contains($residence)) {
             $this->residences[] = $residence;
         }
@@ -387,34 +225,15 @@ class Person extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Remove residence.
-     */
     public function removeResidence(Place $residence) : void {
         $this->residences->removeElement($residence);
     }
 
-    /**
-     * Get residences.
-     *
-     * @param ?bool $flat
-     *
-     * @return Collection
-     */
-    public function getResidences(?bool $flat = false) {
-        if ($flat) {
-            return array_map(fn (Place $p) => $p->getName(), $this->residences->toArray());
-        }
-
+    public function getResidences() : Collection {
         return $this->residences;
     }
 
-    /**
-     * Add alias.
-     *
-     * @return Person
-     */
-    public function addAlias(Alias $alias) {
+    public function addAlias(Alias $alias) : self {
         if ( ! $this->aliases->contains($alias)) {
             $this->aliases[] = $alias;
         }
@@ -422,29 +241,18 @@ class Person extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Remove alias.
-     */
     public function removeAlias(Alias $alias) : void {
         $this->aliases->removeElement($alias);
     }
 
-    /**
-     * Get aliases.
-     *
-     * @param ?bool $flat
-     *
-     * @return Collection|array<string>
-     */
-    public function getAliases(?bool $flat = false) {
-        if ($flat) {
-            return array_map(fn (Alias $a) => $a->getName(), $this->aliases->toArray());
-        }
-
+    public function getAliases() : Collection {
         return $this->aliases;
     }
 
-    public function getContributions($category = null, $sort = 'year') {
+    /**
+     * @return Contribution[]
+     */
+    public function getContributions(mixed $category = null, string $sort = 'year') : array {
         $data = $this->traitContributions($sort);
         if (null === $category) {
             return $data;
@@ -453,14 +261,7 @@ class Person extends AbstractEntity implements LinkableInterface {
         return array_filter($data, fn (Contribution $contribution) => $contribution->getPublication()->getCategory() === $category);
     }
 
-    /**
-     * Add urlLink.
-     *
-     * @param string $urlLink
-     *
-     * @return string
-     */
-    public function addUrlLink($urlLink) {
+    public function addUrlLink(?string $urlLink) : self {
         if ( ! in_array($urlLink, $this->urlLinks, true)) {
             $this->urlLinks[] = $urlLink;
         }
@@ -468,12 +269,7 @@ class Person extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Remove urlLink.
-     *
-     * @param string $urlLink
-     */
-    public function removeUrlLink($urlLink) {
+    public function removeUrlLink(?string $urlLink) : self {
         $index = array_search($urlLink, $this->urlLinks, true);
         if (false !== $index) {
             unset($this->urlLinks[$index]);
@@ -482,69 +278,33 @@ class Person extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Get urlLinks.
-     *
-     * @return array
-     */
-    public function getUrlLinks() {
+    public function getUrlLinks() : array {
         return $this->urlLinks;
     }
 
-    /**
-     * Set urlLinks.
-     *
-     * @param string[] $urlLinks
-     *
-     * @return Person
-     */
-    public function setUrlLinks(array $urlLinks) {
+    public function setUrlLinks(array $urlLinks) : self {
         $this->urlLinks = $urlLinks;
 
         return $this;
     }
 
-    /**
-     * Set gender.
-     *
-     * @param string $gender
-     *
-     * @return Person
-     */
-    public function setGender($gender) {
+    public function setGender(?string $gender) : self {
         $this->gender = $gender;
 
         return $this;
     }
 
-    /**
-     * Get gender.
-     *
-     * @return string
-     */
-    public function getGender() {
+    public function getGender() : ?string {
         return $this->gender;
     }
 
-    /**
-     * Set canadian.
-     *
-     * @param null|bool $canadian
-     *
-     * @return Person
-     */
-    public function setCanadian($canadian = null) {
+    public function setCanadian(?bool $canadian = null) : self {
         $this->canadian = $canadian;
 
         return $this;
     }
 
-    /**
-     * Get canadian.
-     *
-     * @return null|bool
-     */
-    public function getCanadian() {
+    public function getCanadian() : ?bool {
         return $this->canadian;
     }
 }

@@ -10,16 +10,16 @@
     <div class="form-group">
         <div class="col-sm-2"></div>
 
-        <div class='btn-toolbar pull-left'>
-            <div class='btn-group'>
+        <div class='btn-toolbar pb-1'>
+            <div class='btn-group me-auto'>
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a href="{{ path('publisher_index') }}" class="btn btn-warning">Cancel</a>
             </div>
         </div>
 
-        <div class='btn-toolbar pull-right'>
-            <div class='btn-group'>
-                <a href="{{ path('place_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Place</a>
+        <div class='btn-toolbar pb-1'>
+            <div class='btn-group ms-auto'>
+                <a href="{{ path('place_new') }}" class="btn btn-primary" target="_blank"><span class="bi bi-plus-lg"></span> Place</a>
             </div>
         </div>
     </div>
@@ -29,11 +29,4 @@
 
 {% block javascripts %}
     {% include '@NinesEditor/editor/widget.html.twig' %}
-    <script>
-        $(".popup").click(function (e) {
-            e.preventDefault();
-            var url = $(this).prop('href');
-            window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600")
-        });
-    </script>
 {% endblock %}

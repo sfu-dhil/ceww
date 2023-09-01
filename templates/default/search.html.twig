@@ -6,58 +6,40 @@
     <h1>Search</h1>
 {% endblock %}
 
-{% block styles %}
-    <link href='{{ asset('bundles/ninessolr/css/search.css') }}' rel='stylesheet'/>
-{% endblock %}
-
 {% block body %}
-
-    <form method="get" action="{{ path('search') }}" class="form-horizontal">
-        <div class='row'>
-            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search'} %}
-            {% endembed %}
+    {% set q = ('q' in app.request.query.all|keys ? app.request.query.all.q : null) %}
+    <hr>
+    <form method="get" action="{{ path('search') }}">
+        <div class="input-group my-3">
+            <input type="search" class="form-control" placeholder="Search term..." aria-label="Search term" name="q" id="q" value="{{ q }}" />
+            <button class="btn btn-primary" type="submit" id='btn-search'>
+                <i class="bi bi-search"></i> Search
+            </button>
+            {% if q %}
+                <a class="btn btn-warning" href='{{ path('search') }}'>
+                    <i class="bi bi-arrow-repeat"></i> Reset
+                </a>
+            {% endif %}
         </div>
 
-        <div class='row'>
-            <div class='col-sm-3'>
-                {% if result %}
-
-                    {% include '@NinesSolr/search/partial/order.html.twig' with {
-                        'header': 'Result Order',
-                        'options': {
-                            'score.desc': 'Relevance',
-                            'sortable.asc': 'Name (A to Z)',
-                            'sortable.desc': 'Name (Z to A)'
-                        }
-                    } %}
-
-                    {% include '@NinesSolr/search/partial/facet.html.twig' with {
-                        'facet': result.getFacet('type'),
-                        'filter': 'type',
-                        'header': 'Record Type'
-                    } %}
-                {% endif %}
+        <div class="row">
+            <div class="col-sm-3">
+                {% include 'search/partial/order.html.twig' with {
+                    'header': 'Order By',
+                    'options': sortOptions,
+                } %}
+                {% include 'search/partial/filter.html.twig' with {
+                    'header': 'Record Type',
+                    'filterName': 'type',
+                    'buckets': results.customParameters.aggregations.type.buckets,
+                    'capitalize': true,
+                } %}
             </div>
-
-            <div class='col-sm-9'>
-                {% if result and result.count > 0 %}
-                    {% set pagination = result.paginator %}
-
-                    {% embed '@NinesSolr/search/partial/header.html.twig' with {'pagination': pagination} %}
-                    {% endembed %}
-
-                    {% embed 'partial/solr/result.html.twig' with {'result': result} %}
-                    {% endembed %}
-
-                    {% if pagination %}
-                        <div class="navigation">
-                            {{ knp_pagination_render(pagination) }}
-                        </div>
-                    {% endif %}
-
-                {% endif %}
+            <div class="col-sm-9">
+                {% include 'search/partial/list.html.twig' with {
+                    'results': results,
+                } %}
             </div>
         </div>
     </form>
-
 {% endblock %}

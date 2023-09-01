@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Tests\Services;
 
 use App\DataFixtures\BookFixtures;
@@ -88,6 +82,6 @@ class MergerTest extends ServiceTestCase {
 
     public function setUp() : void {
         parent::setUp();
-        $this->merger = self::$container->get(Merger::class);
+        $this->merger = self::getContainer()->get(Merger::class);
     }
 }

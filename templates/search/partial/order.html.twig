@@ -1,0 +1,11 @@
+{# @var options array #}
+{# @var string header #}
+{% set query_params = app.request.query.all %}
+<h3>{{ header }}</h3>
+<select name="order" id="order" class='form-control mb-3'>
+    {% for key, sort in options %}
+        <option value='{{ key }}' {{ ('order' in query_params|keys) and (key == query_params['order']) ? 'selected="selected"' : '' }}>
+            {{ sort.label }}
+        </option>
+    {% endfor %}
+</select>

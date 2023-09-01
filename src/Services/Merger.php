@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Services;
 
 use App\Entity\Contribution;
@@ -15,8 +9,6 @@ use App\Entity\Periodical;
 use App\Entity\Place;
 use App\Entity\Publisher;
 use App\Repository\PlaceRepository;
-use Doctrine\Common\Annotations\Annotation\Required;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -27,42 +19,28 @@ use Psr\Log\LoggerInterface;
  * @author mjoyce
  */
 class Merger {
-    /**
-     * ORM entity manager.
-     *
-     * @var EntityManager
-     */
-    private $em;
+    private ?\App\Repository\PlaceRepository $placeRepository = null;
 
-    /**
-     * Service logger.
-     *
-     * @var Logger
-     */
-    private $logger;
+    public function __construct(
+        /**
+         * Service logger.
+         */
+        private LoggerInterface $logger,
+        /**
+         * ORM entity manager.
+         */
+        private EntityManagerInterface $em
+    ) {}
 
-    /**
-     * @var PlaceRepository
-     */
-    private $placeRepository;
-
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $em) {
-        $this->logger = $logger;
-        $this->em = $em;
-    }
-
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setPlaceRepository(PlaceRepository $placeRepository) : void {
         $this->placeRepository = $placeRepository;
     }
 
     /**
      * @param Place[]
-     * @param mixed $placeIds
      */
-    public function getPlaces($placeIds) {
+    public function getPlaces(mixed $placeIds) {
         return $this->placeRepository->findBy(['id' => $placeIds]);
     }
 

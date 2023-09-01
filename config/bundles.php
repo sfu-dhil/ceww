@@ -20,8 +20,9 @@ return [
     Nines\EditorBundle\NinesEditorBundle::class => ['all' => true],
     Nines\FeedbackBundle\NinesFeedbackBundle::class => ['all' => true],
     Nines\MediaBundle\NinesMediaBundle::class => ['all' => true],
-    Nines\SolrBundle\NinesSolrBundle::class => ['all' => true],
     Nines\UserBundle\NinesUserBundle::class => ['all' => true],
     Nines\UtilBundle\NinesUtilBundle::class => ['all' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
+    EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle::class => ['all' => true],
+    FOS\ElasticaBundle\FOSElasticaBundle::class => ['all' => true],
 ];

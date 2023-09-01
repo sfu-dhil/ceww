@@ -42,53 +42,78 @@
         });
     }
 
-    function formPopup(e) {
-        e.preventDefault();
-        var url = $(this).prop('href');
-        window.open(url, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=60,left=60,width=500,height=600");
-    }
-
     function simpleCollection() {
+        if ( $('.collection-simple').length == 0 ) {
+            return
+        }
         $('.collection-simple').collection({
             init_with_n_elements: 1,
             allow_up: false,
             allow_down: false,
             max: 400,
-            add: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></a>',
-            remove: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></a>',
-            add_at_the_end: false,
+            add_at_the_end: true,
+            add: '<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i></a>',
+            remove: '<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-dash-circle"></i></a>',
         });
     }
 
     function complexCollection() {
+        if ( $('.collection-complex').length == 0 ) {
+            return
+        }
         $('.collection-complex').collection({
             init_with_n_elements: 1,
             allow_up: false,
             allow_down: false,
             max: 400,
-            add: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></a>',
-            remove: '<a href="#" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></a>',
             add_at_the_end: true,
+            add: '<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i></a>',
+            remove: '<a href="#" class="btn btn-primary btn-sm"><i class="bi bi-dash-circle"></i></a>',
             after_add: function(collection, element){
                 $(element).find('.select2entity').select2entity();
-                $(element).find('.select2-container').css('width', '100%');
+                if (tinymce && $(element).find('.tinymce').length > 0 ) {
+                    $(element).find('.tinymce').each(function (index, textarea) {
+                        tinymce.execCommand("mceAddEditor", false, textarea.id);
+                    });
+                }
                 return true;
             },
         });
     }
 
+    function imageModals() {
+        $('#imgModal').on('show.bs.modal', function (event) {
+            var $button = $(event.relatedTarget);
+            // Button that triggered the modal
+            var $modal = $(this);
+
+            $modal.find('#modalTitle').text($button.data('title'));
+            $modal.find('figcaption').html($button.parent().parent().find('.caption').clone());
+            $modal.find("#modalImage").attr('src', $button.data('img'));
+        });
+    }
 
     $(document).ready(function () {
         $(window).bind('beforeunload', windowBeforeUnload);
-        $('form[method="post"]').each(formDirty);
-        $("a.popup").click(formPopup);
+        $('form').each(formDirty);
         $("a").each(link);
         $("*[data-confirm]").each(confirm);
-        $('[data-toggle="popover"]').popover(); // add this line to enable boostrap popover
+        let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl, {
+                html: true,
+                trigger: 'focus',
+            })
+        }) // add this line to enable bootstrap popover
+        let alertList = document.querySelectorAll('.alert')
+        alertList.forEach(function (alert) {
+            new bootstrap.Alert(alert);
+        }); // add alert dismissal
         if (typeof $().collection === 'function') {
             simpleCollection();
             complexCollection();
         }
+        imageModals();
     });
 
 })(jQuery, window);

@@ -12,20 +12,22 @@
 {% block body %}
 
     {% if is_granted('ROLE_CONTENT_ADMIN') %}
-        <div class='btn-toolbar pull-right'>
-            <div class='btn-group'>
-                <a href="{{ path('book_new') }}" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus"></span> New
+        <div class='btn-toolbar pb-1'>
+            <div class='btn-group ms-auto'>
+                <a href="{{ path('book_new') }}" class="btn btn-light">
+                    <span class="bi bi-plus-lg"></span> New
                 </a>
             </div>
         </div>
     {% endif %}
+    <form method="get" action="{{ path('search_title') }}">
+        <input type='hidden' value='book' name='filters[type][]'/>
 
-    <form method="get" action="{{ path('search_title') }}" class="form-horizontal">
-        <input type='hidden' value='Book' name='filter[type][]'/>
-        <div class='row'>
-            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search_title'} %}
-            {% endembed %}
+        <div class="input-group my-3">
+            <input type="search" class="form-control" placeholder="Search term..." aria-label="Search term" name="q" id="q" value="" />
+            <button class="btn btn-primary" type="submit" id='btn-search'>
+                <i class="bi bi-search"></i> Search
+            </button>
         </div>
     </form>
 

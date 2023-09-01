@@ -32,7 +32,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{DependencyInjection,Entity,Extension,Migrations,Tests,Kernel.php}'
 
     App\Command\PlacesUpdateCommand:
         arguments:
@@ -46,6 +46,47 @@ services:
             - 'controller.service_arguments'
             - 'knp_paginator.injectable'
 
+    App\Controller\AliasController:
+        tags:
+            - 'controller.service_arguments'
+            - 'knp_paginator.injectable'
+        arguments:
+            - '@fos_elastica.finder.alias'
+
+    App\Controller\PersonController:
+        tags:
+            - 'controller.service_arguments'
+            - 'knp_paginator.injectable'
+        arguments:
+            - '@fos_elastica.finder.person'
+
+    App\Controller\PlaceController:
+        tags:
+            - 'controller.service_arguments'
+            - 'knp_paginator.injectable'
+        arguments:
+            - '@fos_elastica.finder.place'
+
+    App\Controller\PublisherController:
+        tags:
+            - 'controller.service_arguments'
+            - 'knp_paginator.injectable'
+        arguments:
+            - '@fos_elastica.finder.publisher'
+
+    App\Controller\DefaultController:
+        tags:
+            - 'controller.service_arguments'
+            - 'knp_paginator.injectable'
+        arguments:
+            - '@fos_elastica.index_manager'
+            - '@fos_elastica.elastica_to_model_transformer.alias'
+            - '@fos_elastica.elastica_to_model_transformer.book'
+            - '@fos_elastica.elastica_to_model_transformer.compilation'
+            - '@fos_elastica.elastica_to_model_transformer.periodical'
+            - '@fos_elastica.elastica_to_model_transformer.person'
+            - '@fos_elastica.elastica_to_model_transformer.place'
+            - '@fos_elastica.elastica_to_model_transformer.publisher'
 
     App\Menu\Builder:
         tags:

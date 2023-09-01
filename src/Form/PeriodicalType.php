@@ -2,14 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Form;
 
+use App\Entity\Periodical;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,29 +18,23 @@ class PeriodicalType extends PublicationType {
         $builder->add('runDates', null, [
             'label' => 'Run Dates',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Publication period as a range of dates (YYYY-YYYY)',
-            ],
+            'help' => 'Publication period as a range of dates (YYYY-YYYY)',
         ]);
         $builder->add('continuedFrom', null, [
             'label' => 'Continued From',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Name under which the periodical was previously published',
-            ],
+            'help' => 'Name under which the periodical was previously published',
         ]);
         $builder->add('continuedBy', null, [
             'label' => 'Continued By',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Name under which the periodical was subsequently published',
-            ],
+            'help' => 'Name under which the periodical was subsequently published',
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver) : void {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Periodical',
+            'data_class' => Periodical::class,
         ]);
     }
 }

@@ -2,27 +2,21 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Command;
 
 use App\Entity\Place;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
 use GeoNames\Client as GeoNamesClient;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * DocewwPlacesUpdateCommand command.
- */
+#[AsCommand(name: 'doceww:places:update')]
 class PlacesUpdateCommand extends Command {
     use LoggerAwareTrait;
 
@@ -65,19 +59,10 @@ class PlacesUpdateCommand extends Command {
         'Zambia' => 'ZM',
     ];
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private GeoNamesClient $client;
 
-    /**
-     * @var GeoNamesClient
-     */
-    private $client;
-
-    public function __construct($username, EntityManagerInterface $em, LoggerInterface $logger) {
+    public function __construct($username, private EntityManagerInterface $em, LoggerInterface $logger) {
         parent::__construct();
-        $this->em = $em;
         $this->client = new GeonamesClient($username);
         $this->logger = $logger;
     }
@@ -87,7 +72,6 @@ class PlacesUpdateCommand extends Command {
      */
     protected function configure() : void {
         $this
-            ->setName('doceww:places:update')
             ->setDescription('Update the place data from GeoNames')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit the number of places considered.')
             ->addOption('start', null, InputOption::VALUE_REQUIRED, 'Start at this place ID.')
@@ -95,13 +79,7 @@ class PlacesUpdateCommand extends Command {
         ;
     }
 
-    /**
-     * @param $limit
-     * @param mixed $start
-     *
-     * @return \Doctrine\ORM\Internal\Hydration\IterableResult
-     */
-    protected function getPlaces($limit, $start) {
+    protected function getPlaces(mixed $limit, mixed $start) : IterableResult {
         $qb = $this->em->createQueryBuilder();
         $qb->select('p')->from(Place::class, 'p');
         $qb->where('p.geoNamesId is null');
@@ -139,18 +117,18 @@ class PlacesUpdateCommand extends Command {
         $this->logger->warning('Place: ' . $place->getName() . ' #' . $place->getId());
 
         $data = preg_split('/,\s*/u', $place->getName());
-//        if (2 !== count($data)) {
-//            $this->logger->warning('Malformed Canadian place name: ' . $place->getName() . " #" . $place->getId());
-//
-//            return;
-//        }
+        //        if (2 !== count($data)) {
+        //            $this->logger->warning('Malformed Canadian place name: ' . $place->getName() . " #" . $place->getId());
+        //
+        //            return;
+        //        }
         list($name, $province) = $data;
 
-//        if ( ! array_key_exists($province, self::PROVINCES)) {
-//            $this->logger->warning('Not a Canadian province: ' . $place->getName() . " #" . $place->getId());
-//
-//            return;
-//        }
+        //        if ( ! array_key_exists($province, self::PROVINCES)) {
+        //            $this->logger->warning('Not a Canadian province: ' . $place->getName() . " #" . $place->getId());
+        //
+        //            return;
+        //        }
 
         if ( ! array_key_exists($place->getCountryName(), self::COUNTRIES)) {
             $this->logger->warning('Unknown country: ' . $place->getName() . ' #' . $place->getId());

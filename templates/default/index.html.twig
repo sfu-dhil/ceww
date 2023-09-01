@@ -3,7 +3,7 @@
 {% block body %}
 
     <div class="homepage">
-        <img src="{{ asset('images/homepage/header.jpg') }}" alt="Database of Canada's Early Women Writers" style="margin-bottom:2em;">
+        <img src="{{ asset_prefix|default('') ~ asset('images/homepage/header.jpg') }}" alt="Database of Canada's Early Women Writers" style="margin-bottom:2em;">
         <p>The Database of Canada’s Early Women Writers (DoCEWW) at Simon Fraser
             University is associated with the larger <a href="http://beta.cwrc.ca/islandora/object/islandora%3Adbdbd5af-fc3a-4f91-9be8-9ad8499fa8af">
                 Canada’s Early Women Writers (CEWW) project</a>, which is part of
@@ -34,9 +34,9 @@
             at SFU.</p>
 
         <div style="margin-top:2em;">
-        <img src="{{ asset('images/homepage/sshrc.png') }}" alt='Social Sciences and Humanities Research Council of Canada'>
-        <img src="{{ asset('images/homepage/sfu-tri.jpg') }}" alt='Simon Fraser University faculty of Arts and Social Sciences, Department of English, and SFU Library'>
-        <img src="{{ asset('images/homepage/dhil-logo.png') }}" alt='SFU Digital Humanities Innovation Lab'>
+        <img src="{{ asset_prefix|default('') ~ asset('images/homepage/sshrc.png') }}" alt='Social Sciences and Humanities Research Council of Canada'>
+        <img src="{{ asset_prefix|default('') ~ asset('images/homepage/sfu-tri.jpg') }}" alt='Simon Fraser University faculty of Arts and Social Sciences, Department of English, and SFU Library'>
+        <img src="{{ asset_prefix|default('') ~ asset('images/homepage/dhil-logo.png') }}" alt='SFU Digital Humanities Innovation Lab'>
         </div>
     </div>
 {% endblock %}

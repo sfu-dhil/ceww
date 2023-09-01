@@ -2,14 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Form;
 
+use App\Entity\Place;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,58 +15,46 @@ class PlaceType extends AbstractType {
         $builder->add('name', null, [
             'label' => 'Name',
             'required' => true,
-            'attr' => [
-                'help_block' => 'Place name',
-            ],
+            'help' => 'Place name',
         ]);
         $builder->add('sortableName', null, [
             'label' => 'Sortable Name',
             'required' => true,
-            'attr' => [
-                'help_block' => 'Name used for sorting (lowercase). Sortable name will not be displayed to the public.',
-            ],
+            'help' => 'Name used for sorting (lowercase). Sortable name will not be displayed to the public.',
         ]);
         $builder->add('regionName', null, [
             'label' => 'Region Name',
             'required' => false,
-            'attr' => [
-                'help_block' => 'State, province, territory or other sub-national entity.',
-            ],
+            'help' => 'State, province, territory or other sub-national entity.',
         ]);
         $builder->add('countryName', null, [
             'label' => 'Country Name',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Country name',
-            ],
+            'help' => 'Country name',
         ]);
         $builder->add('latitude', null, [
             'label' => 'Latitude',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Location\'s latitude',
-            ],
+            'help' => 'Location\'s latitude',
         ]);
         $builder->add('longitude', null, [
             'label' => 'Longitude',
             'required' => false,
-            'attr' => [
-                'help_block' => 'Location\'s longitude',
-            ],
+            'help' => 'Location\'s longitude',
         ]);
         $builder->add('description', TextareaType::class, [
             'label' => 'Notes (for the public)',
             'required' => false,
+            'help' => 'This description is public',
             'attr' => [
-                'help_block' => 'This description is public',
                 'class' => 'tinymce',
             ],
         ]);
         $builder->add('notes', TextareaType::class, [
             'label' => 'Research Notes (for editors/admins)',
             'required' => false,
+            'help' => 'Notes are only available to logged-in users',
             'attr' => [
-                'help_block' => 'Notes are only available to logged-in users',
                 'class' => 'tinymce',
             ],
         ]);
@@ -79,7 +62,7 @@ class PlaceType extends AbstractType {
 
     public function configureOptions(OptionsResolver $resolver) : void {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Place',
+            'data_class' => Place::class,
         ]);
     }
 }

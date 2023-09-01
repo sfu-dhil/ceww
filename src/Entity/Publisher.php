@@ -2,70 +2,44 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
+use App\Repository\PublisherRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Nines\SolrBundle\Annotation as Solr;
+use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
-/**
- * Publisher.
- *
- * @ORM\Table(name="publisher", indexes={
- *     @ORM\Index(columns={"name"}, flags={"fulltext"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\PublisherRepository")
- *
- * @Solr\Document(
- *     @Solr\CopyField(from={"name", "places"}, to="content", type="texts"),
- *     @Solr\CopyField(from={"name"}, to="sortable", type="string"),
- *     @Solr\CopyField(from={"places"}, to="places_fct", type="strings")
- * )
- */
-class Publisher extends AbstractEntity {
+#[ORM\Table(name: 'publisher')]
+#[ORM\Index(columns: ['name'], flags: ['fulltext'])]
+#[ORM\Entity(repositoryClass: PublisherRepository::class)]
+class Publisher extends AbstractEntity implements HighlightableModelInterface {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
-
     }
+    use HasHighlights;
+
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: false)]
+    private ?string $name = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $notes = null;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=100, nullable=false)
-     * @ORM\OrderBy({"sortableName": "ASC"})
-     *
-     * @Solr\Field(type="text", boost=2.0)
+     * @var Collection<Place>
      */
-    private $name;
+    #[ORM\ManyToMany(targetEntity: Place::class, inversedBy: 'publishers')]
+    #[ORM\OrderBy(['sortableName' => 'asc'])]
+    private Collection $places;
 
     /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
+     * @var Collection<Publication>
      */
-    private $notes;
-
-    /**
-     * @var Collection|Place[]
-     * @ORM\ManyToMany(targetEntity="Place", inversedBy="publishers")
-     * @ORM\OrderBy({"sortableName": "ASC"})
-     *
-     * @Solr\Field(type="texts", boost=0.6, getter="getPlaces(true)")
-     */
-    private $places;
-
-    /**
-     * @var Collection|Publication[]
-     * @ORM\ManyToMany(targetEntity="Publication", mappedBy="publishers")
-     * @ORM\OrderBy({"sortableTitle": "ASC"})
-     */
-    private $publications;
+    #[ORM\ManyToMany(targetEntity: Publication::class, mappedBy: 'publishers')]
+    #[ORM\OrderBy(['sortableTitle' => 'asc'])]
+    private Collection $publications;
 
     public function __construct() {
         $this->trait_constructor();
@@ -78,34 +52,17 @@ class Publisher extends AbstractEntity {
         return $this->name;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Publisher
-     */
-    public function setName($name) {
+    public function setName(?string $name) {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName() {
+    public function getName() : ?string {
         return $this->name;
     }
 
-    /**
-     * Add place.
-     *
-     * @return Publisher
-     */
-    public function addPlace(Place $place) {
+    public function addPlace(Place $place) : self {
         if ( ! $this->places->contains($place)) {
             $this->places[] = $place;
         }
@@ -113,29 +70,15 @@ class Publisher extends AbstractEntity {
         return $this;
     }
 
-    /**
-     * Remove place.
-     */
     public function removePlace(Place $place) : void {
         $this->places->removeElement($place);
     }
 
-    /**
-     * Get places.
-     *
-     * @param ?bool $flat
-     *
-     * @return Collection
-     */
-    public function getPlaces(?bool $flat = false) {
-        if ($flat) {
-            return array_map(fn (Place $p) => $p->getName(), $this->places->toArray());
-        }
-
+    public function getPlaces() : Collection {
         return $this->places;
     }
 
-    public function setPlaces($places) : void {
+    public function setPlaces(Collection $places) : void {
         $this->places = $places;
     }
 
@@ -149,16 +92,7 @@ class Publisher extends AbstractEntity {
         return $this;
     }
 
-    /**
-     * @param ?bool $flat
-     *
-     * @return mixed
-     */
-    public function getPublications(?bool $flat = false) {
-        if ($flat) {
-            return array_map(fn (Publication $p) => $p->getTitle(), $this->publications->toArray());
-        }
-
+    public function getPublications() : Collection {
         return $this->publications;
     }
 

@@ -2,65 +2,50 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Controller;
 
 use App\Entity\Place;
 use App\Form\PlaceType;
-use App\Index\PlaceIndex;
 use App\Repository\PlaceRepository;
+use App\Services\ElasticSearchHelper;
 use App\Services\Merger;
-use Exception;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
-use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Place controller.
- *
- * @Route("/place")
- */
+#[Route(path: '/place')]
 class PlaceController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
 
-    /**
-     * Lists all Place entities.
-     *
-     * @Route("/", name="place_index", methods={"GET"})
-     *
-     * @Template
-     */
-    public function indexAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
+    public function __construct(
+        private PaginatedFinderInterface $finder,
+    ) {}
+
+    #[Route(path: '/', name: 'place_index', methods: ['GET'])]
+    #[Template]
+    public function index(EntityManagerInterface $em, Request $request) : array {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Place::class, 'e')->orderBy('e.sortableName', 'ASC');
         $query = $qb->getQuery();
 
-        $places = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+        $places = $this->paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
 
         return [
             'places' => $places,
         ];
     }
 
-    /**
-     * @Route("/typeahead", name="place_typeahead", methods={"GET"})
-     *
-     * @return JsonResponse
-     */
-    public function typeahead(Request $request, PlaceRepository $repo) {
+    #[Route(path: '/typeahead', name: 'place_typeahead', methods: ['GET'])]
+    public function typeahead(Request $request, PlaceRepository $repo) : JsonResponse {
         $q = $request->query->get('q');
         if ( ! $q) {
             return new JsonResponse([]);
@@ -77,50 +62,50 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
         return new JsonResponse($data);
     }
 
-    /**
-     * @Route("/search", name="place_search")
-     * @Template
-     */
-    public function searchAction(Request $request, PlaceIndex $repo, SolrManager $solr) {
-        $q = $request->query->get('q');
-        $result = null;
-        if ($q) {
-            $filters = $request->query->get('filter', []);
-
-            $order = null;
-            $m = [];
-            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
-                $order = [$m[1] => $m[2]];
-            }
-
-            $query = $repo->searchQuery($q, $filters, $order);
-            $result = $solr->execute($query, $this->paginator, [
-                'page' => (int) $request->query->get('page', 1),
-                'pageSize' => (int) $this->getParameter('page_size'),
-            ]);
-        }
+    #[Route(path: '/search', name: 'place_search')]
+    #[Template]
+    public function search(Request $request) : array {
+        $elasticSearchHelper = new ElasticSearchHelper([
+            'queryTermFields' => [
+                'name^2.0',
+                'country^0.2',
+                'region^0.5',
+                'description^0.5',
+            ],
+            'filters' => [
+                'country' => ElasticSearchHelper::generateTermFilter('countryFacet'),
+                'region' => ElasticSearchHelper::generateTermFilter('regionFacet'),
+            ],
+            'sort' => ElasticSearchHelper::generateDefaultSortOrder(),
+            'highlights' => [
+                'name' => new stdClass(),
+                'country' => new stdClass(),
+                'region' => new stdClass(),
+                'description' => new stdClass(),
+            ],
+        ]);
+        $query = $elasticSearchHelper->getElasticQuery(
+            $request->query->get('q'),
+            $request->query->get('order'),
+            $request->query->all('filters')
+        );
+        $results = $this->finder->createHybridPaginatorAdapter($query);
 
         return [
-            'q' => $q,
-            'result' => $result,
+            'results' => $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size')),
+            'sortOptions' => ElasticSearchHelper::generateDefaultSortOrder(),
         ];
     }
 
-    /**
-     * Creates a new Place entity.
-     *
-     * @Route("/new", name="place_new", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function newAction(Request $request) {
+    #[Route(path: '/new', name: 'place_new', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function new(EntityManagerInterface $em, Request $request) : array|RedirectResponse {
         $place = new Place();
         $form = $this->createForm(PlaceType::class, $place);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($place);
             $em->flush();
 
@@ -135,63 +120,59 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
         ];
     }
 
-    /**
-     * Creates a new Place entity.
-     *
-     * @Route("/new_popup", name="place_new_popup", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function newPopupAction(Request $request) {
-        return $this->newAction($request);
-    }
+    #[Route(path: '/{id}', name: 'place_show', methods: ['GET'])]
+    #[Template]
+    public function show(Request $request, PlaceRepository $placeRepository, Place $place) : array {
+        $nearbyResults = null;
 
-    /**
-     * Finds and displays a Place entity.
-     *
-     * @Route("/{id}", name="place_show", methods={"GET"})
-     *
-     * @Template
-     */
-    public function showAction(Place $place, PlaceIndex $index, SolrManager $manager) {
-        $nearby = null;
-        if ($manager->enabled()) {
-            $query = $index->nearByQuery($place, 50);
-            if ($query) {
-                try {
-                    $nearby = $manager->execute($query);
-                } catch (Exception $e) {
-                    $manager->log('error', $e->getMessage());
-                }
-            }
+        if ($place->getCoordinates()) {
+            $elasticSearchHelper = new ElasticSearchHelper([
+                'sort' => [
+                    '_geo_distance' => [
+                        'field' => '_geo_distance',
+                        'label' => '',
+                        'options' => [
+                            'coordinates' => $place->getCoordinates(),
+                            'order' => 'asc',
+                            'unit' => 'km',
+                            'mode' => 'min',
+                            'distance_type' => 'arc',
+                            'ignore_unmapped' => true,
+                        ],
+                    ],
+                ],
+                'excludeValues' => [
+                    '_id' => [$place->getId()],
+                ],
+                'queryGeoDistanceFields' => [
+                    'coordinates' => [
+                        'distance' => '50km',
+                        'location' => $place->getCoordinates(),
+                        'excludeIds' => $place->getId(),
+                    ],
+                ],
+            ]);
+            $query = $elasticSearchHelper->getElasticQuery(null, '_geo_distance');
+            $results = $this->finder->createHybridPaginatorAdapter($query);
+            $nearbyResults = $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size'));
         }
-
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Place::class);
 
         return [
             'place' => $place,
-            'nearby' => $nearby,
-            'next' => $repo->next($place),
-            'previous' => $repo->previous($place),
+            'nearbyResults' => $nearbyResults,
+            'next' => $placeRepository->next($place),
+            'previous' => $placeRepository->previous($place),
         ];
     }
 
-    /**
-     * Displays a form to edit an existing Place entity.
-     *
-     * @Route("/{id}/edit", name="place_edit", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function editAction(Request $request, Place $place) {
+    #[Route(path: '/{id}/edit', name: 'place_edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function edit(EntityManagerInterface $em, Request $request, Place $place) : array|RedirectResponse {
         $editForm = $this->createForm(PlaceType::class, $place);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The place has been updated.');
 
@@ -204,17 +185,12 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
         ];
     }
 
-    /**
-     * Finds and displays a Place entity.
-     *
-     * @Route("/{id}/merge", name="place_merge")
-     *
-     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     * @Template
-     */
-    public function mergeAction(Request $request, Place $place, Merger $merger, PlaceRepository $repo) {
+    #[Route(path: '/{id}/merge', name: 'place_merge')]
+    #[Security("is_granted('ROLE_CONTENT_ADMIN')")]
+    #[Template]
+    public function merge(Request $request, Place $place, Merger $merger, PlaceRepository $repo) : array|RedirectResponse {
         if ('POST' === $request->getMethod()) {
-            $places = $repo->findBy(['id' => $request->request->get('places')]);
+            $places = $repo->findBy(['id' => $request->request->all('places')]);
             $count = count($places);
             $merger->places($place, $places);
             $this->addFlash('success', "Merged {$count} places into {$place->getName()}.");
@@ -237,20 +213,14 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
         ];
     }
 
-    /**
-     * Deletes a Place entity.
-     *
-     * @Route("/{id}/delete", name="place_delete", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     */
-    public function deleteAction(Request $request, Place $place) {
+    #[Route(path: '/{id}/delete', name: 'place_delete', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_ADMIN')")]
+    public function delete(EntityManagerInterface $em, Place $place) : RedirectResponse {
         if ( ! $this->isGranted('ROLE_CONTENT_ADMIN')) {
             $this->addFlash('danger', 'You must login to access this page.');
 
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
-        $em = $this->getDoctrine()->getManager();
         $em->remove($place);
         $em->flush();
         $this->addFlash('success', 'The place was deleted.');

@@ -13,21 +13,23 @@
 
 {% block body %}
 
-    <div class='btn-toolbar pull-right'>
-        <div class='btn-group'>
+    <div class='btn-toolbar pb-1'>
+        <div class='btn-group ms-auto'>
             {% if is_granted('ROLE_CONTENT_ADMIN') %}
-                <a href="{{ path('periodical_new') }}" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus"></span> New
+                <a href="{{ path('periodical_new') }}" class="btn btn-light">
+                    <span class="bi bi-plus-lg"></span> New
                 </a>
             {% endif %}
         </div>
     </div>
+    <form method="get" action="{{ path('search_title') }}">
+        <input type='hidden' value='periodical' name='filters[type][]'/>
 
-    <form method="get" action="{{ path('search_title') }}" class="form-horizontal">
-        <input type='hidden' value='Periodical' name='filter[type][]'/>
-        <div class='row'>
-            {% embed '@NinesSolr/search/partial/search_field.html.twig' with {'path': 'search_title'} %}
-            {% endembed %}
+        <div class="input-group my-3">
+            <input type="search" class="form-control" placeholder="Search term..." aria-label="Search term" name="q" id="q" value="" />
+            <button class="btn btn-primary" type="submit" id='btn-search'>
+                <i class="bi bi-search"></i> Search
+            </button>
         </div>
     </form>
     {% include 'periodical/partial/table.html.twig' %}

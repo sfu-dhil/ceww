@@ -1,0 +1,19 @@
+{# @var string header #}
+{# @var string name #}
+{# @var buckets array #}
+{% set query_params = app.request.query.all %}
+<h3>{{ header }}</h3>
+<ul class="list-group mb-3 list-group-flush">
+    {% for bucket in buckets %}
+        {% set id = 'range_filter_' ~ filterName ~ '_' ~ loop.index0 %}
+        {% set selected = ('filters' in query_params|keys) and (filterName in query_params['filters']|keys) and (loop.index0 in query_params['filters'][filterName]) %}
+        {% if bucket.doc_count > 0 or selected %}
+            <li class="list-group-item">
+                <input id="{{ id }}" name="filters[{{ filterName }}][]" class="form-check-input me-1" type="checkbox" value="{{ loop.index0 }}" {{ selected ? 'checked="checked"' : '' }} />
+                <label for="{{ id }}" class="form-check-label stretched-link">
+                    {{ bucket.from ? bucket.from : 'Past' }} to {{ bucket.to ? bucket.to : 'Future' }}: {{ bucket.doc_count }}
+                </label>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

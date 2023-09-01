@@ -2,33 +2,16 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
-/**
- * Description of PublicationTrait.
- *
- * @author mjoyce
- */
 trait HasPublications {
     public function __construct() {
         $this->publications = new ArrayCollection();
     }
 
-    /**
-     * Add publication.
-     *
-     * @return Place
-     */
-    public function addPublication(Publication $publication) {
+    public function addPublication(Publication $publication) : self {
         if ( ! $this->publications->contains($publication)) {
             $this->publications[] = $publication;
         }
@@ -36,22 +19,14 @@ trait HasPublications {
         return $this;
     }
 
-    /**
-     * Remove publication.
-     */
     public function removePublication(Publication $publication) : void {
         $this->publications->removeElement($publication);
     }
 
     /**
-     * Get publications.
-     *
-     * @param null|mixed $category
-     * @param mixed $order
-     *
-     * @return Collection|Publication[]
+     * @return Publication[]
      */
-    public function getPublications($category = null, $order = 'title') {
+    public function getPublications(mixed $category = null, string $order = 'title') : array {
         $publications = $this->publications->toArray();
         if (null !== $category) {
             $publications = array_filter($publications, fn (Publication $publication) => $publication->getCategory() === $category);
@@ -65,7 +40,7 @@ trait HasPublications {
                 break;
 
             case 'year':
-                $cmp = function (Publication $a, Publication $b) {
+                $cmp = function (Publication $a, Publication $b) : int {
                     $ad = $a->getDateYear();
                     $bd = $b->getDateYear();
 

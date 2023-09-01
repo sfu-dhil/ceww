@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Tests\Entity;
 
 use App\Entity\DateYear;
@@ -17,11 +11,8 @@ use PHPUnit\Framework\TestCase;
 class DateYearTest extends TestCase {
     /**
      * @dataProvider setValueData
-     *
-     * @param mixed $expected
-     * @param mixed $value
      */
-    public function testSetValue($expected, $value) : void {
+    public function testSetValue(mixed $expected, mixed $value) : void {
         $date = new DateYear();
         $date->setValue($value);
         $this->assertSame($expected, $date->getValue());
@@ -62,10 +53,8 @@ class DateYearTest extends TestCase {
 
     /**
      * @dataProvider setBadValueData
-     *
-     * @param mixed $value
      */
-    public function testSetBadValue($value) : void {
+    public function testSetBadValue(mixed $value) : void {
         $this->expectException(Exception::class);
         $date = new DateYear();
         $date->setValue($value);
@@ -75,8 +64,6 @@ class DateYearTest extends TestCase {
     public function setBadValueData() {
         return [
             [null],
-            [false],
-            [true],
             ['cheese'],
             ['180'],
             ['c180'],
@@ -90,11 +77,8 @@ class DateYearTest extends TestCase {
 
     /**
      * @dataProvider rangeData
-     *
-     * @param mixed $expected
-     * @param mixed $value
      */
-    public function testIsRange($expected, $value) : void {
+    public function testIsRange(mixed $expected, mixed $value) : void {
         $date = new DateYear();
         $date->setValue($value);
         $this->assertSame($expected, $date->isRange());
@@ -129,11 +113,8 @@ class DateYearTest extends TestCase {
 
     /**
      * @dataProvider hasStartData
-     *
-     * @param mixed $expected
-     * @param mixed $value
      */
-    public function testHasStart($expected, $value) : void {
+    public function testHasStart(mixed $expected, mixed $value) : void {
         $date = new DateYear();
         $date->setValue($value);
         $this->assertSame($expected, $date->hasStart());
@@ -168,11 +149,8 @@ class DateYearTest extends TestCase {
 
     /**
      * @dataProvider getStartData
-     *
-     * @param mixed $expected
-     * @param mixed $value
      */
-    public function testGetStart($expected, $value) : void {
+    public function testGetStart(mixed $expected, mixed $value) : void {
         $date = new DateYear();
         $date->setValue($value);
         $this->assertSame($expected, $date->getStart());
@@ -207,11 +185,8 @@ class DateYearTest extends TestCase {
 
     /**
      * @dataProvider hasEndData
-     *
-     * @param mixed $expected
-     * @param mixed $value
      */
-    public function testHasEnd($expected, $value) : void {
+    public function testHasEnd(mixed $expected, mixed $value) : void {
         $date = new DateYear();
         $date->setValue($value);
         $this->assertSame($expected, $date->hasEnd());
@@ -246,11 +221,8 @@ class DateYearTest extends TestCase {
 
     /**
      * @dataProvider getEndData
-     *
-     * @param mixed $expected
-     * @param mixed $value
      */
-    public function testGetEnd($expected, $value) : void {
+    public function testGetEnd(mixed $expected, mixed $value) : void {
         $date = new DateYear();
         $date->setValue($value);
         $this->assertSame($expected, $date->getEnd());

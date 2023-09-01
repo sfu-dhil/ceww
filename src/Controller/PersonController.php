@@ -2,70 +2,57 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Controller;
 
 use App\Entity\Person;
 use App\Form\PersonType;
-use App\Index\PersonIndex;
-use App\Repository\AliasRepository;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
+use App\Services\ElasticSearchHelper;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
-use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Person controller.
- *
- * @Route("/person")
- */
+#[Route(path: '/person')]
 class PersonController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
 
-    /**
-     * Lists all Person entities.
-     *
-     * @Route("/", name="person_index", methods={"GET"})
-     *
-     * @Template
-     */
-    public function indexAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
+    public function __construct(
+        private PaginatedFinderInterface $finder,
+    ) {}
+
+    #[Route(path: '/', name: 'person_index', methods: ['GET'])]
+    #[Template]
+    public function index(EntityManagerInterface $em, Request $request) : array {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Person::class, 'e');
         if ( ! $this->isGranted('ROLE_USER')) {
-            $qb->where("e.gender <> 'm'");
-            $qb->andWhere('e.canadian is null OR e.canadian != 0');
+            $qb->where("e.gender <> 'm'")
+                ->andWhere('e.canadian is null OR e.canadian != 0')
+            ;
         }
         $qb->orderBy('e.sortableName');
         $query = $qb->getQuery();
 
-        $people = $this->paginator->paginate($query, $request->query->getint('page', 1), $this->getParameter('page_size'));
+        $people = $this->paginator->paginate($query, $request->query->getInt('page', 1), $this->getParameter('page_size'));
 
         return [
             'people' => $people,
         ];
     }
 
-    /**
-     * @Route("/pageinfo", name="person_pageinfo")
-     *
-     * @return JsonResponse
-     */
-    public function pageInfoAction(Request $request, PersonRepository $repo) {
+    #[Route(path: '/pageinfo', name: 'person_pageinfo')]
+    public function pageInfo(Request $request, PersonRepository $repo) : JsonResponse {
         $q = $request->query->get('q');
         if ( ! $q) {
             return new JsonResponse([]);
@@ -86,23 +73,17 @@ class PersonController extends AbstractController implements PaginatorAwareInter
         return new JsonResponse($data);
     }
 
-    /**
-     * @Route("/typeahead", name="person_typeahead", methods={"GET"})
-     *
-     * @return JsonResponse
-     */
-    public function typeaheadAction(Request $request) {
+    #[Route(path: '/typeahead', name: 'person_typeahead', methods: ['GET'])]
+    public function typeahead(PersonRepository $personRepository, Request $request) : JsonResponse {
         $q = $request->query->get('q');
         if ( ! $q) {
             return new JsonResponse([]);
         }
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Person::class);
         $data = [];
 
-        foreach ($repo->typeaheadQuery($q) as $result) {
+        foreach ($personRepository->typeaheadQuery($q) as $result) {
             $name = $result->getFullname();
-            if (count($result->getAliases())) {
+            if (is_countable($result->getAliases()) ? count($result->getAliases()) : 0) {
                 $name .= ' aka ' . $result->getAliases()->first();
             }
             $data[] = [
@@ -114,51 +95,54 @@ class PersonController extends AbstractController implements PaginatorAwareInter
         return new JsonResponse($data);
     }
 
-    /**
-     * @Route("/search", name="person_search")
-     * @Template
-     */
-    public function searchAction(Request $request, PersonIndex $index, SolrManager $solr) {
-        $q = $request->query->get('q');
-        $result = null;
-        if ($q) {
-            $filters = $request->query->get('filter', []);
-            $rangeFilters = $request->query->get('filter_range', []);
-
-            $order = null;
-            $m = [];
-            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
-                $order = [$m[1] => $m[2]];
-            }
-
-            $query = $index->searchQuery($q, $filters, $rangeFilters, $order);
-            $result = $solr->execute($query, $this->paginator, [
-                'page' => (int) $request->query->get('page', 1),
-                'pageSize' => (int) $this->getParameter('page_size'),
-            ]);
-        }
+    #[Route(path: '/search', name: 'person_search')]
+    #[Template]
+    public function search(Request $request) : array {
+        $elasticSearchHelper = new ElasticSearchHelper([
+            'queryTermFields' => [
+                'fullName^2.5',
+                'description^0.5',
+                'birthPlace.name^0.4',
+                'deathPlace.name^0.4',
+                'residences.name^0.3',
+                'aliases.name^1.3',
+            ],
+            'rangeFilters' => [
+                'birthDate' => ElasticSearchHelper::generateRangeFilter('birthDate.year', 1750, (int) date('Y'), 50),
+                'deathDate' => ElasticSearchHelper::generateRangeFilter('deathDate.year', 1750, (int) date('Y'), 50),
+            ],
+            'sort' => ElasticSearchHelper::generateDefaultSortOrder(),
+            'highlights' => [
+                'fullName' => new stdClass(),
+                'description' => new stdClass(),
+                'birthPlace.name' => new stdClass(),
+                'deathPlace.name' => new stdClass(),
+                'residences.name' => new stdClass(),
+                'aliases.name' => new stdClass(),
+            ],
+        ]);
+        $query = $elasticSearchHelper->getElasticQuery(
+            $request->query->get('q'),
+            $request->query->get('order'),
+            $request->query->all('filters')
+        );
+        $results = $this->finder->createHybridPaginatorAdapter($query);
 
         return [
-            'q' => $q,
-            'result' => $result,
+            'results' => $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size')),
+            'sortOptions' => ElasticSearchHelper::generateDefaultSortOrder(),
         ];
     }
 
-    /**
-     * Creates a new Person entity.
-     *
-     * @Route("/new", name="person_new", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function newAction(Request $request) {
+    #[Route(path: '/new', name: 'person_new', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function new(EntityManagerInterface $em, Request $request) : array|RedirectResponse {
         $person = new Person();
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($person);
             $em->flush();
 
@@ -173,26 +157,9 @@ class PersonController extends AbstractController implements PaginatorAwareInter
         ];
     }
 
-    /**
-     * Creates a new Person entity in a popup.
-     *
-     * @Route("/new_popup", name="person_new_popup", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function newPopupAction(Request $request) {
-        return $this->newAction($request);
-    }
-
-    /**
-     * Finds and displays a Person entity.
-     *
-     * @Route("/{id}", name="person_show", methods={"GET"})
-     *
-     * @Template
-     */
-    public function showAction(Person $person, PersonRepository $repo, PublisherRepository $publisherRepo) {
+    #[Route(path: '/{id}', name: 'person_show', methods: ['GET'])]
+    #[Template]
+    public function show(Person $person, PersonRepository $repo, PublisherRepository $publisherRepo) : array|RedirectResponse {
         if ( ! $this->isGranted('ROLE_USER') && Person::FEMALE !== $person->getGender()) {
             throw new NotFoundHttpException('Cannot find that person.');
         }
@@ -205,21 +172,14 @@ class PersonController extends AbstractController implements PaginatorAwareInter
         ];
     }
 
-    /**
-     * Displays a form to edit an existing Person entity.
-     *
-     * @Route("/{id}/edit", name="person_edit", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function editAction(Request $request, Person $person) {
+    #[Route(path: '/{id}/edit', name: 'person_edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function edit(EntityManagerInterface $em, Request $request, Person $person) : array|RedirectResponse {
         $editForm = $this->createForm(PersonType::class, $person);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
             $em->flush();
             $this->addFlash('success', 'The person has been updated.');
 
@@ -232,15 +192,9 @@ class PersonController extends AbstractController implements PaginatorAwareInter
         ];
     }
 
-    /**
-     * Deletes a Person entity.
-     *
-     * @Route("/{id}/delete", name="person_delete", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     */
-    public function deleteAction(Request $request, Person $person) {
-        $em = $this->getDoctrine()->getManager();
+    #[Route(path: '/{id}/delete', name: 'person_delete', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_ADMIN')")]
+    public function delete(EntityManagerInterface $em, Person $person) : RedirectResponse {
         $em->remove($person);
         $em->flush();
         $this->addFlash('success', 'The person was deleted.');

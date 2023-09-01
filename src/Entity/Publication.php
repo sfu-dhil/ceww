@@ -2,48 +2,34 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
+use App\Repository\PublicationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
-use Nines\SolrBundle\Annotation as Solr;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
-/**
- * Publication.
- *
- * @ORM\Entity(repositoryClass="App\Repository\PublicationRepository")
- * @ORM\Table(name="publication", indexes={
- *     @ORM\Index(columns={"title"}, flags={"fulltext"}),
- *     @ORM\Index(columns={"sortable_title"}, flags={"fulltext"}),
- *     @ORM\Index(columns={"category"}),
- * })
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="category", type="string", length=64)
- * @ORM\DiscriminatorMap({
- *     "book": "Book",
- *     "compilation": "Compilation",
- *     "periodical": "Periodical"
- * })
- */
-abstract class Publication extends AbstractEntity implements LinkableInterface {
+#[ORM\Table(name: 'publication')]
+#[ORM\Index(columns: ['title'], flags: ['fulltext'])]
+#[ORM\Index(columns: ['sortable_title'], flags: ['fulltext'])]
+#[ORM\Index(columns: ['category'])]
+#[ORM\Entity(repositoryClass: PublicationRepository::class)]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'category', type: 'string', length: 64)]
+#[ORM\DiscriminatorMap(['book' => 'Book', 'compilation' => 'Compilation', 'periodical' => 'Periodical'])]
+abstract class Publication extends AbstractEntity implements LinkableInterface, HighlightableModelInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
-
     }
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
-
     }
+    use HasHighlights;
 
     public const BOOK = 'book';
 
@@ -51,90 +37,50 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
 
     public const PERIODICAL = 'periodical';
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=false)
-     *
-     * @Solr\Field(type="text", boost=2.0)
-     */
-    private $title;
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    private ?string $title = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    private ?string $sortableTitle = null;
+
+    #[ORM\Column(type: Types::ARRAY, name: 'links')]
+    private Collection|array $oldLinks;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $notes = null;
+
+    #[ORM\OneToOne(targetEntity: DateYear::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?DateYear $dateYear = null;
+
+    #[ORM\ManyToOne(targetEntity: Place::class, inversedBy: 'publications')]
+    private ?Place $location = null;
 
     /**
-     * @var string
-     * @ORM\Column(type="text", nullable=false)
-     *
-     * @Solr\Field(name="sortable", type="string", boost=0.2)
+     * @var Collection<Genre>
      */
-    private $sortableTitle;
+    #[ORM\JoinTable(name: 'publications_genres')]
+    #[ORM\ManyToMany(targetEntity: Genre::class, inversedBy: 'publications')]
+    #[ORM\OrderBy(['label' => 'asc'])]
+    private Collection $genres;
 
     /**
-     * @var string[]
-     * @ORM\Column(type="array", name="links")
+     * @var Collection<Contribution>
      */
-    private $oldLinks;
+    #[ORM\OneToMany(targetEntity: Contribution::class, mappedBy: 'publication', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $contributions;
 
     /**
-     * public research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @Solr\Field(type="text", boost=0.5, filters={"strip_tags", "html_entity_decode(51, 'UTF-8')"})
+     * @var Collection<Publisher>
      */
-    private $description;
-
-    /**
-     * private research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $notes;
-
-    /**
-     * @var DateYear
-     * @ORM\OneToOne(targetEntity="DateYear", cascade={"persist", "remove"}, orphanRemoval=true)
-     *
-     * @Solr\Field(type="integer", mutator="getYear")
-     */
-    private $dateYear;
-
-    /**
-     * @var Place
-     * @ORM\ManyToOne(targetEntity="Place", inversedBy="publications")
-     *
-     * @Solr\Field(type="text", boost=0.5, mutator="getName")
-     */
-    private $location;
-
-    /**
-     * @var Collection|Genre[]
-     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="publications")
-     * @ORM\JoinTable(name="publications_genres")
-     * @ORM\OrderBy({"label": "ASC"})
-     *
-     * @Solr\Field(type="texts", boost=0.5, getter="getGenres(true)")
-     */
-    private $genres;
-
-    /**
-     * @var Collection|Contribution[]
-     * @ORM\OneToMany(targetEntity="Contribution", mappedBy="publication", cascade={"persist"}, orphanRemoval=true)
-     *
-     * @Solr\Field(type="texts", boost=0.5, getter="getContributors()")
-     */
-    private $contributions;
-
-    /**
-     * @var Collection|Publisher
-     * @ORM\ManyToMany(targetEntity="Publisher", inversedBy="publications")
-     * @ORM\OrderBy({"name": "ASC"})
-     *
-     * @Solr\Field(type="texts", boost=0.5, getter="getPublishers(true)")
-     */
-    private $publishers;
+    #[ORM\ManyToMany(targetEntity: Publisher::class, inversedBy: 'publications')]
+    #[ORM\OrderBy(['name' => 'asc'])]
+    private Collection $publishers;
 
     public function __construct() {
+        $this->contributions = new ArrayCollection();
         parent::__construct();
         $this->trait_constructor();
         $this->link_constructor();
@@ -149,47 +95,23 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
 
     abstract public function getCategory();
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return Publication
-     */
-    public function setTitle($title) {
+    public function setTitle(?string $title) : self {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle() {
+    public function getTitle() : ?string {
         return $this->title;
     }
 
-    /**
-     * Set sortableTitle.
-     *
-     * @param string $sortableTitle
-     *
-     * @return Publication
-     */
-    public function setSortableTitle($sortableTitle) {
+    public function setSortableTitle(?string $sortableTitle) : self {
         $this->sortableTitle = $sortableTitle;
 
         return $this;
     }
 
-    /**
-     * Get sortableTitle.
-     *
-     * @return string
-     */
-    public function getSortableTitle() {
+    public function getSortableTitle() : ?string {
         if ($this->sortableTitle) {
             return $this->sortableTitle;
         }
@@ -197,14 +119,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this->title;
     }
 
-    /**
-     * Set links.
-     *
-     * @param array $links
-     *
-     * @return Publication
-     */
-    public function setOldLinks($links) {
+    public function setOldLinks(array|ArrayCollection $links) : self {
         if ( ! $links instanceof ArrayCollection) {
             $this->oldLinks = new ArrayCollection($links);
         } else {
@@ -214,7 +129,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    public function addOldLink($link) {
+    public function addOldLink(string $link) : self {
         if ( ! $this->oldLinks instanceof ArrayCollection) {
             $this->oldLinks = new ArrayCollection($this->oldLinks);
         }
@@ -225,57 +140,37 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Get links.
-     *
-     * @return array
-     */
-    public function getOldLinks() {
+    public function getOldLinks() : array {
         $data = $this->oldLinks;
         if ($this->oldLinks instanceof ArrayCollection) {
             $data = $this->oldLinks->toArray();
         }
-        usort($data, fn ($a, $b) => mb_substr($a, mb_strpos($a, '//') + 1) <=> mb_substr($b, mb_strpos($b, '//') + 1));
+        usort($data, fn ($a, $b) => mb_substr((string) $a, mb_strpos((string) $a, '//') + 1) <=> mb_substr((string) $b, mb_strpos((string) $b, '//') + 1));
 
         return $data;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Publication
-     */
-    public function setDescription($description) {
+    public function setDescription(?string $description) : self {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription() {
+    public function getDescription() : ?string {
         return $this->description;
     }
 
-    /**
-     * Set notes.
-     *
-     * @param string $notes
-     *
-     * @return Publication
-     */
-    public function setNotes($notes) {
+    public function getDescriptionSanitized() : ?string {
+        return strip_tags(html_entity_decode($this->description ?? ''));
+    }
+
+    public function setNotes(?string $notes) : self {
         $this->notes = $notes;
 
         return $this;
     }
 
-    public function appendNote($note) {
+    public function appendNote(string $note) : self {
         if ( ! $this->notes) {
             $this->notes = $note;
         } else {
@@ -285,23 +180,11 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Get notes.
-     *
-     * @return string
-     */
-    public function getNotes() {
+    public function getNotes() : ?string {
         return $this->notes;
     }
 
-    /**
-     * Set dateYear.
-     *
-     * @param DateYear|string $dateYear
-     *
-     * @return Publication
-     */
-    public function setDateYear($dateYear = null) {
+    public function setDateYear(DateYear|string|null $dateYear = null) : self {
         if (is_string($dateYear) || is_numeric($dateYear)) {
             $obj = new DateYear();
             $obj->setValue($dateYear);
@@ -313,57 +196,34 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Get dateYear.
-     *
-     * @return DateYear
-     */
-    public function getDateYear() {
+    public function getDateYear() : ?DateYear {
         return $this->dateYear;
     }
 
-    /**
-     * Set location.
-     *
-     * @param Place $location
-     *
-     * @return Publication
-     */
-    public function setLocation(?Place $location = null) {
+    public function setLocation(?Place $location = null) : self {
         $this->location = $location;
 
         return $this;
     }
 
-    /**
-     * Get location.
-     *
-     * @return Place
-     */
-    public function getLocation() {
+    public function getLocation() : ?Place {
         return $this->location;
     }
 
     /**
-     * Set genres.
-     *
-     * @param Collection|Genre[] $genres
+     * @param Collection<Genre>|Genre[] $genres
      */
-//    public function setGenres(Collection $genres) {
-    public function setGenres($genres) : void {
+    public function setGenres(Collection|array $genres) : self {
         if (is_array($genres)) {
             $this->genres = new ArrayCollection($genres);
         } else {
             $this->genres = $genres;
         }
+
+        return $this;
     }
 
-    /**
-     * Add genre.
-     *
-     * @return Publication
-     */
-    public function addGenre(Genre $genre) {
+    public function addGenre(Genre $genre) : self {
         if ( ! $this->genres->contains($genre)) {
             $this->genres[] = $genre;
         }
@@ -371,98 +231,49 @@ abstract class Publication extends AbstractEntity implements LinkableInterface {
         return $this;
     }
 
-    /**
-     * Remove genre.
-     */
     public function removeGenre(Genre $genre) : void {
         $this->genres->removeElement($genre);
     }
 
-    /**
-     * Get genres.
-     *
-     * @param ?bool $flat
-     *
-     * @return Collection
-     */
-    public function getGenres(?bool $flat = false) {
-        if ($flat) {
-            return array_map(fn (Genre $p) => $p->getLabel(), $this->genres->toArray());
-        }
-
+    public function getGenres() : Collection {
         return $this->genres;
     }
 
-    /**
-     * Get the first author contributor for a publication or null if there
-     * are no author contributors.
-     *
-     * @return null|Person
-     */
-    public function getFirstAuthor() {
+    public function getFirstAuthor() : ?Person {
         foreach ($this->contributions as $contribution) {
             if ('author' === $contribution->getRole()->getName()) {
                 return $contribution->getPerson();
             }
         }
+
+        return null;
     }
 
-    /**
-     * Get the first contribution for a publication.
-     *
-     * @return Contribution
-     */
-    public function getFirstContribution() {
+    public function getFirstContribution() : ?Contribution {
         return $this->contributions->first();
     }
 
-    public function getContributors() {
-        return array_map(
-            fn (Contribution $c) => $c->getPerson()->getFullName(),
-            $this->contributions->toArray()
-        );
-    }
-
-    /**
-     * Add publisher.
-     *
-     * @return Publication
-     */
-    public function addPublisher(Publisher $publisher) {
+    public function addPublisher(Publisher $publisher) : self {
         $this->publishers[] = $publisher;
 
         return $this;
     }
 
-    /**
-     * Remove publisher.
-     */
     public function removePublisher(Publisher $publisher) : void {
         $this->publishers->removeElement($publisher);
     }
 
     /**
-     * Get publishers.
-     *
-     * @param mixed $flatten
-     *
-     * @return array|Collection
+     * @return Collection<Publisher>
      */
-    public function getPublishers($flatten = false) {
-        if ($flatten) {
-            return array_map(
-                fn (Publisher $p) => $p->getName(),
-                $this->publishers->toArray()
-            );
-        }
-
+    public function getPublishers() : Collection {
         return $this->publishers;
     }
 
     /**
-     * @param array|Collection $publishers
+     * @param Collection<Publisher>|Publisher[] $publishers
      */
-    public function setPublishers($publishers) : void {
+    public function setPublishers(Collection|array $publishers) : void {
         if (is_array($publishers)) {
             $this->publishers = new ArrayCollection($publishers);
         } else {

@@ -6,7 +6,8 @@ html {
 }
 body {
     /* Margin bottom by footer height */
-    margin-bottom: 60px;
+    margin-bottom: 70px;
+    margin-top: 70px;
 }
 .footer {
     position: absolute;
@@ -17,18 +18,6 @@ body {
     background-color: #f5f5f5;
 }
 
-/* Move the content down, to make room for the nav bar. */
-body > .container {
-    padding-top: 70px;
-}
-
-/* Menu bar styling */
-a.dropdown-toggle::after {
-    content: "▾";
-    padding-left: 0.3em;
-    font-size: small;
-}
-
 /* Custom app styles */
 label.required::after {
     content: ' *';
@@ -37,32 +26,34 @@ label.required::after {
 }
 
 a[href ^= 'mailto:']::after {
-    content: "\2709";
-    position: relative;
-    top: 1px;
+    content: "\f32c";
     display: inline-block;
-    padding-left: 0.5ex;
-    font-family: 'Glyphicons Halflings';
+    font-family: bootstrap-icons !important;
     font-style: normal;
-    font-weight: 400;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
     line-height: 1;
+    vertical-align: -.125em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding-left: 0.5ex;
 }
 
 a[href ^= 'http://']::after,
 a[href ^= 'https://']::after {
-    content: "\e164";
-    position: relative;
-    top: 1px;
+    content: "\F1C5";
     display: inline-block;
-    padding-left: 0.5ex;
-    font-family: 'Glyphicons Halflings';
+    font-family: bootstrap-icons !important;
     font-style: normal;
-    font-weight: 400;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
     line-height: 1;
+    vertical-align: -.125em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding-left: 0.5ex;
 }
 
 div.tab-content {
@@ -156,4 +147,24 @@ div.collection-complex > div:not(:last-child) {
 /* Add some whitespace above the comments form. */
 div.panel-comments {
     margin-top: 3em;
+}
+
+/* search */
+span.hl {
+    background-color: lightpink;
+}
+
+div.facet div.checkbox, div.facet div.radio {
+    width: auto;
+    float: none;
+}
+
+a:not(:hover) {
+    text-decoration: none;
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eee;
 }

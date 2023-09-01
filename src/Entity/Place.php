@@ -2,143 +2,96 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
+use App\Repository\PlaceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Nines\SolrBundle\Annotation as Solr;
+use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
-/**
- * Place.
- *
- * @ORM\Table(name="place", indexes={
- *     @ORM\Index(columns={"name", "country_name"}, flags={"fulltext"}),
- *     @ORM\Index(columns={"sortable_name"}, flags={"fulltext"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\PlaceRepository")
- *
- * @Solr\Document(
- *     copyField={
- *         @Solr\CopyField(from={"name", "regionName", "description", "countryName"}, to="content", type="texts"),
- *         @Solr\CopyField(from={"regionName"}, to="region_name_fct", type="string"),
- *         @Solr\CopyField(from={"countryName"}, to="country_name_fct", type="string")
- *     },
- *     computedFields={
- *         @Solr\ComputedField(name="coordinates", type="location", getter="getCoordinates")
- *     }
- * )
- */
-class Place extends AbstractEntity {
+#[ORM\Table(name: 'place')]
+#[ORM\Index(columns: ['name', 'country_name'], flags: ['fulltext'])]
+#[ORM\Index(columns: ['sortable_name'], flags: ['fulltext'])]
+#[ORM\Entity(repositoryClass: PlaceRepository::class)]
+class Place extends AbstractEntity implements HighlightableModelInterface {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
-
     }
+    use HasHighlights;
 
-    /**
-     * @ORM\Column(type="string", length=250, nullable=false)
-     *
-     * @Solr\Field(type="text", boost=2.0)
-     */
-    private $name;
+    #[ORM\Column(type: Types::STRING, length: 250, nullable: false)]
+    private ?string $name = null;
 
-    /**
-     * @ORM\Column(type="string", length=250, nullable=false)
-     * @Solr\Field(name="sortable", boost=0.2, type="string")
-     */
-    private $sortableName;
+    #[ORM\Column(type: Types::STRING, length: 250, nullable: false)]
+    private ?string $sortableName = null;
 
-    /**
-     * @var string
-     * @ORM\Column(name="geonames_id", type="string", length=16, nullable=true)
-     */
-    private $geoNamesId;
+    #[ORM\Column(name: 'geonames_id', type: Types::STRING, length: 16, nullable: true)]
+    private ?string $geoNamesId = null;
 
-    /**
-     * A province, state, territory or other sub-national entity.
-     *
-     * @ORM\Column(type="string", length=250, nullable=true)
-     * @Solr\Field(type="text", boost=0.5)
-     */
-    private $regionName;
+    #[ORM\Column(type: Types::STRING, length: 250, nullable: true)]
+    private ?string $regionName = null;
 
-    /**
-     * @ORM\Column(type="string", length=250, nullable=true)
-     * @Solr\Field(type="text", boost=0.2)
-     */
-    private $countryName;
+    #[ORM\Column(type: Types::STRING, length: 250, nullable: true)]
+    private ?string $countryName = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
-     */
-    private $latitude;
+    #[ORM\Column(type: Types::DECIMAL, precision: 9, scale: 6, nullable: true)]
+    private ?string $latitude = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=9, scale=6, nullable=true)
-     */
-    private $longitude;
+    #[ORM\Column(type: Types::DECIMAL, precision: 9, scale: 6, nullable: true)]
+    private ?string $longitude = null;
 
     /**
      * public research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @Solr\Field(type="text", boost=0.5)
      */
-    private $description;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
     /**
      * private research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
-    private $notes;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $notes = null;
 
     /**
-     * @var Collection|Person[]
-     * @ORM\OneToMany(targetEntity="Person", mappedBy="birthPlace")
-     * @ORM\OrderBy({"sortableName": "ASC"})
+     * @var Collection<Person>
      */
-    private $peopleBorn;
+    #[ORM\OneToMany(targetEntity: Person::class, mappedBy: 'birthPlace')]
+    #[ORM\OrderBy(['sortableName' => 'asc'])]
+    private Collection $peopleBorn;
 
     /**
-     * @var Collection|Person[]
-     * @ORM\OneToMany(targetEntity="Person", mappedBy="deathPlace")
-     * @ORM\OrderBy({"sortableName": "ASC"})
+     * @var Collection<Person>
      */
-    private $peopleDied;
+    #[ORM\OneToMany(targetEntity: Person::class, mappedBy: 'deathPlace')]
+    #[ORM\OrderBy(['sortableName' => 'asc'])]
+    private Collection $peopleDied;
 
     /**
-     * @var Collection|Person[]
-     * @ORM\ManyToMany(targetEntity="Person", mappedBy="residences")
-     * @ORM\OrderBy({"sortableName": "ASC"})
+     * @var Collection<Person>
      */
-    private $residents;
+    #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'residences')]
+    #[ORM\OrderBy(['sortableName' => 'asc'])]
+    private Collection $residents;
 
     /**
-     * @var Collection|Publication[]
-     * @ORM\OneToMany(targetEntity="Publication", mappedBy="location")
-     * @ORM\OrderBy({"title": "ASC"})
+     * @var Collection<Publication>
      */
-    private $publications;
+    #[ORM\OneToMany(targetEntity: Publication::class, mappedBy: 'location')]
+    #[ORM\OrderBy(['title' => 'asc'])]
+    private Collection $publications;
 
     /**
-     * @var Collection|Publisher[]
-     * @ORM\ManyToMany(targetEntity="Publisher", mappedBy="places")
-     * @ORM\OrderBy({"name": "ASC"})
+     * @var Collection<Publisher>
      */
-    private $publishers;
+    #[ORM\ManyToMany(targetEntity: Publisher::class, mappedBy: 'places')]
+    #[ORM\OrderBy(['name' => 'asc'])]
+    private Collection $publishers;
 
     public function __construct() {
+        $this->publications = new ArrayCollection();
         $this->trait_constructor();
         parent::__construct();
         $this->peopleBorn = new ArrayCollection();
@@ -152,130 +105,71 @@ class Place extends AbstractEntity {
         return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Place
-     */
-    public function setName($name) {
+    public function setName(?string $name) : self {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName() {
+    public function getName() : ?string {
+        if (null === $this->name) {
+            return $this->name;
+        }
+
         return preg_replace('/^[?, ]*/', '', $this->name);
     }
 
-    /**
-     * Set countryName.
-     *
-     * @param string $countryName
-     *
-     * @return Place
-     */
-    public function setCountryName($countryName) {
+    public function setCountryName(?string $countryName) : self {
         $this->countryName = $countryName;
 
         return $this;
     }
 
-    /**
-     * Get countryName.
-     *
-     * @return string
-     */
-    public function getCountryName() {
+    public function getCountryName() : ?string {
         return $this->countryName;
     }
 
-    /**
-     * Set latitude.
-     *
-     * @param string $latitude
-     *
-     * @return Place
-     */
-    public function setLatitude($latitude) {
+    public function setLatitude(?string $latitude) : self {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    /**
-     * Get latitude.
-     *
-     * @return string
-     */
-    public function getLatitude() {
+    public function getLatitude() : ?string {
         return $this->latitude;
     }
 
-    /**
-     * Set longitude.
-     *
-     * @param string $longitude
-     *
-     * @return Place
-     */
-    public function setLongitude($longitude) {
+    public function setLongitude(?string $longitude) : self {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-    /**
-     * Get longitude.
-     *
-     * @return string
-     */
-    public function getLongitude() {
+    public function getLongitude() : ?string {
         return $this->longitude;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Place
-     */
-    public function setDescription($description) {
+    public function setDescription(?string $description) : self {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription() {
+    public function getDescription() : ?string {
         return $this->description;
     }
 
-    /**
-     * Set notes.
-     *
-     * @param string $notes
-     *
-     * @return Place
-     */
-    public function setNotes($notes) {
+    public function getDescriptionSanitized() : ?string {
+        return strip_tags(html_entity_decode($this->description ?? ''));
+    }
+
+    public function setNotes(?string $notes) : self {
         $this->notes = $notes;
 
         return $this;
     }
 
-    public function appendNote($note) {
+    public function appendNote(?string $note) : self {
         if ( ! $this->notes) {
             $this->notes = $note;
         } else {
@@ -285,21 +179,11 @@ class Place extends AbstractEntity {
         return $this;
     }
 
-    /**
-     * Get notes.
-     *
-     * @return string
-     */
-    public function getNotes() {
+    public function getNotes() : ?string {
         return $this->notes;
     }
 
-    /**
-     * Add peopleBorn.
-     *
-     * @return Place
-     */
-    public function addPersonBorn(Person $peopleBorn) {
+    public function addPersonBorn(Person $peopleBorn) : self {
         if ( ! $this->peopleBorn->contains($peopleBorn)) {
             $this->peopleBorn[] = $peopleBorn;
         }
@@ -307,19 +191,14 @@ class Place extends AbstractEntity {
         return $this;
     }
 
-    /**
-     * Remove peopleBorn.
-     */
     public function removePersonBorn(Person $peopleBorn) : void {
         $this->peopleBorn->removeElement($peopleBorn);
     }
 
     /**
-     * Get peopleBorn.
-     *
-     * @return Collection
+     * @var Person[]
      */
-    public function getPeopleBorn() {
+    public function getPeopleBorn() : array {
         $births = $this->peopleBorn->toArray();
         usort($births, function ($a, $b) {
             $aDate = $a->getBirthDate();
@@ -340,12 +219,7 @@ class Place extends AbstractEntity {
         return $births;
     }
 
-    /**
-     * Add peopleDied.
-     *
-     * @return Place
-     */
-    public function addPersonDied(Person $peopleDied) {
+    public function addPersonDied(Person $peopleDied) : self {
         if ( ! $this->peopleDied->contains($peopleDied)) {
             $this->peopleDied[] = $peopleDied;
         }
@@ -353,19 +227,14 @@ class Place extends AbstractEntity {
         return $this;
     }
 
-    /**
-     * Remove peopleDied.
-     */
     public function removePersonDied(Person $peopleDied) : void {
         $this->peopleDied->removeElement($peopleDied);
     }
 
     /**
-     * Get peopleDied.
-     *
-     * @return Collection
+     * @var Person[]
      */
-    public function getPeopleDied() {
+    public function getPeopleDied() : array {
         $deaths = $this->peopleDied->toArray();
         usort($deaths, function ($a, $b) {
             $aDate = $a->getDeathDate();
@@ -386,12 +255,7 @@ class Place extends AbstractEntity {
         return $deaths;
     }
 
-    /**
-     * Add resident.
-     *
-     * @return Place
-     */
-    public function addResident(Person $resident) {
+    public function addResident(Person $resident) : self {
         if ( ! $this->residents->contains($resident)) {
             $this->residents[] = $resident;
         }
@@ -399,151 +263,84 @@ class Place extends AbstractEntity {
         return $this;
     }
 
-    /**
-     * Remove resident.
-     */
     public function removeResident(Person $resident) : void {
         $this->residents->removeElement($resident);
     }
 
     /**
-     * Get residents.
-     *
-     * @return Collection
+     * @var Person[]
      */
-    public function getResidents() {
+    public function getResidents() : array {
         $residents = $this->residents->toArray();
-        usort($residents, fn ($a, $b) => strcmp($a->getSortableName(), $b->getSortableName()));
+        usort($residents, fn ($a, $b) => strcmp((string) $a->getSortableName(), (string) $b->getSortableName()));
 
         return $residents;
     }
 
-    /**
-     * Set sortableName.
-     *
-     * @param string $sortableName
-     *
-     * @return Place
-     */
-    public function setSortableName($sortableName) {
+    public function setSortableName(?string $sortableName) : self {
         $this->sortableName = $sortableName;
 
         return $this;
     }
 
-    /**
-     * Get sortableName.
-     *
-     * @return string
-     */
-    public function getSortableName() {
+    public function getSortableName() : ?string {
         return $this->sortableName;
     }
 
-    /**
-     * Add peopleBorn.
-     *
-     * @return Place
-     */
-    public function addPeopleBorn(Person $peopleBorn) {
+    public function addPeopleBorn(Person $peopleBorn) : self {
         $this->peopleBorn[] = $peopleBorn;
 
         return $this;
     }
 
-    /**
-     * Remove peopleBorn.
-     */
     public function removePeopleBorn(Person $peopleBorn) : void {
         $this->peopleBorn->removeElement($peopleBorn);
     }
 
-    /**
-     * Add peopleDied.
-     *
-     * @return Place
-     */
-    public function addPeopleDied(Person $peopleDied) {
+    public function addPeopleDied(Person $peopleDied) : self {
         $this->peopleDied[] = $peopleDied;
 
         return $this;
     }
 
-    /**
-     * Remove peopleDied.
-     */
     public function removePeopleDied(Person $peopleDied) : void {
         $this->peopleDied->removeElement($peopleDied);
     }
 
-    /**
-     * Set regionName.
-     *
-     * @param string $regionName
-     *
-     * @return Place
-     */
-    public function setRegionName($regionName) {
+    public function setRegionName(?string $regionName) : self {
         $this->regionName = $regionName;
 
         return $this;
     }
 
-    /**
-     * Get regionName.
-     *
-     * @return string
-     */
-    public function getRegionName() {
+    public function getRegionName() : ?string {
         return $this->regionName;
     }
 
-    /**
-     * Add publisher.
-     *
-     * @return Place
-     */
-    public function addPublisher(Publisher $publisher) {
+    public function addPublisher(Publisher $publisher) : self {
         $this->publishers[] = $publisher;
 
         return $this;
     }
 
-    /**
-     * Remove publisher.
-     */
     public function removePublisher(Publisher $publisher) : void {
         $this->publishers->removeElement($publisher);
     }
 
     /**
-     * Get publishers.
-     *
-     * @return Collection
+     * @return Collection|Publisher[]
      */
-    public function getPublishers() {
+    public function getPublishers() : Collection {
         return $this->publishers;
     }
 
-    /**
-     * Set geoNamesId.
-     *
-     * @param null|string $geoNamesId
-     *
-     * @return Place
-     */
-    public function setGeoNamesId($geoNamesId = null) {
+    public function setGeoNamesId(?string $geoNamesId = null) : self {
         $this->geoNamesId = $geoNamesId;
 
         return $this;
     }
 
-    /**
-     * Get geoNamesId.
-     *
-     * @return null|string
-     */
-    public function getGeoNamesId() {
+    public function getGeoNamesId() : ?string {
         return $this->geoNamesId;
     }
 

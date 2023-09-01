@@ -14,11 +14,15 @@
         <input type="submit" value="Update" class="btn btn-primary" />
         <a href="{{ path('compilation_show_contributions', { 'id': contribution.getPublicationId() }) }}" class="btn btn-warning">Cancel</a>
     </div>
-    <div class='btn-toolbar pull-right'>
-        <div class='btn-group'>
-            <a href="{{ path('person_new_popup') }}" class="btn btn-primary popup" id="newPlace"><span class="glyphicon glyphicon-plus"></span> Person</a>
+    <div class='btn-toolbar pb-1'>
+        <div class='btn-group ms-auto'>
+            <a href="{{ path('person_new') }}" class="btn btn-primary" target="_blank"><span class="bi bi-plus-lg"></span> Person</a>
         </div>
     </div>
     {{ form_end(edit_form) }}
 
+{% endblock %}
+
+{% block javascripts %}
+    {% include '@NinesEditor/editor/widget.html.twig' %}
 {% endblock %}

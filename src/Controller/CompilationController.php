@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Controller;
 
 use App\Entity\Compilation;
@@ -16,35 +10,27 @@ use App\Entity\Publication;
 use App\Form\CompilationType;
 use App\Form\ContributionType;
 use App\Repository\CompilationRepository;
-use App\Repository\PublicationRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Compilation controller.
- *
- * @Route("/compilation")
  */
+#[Route(path: '/compilation')]
 class CompilationController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
 
-    /**
-     * Lists all Compilation entities.
-     *
-     * @Route("/", name="compilation_index", methods={"GET"})
-     *
-     * @Template
-     *
-     * @param PublicationRepository $repo
-     */
-    public function indexAction(Request $request, CompilationRepository $repo) {
-        $em = $this->getDoctrine()->getManager();
+    #[Route(path: '/', name: 'compilation_index', methods: ['GET'])]
+    #[Template]
+    public function index(EntityManagerInterface $em, Request $request, CompilationRepository $repo) : array|RedirectResponse {
         $pageSize = $this->getParameter('page_size');
 
         if ($request->query->has('alpha')) {
@@ -57,7 +43,7 @@ class CompilationController extends AbstractController implements PaginatorAware
         $qb->select('e')->from(Compilation::class, 'e')->orderBy('e.sortableTitle', 'ASC');
         $query = $qb->getQuery();
 
-        $compilations = $this->paginator->paginate($query, $request->query->getint('page', 1), $pageSize);
+        $compilations = $this->paginator->paginate($query, $request->query->getInt('page', 1), $pageSize);
 
         $letterIndex = [];
 
@@ -66,7 +52,7 @@ class CompilationController extends AbstractController implements PaginatorAware
             if ( ! $title) {
                 continue;
             }
-            $letterIndex[mb_convert_case($title[0], MB_CASE_UPPER)] = 1;
+            $letterIndex[mb_convert_case((string) $title[0], MB_CASE_UPPER)] = 1;
         }
 
         return [
@@ -75,15 +61,10 @@ class CompilationController extends AbstractController implements PaginatorAware
         ];
     }
 
-    /**
-     * Creates a new Compilation entity.
-     *
-     * @Route("/new", name="compilation_new", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function newAction(Request $request) {
+    #[Route(path: '/new', name: 'compilation_new', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function new(EntityManagerInterface $em, Request $request) : array|RedirectResponse {
         $compilation = new Compilation();
         $form = $this->createForm(CompilationType::class, $compilation);
         $form->handleRequest($request);
@@ -92,7 +73,6 @@ class CompilationController extends AbstractController implements PaginatorAware
             foreach ($compilation->getContributions() as $contribution) {
                 $contribution->setPublication($compilation);
             }
-            $em = $this->getDoctrine()->getManager();
             $em->persist($compilation);
             $em->flush();
 
@@ -107,33 +87,20 @@ class CompilationController extends AbstractController implements PaginatorAware
         ];
     }
 
-    /**
-     * Finds and displays a Compilation entity.
-     *
-     * @Route("/{id}", name="compilation_show", methods={"GET"})
-     *
-     * @Template
-     */
-    public function showAction(Compilation $compilation) {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Compilation::class);
-
+    #[Route(path: '/{id}', name: 'compilation_show', methods: ['GET'])]
+    #[Template]
+    public function show(CompilationRepository $compilationRepository, Compilation $compilation) : array {
         return [
             'compilation' => $compilation,
-            'next' => $repo->next($compilation),
-            'previous' => $repo->previous($compilation),
+            'next' => $compilationRepository->next($compilation),
+            'previous' => $compilationRepository->previous($compilation),
         ];
     }
 
-    /**
-     * Displays a form to edit an existing Compilation entity.
-     *
-     * @Route("/{id}/edit", name="compilation_edit", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function editAction(Request $request, Compilation $compilation) {
+    #[Route(path: '/{id}/edit', name: 'compilation_edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function edit(EntityManagerInterface $em, Request $request, Compilation $compilation) : array|RedirectResponse {
         $editForm = $this->createForm(CompilationType::class, $compilation);
         $editForm->handleRequest($request);
 
@@ -141,8 +108,6 @@ class CompilationController extends AbstractController implements PaginatorAware
             foreach ($compilation->getContributions() as $contribution) {
                 $contribution->setPublication($compilation);
             }
-
-            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The collection has been updated.');
 
@@ -155,15 +120,9 @@ class CompilationController extends AbstractController implements PaginatorAware
         ];
     }
 
-    /**
-     * Deletes a Compilation entity.
-     *
-     * @Route("/{id}/delete", name="compilation_delete", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     */
-    public function deleteAction(Request $request, Compilation $compilation) {
-        $em = $this->getDoctrine()->getManager();
+    #[Route(path: '/{id}/delete', name: 'compilation_delete', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_CONTENT_ADMIN')")]
+    public function delete(EntityManagerInterface $em, Compilation $compilation) : RedirectResponse {
         $em->remove($compilation);
         $em->flush();
         $this->addFlash('success', 'The compilation was deleted.');
@@ -171,15 +130,10 @@ class CompilationController extends AbstractController implements PaginatorAware
         return $this->redirectToRoute('compilation_index');
     }
 
-    /**
-     * Creates a new Compilation contribution entity.
-     *
-     * @Route("/{id}/contributions/new", name="compilation_new_contribution")
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function newContribution(Request $request, Compilation $compilation) {
+    #[Route(path: '/{id}/contributions/new', name: 'compilation_new_contribution')]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function newContribution(EntityManagerInterface $em, Request $request, Compilation $compilation) : array|RedirectResponse {
         $contribution = new Contribution();
 
         $form = $this->createForm(ContributionType::class, $contribution);
@@ -187,7 +141,6 @@ class CompilationController extends AbstractController implements PaginatorAware
 
         if ($form->isSubmitted() && $form->isValid()) {
             $contribution->setPublication($compilation);
-            $em = $this->getDoctrine()->getManager();
             $em->persist($contribution);
             $em->flush();
 
@@ -202,34 +155,23 @@ class CompilationController extends AbstractController implements PaginatorAware
         ];
     }
 
-    /**
-     * Show compilation contributions list with edit/delete action items.
-     *
-     * @Route("/{id}/contributions", name="compilation_show_contributions")
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function showContributions(Compilation $compilation) {
+    #[Route(path: '/{id}/contributions', name: 'compilation_show_contributions')]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function showContributions(Compilation $compilation) : array {
         return [
             'compilation' => $compilation,
         ];
     }
 
-    /**
-     * Displays a form to edit an existing compilation Contribution entity.
-     *
-     * @Route("/contributions/{id}/edit", name="compilation_edit_contributions")
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Template
-     */
-    public function editContribution(Request $request, Contribution $contribution) {
+    #[Route(path: '/contributions/{id}/edit', name: 'compilation_edit_contributions')]
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Template]
+    public function editContribution(EntityManagerInterface $em, Request $request, Contribution $contribution) : array|RedirectResponse {
         $editForm = $this->createForm(ContributionType::class, $contribution);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The contribution has been updated.');
 
@@ -242,15 +184,9 @@ class CompilationController extends AbstractController implements PaginatorAware
         ];
     }
 
-    /**
-     * Deletes a compilation Contribution entity.
-     *
-     * @Route("/contributions/{id}/delete", name="compilation_delete_contributions")
-     *
-     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     */
-    public function deleteContribution(Request $request, Contribution $contribution) {
-        $em = $this->getDoctrine()->getManager();
+    #[Route(path: '/contributions/{id}/delete', name: 'compilation_delete_contributions')]
+    #[Security("is_granted('ROLE_CONTENT_ADMIN')")]
+    public function deleteContribution(EntityManagerInterface $em, Contribution $contribution) : RedirectResponse {
         $em->remove($contribution);
         $em->flush();
         $this->addFlash('success', 'The contribution was deleted.');

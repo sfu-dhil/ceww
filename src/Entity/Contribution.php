@@ -2,44 +2,26 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
+use App\Repository\ContributionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Nines\UtilBundle\Entity\AbstractEntity;
 
-/**
- * Contribution.
- *
- * @ORM\Table(name="contribution")
- * @ORM\Entity(repositoryClass="App\Repository\ContributionRepository")
- */
+#[ORM\Table(name: 'contribution')]
+#[ORM\Entity(repositoryClass: ContributionRepository::class)]
 class Contribution extends AbstractEntity {
-    /**
-     * @var Role
-     * @ORM\ManyToOne(targetEntity="Role", inversedBy="contributions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $role;
+    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'contributions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
 
-    /**
-     * @var Person
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="contributions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $person;
+    #[ORM\ManyToOne(targetEntity: Person::class, inversedBy: 'contributions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Person $person = null;
 
-    /**
-     * @var Publication
-     * @ORM\ManyToOne(targetEntity="Publication", inversedBy="contributions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $publication;
+    #[ORM\ManyToOne(targetEntity: Publication::class, inversedBy: 'contributions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Publication $publication = null;
 
     public function __construct() {
         parent::__construct();
@@ -49,72 +31,37 @@ class Contribution extends AbstractEntity {
         return "{$this->role->getName()}:{$this->person->getFullName()}:{$this->publication->getTitle()}";
     }
 
-    /**
-     * Set role.
-     *
-     * @return Contribution
-     */
-    public function setRole(Role $role) {
+    public function setRole(Role $role) : self {
         $this->role = $role;
 
         return $this;
     }
 
-    /**
-     * Get role.
-     *
-     * @return Role
-     */
-    public function getRole() {
+    public function getRole() : ?Role {
         return $this->role;
     }
 
-    /**
-     * Set person.
-     *
-     * @return Contribution
-     */
-    public function setPerson(Person $person) {
+    public function setPerson(Person $person) : self {
         $this->person = $person;
 
         return $this;
     }
 
-    /**
-     * Get person.
-     *
-     * @return Person
-     */
-    public function getPerson() {
+    public function getPerson() : ?Person {
         return $this->person;
     }
 
-    /**
-     * Set publication.
-     *
-     * @return Contribution
-     */
-    public function setPublication(Publication $publication) {
+    public function setPublication(Publication $publication) : self {
         $this->publication = $publication;
 
         return $this;
     }
 
-    /**
-     * Get publication.
-     *
-     * @return Publication
-     */
-    public function getPublication() {
+    public function getPublication() : ?Publication {
         return $this->publication;
     }
 
-    /**
-     * Get publication id.
-     *
-     * @return publicaiton
-     */
-    public function getPublicationId() {
+    public function getPublicationId() : ?int {
         return $this->publication->getId();
     }
 }

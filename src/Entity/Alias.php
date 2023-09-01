@@ -2,84 +2,52 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Entity;
 
+use App\Repository\AliasRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\UtilBundle\Entity\AbstractEntity;
-use Nines\SolrBundle\Annotation as Solr;
 
-/**
- * Alias.
- *
- * @ORM\Table(name="alias", indexes={
- *     @ORM\Index(columns={"name"}, flags={"fulltext"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\AliasRepository")
- * @Solr\Document(
- *      @Solr\CopyField(from={"name","description","people"}, to="content", type="texts")
- * )
- */
-class Alias extends AbstractEntity {
-    /**
-     * Name of the alias.
-     *
-     * @var string
-     * @ORM\Column(type="string", length=100, nullable=false)
-     * @Solr\Field(type="text", boost=2.5)
-     */
-    private $name;
+#[ORM\Table(name: 'alias')]
+#[ORM\Index(columns: ['name'], flags: ['fulltext'])]
+#[ORM\Entity(repositoryClass: AliasRepository::class)]
+class Alias extends AbstractEntity implements HighlightableModelInterface {
+    use HasHighlights;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=100, nullable=false)
-     * @Solr\Field(name="sortable", type="string", boost=0.2)
-     */
-    private $sortableName;
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: false)]
+    private ?string $name = null;
 
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $maiden;
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: false)]
+    private ?string $sortableName = null;
 
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $married;
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
+    private ?bool $maiden = null;
+
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
+    private ?bool $married = null;
 
     /**
      * public research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     * @Solr\Field(type="text", boost=0.5, filters={"strip_tags", "html_entity_decode(51, 'UTF-8')"})
      */
-    private $description;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
     /**
      * private research notes.
-     *
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
-    private $notes;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $notes = null;
 
     /**
-     * @var Collection|Person[]
-     * @ORM\ManyToMany(targetEntity="Person", mappedBy="aliases")
-     * @ORM\OrderBy({"sortableName": "ASC"})
-     * @Solr\Field(type="texts", boost=1.3, getter="getPeople(true)")
+     * @var Collection<Person>
      */
-    private $people;
+    #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'aliases')]
+    #[ORM\OrderBy(['sortableName' => 'asc'])]
+    private Collection $people;
 
     public function __construct() {
         parent::__construct();
@@ -91,92 +59,55 @@ class Alias extends AbstractEntity {
         return $this->name;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Alias
-     */
-    public function setName($name) {
+    public function setName(?string $name) : self {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName() {
+    public function getName() : ?string {
         return $this->name;
     }
 
-    /**
-     * Set maiden.
-     *
-     * @param bool $maiden
-     *
-     * @return Alias
-     */
-    public function setMaiden($maiden) {
+    public function setMaiden(?bool $maiden) : self {
         $this->maiden = $maiden;
 
         return $this;
     }
 
-    /**
-     * Get maiden.
-     *
-     * @return bool
-     */
-    public function getMaiden(?bool $yesNo = false) {
-        if($yesNo) {
-            if(isset($this->maiden)) {
+    public function getMaiden(?bool $yesNo = false) : string|bool|null {
+        if ($yesNo) {
+            if (isset($this->maiden)) {
                 return $this->maiden ? 'Yes' : 'No';
             }
+
             return false;
         }
+
         return $this->maiden;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Alias
-     */
-    public function setDescription($description) {
+    public function setDescription(?string $description) : self {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription() {
+    public function getDescription() : ?string {
         return $this->description;
     }
 
-    /**
-     * Set notes.
-     *
-     * @param string $notes
-     *
-     * @return Alias
-     */
-    public function setNotes($notes) {
+    public function getDescriptionSanitized() : ?string {
+        return strip_tags(html_entity_decode($this->description ?? ''));
+    }
+
+    public function setNotes(?string $notes) : self {
         $this->notes = $notes;
 
         return $this;
     }
 
-    public function appendNote($note) {
+    public function appendNote(?string $note) : self {
         if ( ! $this->notes) {
             $this->notes = $note;
         } else {
@@ -186,92 +117,49 @@ class Alias extends AbstractEntity {
         return $this;
     }
 
-    /**
-     * Get notes.
-     *
-     * @return string
-     */
-    public function getNotes() {
+    public function getNotes() : ?string {
         return $this->notes;
     }
 
-    /**
-     * Add person.
-     *
-     * @return Alias
-     */
-    public function addPerson(Person $person) {
+    public function addPerson(Person $person) : self {
         $this->people[] = $person;
 
         return $this;
     }
 
-    /**
-     * Remove person.
-     */
     public function removePerson(Person $person) : void {
         $this->people->removeElement($person);
     }
 
-    /**
-     * Get people.
-     *
-     * @return Collection|array<string>
-     */
-    public function getPeople(?bool $flatten = false) {
-        if($flatten) {
-            return array_map(fn (Person $p) => $p->getFullName(), $this->people->toArray());
-        }
+    public function getPeople() : Collection {
         return $this->people;
     }
 
-    /**
-     * Set sortableName.
-     *
-     * @param string $sortableName
-     *
-     * @return Alias
-     */
-    public function setSortableName($sortableName) {
+    public function setSortableName(?string $sortableName) : self {
         $this->sortableName = $sortableName;
 
         return $this;
     }
 
-    /**
-     * Get sortableName.
-     *
-     * @return string
-     */
-    public function getSortableName() {
+    public function getSortableName() : ?string {
         return $this->sortableName;
     }
 
-    /**
-     * Set married.
-     *
-     * @param null|bool $married
-     *
-     * @return Alias
-     */
-    public function setMarried($married = null) {
+    public function setMarried(?bool $married = null) : self {
         $this->married = $married;
 
         return $this;
     }
 
-    /**
-     * Get married.
-     *
-     * @return null|bool
-     */
-    public function getMarried(?bool $yesNo = false) {
-        if($yesNo) {
-            if(isset($this->married)) {
+    public function getMarried(?bool $yesNo = false) : bool|string|null {
+        if ($yesNo) {
+            if (isset($this->married)) {
                 return $this->married ? 'Yes' : 'No';
             }
+
             return null;
         }
+
         return $this->married;
     }
 }

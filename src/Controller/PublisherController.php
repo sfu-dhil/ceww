@@ -2,70 +2,51 @@
 
 declare(strict_types=1);
 
-/*
- * (c) 2022 Michael Joyce <mjoyce@sfu.ca>
- * This source file is subject to the GPL v2, bundled
- * with this source code in the file LICENSE.
- */
-
 namespace App\Controller;
 
-use App\Entity\Place;
 use App\Entity\Publisher;
 use App\Form\PublisherType;
-use App\Index\PublisherIndex;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
+use App\Services\ElasticSearchHelper;
 use App\Services\Merger;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
-use Nines\SolrBundle\Services\SolrManager;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Publisher controller.
- *
- * @Route("/publisher")
- */
+#[Route(path: '/publisher')]
 class PublisherController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
 
-    /**
-     * Lists all Publisher entities.
-     *
-     * @return array
-     *
-     * @Route("/", name="publisher_index", methods={"GET"})
-     *
-     * @Template
-     */
-    public function indexAction(Request $request) {
-        $em = $this->getDoctrine()->getManager();
+    public function __construct(
+        private PaginatedFinderInterface $finder,
+    ) {}
+
+    #[Route(path: '/', name: 'publisher_index', methods: ['GET'])]
+    #[Template]
+    public function index(EntityManagerInterface $em, Request $request) : array {
         $qb = $em->createQueryBuilder();
         $qb->select('e')->from(Publisher::class, 'e')->orderBy('e.name', 'ASC');
         $query = $qb->getQuery();
 
-        $publishers = $this->paginator->paginate($query, $request->query->getint('page', 1), 25);
+        $publishers = $this->paginator->paginate($query, $request->query->getInt('page', 1), 25);
 
         return [
             'publishers' => $publishers,
         ];
     }
 
-    /**
-     * Typeahead API endpoint for Publisher entities.
-     *
-     * @Route("/typeahead", name="publisher_typeahead", methods={"GET"})
-     *
-     * @return JsonResponse
-     */
-    public function typeahead(Request $request, PublisherRepository $repo) {
+    #[Route(path: '/typeahead', name: 'publisher_typeahead', methods: ['GET'])]
+    public function typeahead(Request $request, PublisherRepository $repo) : JsonResponse {
         $q = $request->query->get('q');
         if ( ! $q) {
             return new JsonResponse([]);
@@ -82,52 +63,45 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
         return new JsonResponse($data);
     }
 
-    /**
-     * @Route("/search", name="publisher_search")
-     * @Template
-     */
-    public function searchAction(Request $request, PublisherIndex $repo, SolrManager $solr) {
-        $q = $request->query->get('q');
-        $result = null;
-        if ($q) {
-            $filters = $request->query->get('filter', []);
-
-            $order = null;
-            $m = [];
-            if (preg_match('/^(\\w+).(asc|desc)$/', $request->query->get('order', 'score.desc'), $m)) {
-                $order = [$m[1] => $m[2]];
-            }
-
-            $query = $repo->searchQuery($q, $filters, $order);
-            $result = $solr->execute($query, $this->paginator, [
-                'page' => (int) $request->query->get('page', 1),
-                'pageSize' => (int) $this->getParameter('page_size'),
-            ]);
-        }
+    #[Route(path: '/search', name: 'publisher_search')]
+    #[Template]
+    public function search(Request $request) : array {
+        $elasticSearchHelper = new ElasticSearchHelper([
+            'queryTermFields' => [
+                'name^2.0',
+                'places.name^0.6',
+            ],
+            'filters' => [
+                'places' => ElasticSearchHelper::generateTermFilter('places.nameFacet'),
+            ],
+            'sort' => ElasticSearchHelper::generateDefaultSortOrder(),
+            'highlights' => [
+                'name' => new stdClass(),
+                'places.name' => new stdClass(),
+            ],
+        ]);
+        $query = $elasticSearchHelper->getElasticQuery(
+            $request->query->get('q'),
+            $request->query->get('order'),
+            $request->query->all('filters')
+        );
+        $results = $this->finder->createHybridPaginatorAdapter($query);
 
         return [
-            'q' => $q,
-            'result' => $result,
+            'results' => $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size')),
+            'sortOptions' => ElasticSearchHelper::generateDefaultSortOrder(),
         ];
     }
 
-    /**
-     * Creates a new Publisher entity.
-     *
-     * @return array|Response
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Route("/new", name="publisher_new", methods={"GET", "POST"})
-     *
-     * @Template
-     */
-    public function newAction(Request $request) {
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Route(path: '/new', name: 'publisher_new', methods: ['GET', 'POST'])]
+    #[Template]
+    public function new(EntityManagerInterface $em, Request $request) : array|RedirectResponse {
         $publisher = new Publisher();
         $form = $this->createForm(PublisherType::class, $publisher);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($publisher);
             $em->flush();
 
@@ -142,52 +116,23 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
         ];
     }
 
-    /**
-     * Creates a new Publisher entity in a popup.
-     *
-     * @return array|Response
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Route("/new_popup", name="publisher_new_popup", methods={"GET", "POST"})
-     *
-     * @Template
-     */
-    public function newPopupAction(Request $request) {
-        return $this->newAction($request);
-    }
-
-    /**
-     * Finds and displays a Publisher entity.
-     *
-     * @return array
-     *
-     * @Route("/{id}", name="publisher_show", methods={"GET"})
-     *
-     * @Template
-     */
-    public function showAction(Publisher $publisher, PersonRepository $repo) {
+    #[Route(path: '/{id}', name: 'publisher_show', methods: ['GET'])]
+    #[Template]
+    public function show(Publisher $publisher, PersonRepository $repo) : array {
         return [
             'publisher' => $publisher,
             'people' => $repo->byPublisher($publisher),
         ];
     }
 
-    /**
-     * Displays a form to edit an existing Publisher entity.
-     *
-     * @return array|Response
-     *
-     * @Security("is_granted('ROLE_CONTENT_EDITOR')")
-     * @Route("/{id}/edit", name="publisher_edit", methods={"GET", "POST"})
-     *
-     * @Template
-     */
-    public function editAction(Request $request, Publisher $publisher) {
+    #[Security("is_granted('ROLE_CONTENT_EDITOR')")]
+    #[Route(path: '/{id}/edit', name: 'publisher_edit', methods: ['GET', 'POST'])]
+    #[Template]
+    public function edit(EntityManagerInterface $em, Request $request, Publisher $publisher) : array|RedirectResponse {
         $editForm = $this->createForm(PublisherType::class, $publisher);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->flush();
             $this->addFlash('success', 'The publisher has been updated.');
 
@@ -200,17 +145,12 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
         ];
     }
 
-    /**
-     * Finds and displays a Place entity.
-     *
-     * @Route("/{id}/merge", name="publisher_merge")
-     *
-     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     * @Template
-     */
-    public function mergeAction(Request $request, Publisher $publisher, Merger $merger, PublisherRepository $repo) {
+    #[Security("is_granted('ROLE_CONTENT_ADMIN')")]
+    #[Route(path: '/{id}/merge', name: 'publisher_merge')]
+    #[Template]
+    public function merge(Request $request, Publisher $publisher, Merger $merger, PublisherRepository $repo) : array|RedirectResponse {
         if ('POST' === $request->getMethod()) {
-            $publishers = $repo->findBy(['id' => $request->request->get('publishers')]);
+            $publishers = $repo->findBy(['id' => $request->request->all('publishers')]);
             $count = count($publishers);
             $merger->publishers($publisher, $publishers);
             $this->addFlash('success', "Merged {$count} publishers into {$publisher->getName()}.");
@@ -233,19 +173,9 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
         ];
     }
 
-    /**
-     * Deletes a Publisher entity.
-     *
-     * @param Request $request Dependency injected HTTP request object.
-     * @param Publisher $publisher The Publisher to delete.
-     *
-     * @return array|Response A redirect to the publisher_index.
-     *
-     * @Security("is_granted('ROLE_CONTENT_ADMIN')")
-     * @Route("/{id}/delete", name="publisher_delete", methods={"GET", "POST"})
-     */
-    public function deleteAction(Request $request, Publisher $publisher) {
-        $em = $this->getDoctrine()->getManager();
+    #[Security("is_granted('ROLE_CONTENT_ADMIN')")]
+    #[Route(path: '/{id}/delete', name: 'publisher_delete', methods: ['GET', 'POST'])]
+    public function delete(EntityManagerInterface $em, Publisher $publisher) : RedirectResponse {
         $em->remove($publisher);
         $em->flush();
         $this->addFlash('success', 'The publisher was deleted.');
