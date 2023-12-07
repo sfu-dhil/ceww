@@ -70,7 +70,6 @@ jobs:
         pull: true
         tags: dhilsfu/doceww:latest
         cache-from: type=registry,ref=dhilsfu/doceww:buildcache
-        cache-to: type=registry,ref=dhilsfu/doceww:buildcache,mode=max
 
     - name: Run Unit Tests
       run: |
