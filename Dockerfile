@@ -1,4 +1,4 @@
-FROM python:3.9.17 AS doceww-docs
+FROM python:3.12-slim AS doceww-docs
 WORKDIR /app
 
 # build python deps
@@ -9,7 +9,7 @@ COPY docs /app
 
 RUN sphinx-build source _site
 
-FROM node:20.4 AS doceww-prod-assets
+FROM node:21.6-slim AS doceww-prod-assets
 WORKDIR /app
 
 RUN apt-get update \
