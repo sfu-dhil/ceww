@@ -27,12 +27,16 @@ test.reset: ## Create a test database and load the fixtures in it
 	$(CONSOLE) --env=test doctrine:schema:validate  --quiet
 	$(CONSOLE) --env=test doctrine:cache:clear-metadata --quiet
 	$(CONSOLE) --env=test doctrine:fixtures:load --quiet --no-interaction --group=dev
-	$(CONSOLE) --env=test fos:elastica:populate --quiet --no-debug
+	$(CONSOLE) --env=test meili:delete --quiet --no-debug
+	$(CONSOLE) --env=test meili:import --quiet --no-debug
+
+test.clean: ## Clean Meilisearch
+	$(CONSOLE) --env=test meili:delete --quiet --no-debug
 
 test.run: ## Directly run tests. Use optional path=/path/to/tests to limit target
 	$(PHPUNIT) $(path)
 
-test: test.reset test.run ## Run all tests. Use optional path=/path/to/tests to limit target
+test: test.reset test.run test.clean ## Run all tests. Use optional path=/path/to/tests to limit target
 
 test.cover: test.reset ## Generate a test cover report
 	$(PHP) -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" $(PHPUNIT) $(path) --coverage-html=coverage

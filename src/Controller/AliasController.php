@@ -7,27 +7,22 @@ namespace App\Controller;
 use App\Entity\Alias;
 use App\Form\AliasType;
 use App\Repository\AliasRepository;
-use App\Services\ElasticSearchHelper;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Meilisearch\Bundle\SearchService;
+use App\Services\MeilisearchHelper;
 
 #[Route(path: '/alias')]
 class AliasController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
-
-    public function __construct(
-        private PaginatedFinderInterface $finder,
-    ) {}
 
     #[Route(path: '/', name: 'alias_index', methods: ['GET'])]
     #[Template]
@@ -45,29 +40,27 @@ class AliasController extends AbstractController implements PaginatorAwareInterf
 
     #[Route(path: '/search', name: 'alias_search', methods: ['GET'])]
     #[Template]
-    public function search(Request $request) : array {
-        $elasticSearchHelper = new ElasticSearchHelper([
-            'queryTermFields' => [
-                'name^2',
-                'description^0.5',
-                'people.fullName^1.3',
-            ],
-            'sort' => ElasticSearchHelper::generateDefaultSortOrder(),
-            'highlights' => [
-                'name' => new stdClass(),
-                'description' => new stdClass(),
-                'people.fullName' => new stdClass(),
-            ],
-        ]);
-        $query = $elasticSearchHelper->getElasticQuery(
-            $request->query->get('q'),
-            $request->query->get('order')
-        );
-        $results = $this->finder->createHybridPaginatorAdapter($query);
+    public function search(SearchService $searchService, Request $request) : array {
+        $sortOptions = MeilisearchHelper::getDefaultSortOptions();
+        $searchParams = [
+            // Pagination is handled by paginator service (not ideal but easier)
+            'limit' => 10000,
+            // Highlights
+            'attributesToHighlight' => ["*"],
+            'highlightPreTag' => '<span class="hl">',
+            'highlightPostTag' => '</span>',
+            // Sorting
+            'sort' => MeilisearchHelper::getSort($sortOptions, $request->query->getString('order', '')),
+            // scoring
+            // 'rankingScoreThreshold' => 0.2,
+            'showRankingScore' => true,
+        ];
+        $searchResults = $searchService->rawSearch(Alias::class, $request->query->get('q') ?? '*', $searchParams);
+        $results = $this->paginator->paginate($searchResults['hits'], $request->query->getInt('page', 1), $this->getParameter('page_size'));
 
         return [
-            'results' => $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size')),
-            'sortOptions' => ElasticSearchHelper::generateDefaultSortOrder(),
+            'results' => $results,
+            'sortOptions' => $sortOptions,
         ];
     }
 

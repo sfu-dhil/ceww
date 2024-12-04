@@ -9,15 +9,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\UtilBundle\Entity\AbstractEntity;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 #[ORM\Table(name: 'alias')]
 #[ORM\Index(columns: ['name'], flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: AliasRepository::class)]
-class Alias extends AbstractEntity implements HighlightableModelInterface {
-    use HasHighlights;
-
+class Alias extends AbstractEntity implements NormalizableInterface {
     #[ORM\Column(type: Types::STRING, length: 100, nullable: false)]
     private ?string $name = null;
 
@@ -161,5 +160,18 @@ class Alias extends AbstractEntity implements HighlightableModelInterface {
         }
 
         return $this->married;
+    }
+
+    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    {
+        return [
+            'recordType' => 'Alias',
+            'name' => $this->getName(),
+            'sortable' => $this->getSortableName(),
+            'description' => $this->getDescriptionSanitized(),
+            'people' => array_unique(array_map(function ($person) {
+                return $person->getFullName();
+            }, $this->getPeople()->toArray())),
+        ];
     }
 }

@@ -9,18 +9,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\UtilBundle\Entity\AbstractEntity;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 #[ORM\Table(name: 'place')]
 #[ORM\Index(columns: ['name', 'country_name'], flags: ['fulltext'])]
 #[ORM\Index(columns: ['sortable_name'], flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
-class Place extends AbstractEntity implements HighlightableModelInterface {
+class Place extends AbstractEntity implements NormalizableInterface {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }
-    use HasHighlights;
 
     #[ORM\Column(type: Types::STRING, length: 250, nullable: false)]
     private ?string $name = null;
@@ -350,5 +350,24 @@ class Place extends AbstractEntity implements HighlightableModelInterface {
         }
 
         return null;
+    }
+
+    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    {
+        $data = [
+            'recordType' => 'Place',
+            'name' => $this->getName(),
+            'sortable' => $this->getSortableName(),
+            'region' => $this->getRegionName(),
+            'country' => $this->getCountryName(),
+            'description' => $this->getDescriptionSanitized(),
+        ];
+        if ($this->getCoordinates()) {
+            $data['_geo'] = [
+                'lat' => $this->getLatitude(),
+                'lng' => $this->getLongitude(),
+            ];
+        }
+        return $data;
     }
 }

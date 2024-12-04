@@ -31,18 +31,16 @@
                 {% include 'search/partial/range_filter.html.twig' with {
                     'header': 'Birth Date',
                     'filterName': 'birthDate',
-                    'buckets': results.customParameters.aggregations.birthDate.buckets,
+                    'ranges': facetDistribution.birthDate,
                 } %}
                 {% include 'search/partial/range_filter.html.twig' with {
                     'header': 'Death Date',
                     'filterName': 'deathDate',
-                    'buckets': results.customParameters.aggregations.deathDate.buckets,
+                    'ranges': facetDistribution.deathDate,
                 } %}
             </div>
             <div class="col-sm-9">
-                {% include 'search/partial/list.html.twig' with {
-                    'results': results,
-                } %}
+                {% include 'search/partial/results.html.twig' with { 'results': results } %}
             </div>
         </div>
     </form>

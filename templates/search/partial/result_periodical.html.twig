@@ -1,0 +1,33 @@
+<a href="{{ path( 'periodical_show', { 'id': result.objectID }) }}" class="list-group-item">
+    <h5>Periodical: {{ result._formatted.title|raw }}</h5>
+    {% if '<span class="hl">' in result._formatted.description %}
+        <div class="mt-3"><strong>Description:</strong> {{ result._formatted.description|raw }}</div>
+    {% endif %}
+    {% if '<span class="hl">' in result._formatted.location %}
+        <div class="mt-3"><strong>Location:</strong> {{ result._formatted.location|raw }}</div>
+    {% endif %}
+    {% for genre in result._formatted.genres %}
+        {% if '<span class="hl">' in genre %}
+            <div class="mt-3"><strong>Genre:</strong> {{ genre|raw }}</div>
+        {% endif %}
+    {% endfor %}
+    {% for contribution in result._formatted.contributions %}
+        {% if '<span class="hl">' in contribution %}
+            <div class="mt-3"><strong>Contribution:</strong> {{ contribution|raw }}</div>
+        {% endif %}
+    {% endfor %}
+    {% for publisher in result._formatted.publishers %}
+        {% if '<span class="hl">' in publisher %}
+            <div class="mt-3"><strong>Publisher:</strong> {{ publisher|raw }}</div>
+        {% endif %}
+    {% endfor %}
+    {% if '<span class="hl">' in result._formatted.continuedFrom %}
+        <div class="mt-3"><strong>Continued From:</strong> {{ result._formatted.continuedFrom|raw }}</div>
+    {% endif %}
+    {% if '<span class="hl">' in result._formatted.continuedBy %}
+        <div class="mt-3"><strong>Continued By:</strong> {{ result._formatted.continuedBy|raw }}</div>
+    {% endif %}
+    {% if is_granted('ROLE_USER') %}
+        <p class="text-end text-muted">{{ result._rankingScore }}</p>
+    {% endif %}
+</a>

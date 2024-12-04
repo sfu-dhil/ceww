@@ -30,25 +30,22 @@
                 } %}
                 {% include 'search/partial/filter.html.twig' with {
                     'header': 'Record Type',
-                    'filterName': 'type',
-                    'buckets': results.customParameters.aggregations.type.buckets,
-                    'capitalize': true,
+                    'filterName': 'recordType',
+                    'terms': facetDistribution.recordType,
                 } %}
                 {% include 'search/partial/range_filter.html.twig' with {
                     'header': 'Date of Publication',
-                    'filterName': 'publicationDate',
-                    'buckets': results.customParameters.aggregations.publicationDate.buckets,
+                    'filterName': 'dateYear',
+                    'ranges': facetDistribution.dateYear,
                 } %}
                 {% include 'search/partial/filter.html.twig' with {
                     'header': 'Place of Publication',
-                    'filterName': 'publicationLocation',
-                    'buckets': results.customParameters.aggregations.publicationLocation.buckets,
+                    'filterName': 'location',
+                    'terms': facetDistribution.location,
                 } %}
             </div>
             <div class="col-sm-9">
-                {% include 'search/partial/list.html.twig' with {
-                    'results': results,
-                } %}
+                {% include 'search/partial/results.html.twig' with { 'results': results } %}
             </div>
         </div>
     </form>

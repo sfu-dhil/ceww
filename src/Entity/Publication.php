@@ -9,10 +9,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
 use Nines\UtilBundle\Entity\AbstractEntity;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 #[ORM\Table(name: 'publication')]
 #[ORM\Index(columns: ['title'], flags: ['fulltext'])]
@@ -22,14 +23,13 @@ use Nines\UtilBundle\Entity\AbstractEntity;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'category', type: 'string', length: 64)]
 #[ORM\DiscriminatorMap(['book' => 'Book', 'compilation' => 'Compilation', 'periodical' => 'Periodical'])]
-abstract class Publication extends AbstractEntity implements LinkableInterface, HighlightableModelInterface {
+abstract class Publication extends AbstractEntity implements LinkableInterface, NormalizableInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
     }
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
     }
-    use HasHighlights;
 
     public const BOOK = 'book';
 
@@ -170,7 +170,7 @@ abstract class Publication extends AbstractEntity implements LinkableInterface, 
         return $this;
     }
 
-    public function appendNote(string $note) : self {
+    public function appendNote(?string $note) : self {
         if ( ! $this->notes) {
             $this->notes = $note;
         } else {
@@ -279,5 +279,26 @@ abstract class Publication extends AbstractEntity implements LinkableInterface, 
         } else {
             $this->publishers = $publishers;
         }
+    }
+
+    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    {
+        return [
+            'recordType' => 'Publication',
+            'title' => $this->getTitle(),
+            'sortable' => $this->getSortableTitle(),
+            'description' => $this->getDescriptionSanitized(),
+            'dateYear' => $this->getDateYear()?->getYear(),
+            'location' => $this->getLocation()?->getName(),
+            'genres' => array_unique(array_map(function ($genre) {
+                return $genre->getLabel();
+            }, $this->getGenres()->toArray())),
+            'contributions' => array_unique(array_map(function ($contribution) {
+                return $contribution->getPerson()->getFullName();
+            }, $this->getContributions())),
+            'publishers' => array_unique(array_map(function ($publisher) {
+                return $publisher->getName();
+            }, $this->getPublishers()->toArray())),
+        ];
     }
 }

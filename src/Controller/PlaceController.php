@@ -7,28 +7,23 @@ namespace App\Controller;
 use App\Entity\Place;
 use App\Form\PlaceType;
 use App\Repository\PlaceRepository;
-use App\Services\ElasticSearchHelper;
 use App\Services\Merger;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Meilisearch\Bundle\SearchService;
+use App\Services\MeilisearchHelper;
 
 #[Route(path: '/place')]
 class PlaceController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
-
-    public function __construct(
-        private PaginatedFinderInterface $finder,
-    ) {}
 
     #[Route(path: '/', name: 'place_index', methods: ['GET'])]
     #[Template]
@@ -64,36 +59,41 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
 
     #[Route(path: '/search', name: 'place_search')]
     #[Template]
-    public function search(Request $request) : array {
-        $elasticSearchHelper = new ElasticSearchHelper([
-            'queryTermFields' => [
-                'name^2.0',
-                'country^0.2',
-                'region^0.5',
-                'description^0.5',
-            ],
-            'filters' => [
-                'country' => ElasticSearchHelper::generateTermFilter('countryFacet'),
-                'region' => ElasticSearchHelper::generateTermFilter('regionFacet'),
-            ],
-            'sort' => ElasticSearchHelper::generateDefaultSortOrder(),
-            'highlights' => [
-                'name' => new stdClass(),
-                'country' => new stdClass(),
-                'region' => new stdClass(),
-                'description' => new stdClass(),
-            ],
-        ]);
-        $query = $elasticSearchHelper->getElasticQuery(
-            $request->query->get('q'),
-            $request->query->get('order'),
-            $request->query->all('filters')
-        );
-        $results = $this->finder->createHybridPaginatorAdapter($query);
+    public function search(SearchService $searchService, Request $request) : array {
+        $sortOptions = MeilisearchHelper::getDefaultSortOptions();
+        $searchParams = [
+            // Pagination is handled by paginator service (not ideal but easier)
+            'limit' => 10000,
+            // Highlights
+            'attributesToHighlight' => ["*"],
+            'highlightPreTag' => '<span class="hl">',
+            'highlightPostTag' => '</span>',
+            // Sorting
+            'sort' => MeilisearchHelper::getSort($sortOptions, $request->query->getString('order', '')),
+            // Filtering
+            'filter' => [],
+            // Scoring
+            // 'rankingScoreThreshold' => 0.2,
+            'showRankingScore' => true,
+            // Facets
+            'facets' => ['*'],
+        ];
+        $filters = $request->query->all('filters');
+        if (array_key_exists('country', $filters)) {
+            $searchParams['filter'][] = MeilisearchHelper::generateTermFilter('country', $filters['country']);
+        }
+        if (array_key_exists('region', $filters)) {
+            $searchParams['filter'][] = MeilisearchHelper::generateTermFilter('region', $filters['region']);
+        }
+
+        // Run search
+        $searchResults = $searchService->rawSearch(Place::class, $request->query->get('q') ?? '*', $searchParams);
+        $results = $this->paginator->paginate($searchResults['hits'], $request->query->getInt('page', 1), $this->getParameter('page_size'));
 
         return [
-            'results' => $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size')),
-            'sortOptions' => ElasticSearchHelper::generateDefaultSortOrder(),
+            'results' => $results,
+            'facetDistribution' => $searchResults['facetDistribution'],
+            'sortOptions' => $sortOptions,
         ];
     }
 
@@ -122,39 +122,22 @@ class PlaceController extends AbstractController implements PaginatorAwareInterf
 
     #[Route(path: '/{id}', name: 'place_show', methods: ['GET'])]
     #[Template]
-    public function show(Request $request, PlaceRepository $placeRepository, Place $place) : array {
+    public function show(SearchService $searchService, Request $request, PlaceRepository $placeRepository, Place $place) : array {
         $nearbyResults = null;
 
         if ($place->getCoordinates()) {
-            $elasticSearchHelper = new ElasticSearchHelper([
-                'sort' => [
-                    '_geo_distance' => [
-                        'field' => '_geo_distance',
-                        'label' => '',
-                        'options' => [
-                            'coordinates' => $place->getCoordinates(),
-                            'order' => 'asc',
-                            'unit' => 'km',
-                            'mode' => 'min',
-                            'distance_type' => 'arc',
-                            'ignore_unmapped' => true,
-                        ],
-                    ],
-                ],
-                'excludeValues' => [
-                    '_id' => [$place->getId()],
-                ],
-                'queryGeoDistanceFields' => [
-                    'coordinates' => [
-                        'distance' => '50km',
-                        'location' => $place->getCoordinates(),
-                        'excludeIds' => $place->getId(),
-                    ],
-                ],
-            ]);
-            $query = $elasticSearchHelper->getElasticQuery(null, '_geo_distance');
-            $results = $this->finder->createHybridPaginatorAdapter($query);
-            $nearbyResults = $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size'));
+            $geoPoint = $place->getCoordinates();
+            $searchParams = [
+                // Pagination is handled by paginator service (not ideal but easier)
+                'limit' => 10000,
+                // Sorting
+                'sort' =>  ["_geoPoint({$geoPoint}):asc"],
+                // Filtering
+                'filter' => ["objectID != {$place->getId()}", "_geoRadius({$geoPoint}, 50000)"],
+            ];
+            // Run search
+            $searchResults = $searchService->rawSearch(Place::class, '*', $searchParams);
+            $nearbyResults = $this->paginator->paginate($searchResults['hits'], $request->query->getInt('page', 1), $this->getParameter('page_size'));
         }
 
         return [

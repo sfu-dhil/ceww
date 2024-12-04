@@ -9,16 +9,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\MediaBundle\Entity\LinkableInterface;
 use Nines\MediaBundle\Entity\LinkableTrait;
 use Nines\UtilBundle\Entity\AbstractEntity;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 #[ORM\Table(name: 'person')]
 #[ORM\Index(columns: ['full_name'], flags: ['fulltext'])]
 #[ORM\Index(columns: ['sortable_name'])]
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
-class Person extends AbstractEntity implements LinkableInterface, HighlightableModelInterface {
+class Person extends AbstractEntity implements LinkableInterface, NormalizableInterface {
     use HasContributions {
         HasContributions::__construct as private trait_constructor;
         getContributions as private traitContributions;
@@ -26,7 +27,6 @@ class Person extends AbstractEntity implements LinkableInterface, HighlightableM
     use LinkableTrait {
         LinkableTrait::__construct as private link_constructor;
     }
-    use HasHighlights;
 
     public const MALE = 'm';
 
@@ -306,5 +306,25 @@ class Person extends AbstractEntity implements LinkableInterface, HighlightableM
 
     public function getCanadian() : ?bool {
         return $this->canadian;
+    }
+
+    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    {
+        return [
+            'recordType' => 'Person',
+            'fullName' => $this->getFullName(),
+            'sortable' => $this->getSortableName(),
+            'description' => $this->getDescriptionSanitized(),
+            'birthDate' => $this->getBirthDate()?->getYear(),
+            'birthPlace' => $this->getBirthPlace()?->getName(),
+            'deathDate' => $this->getDeathDate()?->getYear(),
+            'deathPlace' => $this->getDeathPlace()?->getName(),
+            'residences' => array_unique(array_map(function ($place) {
+                return $place->getName();
+            }, $this->getResidences()->toArray())),
+            'aliases' => array_unique(array_map(function ($alias) {
+                return $alias->getName();
+            }, $this->getAliases()->toArray())),
+        ];
     }
 }

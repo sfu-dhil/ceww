@@ -78,14 +78,12 @@
                 <td>
                     {% if nearbyResults %}
                         <ul>
-                        {% for hybridResult in nearbyResults %}
-                            {% set result = hybridResult.result %}
-                            {% set entity = hybridResult.transformed %}
+                        {% for result in nearbyResults %}
                             <li>
-                                <a href='{{ path('place_show', {'id': entity.id}) }}'>
-                                    {{ entity }}
+                                <a href="{{ path('place_show', {'id': result.objectID }) }}">
+                                    {{ result.name }}
                                 </a>
-                                {{ result.sort|first|number_format(1) }} km
+                                {{ (result._geoDistance / 1000)|number_format(1) }} km
                             </li>
                         {% endfor %}
                         </ul>

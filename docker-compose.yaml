@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db:
     container_name: doceww_db
@@ -21,18 +20,15 @@ services:
       interval: 2s
       retries: 120
 
-  elasticsearch:
-    container_name: doceww_elasticsearch
-    image: elasticsearch:8.9.2
+  meilisearch:
+    container_name: doceww_meilisearch
+    image: getmeili/meilisearch:v1.11.3
     ports:
-     - "9200:9200"
-     - "9300:9300"
+      - "7700:7700"
     volumes:
-      - .data/elasticsearch:/usr/share/elasticsearch/data
+      - .data/meilisearch:/meili_data
     environment:
-      discovery.type: single-node
-      xpack.security.enabled: true
-      ELASTIC_PASSWORD: password
+      MEILI_MASTER_KEY: password
 
   app:
     container_name: doceww_app

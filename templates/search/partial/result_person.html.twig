@@ -1,0 +1,25 @@
+<a href="{{ path('person_show', { 'id': result.objectID }) }}" class="list-group-item">
+    <h5>Person: {{ result._formatted.fullName|raw }}</h5>
+    {% if '<span class="hl">' in result._formatted.description %}
+        <div class="mt-3"><strong>Description:</strong> {{ result._formatted.description|raw }}</div>
+    {% endif %}
+    {% if '<span class="hl">' in result._formatted.birthPlace %}
+        <div class="mt-3"><strong>Birth Place:</strong> {{ result._formatted.birthPlace|raw }}</div>
+    {% endif %}
+    {% if '<span class="hl">' in result._formatted.deathPlace %}
+        <div class="mt-3"><strong>Death Place:</strong> {{ result._formatted.deathPlace|raw }}</div>
+    {% endif %}
+    {% for residence in result._formatted.residences %}
+        {% if '<span class="hl">' in residence %}
+            <div class="mt-3"><strong>Residence:</strong> {{ residence|raw }}</div>
+        {% endif %}
+    {% endfor %}
+    {% for alias in result._formatted.aliases %}
+        {% if '<span class="hl">' in alias %}
+            <div class="mt-3"><strong>Alias:</strong> {{ alias|raw }}</div>
+        {% endif %}
+    {% endfor %}
+    {% if is_granted('ROLE_USER') %}
+        <p class="text-end text-muted">{{ result._rankingScore }}</p>
+    {% endif %}
+</a>

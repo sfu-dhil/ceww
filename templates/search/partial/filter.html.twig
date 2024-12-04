@@ -1,23 +1,22 @@
 {# @var string header #}
 {# @var string name #}
-{# @var buckets array #}
-{# @var boolean capitalize #}
+{# @var terms array #}
 {% set query_params = app.request.query.all %}
 <h3>{{ header }}</h3>
 <ul class="list-group mb-3 list-group-flush">
-    {% for bucket in buckets[:10] %}
-        {% set id = 'filter_' ~ filterName ~ '_' ~ (bucket.key|lower|replace({' ': '_'})|url_encode) %}
-        {% set selected = ('filters' in query_params|keys) and (filterName in query_params['filters']|keys) and (bucket.key in query_params['filters'][filterName]) %}
+    {% for term, count in terms[:10] %}
+        {% set id = 'filter_' ~ filterName ~ '_' ~ (term|lower|replace({' ': '_'})|url_encode) %}
+        {% set selected = ('filters' in query_params|keys) and (filterName in query_params['filters']|keys) and (term in query_params['filters'][filterName]) %}
         <li class="list-group-item">
-            <input id="{{ id }}" name="filters[{{ filterName }}][]" class="form-check-input me-1" type="checkbox" value="{{ bucket.key }}" {{ selected ? 'checked="checked"' : '' }} />
+            <input id="{{ id }}" name="filters[{{ filterName }}][]" class="form-check-input me-1" type="checkbox" value="{{ term }}" {{ selected ? 'checked="checked"' : '' }} />
             <label for="{{ id }}" class="form-check-label stretched-link">
-                {{ capitalize ?? false ? bucket.key|capitalize : bucket.key }}: {{ bucket.doc_count }}
+                {{ term }}: {{ count }}
             </label>
         </li>
     {% endfor %}
 </ul>
-{% if buckets|length > 10 %}
+{% if terms|length > 10 %}
     <div class="text-end mb-3">
-        And {{ (buckets|length) - 10 }} more.
+        And {{ (terms|length) - 10 }} more.
     </div>
 {% endif %}

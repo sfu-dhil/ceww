@@ -21,7 +21,6 @@
                 </a>
             {% endif %}
         </div>
-
         <div class="row">
             <div class="col-sm-3">
                 {% include 'search/partial/order.html.twig' with {
@@ -30,15 +29,12 @@
                 } %}
                 {% include 'search/partial/filter.html.twig' with {
                     'header': 'Record Type',
-                    'filterName': 'type',
-                    'buckets': results.customParameters.aggregations.type.buckets,
-                    'capitalize': true,
+                    'filterName': 'recordType',
+                    'terms': facetDistribution.recordType,
                 } %}
             </div>
             <div class="col-sm-9">
-                {% include 'search/partial/list.html.twig' with {
-                    'results': results,
-                } %}
+                {% include 'search/partial/results.html.twig' with { 'results': results } %}
             </div>
         </div>
     </form>

@@ -79,29 +79,28 @@ jobs:
         mysql user: ${{ env.DB_USER }}
         mysql password: ${{ env.DB_PASSWORD }}
 
-    - name: Runs Elasticsearch
-      uses: getong/elasticsearch-action@v1.2
-      with:
-        elasticsearch version: '8.9.2'
-        host port: 9200
-        container port: 9200
-        host node port: 9300
-        node port: 9300
-        discovery type: 'single-node'
+    - name: Run Meilisearch
+      run: |
+        docker run -d \
+          -p 7700:7700 \
+          -e MEILI_MASTER_KEY='password' \
+          getmeili/meilisearch:v1.11.3
 
     - name: Run Unit Tests
       run: |
         touch .env.test.local
         echo DATABASE_URL="mysql://${{ env.DB_USER }}:${{ env.DB_PASSWORD }}@127.0.0.1:3306/${{ env.DB_NAME }}?serverVersion=mariadb-10.11.0" >> .env.test.local
-        echo ELASTICSEARCH_HOST="127.0.0.1" >> .env.test.local
-        echo ELASTICSEARCH_PORT="9200" >> .env.test.local
-        echo ELASTICSEARCH_USERNAME="elastic" >> .env.test.local
-        echo ELASTICSEARCH_PASSWORD="" >> .env.test.local
+        echo MEILISEARCH_URL="http://127.0.0.1:7700" >> .env.test.local
+        echo MEILISEARCH_API_KEY="password" >> .env.test.local
         docker run --rm \
           -v "${GITHUB_WORKSPACE}/.env.test.local":/var/www/html/.env.test.local \
           --network host \
           --platform=${{ matrix.platform }} \
           ${{ env.REGISTRY_IMAGE }}@${{ steps.build.outputs.digest }} make test
+
+    - name: Stop Meilisearch
+      run: |
+        docker rm $(docker stop $(docker ps -a -q --filter ancestor=getmeili/meilisearch:v1.11.3 --format="{{.ID}}"))
 
     - name: Export digest
       run: |

@@ -1,0 +1,15 @@
+<a href="{{ path('place_show', { 'id': result.objectID }) }}" class="list-group-item">
+    <h5>Place: {{ result._formatted.name|raw }}</h5>
+    {% if '<span class="hl">' in result._formatted.country %}
+        <div class="mt-3"><strong>Country:</strong> {{ result._formatted.country|raw }}</div>
+    {% endif %}
+    {% if '<span class="hl">' in result._formatted.region %}
+        <div class="mt-3"><strong>Region:</strong> {{ result._formatted.region|raw }}</div>
+    {% endif %}
+    {% if '<span class="hl">' in result._formatted.description %}
+        <div class="mt-3"><strong>Description:</strong> {{ result._formatted.description|raw }}</div>
+    {% endif %}
+    {% if is_granted('ROLE_USER') %}
+        <p class="text-end text-muted">{{ result._rankingScore }}</p>
+    {% endif %}
+</a>

@@ -1,0 +1,67 @@
+meilisearch:
+    url: '%env(MEILISEARCH_URL)%'
+    api_key: '%env(MEILISEARCH_API_KEY)%'
+    prefix: '%env(MEILISEARCH_PREFIX)%'
+    indices:
+        - name: alias
+          class: App\Entity\Alias
+          settings: &default_settings
+            searchableAttributes: ['name', 'description', 'people']
+            filterableAttributes: ['recordType']
+            sortableAttributes: ['sortable']
+            # https://www.meilisearch.com/docs/reference/api/settings#ranking-rules
+            # allow prioritizing sort order above score
+            rankingRules: ["sort", "words", "typo", "proximity", "attribute", "exactness"]
+            pagination:
+              maxTotalHits: 10000
+            faceting:
+              maxValuesPerFacet: 10000
+              sortFacetValuesBy:
+                '*': count
+
+        - name: book
+          class: App\Entity\Book
+          settings:
+            <<: *default_settings
+            searchableAttributes: ['title', 'description', 'location', 'genres', 'contributions', 'publishers']
+            filterableAttributes: ['recordType', 'dateYear', 'location']
+
+        - name: compilation
+          class: App\Entity\Compilation
+          settings:
+            <<: *default_settings
+            searchableAttributes: ['title', 'description', 'location', 'genres', 'contributions', 'publishers']
+            filterableAttributes: ['recordType', 'dateYear', 'location']
+
+        - name: periodical
+          class: App\Entity\Periodical
+          settings:
+            <<: *default_settings
+            searchableAttributes: ['title', 'description', 'location', 'genres', 'contributions', 'publishers', 'continuedFrom', 'continuedBy']
+            filterableAttributes: ['recordType', 'dateYear', 'location']
+
+        - name: person
+          class: App\Entity\Person
+          settings:
+            <<: *default_settings
+            searchableAttributes: ['fullName', 'description', 'birthPlace', 'deathPlace', 'residences', 'aliases']
+            filterableAttributes: ['recordType', 'birthDate', 'deathDate']
+
+        - name: place
+          class: App\Entity\Place
+          settings:
+            <<: *default_settings
+            sortableAttributes: ['sortable', _geo]
+            searchableAttributes: ['name', 'country', 'region', 'description']
+            filterableAttributes: ['recordType', 'objectID', '_geo', 'country', 'region']
+
+        - name: publisher
+          class: App\Entity\Publisher
+          settings:
+            <<: *default_settings
+            searchableAttributes: ['name', 'places']
+            filterableAttributes: ['recordType', 'places']
+
+when@test:
+    meilisearch:
+        prefix: '%env(MEILISEARCH_PREFIX)%test_'

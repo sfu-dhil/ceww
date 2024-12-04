@@ -8,28 +8,23 @@ use App\Entity\Publisher;
 use App\Form\PublisherType;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
-use App\Services\ElasticSearchHelper;
 use App\Services\Merger;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Meilisearch\Bundle\SearchService;
+use App\Services\MeilisearchHelper;
 
 #[Route(path: '/publisher')]
 class PublisherController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
-
-    public function __construct(
-        private PaginatedFinderInterface $finder,
-    ) {}
 
     #[Route(path: '/', name: 'publisher_index', methods: ['GET'])]
     #[Template]
@@ -65,31 +60,38 @@ class PublisherController extends AbstractController implements PaginatorAwareIn
 
     #[Route(path: '/search', name: 'publisher_search')]
     #[Template]
-    public function search(Request $request) : array {
-        $elasticSearchHelper = new ElasticSearchHelper([
-            'queryTermFields' => [
-                'name^2.0',
-                'places.name^0.6',
-            ],
-            'filters' => [
-                'places' => ElasticSearchHelper::generateTermFilter('places.nameFacet'),
-            ],
-            'sort' => ElasticSearchHelper::generateDefaultSortOrder(),
-            'highlights' => [
-                'name' => new stdClass(),
-                'places.name' => new stdClass(),
-            ],
-        ]);
-        $query = $elasticSearchHelper->getElasticQuery(
-            $request->query->get('q'),
-            $request->query->get('order'),
-            $request->query->all('filters')
-        );
-        $results = $this->finder->createHybridPaginatorAdapter($query);
+    public function search(SearchService $searchService, Request $request) : array {
+        $sortOptions = MeilisearchHelper::getDefaultSortOptions();
+        $searchParams = [
+            // Pagination is handled by paginator service (not ideal but easier)
+            'limit' => 10000,
+            // Highlights
+            'attributesToHighlight' => ["*"],
+            'highlightPreTag' => '<span class="hl">',
+            'highlightPostTag' => '</span>',
+            // Sorting
+            'sort' => MeilisearchHelper::getSort($sortOptions, $request->query->getString('order', '')),
+            // Filtering
+            'filter' => [],
+            // Scoring
+            // 'rankingScoreThreshold' => 0.2,
+            'showRankingScore' => true,
+            // Facets
+            'facets' => ['*'],
+        ];
+        $filters = $request->query->all('filters');
+        if (array_key_exists('places', $filters)) {
+            $searchParams['filter'][] = MeilisearchHelper::generateTermFilter('places', $filters['places']);
+        }
+
+        // Run search
+        $searchResults = $searchService->rawSearch(Publisher::class, $request->query->get('q') ?? '*', $searchParams);
+        $results = $this->paginator->paginate($searchResults['hits'], $request->query->getInt('page', 1), $this->getParameter('page_size'));
 
         return [
-            'results' => $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size')),
-            'sortOptions' => ElasticSearchHelper::generateDefaultSortOrder(),
+            'results' => $results,
+            'facetDistribution' => $searchResults['facetDistribution'],
+            'sortOptions' => $sortOptions,
         ];
     }
 

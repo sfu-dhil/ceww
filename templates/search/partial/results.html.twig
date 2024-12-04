@@ -1,0 +1,31 @@
+<h3>Results</h3>
+<p class="count">
+    {% if results.getPageCount > 0 %}
+        {{ results.getTotalItemCount ~ ' ' ~ (q ? 'found' : 'total') }}.
+        Showing page {{ results.getCurrentPageNumber }} of {{ results.getPageCount }} with results from {{ results.getPaginationData.firstItemNumber }} to {{ results.getPaginationData.lastItemNumber }}.
+    {% else %}
+        No results found.
+    {% endif %}
+</p>
+<div class='list-group'>
+    {% for result in results %}
+        {% if result.recordType == 'Book' %}
+            {% include 'search/partial/result_book.html.twig' with { 'result': result } %}
+        {% elseif result.recordType == 'Person' %}
+            {% include 'search/partial/result_person.html.twig' with { 'result': result } %}
+        {% elseif result.recordType == 'Periodical' %}
+            {% include 'search/partial/result_periodical.html.twig' with { 'result': result } %}
+        {% elseif result.recordType == 'Alias' %}
+            {% include 'search/partial/result_alias.html.twig' with { 'result': result } %}
+        {% elseif result.recordType == 'Place' %}
+            {% include 'search/partial/result_place.html.twig' with { 'result': result } %}
+        {% elseif result.recordType == 'Publisher' %}
+            {% include 'search/partial/result_publisher.html.twig' with { 'result': result } %}
+        {% elseif result.recordType == 'Compilation' %}
+            {% include 'search/partial/result_compilation.html.twig' with { 'result': result } %}
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="navigation my-3">
+    {{ knp_pagination_render(results) }}
+</div>

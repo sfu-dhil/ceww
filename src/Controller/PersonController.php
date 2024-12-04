@@ -8,28 +8,23 @@ use App\Entity\Person;
 use App\Form\PersonType;
 use App\Repository\PersonRepository;
 use App\Repository\PublisherRepository;
-use App\Services\ElasticSearchHelper;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Knp\Bundle\PaginatorBundle\Definition\PaginatorAwareInterface;
 use Nines\UtilBundle\Controller\PaginatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Meilisearch\Bundle\SearchService;
+use App\Services\MeilisearchHelper;
 
 #[Route(path: '/person')]
 class PersonController extends AbstractController implements PaginatorAwareInterface {
     use PaginatorTrait;
-
-    public function __construct(
-        private PaginatedFinderInterface $finder,
-    ) {}
 
     #[Route(path: '/', name: 'person_index', methods: ['GET'])]
     #[Template]
@@ -97,40 +92,48 @@ class PersonController extends AbstractController implements PaginatorAwareInter
 
     #[Route(path: '/search', name: 'person_search')]
     #[Template]
-    public function search(Request $request) : array {
-        $elasticSearchHelper = new ElasticSearchHelper([
-            'queryTermFields' => [
-                'fullName^2.5',
-                'description^0.5',
-                'birthPlace.name^0.4',
-                'deathPlace.name^0.4',
-                'residences.name^0.3',
-                'aliases.name^1.3',
-            ],
-            'rangeFilters' => [
-                'birthDate' => ElasticSearchHelper::generateRangeFilter('birthDate.year', 1750, (int) date('Y'), 50),
-                'deathDate' => ElasticSearchHelper::generateRangeFilter('deathDate.year', 1750, (int) date('Y'), 50),
-            ],
-            'sort' => ElasticSearchHelper::generateDefaultSortOrder(),
-            'highlights' => [
-                'fullName' => new stdClass(),
-                'description' => new stdClass(),
-                'birthPlace.name' => new stdClass(),
-                'deathPlace.name' => new stdClass(),
-                'residences.name' => new stdClass(),
-                'aliases.name' => new stdClass(),
-            ],
-        ]);
-        $query = $elasticSearchHelper->getElasticQuery(
-            $request->query->get('q'),
-            $request->query->get('order'),
-            $request->query->all('filters')
-        );
-        $results = $this->finder->createHybridPaginatorAdapter($query);
+    public function search(SearchService $searchService, Request $request) : array {
+        $sortOptions = MeilisearchHelper::getDefaultSortOptions();
+        $rangeFilters = [
+            'birthDate' => MeilisearchHelper::rangeFilter(1750, (int) date('Y'), 50),
+            'deathDate' => MeilisearchHelper::rangeFilter(1750, (int) date('Y'), 50),
+        ];
+        $searchParams = [
+            // Pagination is handled by paginator service (not ideal but easier)
+            'limit' => 10000,
+            // Highlights
+            'attributesToHighlight' => ["*"],
+            'highlightPreTag' => '<span class="hl">',
+            'highlightPostTag' => '</span>',
+            // Sorting
+            'sort' => MeilisearchHelper::getSort($sortOptions, $request->query->getString('order', '')),
+            // Filtering
+            'filter' => [],
+            // Scoring
+            // 'rankingScoreThreshold' => 0.2,
+            'showRankingScore' => true,
+            // Facets
+            'facets' => ['*'],
+        ];
+        $filters = $request->query->all('filters');
+        if (array_key_exists('birthDate', $filters)) {
+            $searchParams['filter'][] = MeilisearchHelper::generateRangeFilter('birthDate', $rangeFilters['birthDate'], $filters['birthDate']);
+        }
+        if (array_key_exists('deathDate', $filters)) {
+            $searchParams['filter'][] = MeilisearchHelper::generateRangeFilter('deathDate', $rangeFilters['deathDate'], $filters['deathDate']);
+        }
+
+        // Run search
+        $searchResults = $searchService->rawSearch(Person::class, $request->query->get('q') ?? '*', $searchParams);
+        $results = $this->paginator->paginate($searchResults['hits'], $request->query->getInt('page', 1), $this->getParameter('page_size'));
+
+        $searchResults['facetDistribution']['birthDate'] = MeilisearchHelper::addRangeFilterCounts($rangeFilters['birthDate'], $searchResults['facetDistribution']['birthDate']);
+        $searchResults['facetDistribution']['deathDate'] = MeilisearchHelper::addRangeFilterCounts($rangeFilters['deathDate'], $searchResults['facetDistribution']['deathDate']);
 
         return [
-            'results' => $this->paginator->paginate($results, $request->query->getInt('page', 1), $this->getParameter('page_size')),
-            'sortOptions' => ElasticSearchHelper::generateDefaultSortOrder(),
+            'results' => $results,
+            'facetDistribution' => $searchResults['facetDistribution'],
+            'sortOptions' => $sortOptions,
         ];
     }
 

@@ -20,7 +20,7 @@ Next you must start the whole application
 
     docker compose up -d --build
 
-    docker exec -it doceww_app ./bin/console fos:elastica:populate --no-debug
+    docker exec -it doceww_app ./bin/console meili:import --no-debug
 
 doceww will now be available at `http://localhost:8080/`
 
@@ -52,9 +52,10 @@ example:
 
     docker compose up -d --build
 
-### Rebuilding the elasticsearch logs
+### Rebuilding the meilisearch indexes
 
-    docker exec -it doceww_app ./bin/console fos:elastica:populate --no-debug
+    docker exec -it doceww_app ./bin/console meili:delete --no-debug
+    docker exec -it doceww_app ./bin/console meili:import --no-debug
 
 ### Viewing logs (each container)
 

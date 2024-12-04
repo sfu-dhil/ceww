@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\PeriodicalRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 #[ORM\Table(name: 'periodical')]
 #[ORM\Entity(repositoryClass: PeriodicalRepository::class)]
@@ -52,5 +53,14 @@ class Periodical extends Publication {
 
     public function getCategory() : string {
         return self::PERIODICAL;
+    }
+
+    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    {
+        $results = parent::normalize($serializer, $format, $context);
+        $results['recordType'] = 'Periodical';
+        $results['continuedFrom'] = $this->getContinuedFrom();
+        $results['continuedBy'] = $this->getContinuedBy();
+        return $results;
     }
 }

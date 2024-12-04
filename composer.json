@@ -16,12 +16,14 @@
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.15",
-        "friendsofsymfony/elastica-bundle": "^6.3",
         "guzzlehttp/guzzle": "^7.7",
         "knplabs/knp-menu-bundle": "^3.2",
         "knplabs/knp-paginator-bundle": "^6.2",
+        "meilisearch/search-bundle": "^0.15.6",
         "ninsuo/symfony-collection": "^2.1",
+        "nyholm/psr7": "^1.8",
         "phpdocumentor/reflection-docblock": "^5.3",
+        "phpstan/phpdoc-parser": "^1.33",
         "sensio/framework-extra-bundle": "^6.2",
         "sfu-dhil/nines": "6.3.16",
         "symfony/asset": "6.3.*",
@@ -82,7 +84,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "php-http/discovery": true
         }
     },
     "autoload": {

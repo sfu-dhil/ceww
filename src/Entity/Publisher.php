@@ -9,17 +9,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\ElasticaBundle\Transformer\HighlightableModelInterface;
 use Nines\UtilBundle\Entity\AbstractEntity;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 #[ORM\Table(name: 'publisher')]
 #[ORM\Index(columns: ['name'], flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: PublisherRepository::class)]
-class Publisher extends AbstractEntity implements HighlightableModelInterface {
+class Publisher extends AbstractEntity implements NormalizableInterface {
     use HasPublications {
         HasPublications::__construct as private trait_constructor;
     }
-    use HasHighlights;
 
     #[ORM\Column(type: Types::STRING, length: 100, nullable: false)]
     private ?string $name = null;
@@ -112,5 +112,17 @@ class Publisher extends AbstractEntity implements HighlightableModelInterface {
         }
 
         return $this;
+    }
+
+    public function normalize(NormalizerInterface $serializer, ?string $format = null, array $context = []): array
+    {
+        return [
+            'recordType' => 'Publisher',
+            'name' => $this->getName(),
+            'sortable' => $this->getName(),
+            'places' => array_unique(array_map(function ($place) {
+                return $place->getName();
+            }, $this->getPlaces()->toArray())),
+        ];
     }
 }

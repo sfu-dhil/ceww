@@ -1,0 +1,11 @@
+<a href="{{ path('publisher_show', { 'id': result.objectID }) }}" class="list-group-item">
+    <h5>Publisher: {{ result._formatted.name|raw }}</h5>
+    {% for place in result._formatted.places %}
+        {% if '<span class="hl">' in place %}
+            <div class="mt-3"><strong>Place:</strong> {{ place|raw }}</div>
+        {% endif %}
+    {% endfor %}
+    {% if is_granted('ROLE_USER') %}
+        <p class="text-end text-muted">{{ result._rankingScore }}</p>
+    {% endif %}
+</a>
