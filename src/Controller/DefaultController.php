@@ -143,8 +143,4 @@ class DefaultController extends AbstractController implements PaginatorAwareInte
             'sortOptions' => $sortOptions,
         ];
     }
-
-    #[Route(path: '/privacy', name: 'privacy')]
-    #[Template]
-    public function privacy() : void {}
 }
