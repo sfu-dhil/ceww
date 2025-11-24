@@ -17,11 +17,6 @@ parameters:
     app.geonames.username: '%env(GEONAMES_USERNAME)%'
     page_size: 50
 
-    dhil.matomo_enabled: '%env(bool:MATOMO_ENABLED)%'
-    dhil.matomo_url: //matomo.lib.sfu.ca/library/
-    dhil.matomo_siteid: 37
-    dhil.matomo_domain: dhil.lib.sfu.ca/doceww
-
 services:
     # default configuration for services in *this* file
     _defaults:
