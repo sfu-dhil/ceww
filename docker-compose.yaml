@@ -32,7 +32,7 @@ services:
 
   app:
     container_name: doceww_app
-    # image: dhil/doceww
+    # image: ghcr.io/sfu-dhil/ceww
     build:
       context: .
       target: doceww

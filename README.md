@@ -1,3 +1,6 @@
+[![Docker Image Latest Badge](https://ghcr-badge.egpl.dev/sfu-dhil/ceww/latest_tag?trim=major&label=latest)](https://github.com/sfu-dhil/ceww/pkgs/container/ceww)
+[![Docker Image Size badge](https://ghcr-badge.egpl.dev/sfu-dhil/ceww/size)](https://github.com/sfu-dhil/ceww/pkgs/container/ceww)
+
 # Database of Canada's Early Women Writers
 
 [Database of Canada's Early Women Writers](https://dhil.lib.sfu.ca/doceww/) intends to expand the work of the Canada’s Early Women Writers (CEWW) project, a bio-bibliographical database of selected women authors. It assembles basic information about a vastly extended collection of writers and create a searchable database associating authors with their publications, life dates, and primary residences.
