@@ -9,7 +9,7 @@ COPY docs /app
 
 RUN sphinx-build source _site
 
-FROM node:21.6-slim AS doceww-prod-assets
+FROM node:25.5 AS doceww-prod-assets
 WORKDIR /app
 
 RUN apt-get update \
